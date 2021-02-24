@@ -1,4 +1,4 @@
-# Cluster Evalutaion Er..something (ClEvEr)
+# Cluster Evalutaion Resources (ClEvaR)
 Library to validate cluster detection
 
 # Contriutors
