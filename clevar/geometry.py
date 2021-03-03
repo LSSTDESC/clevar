@@ -62,5 +62,3 @@ def convert_units(dist1, unit1, unit2, redshift=None, cosmo=None):
             dist1_mpc = (dist1*units_bank[unit1]).to(u.Mpc).value
             dist1_rad = cosmo.mpc2rad(dist1_mpc, redshift)
             return (dist1_rad*u.rad).to(units_bank[unit2]).value
-def square_mask(ra, dec, ra0, ra1, dec0, dec1):
-    return (ra>=ra0)*(ra<=ra1)*(dec>=dec0)*(dec<=dec1)

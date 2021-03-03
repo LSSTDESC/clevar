@@ -8,9 +8,9 @@ from astropy import units as u
 
 class ClData(APtable):
     """
-    Data: A data object. It behaves as an astropy table but case independent.
+    ClData: A data object. It behaves as an astropy table but case independent.
 
-    Parameters
+    Attributes
     ----------
     meta: dict
         Dictionary with metadata for this object
@@ -42,7 +42,26 @@ class ClData(APtable):
         return out
 
 class Catalog():
-    def __init__(self, **kwargs):
+    """
+    Object to handle catalogs
+
+    Attributes
+    ----------
+    name: str
+        Catalog name
+    data: ClData
+        Main catalog data (ex: id, ra, dec, z). Fixed values.
+    data: ClData
+        Mathing data (self, other, cross, multi_self, multi_other)
+    mt_input: object
+        Constains the necessary inputs for the match (added by Match objects)
+    size: int
+        Number of objects in the catalog
+    id_dict: dict
+        Dictionary of indicies given the cluster id
+    """
+    def __init__(self, name, **kwargs):
+        self.name = name
         self.data = ClData()
         self.match = ClData()
         self.mt_input = None
@@ -51,7 +70,7 @@ class Catalog():
         if len(kwargs)>0:
             self._add_values(**kwargs)
     def _add_values(self, **columns):
-        """Add values for all attributes"""
+        """Add values for all attributes. If id is not provided, one is created"""
         # Check all columns have same size
         names = [n for n in columns]
         sizes = [len(v) for v in columns.values()]
@@ -76,6 +95,7 @@ class Catalog():
         self.id_dict = {i:ind for ind, i in enumerate(self.data['id'])}
         self._init_match_vals()
     def _init_match_vals(self):
+        """Fills self.match with default values"""
         self.match['self'] = None
         self.match['other'] = None
         self.match['multi_self']  = None
@@ -84,11 +104,20 @@ class Catalog():
             self.match['multi_self'][i] = []
             self.match['multi_other'][i] = []
     def ids2inds(self, ids):
+        """Returns the indicies of objects given an id list.
+
+        Parameters
+        ----------
+        ids: list
+            List of object ids
+        """
         return np.array([self.id_dict[i] for i in ids])
     def remove_multiple_duplicates(self):
+        """Removes duplicates in multiple match columns"""
         for i in range(self.size):
             for col in ('multi_self', 'multi_other'):
                 if self.match[col][i]:
                     self.match[col][i] = list(set(self.match[col][i]))
     def cross_match(self):
+        """Makes cross matches, requires unique matches to be done first."""
         self.match['cross'] = self.match['self'][self.match['self']==self.match['other']]
