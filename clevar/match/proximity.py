@@ -43,7 +43,7 @@ class ProximityMatch(Match):
                         cat1.match['multi_self'][i].append(id2)
                         i2 = int(cat2.id_dict[id2])
                         cat2.match['multi_other'][i2].append(cat1.data['id'][i])
-        print(f'* {len(cat1.match[veclen(cat1.match["multi_self"])>0]):,} objects matched.')
+        print(f'* {len(cat1.match[veclen(cat1.match["multi_self"])>0]):,}/{cat1.size:,} objects matched.')
     def prep_cat_for_match(self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1,
         cosmo=None):
         """
@@ -114,15 +114,18 @@ class ProximityMatch(Match):
             in_rad = None
             for unit in units_bank:
                 if unit in match_radius.lower():
-                    in_rad = float(match_radius.lower().replace(unit, ''))*np.ones(cat.size)
-                    in_rad_unit = unit
-                    break
+                    try:
+                        in_rad = float(match_radius.lower().replace(unit, ''))*np.ones(cat.size)
+                        in_rad_unit = unit
+                        break
+                    except:
+                        pass
             if in_rad is None:
                 return ValueError(f'Unknown radius unit in {config["match_radius"]}, must be in {units_bank.keys()}')
         # convert to degrees
         cat.mt_input['ang'] = convert_units(in_rad, in_rad_unit, 'degrees',
                                 redshift=cat.data['z'] if 'z' in cat.data.colnames else None,
-                                cosmo=None)
+                                cosmo=cosmo)
     def _rescale_z(z, zlim, n):
         """Rescale zmin/zmax by a factor n
         

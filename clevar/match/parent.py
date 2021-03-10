@@ -48,7 +48,7 @@ class Match():
         for i in i_vals:
             inds2 = cat2.ids2inds(cat1.match['multi_self'][i])
             set_unique(cat1, i, cat2, inds2)
-        print(f'* {len(cat1.match[cat1.match["self"]!=None]):,} objects matched.')
+        print(f'* {len(cat1.match[cat1.match["self"]!=None]):,}/{cat1.size:,} objects matched.')
     def _match_mpref(self, cat1, i, cat2, inds2):
         """
         Make the unique match by mass preference
