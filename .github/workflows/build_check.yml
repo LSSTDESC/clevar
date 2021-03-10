@@ -16,10 +16,6 @@ jobs:
         git clone https://github.com/LSSTDESC/CCL
         cd CCL
         sudo python3 setup.py install
-    - name: Install prereq using pip
-      run: |        
-        python3 numcosmo-0.15.2/examples/example_simple.py
-        sudo pip3 install -r requirements.txt
     - name: Install the package
       run: sudo python3 setup.py install
     - name: Run the unit tests
