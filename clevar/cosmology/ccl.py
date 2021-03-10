@@ -5,6 +5,8 @@ import pyccl as ccl
 import numpy as np
 import warnings
 
+from .. constants import Constants as const
+
 from .parent_class import Cosmology
 
 __all__ = []
