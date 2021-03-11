@@ -11,7 +11,7 @@ MOCK_MODULES = []
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = MagicMock()
 
-import clmm
+import clevar
 
 
 # -- RTD Fix for cluster_toolkit -----------------------------------------
@@ -45,7 +45,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.githubpages',
               'IPython.sphinxext.ipython_console_highlighting']
 
-apidoc_module_dir = '../clmm'
+apidoc_module_dir = '../clevar'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -62,9 +62,8 @@ language = 'en'
 
 # Files to ignore when looking for source files
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
-                    'api/clmm.rst', 'source/index_body.rst',
-                    'api/clmm.cluster_toolkit_patches.rst',
-                    'api/clmm.modbackend.*']
+                    'api/clevar.rst', 'source/index_body.rst',
+                    ]
 
 # Some style options
 highlight_language = 'python3'
@@ -102,7 +101,7 @@ napoleon_use_ivar = True
 #    from sphinxcontrib.apidoc import main as apidoc_main
 #    cur_dir = os.path.normpath(os.path.dirname(__file__))
 #    output_path = os.path.join(cur_dir, 'api')
-#    modules = os.path.normpath(os.path.join(cur_dir, "../clmm"))
+#    modules = os.path.normpath(os.path.join(cur_dir, "../clevar"))
 #    paramlist = ['--separate', '--no-toc', '-f', '-M', '-o', output_path, modules]
 #    apidoc_main(paramlist)
 
@@ -197,6 +196,6 @@ Information on specific functions, classes, and methods.
 
 """
 for onemodule in apilist:
-    apitoc+= f"   api/clmm.{onemodule}.rst\n"
+    apitoc+= f"   api/clevar.{onemodule}.rst\n"
 with open('api.rst', 'w') as apitocfile:
     apitocfile.write(apitoc)
