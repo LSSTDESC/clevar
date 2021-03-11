@@ -1,4 +1,6 @@
 import numpy as np
+from scipy.interpolate import InterpolatedUnivariateSpline as spline
+
 from .parent import Match
 from ..geometry import units_bank, convert_units
 from ..catalog import ClData
@@ -94,11 +96,10 @@ class ProximityMatch(Match):
             print('* zmin|zmax from aux file')
             k = 3
             zv, zvmin, zvmax = np.loadtxt(delta_z)
-            zvmin = self._rescale_z(zv, zvmin, nz)
-            zvmax = self._rescale_z(zv, zvmax, nz)
+            zvmin = self._rescale_z(zv, zvmin, n_delta_z)
+            zvmax = self._rescale_z(zv, zvmax, n_delta_z)
             cat.mt_input['zmin'] = spline(zv, zvmin, k=k)(cat.data['z'])
             cat.mt_input['zmax'] = spline(zv, zvmax, k=k)(cat.data['z'])
-            mt_cols['zmin'], mt_cols['zmax'] = zmin_func(mt_cols['z']),  zmax_func(mt_cols['z'])
         elif isinstance(delta_z, (int, float)):
             # zmin/zmax from sigma_z*(1+z)
             print('* zmin|zmax from config value')
