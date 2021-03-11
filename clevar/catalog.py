@@ -78,7 +78,7 @@ class Catalog():
             self.size = sizes[0]
         tab = " "*12
         if any(self.size!=s for s in sizes):
-            raise TypeError(f"Column sizes inconsistent:\n"+
+            raise ValueError(f"Column sizes inconsistent:\n"+
                 f"{tab}{'Catalog':10}: {self.size:,}\n"+
                 "\n".join([f"{tab}{k:10}: {l:,}" for k, l in zip(names, sizes)])
                 )
@@ -120,4 +120,6 @@ class Catalog():
                     self.match[col][i] = list(set(self.match[col][i]))
     def cross_match(self):
         """Makes cross matches, requires unique matches to be done first."""
-        self.match['cross'] = self.match['self'][self.match['self']==self.match['other']]
+        self.match['cross'] = None
+        cross_mask = self.match['self']==self.match['other']
+        self.match['cross'][cross_mask] = self.match['self'][cross_mask]
