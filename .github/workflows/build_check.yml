@@ -34,4 +34,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         sudo pip3 install coveralls
+        coverage run --source=clevar -m pytest tests/
         coveralls --service=github
