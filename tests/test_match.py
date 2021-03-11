@@ -78,10 +78,10 @@ def _test_proximity(Cosmology):
     assert_equal(c2.match['self'], smt[:-1])
     assert_equal(c2.match['other'], smt[:-1])
     # Check unique with z preference
-    print('####### z ###########')
     for col in ('self', 'other'):
         c1.match[col] = None
         c2.match[col] = None
+    c2.match['other'][0] = 'CL3' # to force a replacement
     mt.unique(c1, c2, 'z')
     mt.unique(c2, c1, 'z')
     smt = ['CL1', 'CL0', 'CL2', 'CL3', None]
@@ -133,3 +133,8 @@ def _test_proximity(Cosmology):
         # radus in unknown unit
     assert_raises(ValueError, mt.prep_cat_for_match, c1, delta_z='cat',
                     match_radius='1 unknown', cosmo=cosmo)
+    # Other multiple match configs
+    mt.prep_cat_for_match(c1, **mt_config1)
+    mt.multiple(c1, c2, radius_selection='self')
+    mt.multiple(c1, c2, radius_selection='other')
+    mt.multiple(c1, c2, radius_selection='min')
