@@ -104,6 +104,9 @@ def _test_proximity(Cosmology):
     mt.prep_cat_for_match(c1, delta_z=None, match_radius='1 mpc', cosmo=cosmo)
     assert all(c1.mt_input['zmin']<c1.data['z'].min())
     assert all(c1.mt_input['zmax']>c1.data['z'].max())
+        # missing all zmin/zmax info in catalog
+    assert_raises(ValueError, mt.prep_cat_for_match, c1, delta_z='cat',
+                    match_radius='1 mpc', cosmo=cosmo)
         # zmin/zmax in catalog
     c1.data['zmin'] = c1.data['z']-.2
     c1.data['zmax'] = c1.data['z']+.2
@@ -117,6 +120,12 @@ def _test_proximity(Cosmology):
     mt.prep_cat_for_match(c1, delta_z='cat', match_radius='1 mpc', cosmo=cosmo)
     assert_allclose(c1.mt_input['zmin'], c1.data['z']-c1.data['z_err'])
     assert_allclose(c1.mt_input['zmax'], c1.data['z']+c1.data['z_err'])
+        # zmin/zmax from aux file
+    zv = np.linspace(0, 5, 10)
+    np.savetxt('zvals.dat', [zv, zv-.22, zv+.33])
+    mt.prep_cat_for_match(c1, delta_z='zvals.dat', match_radius='1 mpc', cosmo=cosmo)
+    assert_allclose(c1.mt_input['zmin'], c1.data['z']-.22)
+    assert_allclose(c1.mt_input['zmax'], c1.data['z']+.33)
         # radus in catalog
     c1.data['rad'] = 1
     c1.radius_unit = 'Mpc'
