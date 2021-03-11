@@ -33,6 +33,7 @@ def _test_convert_units(Cosmology):
     assert_raises(TypeError, convert_units, 1.0, 'arcsec', 'Mpc', None, cosmo)
     assert_raises(TypeError, convert_units, 1.0, 'arcsec', 'Mpc', 0.5, None)
     assert_raises(ValueError, convert_units, 1.0, 'arcsec', 'Mpc', -0.5, cosmo)
+    assert_raises(ValueError, convert_units, np.ones(2), 'arcsec', 'Mpc', -0.5*np.ones(2), cosmo)
 
     # Test cases to make sure angular -> angular is fitting together
     assert_allclose(convert_units(np.pi, 'radians', 'degrees'), 180., **TOLERANCE)
