@@ -1,5 +1,6 @@
 # pylint: disable=no-member, protected-access
 """ Tests for match.py """
+import os
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 
@@ -99,6 +100,7 @@ def _test_proximity(Cosmology):
     for col in ('self', 'other', 'multi_self', 'multi_other'):
         assert_equal(c1.match[col], c1_v2.match[col])
         assert_equal(c2.match[col], c2_v2.match[col])
+    os.system('rm -rf temp')
     # Other config of prep for matching
         # No redshift use
     mt.prep_cat_for_match(c1, delta_z=None, match_radius='1 mpc', cosmo=cosmo)
@@ -126,6 +128,7 @@ def _test_proximity(Cosmology):
     mt.prep_cat_for_match(c1, delta_z='zvals.dat', match_radius='1 mpc', cosmo=cosmo)
     assert_allclose(c1.mt_input['zmin'], c1.data['z']-.22)
     assert_allclose(c1.mt_input['zmax'], c1.data['z']+.33)
+    os.system('rm -rf zvals.dat')
         # radus in catalog
     c1.data['rad'] = 1
     c1.radius_unit = 'Mpc'
