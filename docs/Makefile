@@ -9,7 +9,7 @@ SOURCEDIR     = .
 BUILDDIR      = _build
 RM	      = rm -rf
 SPHINXAPIDOC  = sphinx-apidoc
-MODULEDIR     = ../clmm
+MODULEDIR     = ../clevar
 
 # Put it first so that "make" without argument is like "make help".
 help:
