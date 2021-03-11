@@ -72,7 +72,7 @@ class Match():
                     return
     def _match_apref(self, cat1, i, cat2, MATCH_PREF):
         """
-        Make the unique match by angula (or redshift) distance preference
+        Make the unique match by angular (or redshift) distance preference
 
         Parameters
         ----------

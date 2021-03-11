@@ -10,7 +10,7 @@ from ..utils import veclen
 class ProximityMatch(Match):
     def __init__(self, ):
         self.type = 'Proximity'
-    def multiple(self, cat1, cat2):
+    def multiple(self, cat1, cat2, radius_selection='max'):
         """
         Make the one way multiple matching
 
@@ -20,8 +20,8 @@ class ProximityMatch(Match):
             Catalogs to be matched
         nradius: float
             Multiplier of the radius to be used
-        radius_use: str (optional)
-            Case of radius to be used, can be: max, each, other.
+        radius_selection: str (optional)
+            Case of radius to be used, can be: max, min, self, other.
         """
         ra2, dec2, sk2 = (cat2.data[c] for c in ('ra', 'dec', 'SkyCoord'))
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ('ang', 'zmin', 'zmax'))
@@ -40,7 +40,7 @@ class ProximityMatch(Match):
                 if mask.any():
                     # makes circular crop
                     dist = sk1.separation(sk2[mask]).value
-                    max_dist = self._max_mt_distance(ang1, ang2[mask], TYPE_R='max')
+                    max_dist = self._max_mt_distance(ang1, ang2[mask], radius_selection=radius_selection)
                     for id2 in cat2.data['id'][mask][dist<=max_dist]:
                         cat1.match['multi_self'][i].append(id2)
                         i2 = int(cat2.id_dict[id2])
@@ -145,7 +145,7 @@ class ProximityMatch(Match):
             Rescaled z limit
         """
         return z+n*(zlim-z)
-    def _max_mt_distance(self, radius1, radius2, TYPE_R):
+    def _max_mt_distance(self, radius1, radius2, radius_selection):
         """Get maximum angular distance allowed for the matching
 
         Parameters
@@ -154,24 +154,24 @@ class ProximityMatch(Match):
             Radius to be used for catalog 1
         radius2: float, array
             Radius to be used for catalog 2
-        TYPE_R: str
-            Case of radius to be used, can be: own, other, min, max.
+        radius_selection: str
+            Case of radius to be used, can be: self, other, min, max.
 
         Returns
         -------
         float, array
             Maximum angular distance allowed for matching
         """
-        if TYPE_R=='own':
+        if radius_selection=='self':
             f1 = np.ones(radius1.size)
             f2 = np.zeros(radius2.size)
-        elif TYPE_R=='other':
+        elif radius_selection=='other':
             f1 = np.zeros(radius1.size)
             f2 = np.ones(radius2.size)
-        elif TYPE_R=='max':
+        elif radius_selection=='max':
             f1 = (radius1 >= radius2)
             f2 = (radius1 < radius2)
-        elif TYPE_R=='min':
+        elif radius_selection=='min':
             f1 = (radius1 < radius2)
             f2 = (radius1 >= radius2)
         return f1 * radius1 + f2 * radius2
