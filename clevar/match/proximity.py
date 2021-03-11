@@ -121,12 +121,12 @@ class ProximityMatch(Match):
                     except:
                         pass
             if in_rad is None:
-                return ValueError(f'Unknown radius unit in {config["match_radius"]}, must be in {units_bank.keys()}')
+                raise ValueError(f'Unknown radius unit in {match_radius}, must be in {units_bank.keys()}')
         # convert to degrees
         cat.mt_input['ang'] = convert_units(in_rad, in_rad_unit, 'degrees',
                                 redshift=cat.data['z'] if 'z' in cat.data.colnames else None,
                                 cosmo=cosmo)
-    def _rescale_z(z, zlim, n):
+    def _rescale_z(self, z, zlim, n):
         """Rescale zmin/zmax by a factor n
         
         Parameters
