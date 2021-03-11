@@ -102,7 +102,7 @@ def _test_proximity(Cosmology):
     # Other config of prep for matching
         # No redshift use
     mt.prep_cat_for_match(c1, delta_z=None, match_radius='1 mpc', cosmo=cosmo)
-    assert all(c1.mt_input['zmin']>c1.data['z'].min())
+    assert all(c1.mt_input['zmin']<c1.data['z'].min())
     assert all(c1.mt_input['zmax']>c1.data['z'].max())
         # zmin/zmax in catalog
     c1.data['zmin'] = c1.data['z']-.2
@@ -115,8 +115,8 @@ def _test_proximity(Cosmology):
     del c1.data['zmin']
     del c1.data['zmax']
     mt.prep_cat_for_match(c1, delta_z='cat', match_radius='1 mpc', cosmo=cosmo)
-    assert_allclose(c1.mt_input['zmin'], c1.data['zmin']-c1.data['z_err'])
-    assert_allclose(c1.mt_input['zmax'], c1.data['zmax']+c1.data['z_err'])
+    assert_allclose(c1.mt_input['zmin'], c1.data['z']-c1.data['z_err'])
+    assert_allclose(c1.mt_input['zmax'], c1.data['z']+c1.data['z_err'])
         # radus in catalog
     c1.data['rad'] = 1
     c1.radius_unit = 'Mpc'
