@@ -18,7 +18,6 @@ def test_class():
     assert_raises(NotImplementedError, Cosmology.get_Omega_m, None, None)
     assert_raises(NotImplementedError, Cosmology.eval_da_z1z2, None, None, None)
     assert_raises(AttributeError, Cosmology.eval_da, None, None)
-    assert_raises(NotImplementedError, Cosmology.eval_sigma_crit, None, None, None)
     assert_raises(NotImplementedError, Cosmology.get_E2Omega_m, None, None)
 TOLERANCE = {'rtol': 1.0e-15}
 
@@ -87,6 +86,8 @@ def test_cosmo_basic(cosmo_init):
 def _test_cosmo_basic(CosmoClass, cosmo_init):
     """ Unit tests abstract class z and a methdods """
     cosmo = CosmoClass(**cosmo_init)
+    assert_raises(NotImplementedError, cosmo.__setitem__, 'h', 0.5)
+    assert isinstance(cosmo.get_desc(), str)
     # Test get_<PAR>(z)
     Omega_m0 = cosmo['Omega_m0']
     assert_allclose(cosmo.get_Omega_m(0.0), Omega_m0, **TOLERANCE)

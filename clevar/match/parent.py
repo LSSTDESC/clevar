@@ -39,17 +39,18 @@ class Match():
         """
         i_vals = range(cat1.size)
         if preference=='mproxy':
-            set_unique = lambda cat1, i, cat2, i2: self._match_mpref(cat1, i, cat2, i2)
+            set_unique = lambda cat1, i, cat2: self._match_mpref(cat1, i, cat2)
             i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1.data['mass'])]
         elif preference=='ang':
-            set_unique = lambda cat1, i, cat2, i2: self._match_apref(cat1, i, cat2, i2, 'ang')
+            set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'ang')
         elif preference=='z':
-            set_unique = lambda cat1, i, cat2, i2: self._match_apref(cat1, i, cat2, i2, 'z')
+            set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'z')
+        else:
+            raise ValueError("preference must be 'ang' or 'z'")
         for i in i_vals:
-            inds2 = cat2.ids2inds(cat1.match['multi_self'][i])
-            set_unique(cat1, i, cat2, inds2)
+            set_unique(cat1, i, cat2)
         print(f'* {len(cat1.match[cat1.match["self"]!=None]):,}/{cat1.size:,} objects matched.')
-    def _match_mpref(self, cat1, i, cat2, inds2):
+    def _match_mpref(self, cat1, i, cat2):
         """
         Make the unique match by mass preference
 
@@ -61,17 +62,17 @@ class Match():
             Index of the cluster from cat1 to be matched
         cat2: clevar.Catalog
             Target catalog
-        inds2: list
-            List of indices of objects in cat2 to be used
         """
-        for i2 in inds2[np.argsort(cat2.data['mass'])[inds2]]:
-            if cat2.match['other'][i2]=='':
-                cat1.match['self'][i] = cat2.data['id'][i2]
-                cat2.match['other'][i2] = cat1.data['id'][i]
-                return
-    def _match_apref(self, cat1, i, cat2, inds2, MATCH_PREF):
+        inds2 = cat2.ids2inds(cat1.match['multi_self'][i])
+        if len(inds2)>0:
+            for i2 in inds2[np.argsort(cat2.data['mass'][inds2])]:
+                if cat2.match['other'][i2] is None:
+                    cat1.match['self'][i] = cat2.data['id'][i2]
+                    cat2.match['other'][i2] = cat1.data['id'][i]
+                    return
+    def _match_apref(self, cat1, i, cat2, MATCH_PREF):
         """
-        Make the unique match by angula (or redshift) distance preference
+        Make the unique match by angular (or redshift) distance preference
 
         Parameters
         ----------
@@ -81,11 +82,10 @@ class Match():
             Index of the cluster from cat1 to be matched
         cat2: clevar.Catalog
             Target catalog
-        inds2: list
-            List of indices of objects in cat2 to be used
         MATCH_PREF: str
             Match preference (ang dist, redshift dist)
         """
+        inds2 = cat2.ids2inds(cat1.match['multi_self'][i])
         dists = self._get_dist_mt(cat1.data[i], cat2.data[inds2], MATCH_PREF)
         sort_d = np.argsort(dists)
         for dist, i2 in zip(dists[sort_d], inds2[sort_d]):
@@ -123,8 +123,6 @@ class Match():
                 dat2['SkyCoord']).value
         elif MATCH_PREF=='z':
             return abs(dat1['z']-dat2['z'])
-        else:
-            raise ValueError("MATCH_PREF in get_dist_mt must be 'ang' or 'z'")
     def save_matches(self, cat1, cat2, config):
         """
         Saves the matching results

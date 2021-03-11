@@ -158,35 +158,6 @@ class Cosmology:
         """
         return self.eval_da_z1z2(0.0, z)
 
-    def eval_da_a1a2(self, a1, a2=1.):
-        r"""This is a function to calculate the angular diameter distance
-        between two scale factors.
-
-        .. math::
-            d_a(a1, a2) = \frac{c}{H_0}a2\int_{a2}^{a1}\frac{da'}{a'^2E(a')}
-
-        If only a1 is specified, this function returns the angular diameter
-        distance from a=1 to a1. If both a1 and a2 are specified, this function
-        returns the angular diameter distance between a1 and a2.
-
-        .. math::
-            d_a(a) = \frac{c}{H_0}a\int_{a}^{1}\frac{da'}{a'^2E(a')}
-
-        Parameters
-        ----------
-        a1 : float
-            Scale factor.
-        a2 : float, optional
-            Scale factor.
-        Returns
-        -------
-        float
-            Angular diameter distance in units :math:`M\!pc`
-        """
-        z1 = self._get_z_from_a(a2)
-        z2 = self._get_z_from_a(a1)
-        return self.eval_da_z1z2(z1, z2)
-
     def _get_a_from_z(self, z):
         """ Convert redshift to scale factor
         Parameters
@@ -262,20 +233,3 @@ class Cosmology:
             Distances in radians
         """
         return dist1/self.eval_da(redshift)
-
-    def eval_sigma_crit(self, z_len, z_src):
-        r"""Computes the critical surface density
-
-        Parameters
-        ----------
-        z_len : float
-            Lens redshift
-        z_src : array_like, float
-            Background source galaxy redshift(s)
-
-        Returns
-        -------
-        float
-            Cosmology-dependent critical surface density in units of :math:`M_\odot\ Mpc^{-2}`
-        """
-        raise NotImplementedError

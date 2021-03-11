@@ -77,25 +77,3 @@ class CCLCosmology(Cosmology):
         a1 = 1.0/(1.0+z1)
         a2 = 1.0/(1.0+z2)
         return np.vectorize(ccl.angular_diameter_distance)(self.be_cosmo, a1, a2)
-
-    def eval_sigma_crit(self, z_len, z_src):
-        a_len = self._get_a_from_z(z_len)
-        a_src = np.atleast_1d(self._get_a_from_z(z_src))
-        cte = ccl.physical_constants.CLIGHT**2/(4.0*np.pi*ccl.physical_constants.GNEWT*ccl.physical_constants.SOLAR_MASS)*ccl.physical_constants.MPC_TO_METER
-
-        z_cut = (a_src < a_len)
-        if np.isscalar(a_len):
-            a_len = np.repeat(a_len, len(a_src))
-
-        res = np.zeros_like(a_src)
-
-        if np.any(z_cut):
-            Ds = ccl.angular_diameter_distance(self.be_cosmo, a_src[z_cut])
-            Dl = ccl.angular_diameter_distance(self.be_cosmo, a_len[z_cut])
-            Dls = ccl.angular_diameter_distance(self.be_cosmo, a_len[z_cut], a_src[z_cut])
-
-            res[z_cut] = (cte*Ds/(Dl*Dls))*self.cor_factor
-
-        res[~z_cut] = np.Inf
-
-        return np.squeeze(res)

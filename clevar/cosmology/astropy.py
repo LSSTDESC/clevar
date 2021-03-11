@@ -63,17 +63,3 @@ class AstroPyCosmology(Cosmology):
 
     def eval_da_z1z2(self, z1, z2):
         return self.be_cosmo.angular_diameter_distance_z1z2(z1, z2).to_value(units.Mpc)
-
-    def eval_sigma_crit(self, z_len, z_src):
-        if np.any(np.array(z_src)<=z_len):
-            warnings.warn(f'Some source redshifts are lower than the cluster redshift. Returning Sigma_crit = np.inf for those galaxies.')
-        # Constants
-        clight_pc_s = const.CLIGHT_KMS.value*1000./const.PC_TO_METER.value
-        gnewt_pc3_msun_s2 = const.GNEWT.value*const.SOLAR_MASS.value/const.PC_TO_METER.value**3
-
-        d_l = self.eval_da_z1z2(0, z_len)
-        d_s = self.eval_da_z1z2(0, z_src)
-        d_ls = self.eval_da_z1z2(z_len, z_src)
-
-        beta_s = np.maximum(0., d_ls/d_s)
-        return clight_pc_s**2/(4.0*np.pi*gnewt_pc3_msun_s2)*1/d_l*np.divide(1., beta_s)*1.0e6
