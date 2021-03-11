@@ -59,6 +59,8 @@ class Catalog():
         Number of objects in the catalog
     id_dict: dict
         Dictionary of indicies given the cluster id
+    radius_unit: str, None
+        Unit of the radius column
     """
     def __init__(self, name, **kwargs):
         self.name = name
@@ -67,6 +69,7 @@ class Catalog():
         self.mt_input = None
         self.size = None
         self.id_dict = {}
+        self.radius_unit = None
         if len(kwargs)>0:
             self._add_values(**kwargs)
     def _add_values(self, **columns):
