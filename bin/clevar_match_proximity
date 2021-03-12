@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import clevar
-from clevar import yaml_funcs
+import yaml_funcs
 def do_match(mt, match_config):
-    cosmo = clevar.yaml_funcs.make_cosmology(match_config['cosmology'])
+    cosmo = yaml_funcs.make_cosmology(match_config['cosmology'])
 
     if match_config['type'] in ('cat1', 'cross'):
         mt.prep_cat_for_match(c1, cosmo=cosmo, **match_config['catalog1'])
@@ -38,8 +38,8 @@ def do_match(mt, match_config):
 if __name__=='__main__': 
     config = yaml_funcs.loadconf()
     print(config)
-    c1 = clevar.yaml_funcs.make_catalog(config['catalog1'])
-    c2 = clevar.yaml_funcs.make_catalog(config['catalog2'])
+    c1 = yaml_funcs.make_catalog(config['catalog1'])
+    c2 = yaml_funcs.make_catalog(config['catalog2'])
 
     mt = clevar.match.ProximityMatch()
 
