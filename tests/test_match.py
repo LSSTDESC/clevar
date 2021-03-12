@@ -93,10 +93,10 @@ def _test_proximity(Cosmology):
     # Error for unkown preference
     assert_raises(ValueError, mt.unique, c1, c2, 'unknown')
     # Check save and load matching
-    mt.save_matches(c1, c2, {'out_dir':'temp'})
+    mt.save_matches(c1, c2, out_dir='temp')
     c1_v2 = Catalog('Cat1', **input1)
     c2_v2 = Catalog('Cat2', **input2)
-    mt.load_matches(c1_v2, c2_v2, {'out_dir':'temp'})
+    mt.load_matches(c1_v2, c2_v2, out_dir='temp')
     for col in ('self', 'other', 'multi_self', 'multi_other'):
         assert_equal(c1.match[col], c1_v2.match[col])
         assert_equal(c2.match[col], c2_v2.match[col])

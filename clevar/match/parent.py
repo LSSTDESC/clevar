@@ -142,15 +142,15 @@ class Match():
         for col in ('multi_self', 'multi_other'):
             out[col] = [','.join(c) if c else '' for c in cat.match[col]]
         out.write(out_name, overwrite=True)
-    def load_matches(self, cat1, cat2, config):
+    def load_matches(self, cat1, cat2, out_dir):
         """
         Load matching results to catalogs
         """
-        mt1 = ClData.read(f'{config["out_dir"]}/match1.fits')
+        mt1 = ClData.read(f'{out_dir}/match1.fits')
         self._load_match(cat1, mt1)
         del mt1
         #return out1
-        mt2 = ClData.read(f'{config["out_dir"]}/match2.fits')
+        mt2 = ClData.read(f'{out_dir}/match2.fits')
         self._load_match(cat2, mt2)
         del mt2
     def _load_match(self, cat, mt):
