@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+import clevar
+from clevar import yaml_funcs
+
+if __name__=='__main__': 
+    config = yaml_funcs.loadconf()
+    print(config)
+    c1 = clevar.yaml_funcs.make_catalog(config['catalog1'])
+    c2 = clevar.yaml_funcs.make_catalog(config['catalog2'])
+    print(c1.data)
+
+    match_config = config['proximity_match']
+    mt = clevar.match.ProximityMatch()
+    cosmo = clevar.yaml_funcs.make_cosmology(match_config['cosmology'])
+
+    if match_config['type'] in ('cat1', 'cross'):
+        mt.prep_cat_for_match(c1, cosmo=cosmo, **match_config['catalog1'])
+    if match_config['type'] in ('cat2', 'cross'):
+        mt.prep_cat_for_match(c2, cosmo=cosmo, **match_config['catalog2'])
+
+    if match_config['type'] in ('cat1', 'cross'):
+        print("## Multiple match (catalog 1)")
+        if match_config['which_radius'] == 'cat1':
+            radius_selection = 'self'
+        elif match_config['which_radius'] == 'cat2':
+            radius_selection = 'other'
+        else:
+            radius_selection = match_config['which_radius']
+        mt.multiple(c1, c2, radius_selection)
+    if match_config['type'] in ('cat2', 'cross'):
+        print("## Multiple match (catalog 2)")
+        if match_config['which_radius'] == 'cat1':
+            radius_selection = 'other'
+        elif match_config['which_radius'] == 'cat2':
+            radius_selection = 'self'
+        else:
+            radius_selection = match_config['which_radius']
+        mt.multiple(c2, c1, radius_selection)
+
+    if match_config['type'] in ('cat1', 'cross'):
+        print("## Finding unique matches of catalog 1")
+        mt.unique(c1, c2, match_config['preference'])
+    if match_config['type'] in ('cat2', 'cross'):
+        print("## Finding unique matches of catalog 2")
+        mt.unique(c2, c1, match_config['preference'])
+
+    mt.save_matches(c1, c2, out_dir=match_config['outpath'])
