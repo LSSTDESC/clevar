@@ -38,15 +38,15 @@ class Match():
             Preference to set best match
         """
         i_vals = range(cat1.size)
-        if preference=='mproxy':
+        if preference=='more_massive':
             set_unique = lambda cat1, i, cat2: self._match_mpref(cat1, i, cat2)
             i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1.data['mass'])]
-        elif preference=='ang':
-            set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'ang')
-        elif preference=='z':
-            set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'z')
+        elif preference=='angular_proximity':
+            set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'angular_proximity')
+        elif preference=='redshift_proximity':
+            set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'redshift_proximity')
         else:
-            raise ValueError("preference must be 'ang' or 'z'")
+            raise ValueError("preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'")
         for i in i_vals:
             set_unique(cat1, i, cat2)
         print(f'* {len(cat1.match[cat1.match["self"]!=None]):,}/{cat1.size:,} objects matched.')
@@ -118,19 +118,19 @@ class Match():
         bool
             If there was a match
         """
-        if MATCH_PREF=='ang':
+        if MATCH_PREF=='angular_proximity':
             return dat1['SkyCoord'].separation(
                 dat2['SkyCoord']).value
-        elif MATCH_PREF=='z':
+        elif MATCH_PREF=='redshift_proximity':
             return abs(dat1['z']-dat2['z'])
-    def save_matches(self, cat1, cat2, config):
+    def save_matches(self, cat1, cat2, out_dir):
         """
         Saves the matching results
         """
-        if not os.path.isdir(config["out_dir"]):
-            os.system(f'mkdir {config["out_dir"]}')
-        self._save_match(cat1, f'{config["out_dir"]}/match1.fits')
-        self._save_match(cat2, f'{config["out_dir"]}/match2.fits')
+        if not os.path.isdir(out_dir):
+            os.system(f'mkdir {out_dir}')
+        self._save_match(cat1, f'{out_dir}/match1.fits')
+        self._save_match(cat2, f'{out_dir}/match2.fits')
     def _save_match(self, cat, out_name):
         """
         Saves the matching results of one catalog

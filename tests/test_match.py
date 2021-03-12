@@ -60,8 +60,8 @@ def _test_proximity(Cosmology):
     assert_equal(c2.match['multi_self'], mmt[:-1])
     assert_equal(c2.match['multi_other'], mmt[:-1])
     # Check unique with ang preference
-    mt.unique(c1, c2, 'ang')
-    mt.unique(c2, c1, 'ang')
+    mt.unique(c1, c2, 'angular_proximity')
+    mt.unique(c2, c1, 'angular_proximity')
     smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
     assert_equal(c1.match['self'], smt)
     assert_equal(c1.match['other'], smt)
@@ -71,8 +71,8 @@ def _test_proximity(Cosmology):
     for col in ('self', 'other'):
         c1.match[col] = None
         c2.match[col] = None
-    mt.unique(c1, c2, 'mproxy')
-    mt.unique(c2, c1, 'mproxy')
+    mt.unique(c1, c2, 'more_massive')
+    mt.unique(c2, c1, 'more_massive')
     smt = ['CL2', 'CL1', 'CL0', 'CL3', None]
     assert_equal(c1.match['self'], smt)
     assert_equal(c1.match['other'], smt)
@@ -83,8 +83,8 @@ def _test_proximity(Cosmology):
         c1.match[col] = None
         c2.match[col] = None
     c2.match['other'][0] = 'CL3' # to force a replacement
-    mt.unique(c1, c2, 'z')
-    mt.unique(c2, c1, 'z')
+    mt.unique(c1, c2, 'redshift_proximity')
+    mt.unique(c2, c1, 'redshift_proximity')
     smt = ['CL1', 'CL0', 'CL2', 'CL3', None]
     assert_equal(c1.match['self'], smt)
     assert_equal(c1.match['other'], smt)
