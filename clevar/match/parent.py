@@ -83,7 +83,7 @@ class Match():
         cat2: clevar.Catalog
             Target catalog
         MATCH_PREF: str
-            Match preference (ang dist, redshift dist)
+            Matching preference, can be 'angular_proximity' or 'redshift_proximity'
         """
         inds2 = cat2.ids2inds(cat1.match['multi_self'][i])
         dists = self._get_dist_mt(cat1.data[i], cat2.data[inds2], MATCH_PREF)
@@ -111,7 +111,7 @@ class Match():
         dat2: clevar.ClData
             Data of target catalog
         MATCH_PREF: str
-            Type of distance, can be ang or z.
+            Matching preference, can be 'angular_proximity' or 'redshift_proximity'
 
         Return
         ------

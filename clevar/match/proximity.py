@@ -16,10 +16,10 @@ class ProximityMatch(Match):
 
         Parameters
         ----------
-        cat1, cat2: ClusterObject
-            Catalogs to be matched
-        nradius: float
-            Multiplier of the radius to be used
+        cat1: clevar.Catalog
+            Base catalog
+        cat2: clevar.Catalog
+            Target catalog
         radius_selection: str (optional)
             Case of radius to be used, can be: max, min, self, other.
         """
