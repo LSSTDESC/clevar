@@ -1,4 +1,9 @@
 outpath: temp2
+
+cosmology:
+    backend: Astropy
+    parameters:
+
 catalog1:
     file: cat1.fits
     name:
@@ -22,9 +27,6 @@ catalog2:
     radius_unit: ARCMIN
 
 proximity_match:
-    cosmology:
-        backend: Astropy
-        parameters:
     which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
     type: cross # options are cross, cat1, cat2
     preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
@@ -36,9 +38,6 @@ proximity_match:
         match_radius: .01 arcsec
             
 proximity_match_2:
-    cosmology:
-        backend: Astropy
-        parameters:
     which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
     type: cross # options are cross, cat1, cat2
     preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
