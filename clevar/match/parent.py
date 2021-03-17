@@ -143,17 +143,37 @@ class Match():
                 dat2['SkyCoord']).value
         elif MATCH_PREF=='redshift_proximity':
             return abs(dat1['z']-dat2['z'])
-    def save_matches(self, cat1, cat2, out_dir):
+    def save_matches(self, cat1, cat2, out_dir, overwrite=False):
         """
         Saves the matching results
+
+        Parameters
+        ----------
+        cat1: clevar.Catalog
+            Catalog 1
+        cat2: clevar.Catalog
+            Catalog 2
+        out_dir: str
+            Path of directory to save output
+        overwrite: bool
+            Overwrite saved files
         """
         if not os.path.isdir(out_dir):
             os.system(f'mkdir {out_dir}')
-        self._save_match(cat1, f'{out_dir}/match1.fits')
-        self._save_match(cat2, f'{out_dir}/match2.fits')
-    def _save_match(self, cat, out_name):
+        self._save_match(cat1, f'{out_dir}/match1.fits', overwrite=overwrite)
+        self._save_match(cat2, f'{out_dir}/match2.fits', overwrite=overwrite)
+    def _save_match(self, cat, out_name, overwrite=False):
         """
         Saves the matching results of one catalog
+
+        Parameters
+        ----------
+        cat1: clevar.Catalog
+            Catalog
+        out_dir: str
+            Path of directory to save output
+        overwrite: bool
+            Overwrite saved files
         """
         out = ClData()
         out['id'] = cat.data['id']
@@ -161,7 +181,7 @@ class Match():
             out[col] = [c if c else '' for c in cat.match[col]]
         for col in ('multi_self', 'multi_other'):
             out[col] = [','.join(c) if c else '' for c in cat.match[col]]
-        out.write(out_name, overwrite=True)
+        out.write(out_name, overwrite=overwrite)
     def load_matches(self, cat1, cat2, out_dir):
         """
         Load matching results to catalogs
