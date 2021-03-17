@@ -63,8 +63,24 @@ def get_dicts_diff(dict1, dict2, keys=None,
         print(f'  {"-"*max_sizes[0]}-|-{"-"*max_sizes[1]}-|-{"-"*max_sizes[2]}')
         for l in diff_lines[1:]:
             print(fmts%tuple(l))
-    return diff_lines
-def loadconf(consistency_configs=[]):
+    return diff_lines[1:]
+def loadconf(consistency_configs=[], fail_action='ask'):
+    """
+    Load configuration yaml file, creates output directory and config.log.yml
+
+    Parameters
+    ----------
+    consistency_configs: list
+        List of configurations to be checked with config.log.yml
+    fail_action: str
+        Action to do when there is inconsistency in configs.
+        Options are 'ask', 'overwrite' and 'quit'
+
+    Returns
+    -------
+    dict
+        Configuration for clevar
+    """
     print("\n## Loading config")
     if len(sys.argv)<2:
         raise ValueError('Config file must be provided')
@@ -83,17 +99,30 @@ def loadconf(consistency_configs=[]):
         diff_configs = get_dicts_diff(config, check_config, keys=consistency_configs,
                                         header=['Name', 'New', 'Saved'],
                                         msg='\nConfigurations differs from saved config:\n')
-        if len(diff_configs)>1:
-            action = input('\nOverwrite(o) and proceed or Quit(q)?\n')
+        if len(diff_configs)>0:
+            action = {'ask': input('\nOverwrite(o) and proceed or Quit(q)?\n'),
+                      'orverwrite': 'o', 'quit': 'q'}[fail_action]
             while action not in ('o', 'q'):
                 action = input(f'Option {action} not valid. Please choose: Overwrite (o) or Cancel(c)\n')
             if action=='o':
                 os.system(f'cp {config_file} {check_file}')
             elif action=='q':
                 exit()
-
     return config
 def make_catalog(cat_config):
+    """
+    Make a clevar.Catalog object based on config
+
+    Parameters
+    ----------
+    cat_config: dict
+        Catalog configuration
+
+    Returns
+    -------
+    clevar.Catalog
+        Catalog based on input config
+    """
     c0 = clevar.ClData.read(cat_config['file'])
     cat = clevar.Catalog(cat_config['name'], 
         **{k:c0[v] for k, v in cat_config['columns'].items()})
