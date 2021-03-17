@@ -1,6 +1,8 @@
 import os, sys
 import yaml
+import argparse
 import numpy as np
+
 import clevar
 from clevar.utils import veclen
 def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
@@ -80,12 +82,14 @@ def get_input_loop(options_msg, actions):
         action = input(f'Option {action} not valid. Please choose: {options_msg}\n')
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
-def loadconf(consistency_configs=[], fail_action='ask'):
+def loadconf(config_file, consistency_configs=[], fail_action='ask'):
     """
-    Load configuration yaml file, creates output directory and config.log.yml
+    Load configuration from yaml file, creates output directory and config.log.yml
 
     Parameters
     ----------
+    config_file: str
+        Yaml configuration file
     consistency_configs: list
         List of configurations to be checked with config.log.yml
     fail_action: str
@@ -98,11 +102,8 @@ def loadconf(consistency_configs=[], fail_action='ask'):
         Configuration for clevar
     """
     print("\n## Loading config")
-    if len(sys.argv)<2:
-        raise ValueError('Config file must be provided')
-    elif not os.path.isfile(sys.argv[1]):
-        raise ValueError(f'Config file "{sys.argv[1]}" not found')
-    config_file = sys.argv[1]
+    if not os.path.isfile(config_file):
+        raise ValueError(f'Config file "{config_file}" not found')
     with open(config_file) as file:
         config = yaml.load(file, Loader=yaml.FullLoader)
     check_file = f'{config["outpath"]}/config.log.yml'
