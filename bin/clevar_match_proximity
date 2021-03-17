@@ -4,16 +4,16 @@ import warnings
 
 import clevar
 
-import yaml_funcs
+import helper_funcs
 if __name__=='__main__': 
     # Create clevar objects from yml config
-    config = yaml_funcs.loadconf(consistency_configs=['catalog1', 'catalog2','proximity_match'])
+    config = helper_funcs.loadconf(consistency_configs=['catalog1', 'catalog2','proximity_match'])
     print("\n# Reading Catalog 1")
-    c1 = yaml_funcs.make_catalog(config['catalog1'])
+    c1 = helper_funcs.make_catalog(config['catalog1'])
     print("\n# Reading Catalog 2")
-    c2 = yaml_funcs.make_catalog(config['catalog2'])
+    c2 = helper_funcs.make_catalog(config['catalog2'])
     print("\n# Creating Cosmology")
-    cosmo = yaml_funcs.make_cosmology(config['cosmology'])
+    cosmo = helper_funcs.make_cosmology(config['cosmology'])
     # Run matching
     mt = clevar.match.ProximityMatch()
     for match_step in sorted([c for c in config.keys()
@@ -21,7 +21,7 @@ if __name__=='__main__':
         prt_msg = '# Start matching' if match_step=='proximity_match'\
             else f'# Run step {match_step.replace("proximity_match_", "")}'
         print(f'\n{"#"*20}\n{prt_msg}\n{"#"*20}')
-        cosmo_ = yaml_funcs.make_cosmology(config[match_step]['cosmology']) \
+        cosmo_ = helper_funcs.make_cosmology(config[match_step]['cosmology']) \
                     if 'cosmology' in config[match_step] else cosmo
         if cosmo_!=cosmo:
             warn_msg = ('replacing default cosmology in matching with:\n    '+
@@ -32,8 +32,8 @@ if __name__=='__main__':
     check_actions = {'o': (lambda : None, [], {}), 'q': (exit, [], {}),}
     if os.path.isfile(out1):
         print(f"\n*** File '{out1}' already exist! ***")
-        yaml_funcs.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
+        helper_funcs.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
     if os.path.isfile(out2):
         print(f"\n*** File '{out2}' already exist! ***")
-        yaml_funcs.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
+        helper_funcs.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
     mt.save_matches(c1, c2, out_dir=config['outpath'], overwrite=True)
