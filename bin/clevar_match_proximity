@@ -1,7 +1,10 @@
 #!/usr/bin/env python
-import clevar
-import yaml_funcs
+import os
 import warnings
+
+import clevar
+
+import yaml_funcs
 if __name__=='__main__': 
     # Create clevar objects from yml config
     config = yaml_funcs.loadconf(consistency_configs=['catalog1', 'catalog2','proximity_match'])
@@ -25,4 +28,12 @@ if __name__=='__main__':
                     '\n    '.join([f'{k}: {v}' for k, v in config[match_step]['cosmology'].items()]))
             warnings.warn(warn_msg)
         mt.match_from_config(c1, c2, config[match_step], cosmo=cosmo_)
-    mt.save_matches(c1, c2, out_dir=config['outpath'])
+    out1, out2 = f'{config["outpath"]}/match1.fits', f'{config["outpath"]}/match2.fits'
+    check_actions = {'o': (lambda : None, [], {}), 'q': (exit, [], {}),}
+    if os.path.isfile(out1):
+        print(f"\n*** File '{out1}' already exist! ***")
+        yaml_funcs.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
+    if os.path.isfile(out2):
+        print(f"\n*** File '{out2}' already exist! ***")
+        yaml_funcs.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
+    mt.save_matches(c1, c2, out_dir=config['outpath'], overwrite=True)

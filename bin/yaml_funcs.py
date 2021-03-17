@@ -64,6 +64,22 @@ def get_dicts_diff(dict1, dict2, keys=None,
         for l in diff_lines[1:]:
             print(fmts%tuple(l))
     return diff_lines[1:]
+def get_input_loop(options_msg, actions):
+    """
+    Get input from fixed values
+
+    Parameters
+    ----------
+    options_msg: str
+        Description of the possible input options
+    actions: dict
+        Dictionary with the actions to be made. Values must be (function, args, kwargs)
+    """
+    action = input(f'\n{options_msg}\n')
+    while action not in actions:
+        action = input(f'Option {action} not valid. Please choose: {options_msg}\n')
+    f, args, kwargs = actions[action]
+    return f(*args, **kwargs)
 def loadconf(consistency_configs=[], fail_action='ask'):
     """
     Load configuration yaml file, creates output directory and config.log.yml
@@ -100,14 +116,16 @@ def loadconf(consistency_configs=[], fail_action='ask'):
                                         header=['Name', 'New', 'Saved'],
                                         msg='\nConfigurations differs from saved config:\n')
         if len(diff_configs)>0:
-            action = {'ask': input('\nOverwrite(o) and proceed or Quit(q)?\n'),
-                      'orverwrite': 'o', 'quit': 'q'}[fail_action]
-            while action not in ('o', 'q'):
-                action = input(f'Option {action} not valid. Please choose: Overwrite (o) or Cancel(c)\n')
-            if action=='o':
-                os.system(f'cp {config_file} {check_file}')
-            elif action=='q':
-                exit()
+            actions_loop = {
+                'o': (os.system, [f'cp {config_file} {check_file}'], {}),
+                'q': (exit, [], {}),
+                }
+            f, args, kwargs = {
+                'ask': (get_input_loop, ['Overwrite(o) and proceed or Quit(q)?', actions_loop], {}),
+                'orverwrite': actions_loop['o'],
+                'quit': actions_loop['q'],
+            }[fail_action]
+            f(*args, **kwargs)
     return config
 def make_catalog(cat_config):
     """
