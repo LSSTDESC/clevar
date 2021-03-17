@@ -5,7 +5,7 @@ cosmology:
     parameters:
 
 catalog1:
-    file: 'cat1.fits'
+    file: cat1.fits
     name:
     columns:
         ra: RA
@@ -16,7 +16,7 @@ catalog1:
     radius_unit: ARCMIN
 
 catalog2:
-    file: 'cat2.fits'
+    file: cat2.fits
     name:
     columns:
         ra: RA
