@@ -50,6 +50,26 @@ class Match():
         for i in i_vals:
             set_unique(cat1, i, cat2)
         print(f'* {len(cat1.match[cat1.match["self"]!=None]):,}/{cat1.size:,} objects matched.')
+    def match_from_config(self, cat1, cat2, match_config, cosmo=None):
+        """
+        Make matching of catalogs based on a configuration dictionary
+
+        Parameters
+        ----------
+        cat1: clevar.Catalog
+            Catalog 1
+        cat2: clevar.Catalog
+            Catalog 2
+        match_config: dict
+            Dictionary with the matching configuration.
+        cosmo: clevar.Cosmology object
+            Cosmology object for when radius has physical units
+
+        Note
+        ----
+            Not implemented in parent class
+        """
+        raise NotImplementedError
     def _match_mpref(self, cat1, i, cat2):
         """
         Make the unique match by mass preference

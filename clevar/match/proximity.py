@@ -129,7 +129,7 @@ class ProximityMatch(Match):
                                 cosmo=cosmo)
     def _rescale_z(self, z, zlim, n):
         """Rescale zmin/zmax by a factor n
-        
+
         Parameters
         ----------
         z: float, array
@@ -175,3 +175,50 @@ class ProximityMatch(Match):
             f1 = (radius1 < radius2)
             f2 = (radius1 >= radius2)
         return f1 * radius1 + f2 * radius2
+    def match_from_config(self, cat1, cat2, match_config, cosmo=None):
+        """
+        Make matching of catalogs based on a configuration dictionary
+
+        Parameters
+        ----------
+        cat1: clevar.Catalog
+            Catalog 1
+        cat2: clevar.Catalog
+            Catalog 2
+        match_config: dict
+            Dictionary with the matching configuration.
+        cosmo: clevar.Cosmology object
+            Cosmology object for when radius has physical units
+        """
+        if match_config['type'] in ('cat1', 'cross'):
+            print("\n## Catalog 1")
+            self.prep_cat_for_match(cat1, cosmo=cosmo, **match_config['catalog1'])
+        if match_config['type'] in ('cat2', 'cross'):
+            print("\n## Catalog 2")
+            self.prep_cat_for_match(cat2, cosmo=cosmo, **match_config['catalog2'])
+
+        if match_config['type'] in ('cat1', 'cross'):
+            print("\n## Multiple match (catalog 1)")
+            if match_config['which_radius'] == 'cat1':
+                radius_selection = 'self'
+            elif match_config['which_radius'] == 'cat2':
+                radius_selection = 'other'
+            else:
+                radius_selection = match_config['which_radius']
+            self.multiple(cat1, cat2, radius_selection)
+        if match_config['type'] in ('cat2', 'cross'):
+            print("\n## Multiple match (catalog 2)")
+            if match_config['which_radius'] == 'cat1':
+                radius_selection = 'other'
+            elif match_config['which_radius'] == 'cat2':
+                radius_selection = 'self'
+            else:
+                radius_selection = match_config['which_radius']
+            self.multiple(cat2, cat1, radius_selection)
+
+        if match_config['type'] in ('cat1', 'cross'):
+            print("\n## Finding unique matches of catalog 1")
+            self.unique(cat1, cat2, match_config['preference'])
+        if match_config['type'] in ('cat2', 'cross'):
+            print("\n## Finding unique matches of catalog 2")
+            self.unique(cat2, cat1, match_config['preference'])
