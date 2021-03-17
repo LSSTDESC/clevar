@@ -7,7 +7,6 @@ from numpy.testing import assert_raises, assert_allclose, assert_equal
 from clevar.catalog import Catalog
 from clevar.match.parent import Match
 from clevar.match import ProximityMatch
-from clevar.cosmology import AstroPyCosmology, CCLCosmology
 
 def test_parent():
     mt = Match()
@@ -28,10 +27,7 @@ def _test_mt_results(mt, c1, c2, multiple_res1, unique_res1,
     assert_equal(c2.match['self'], unique_res2)
     assert_equal(c2.match['other'], unique_res2)
 
-def test_proximity():
-    _test_proximity(AstroPyCosmology)
-    _test_proximity(CCLCosmology)
-def _test_proximity(Cosmology):
+def test_data():
     input1 = {
         'id': [f'CL{i}' for i in range(5)],
         'ra': [0., .0001, 0.00011, 25, 20],
@@ -42,13 +38,15 @@ def _test_proximity(Cosmology):
     input2 = {k:v[:4] for k, v in input1.items()}
     input2['z'][:2] = [.3, .2]
     input2['mass'][:3] = input2['mass'][:3][::-1]
-
+    return input1, input2
+def test_proximity(CosmoClass):
+    input1, input2 = test_data()
     c1 = Catalog('Cat1', **input1)
     c2 = Catalog('Cat2', **input2)
     print(c1.data)
     print(c2.data)
     # init match
-    cosmo =  AstroPyCosmology()
+    cosmo =  CosmoClass()
     mt = ProximityMatch()
     mt_config1 = {'delta_z':.2,
                 'match_radius': '1 mpc',
@@ -144,27 +142,14 @@ def _test_proximity(Cosmology):
     mt.multiple(c1, c2, radius_selection='self')
     mt.multiple(c1, c2, radius_selection='other')
     mt.multiple(c1, c2, radius_selection='min')
-def test_proximity_cfg():
-    _test_proximity_cfg(AstroPyCosmology)
-    _test_proximity_cfg(CCLCosmology)
-def _test_proximity_cfg(Cosmology):
-    input1 = {
-        'id': [f'CL{i}' for i in range(5)],
-        'ra': [0., .0001, 0.00011, 25, 20],
-        'dec': [0., 0, 0, 0, 0],
-        'z': [.2, .3, .25, .4, .35],
-        'mass': [10**13.5, 10**13.4, 10**13.3, 10**13.8, 10**14],
-    }
-    input2 = {k:v[:4] for k, v in input1.items()}
-    input2['z'][:2] = [.3, .2]
-    input2['mass'][:3] = input2['mass'][:3][::-1]
-
+def test_proximity_cfg(CosmoClass):
+    input1, input2 = test_data()
     c1 = Catalog('Cat1', **input1)
     c2 = Catalog('Cat2', **input2)
     print(c1.data)
     print(c2.data)
     # init match
-    cosmo =  Cosmology()
+    cosmo =  CosmoClass()
     mt = ProximityMatch()
     ### test 0 ###
     mt_config = {
