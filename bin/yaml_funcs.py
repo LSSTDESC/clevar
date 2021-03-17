@@ -4,6 +4,18 @@ import numpy as np
 import clevar
 from clevar.utils import veclen
 def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
+    """
+    Adds the differences between dictionaries to a list
+
+    Parameters
+    ----------
+    dict1, dict2: dict
+        Dictionaies to be compared
+    pref: str
+        Prefix to be added in output
+    diff_lines: list
+        List where differences will be appended to
+    """
     for k in dict1:
         if k not in dict2:
             diff_lines.append((f'{pref}[{k}]', 'present', 'missing'))
@@ -17,6 +29,26 @@ def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
 def get_dicts_diff(dict1, dict2, keys=None,
         header=['Name', 'dict1', 'dict2'],
         msg=''):
+    """
+    Get all the differences between dictionaries, accounting for nested dictionaries.
+    If there are differences, a table with the information is printed.
+
+    Parameters
+    ----------
+    dict1, dict2: dict
+        Dictionaies to be compared
+    keys: list, None
+        List of keys to be compared. If None, all keys are compared
+    header: str
+        Header for differences table
+    msg: str
+        Message printed before the differences
+
+    Returns
+    -------
+    diff_lines:
+        List of dictionaries differences
+    """
     diff_lines = [header]
     if keys is None:
         keys = set(list(dict1.keys())+list(dict2.keys()))
@@ -69,7 +101,19 @@ def make_catalog(cat_config):
                         else None
     return cat
 def make_cosmology(cosmo_config):
-    print("\n# Creating cosmology")
+    """
+    Make a cosmology object based on config
+
+    Parameters
+    ----------
+    cosmo_config: dict
+        Cosmology configuration
+
+    Returns
+    -------
+    clevar.Cosmology
+        Cosmology based on the input config
+    """
     if cosmo_config['backend'].lower()=='astropy':
         CosmoClass = clevar.cosmology.AstroPyCosmology
     elif cosmo_config['backend'].lower()=='astropy':
