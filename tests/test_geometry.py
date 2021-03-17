@@ -3,22 +3,17 @@
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose
 
-from clevar.cosmology import AstroPyCosmology, CCLCosmology
 from clevar.geometry import convert_units
-
 
 TOLERANCE = {'rtol': 1.0e-6, 'atol': 0}
 
-def test_convert_units():
-    _test_convert_units(AstroPyCosmology)
-    _test_convert_units(CCLCosmology)
-def _test_convert_units(Cosmology):
+def test_convert_units(CosmoClass):
     """ Test the wrapper function to convert units. Corner cases should be tested in the
     individual functions. This function should test one case for all supported conversions
     and the error handling.
     """
     # Make an astropy cosmology object for testing
-    cosmo = Cosmology(H0=70.0, Omega_dm0=0.3-0.045, Omega_b0=0.045)
+    cosmo = CosmoClass(H0=70.0, Omega_dm0=0.3-0.045, Omega_b0=0.045)
 
     # Test that each unit is supported
     convert_units(1.0, 'radians', 'degrees')

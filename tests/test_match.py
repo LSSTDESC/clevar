@@ -7,17 +7,27 @@ from numpy.testing import assert_raises, assert_allclose, assert_equal
 from clevar.catalog import Catalog
 from clevar.match.parent import Match
 from clevar.match import ProximityMatch
-from clevar.cosmology import AstroPyCosmology, CCLCosmology
 
 def test_parent():
     mt = Match()
     assert_raises(NotImplementedError, mt._prep_for_match, None)
     assert_raises(NotImplementedError, mt.multiple, None, None)
+    assert_raises(NotImplementedError, mt.match_from_config, None, None, None, None)
 
-def test_proximity():
-    _test_proximity(AstroPyCosmology)
-    _test_proximity(CCLCosmology)
-def _test_proximity(Cosmology):
+def _test_mt_results(mt, c1, c2, multiple_res1, unique_res1,
+                     multiple_res2, unique_res2):
+    # Check multiple match
+    assert_equal(c1.match['multi_self'], multiple_res1)
+    assert_equal(c1.match['multi_other'], multiple_res1)
+    assert_equal(c2.match['multi_self'], multiple_res2)
+    assert_equal(c2.match['multi_other'], multiple_res2)
+    # Check unique with ang preference
+    assert_equal(c1.match['self'], unique_res1)
+    assert_equal(c1.match['other'], unique_res1)
+    assert_equal(c2.match['self'], unique_res2)
+    assert_equal(c2.match['other'], unique_res2)
+
+def test_data():
     input1 = {
         'id': [f'CL{i}' for i in range(5)],
         'ra': [0., .0001, 0.00011, 25, 20],
@@ -28,13 +38,15 @@ def _test_proximity(Cosmology):
     input2 = {k:v[:4] for k, v in input1.items()}
     input2['z'][:2] = [.3, .2]
     input2['mass'][:3] = input2['mass'][:3][::-1]
-
+    return input1, input2
+def test_proximity(CosmoClass):
+    input1, input2 = test_data()
     c1 = Catalog('Cat1', **input1)
     c2 = Catalog('Cat2', **input2)
     print(c1.data)
     print(c2.data)
     # init match
-    cosmo =  AstroPyCosmology()
+    cosmo =  CosmoClass()
     mt = ProximityMatch()
     mt_config1 = {'delta_z':.2,
                 'match_radius': '1 mpc',
@@ -46,8 +58,6 @@ def _test_proximity(Cosmology):
     # Check prep cat
     assert_allclose(c2.mt_input['ang'], np.ones(c2.size)/3600.)
     # Check multiple match
-    mt.multiple(c1, c2)
-    mt.multiple(c2, c1)
     mmt = [
         ['CL0', 'CL1', 'CL2'],
         ['CL0', 'CL1', 'CL2'],
@@ -55,48 +65,39 @@ def _test_proximity(Cosmology):
         ['CL3'],
         [],
         ]
-    assert_equal(c1.match['multi_self'], mmt)
-    assert_equal(c1.match['multi_other'], mmt)
-    assert_equal(c2.match['multi_self'], mmt[:-1])
-    assert_equal(c2.match['multi_other'], mmt[:-1])
-    # Check unique with ang preference
-    mt.unique(c1, c2, 'ang')
-    mt.unique(c2, c1, 'ang')
     smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
-    assert_equal(c1.match['self'], smt)
-    assert_equal(c1.match['other'], smt)
-    assert_equal(c2.match['self'], smt[:-1])
-    assert_equal(c2.match['other'], smt[:-1])
+    mt.multiple(c1, c2)
+    mt.multiple(c2, c1)
+    mt.unique(c1, c2, 'angular_proximity')
+    mt.unique(c2, c1, 'angular_proximity')
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
     # Check unique with mass preference
     for col in ('self', 'other'):
         c1.match[col] = None
         c2.match[col] = None
-    mt.unique(c1, c2, 'mproxy')
-    mt.unique(c2, c1, 'mproxy')
+    mt.unique(c1, c2, 'more_massive')
+    mt.unique(c2, c1, 'more_massive')
     smt = ['CL2', 'CL1', 'CL0', 'CL3', None]
-    assert_equal(c1.match['self'], smt)
-    assert_equal(c1.match['other'], smt)
-    assert_equal(c2.match['self'], smt[:-1])
-    assert_equal(c2.match['other'], smt[:-1])
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
     # Check unique with z preference
     for col in ('self', 'other'):
         c1.match[col] = None
         c2.match[col] = None
     c2.match['other'][0] = 'CL3' # to force a replacement
-    mt.unique(c1, c2, 'z')
-    mt.unique(c2, c1, 'z')
+    mt.unique(c1, c2, 'redshift_proximity')
+    mt.unique(c2, c1, 'redshift_proximity')
     smt = ['CL1', 'CL0', 'CL2', 'CL3', None]
-    assert_equal(c1.match['self'], smt)
-    assert_equal(c1.match['other'], smt)
-    assert_equal(c2.match['self'], smt[:-1])
-    assert_equal(c2.match['other'], smt[:-1])
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
     # Error for unkown preference
     assert_raises(ValueError, mt.unique, c1, c2, 'unknown')
     # Check save and load matching
-    mt.save_matches(c1, c2, {'out_dir':'temp'})
+    mt.save_matches(c1, c2, out_dir='temp')
     c1_v2 = Catalog('Cat1', **input1)
     c2_v2 = Catalog('Cat2', **input2)
-    mt.load_matches(c1_v2, c2_v2, {'out_dir':'temp'})
+    mt.load_matches(c1_v2, c2_v2, out_dir='temp')
     for col in ('self', 'other', 'multi_self', 'multi_other'):
         assert_equal(c1.match[col], c1_v2.match[col])
         assert_equal(c2.match[col], c2_v2.match[col])
@@ -141,3 +142,54 @@ def _test_proximity(Cosmology):
     mt.multiple(c1, c2, radius_selection='self')
     mt.multiple(c1, c2, radius_selection='other')
     mt.multiple(c1, c2, radius_selection='min')
+def test_proximity_cfg(CosmoClass):
+    input1, input2 = test_data()
+    c1 = Catalog('Cat1', **input1)
+    c2 = Catalog('Cat2', **input2)
+    print(c1.data)
+    print(c2.data)
+    # init match
+    cosmo =  CosmoClass()
+    mt = ProximityMatch()
+    ### test 0 ###
+    mt_config = {
+        'which_radius': 'max',
+        'type': 'cross',
+        'preference': 'angular_proximity',
+        'catalog1': {
+            'delta_z':.2,
+            'match_radius': '1 mpc'},
+        'catalog2': {
+            'delta_z':.2,
+            'match_radius': '1 arcsec'},
+    }
+    # Check multiple match
+    mmt = [
+        ['CL0', 'CL1', 'CL2'],
+        ['CL0', 'CL1', 'CL2'],
+        ['CL0', 'CL1', 'CL2'],
+        ['CL3'],
+        [],
+        ]
+    smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
+    ### test 0 ###
+    mt.match_from_config(c1, c2, mt_config, cosmo=cosmo)
+        # Check prep cat
+    assert_allclose(c2.mt_input['ang'], np.ones(c2.size)/3600.)
+        # Check match
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
+    ### test 1 ###
+    mt_config['which_radius'] = 'cat1'
+    c1._init_match_vals()
+    c2._init_match_vals()
+    mt.match_from_config(c1, c2, mt_config, cosmo=cosmo)
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
+    ### test 2 ###
+    mt_config['which_radius'] = 'cat2'
+    c1._init_match_vals()
+    c2._init_match_vals()
+    mt.match_from_config(c1, c2, mt_config, cosmo=cosmo)
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
