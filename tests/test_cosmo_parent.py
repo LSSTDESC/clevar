@@ -2,7 +2,6 @@
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 from clevar.cosmology.parent_class import Cosmology
-from clevar.cosmology import AstroPyCosmology, CCLCosmology
 
 def test_class():
     """ Unit tests abstract class and unimplemented methdods """
@@ -22,10 +21,7 @@ def test_class():
 TOLERANCE = {'rtol': 1.0e-15}
 
 
-def test_z_and_a():
-    _test_z_and_a(AstroPyCosmology)
-    _test_z_and_a(CCLCosmology)
-def _test_z_and_a(CosmoClass):
+def test_z_and_a(CosmoClass):
     """ Unit tests abstract class z and a methdods """
 
     cosmo = CosmoClass()
@@ -80,10 +76,7 @@ def _test_z_and_a(CosmoClass):
     assert_allclose(cosmo._get_z_from_a(cosmo._get_a_from_z(testval)), testval, **TOLERANCE)
 
 
-def test_cosmo_basic(cosmo_init):
-    _test_cosmo_basic(AstroPyCosmology, cosmo_init)
-    _test_cosmo_basic(CCLCosmology, cosmo_init)
-def _test_cosmo_basic(CosmoClass, cosmo_init):
+def test_cosmo_basic(CosmoClass, cosmo_init):
     """ Unit tests abstract class z and a methdods """
     cosmo = CosmoClass(**cosmo_init)
     assert_raises(NotImplementedError, cosmo.__setitem__, 'h', 0.5)
@@ -120,10 +113,7 @@ def _rad2mpc_helper(dist, redshift, cosmo, do_inverse):
         assert_allclose(cosmo.rad2mpc(dist, redshift), dist*d_a, **TOLERANCE)
 
 
-def test_convert_rad_to_mpc():
-    _test_convert_rad_to_mpc(AstroPyCosmology)
-    _test_convert_rad_to_mpc(CCLCosmology)
-def _test_convert_rad_to_mpc(CosmoClass):
+def test_convert_rad_to_mpc(CosmoClass):
     """ Test conversion between physical and angular units and vice-versa. """
     # Set some default values if I want them
     redshift = 0.25
