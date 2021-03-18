@@ -6,6 +6,8 @@ from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 
+from .utils import veclen
+
 class ClData(APtable):
     """
     ClData: A data object. It behaves as an astropy table but case independent.
@@ -41,6 +43,14 @@ class ClData(APtable):
         out = APtable.__getitem__(self, item)
         return out
 
+_matching_mask_funcs = {
+    'cross': lambda match: match['cross']!=None,
+    'self': lambda match: match['self']!=None,
+    'other': lambda match: match['other']!=None,
+    'multi_self': lambda match: veclen(match['multi_self'])>0,
+    'multi_other': lambda match: veclen(match['multi_other'])>0,
+    'multi_join': lambda match: (veclen(match['multi_self'])>0)+(veclen(match['multi_other'])>0),
+}
 class Catalog():
     """
     Object to handle catalogs
@@ -126,3 +136,7 @@ class Catalog():
         self.match['cross'] = None
         cross_mask = self.match['self']==self.match['other']
         self.match['cross'][cross_mask] = self.match['self'][cross_mask]
+    def get_matching_mask(self, matching_type):
+        if matching_type not in _matching_mask_funcs:
+            raise ValueError(f'matching_type ({matching_type}) must be in {list(_matching_mask_funcs.keys())}')
+        return _matching_mask_funcs[matching_type](self.match)
