@@ -155,7 +155,8 @@ class ArrayFuncs():
             ax.axis('off')
         return f, axes
     def plot2D(values1, values2, bins1, bins2, is_matched,
-               ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={}):
+               ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
+               add_num=False, num_kwargs={}):
         """
         Plot recovery rate as in 2D bins.
 
@@ -179,6 +180,10 @@ class ArrayFuncs():
             Plot colorbar
         cb_kwargs: dict
             Colorbar arguments
+        add_num: int
+            Add numbers in each bin
+        num_kwargs: dict
+            Arguments for number plot (used in plt.text)
 
         Returns
         -------
@@ -190,6 +195,14 @@ class ArrayFuncs():
         recovery = get_recovery_rate(values1, values2, bins1, bins2, is_matched).T
         ax = plt.axes() if ax is None else ax
         c = ax.pcolor(bins1, bins2, recovery, **plt_kwargs)
+        if add_num:
+            hist_all = np.histogram2d(values1, values2, bins=(bins1, bins2))[0]
+            hist_matched = np.histogram2d(values1[is_matched], values2[is_matched],
+                                  bins=(bins1, bins2))[0]
+            xp, yp = .5*(bins1[:-1]+bins1[1:]), .5*(bins2[:-1]+bins2[1:])
+            for x, ht_, hb_ in zip(xp, hist_matched, hist_all):
+                for y, ht, hb in zip(yp, ht_, hb_):
+                    plt.text(x, y, f'$\\frac{{{ht:.0f}}}{{{hb:.0f}}}$', **num_kwargs)
         return ax, plt.colorbar(c, **cb_kwargs)
 class CatalogFuncs():
     """
@@ -368,6 +381,10 @@ class CatalogFuncs():
             Plot colorbar
         cb_kwargs: dict
             Colorbar arguments
+        add_num: int
+            Add numbers in each bin
+        num_kwargs: dict
+            Arguments for number plot (used in plt.text)
 
         Returns
         -------
@@ -546,6 +563,10 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
         Plot colorbar
     cb_kwargs: dict
         Colorbar arguments
+    add_num: int
+        Add numbers in each bin
+    num_kwargs: dict
+        Arguments for number plot (used in plt.text)
 
     Returns
     -------
