@@ -33,29 +33,6 @@ def get_recovery_rate(values1, values2, bins1, bins2, is_matched):
     recovery[:] = np.nan
     recovery[hist_all>0] = hist_matched[hist_all>0]/hist_all[hist_all>0]
     return recovery
-def plot_recovery_line(hist_values, bins, ax, shape='steps', kwargs={}):
-    """
-    Plot recovey rate as lines. Can be in steps or continuous
-
-    Parameters
-    ----------
-    hist_values: array
-        Values of each bin in the histogram
-    bins: array
-        Bins of histogram
-    ax: matplotlib.axes
-        Ax to add plot
-    shape: str
-        Shape of the line. Can be steps or line.
-    """
-    if shape=='steps':
-        data = (np.transpose([bins[:-1], bins[1:]]).flatten(),
-                np.transpose([hist_values, hist_values]).flatten())
-    elif shape=='line':
-        data = (0.5*(bins[:-1]+bins[1:]), hist_values)
-    else:
-        raise ValueError(f"shape ({shape}) must be 'steps' or 'line'")
-    ax.plot(*data, **kwargs)
 class ArrayFuncs():
     """
     Class of plot functions with arrays as inputs
@@ -87,8 +64,8 @@ class ArrayFuncs():
             List of additional arguments for plotting each line (using pylab.plot).
             Must have same size as len(bins2)-1
 
-        Return
-        ------
+        Returns
+        -------
         ax: matplotlib.axes
             Axis of the plot
         """
@@ -100,7 +77,7 @@ class ArrayFuncs():
             kwargs = {}
             kwargs.update(plt_kwargs)
             kwargs.update(l_kwargs)
-            plot_recovery_line(rec_line, bins1, ax, shape, kwargs)
+            ph.plot_hist_line(rec_line, bins1, ax, shape, kwargs)
         return ax
     def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
                    plt_kwargs={}, panel_kwargs_list=None,
@@ -150,7 +127,7 @@ class ArrayFuncs():
             kwargs = {}
             kwargs.update(plt_kwargs)
             kwargs.update(p_kwargs)
-            plot_recovery_line(rec_line, bins1, ax, shape, kwargs)
+            ph.plot_hist_line(rec_line, bins1, ax, shape, kwargs)
         for ax in axes.flatten()[len(bins2)-1:]:
             ax.axis('off')
         return f, axes
