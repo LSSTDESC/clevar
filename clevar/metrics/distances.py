@@ -3,6 +3,7 @@ import pylab as plt
 
 from ..utils import none_val, bin_masks
 from ..geometry import convert_units
+from ..match import MatchedPairs
 from . import plot_helper as ph
 
 def get_central_distances(cat1, cat2, matching_type, units='degrees', cosmo=None):
@@ -28,11 +29,11 @@ def get_central_distances(cat1, cat2, matching_type, units='degrees', cosmo=None
     array
         Distances of cluster centers in input units
     """
-    is_matched = cat1.get_matching_mask(matching_type)
-    sk1 = cat1.data['SkyCoord'][is_matched]
-    sk2 = cat2.data['SkyCoord'][cat2.ids2inds(cat1.match[matching_type][is_matched])]
+    mp = MatchedPairs(cat1, cat2, matching_type)
+    sk1 = mp.data1['SkyCoord']
+    sk2 = mp.data2['SkyCoord']
     return convert_units(sk1.separation(sk2).deg, 'degrees', units,
-        redshift=cat1.data['z'][is_matched], cosmo=cosmo)
+        redshift=mp.data1['z'], cosmo=cosmo)
 def get_redshift_distances(cat1, cat2, matching_type, normalize=None):
     """
     Get redshift distances between cat1 and cat2.
@@ -55,9 +56,9 @@ def get_redshift_distances(cat1, cat2, matching_type, normalize=None):
     array
         Redshift difference: z1-z2 (can be normalized)
     """
-    is_matched = cat1.get_matching_mask(matching_type)
-    z1 = cat1.data['z'][is_matched]
-    z2 = cat2.data['z'][cat2.ids2inds(cat1.match[matching_type][is_matched])]
+    mp = MatchedPairs(cat1, cat2, matching_type)
+    z1 = mp.data1['z']
+    z2 = mp.data2['z']
     return (z1-z2)/{None:1, 'cat1':(1+z1), 'cat2':(1+z2), 'mean':.5*(2+z1+z2)}[normalize]
 class CatalogFuncs():
     def _histograms(distances, distance_bins, quantity2=None, bins2=None,
