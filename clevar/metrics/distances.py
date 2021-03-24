@@ -1,5 +1,11 @@
-import numpy as np
+# Set mpl backend run plots on github actions
+import os
+import matplotlib as mpl
+if os.environ.get('DISPLAY','') == 'test':
+    print('no display found. Using non-interactive Agg backend')
+    mpl.use('Agg')
 import pylab as plt
+import numpy as np
 
 from ..utils import none_val, bin_masks
 from ..geometry import convert_units
