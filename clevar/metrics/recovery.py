@@ -510,8 +510,8 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
     ax: matplotlib.axes
         Axes with the panels
     """
-    if 'label_format' not in kwargs and 'label_fmt' in kwargs:
-        label_fmt = kwargs.pop('label_fmt')
+    if 'label_format' not in kwargs:
+        label_fmt = kwargs.pop('label_fmt') if 'label_fmt' in kwargs else '.2f'
         kwargs['label_format'] = lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) \
                                     if log_mass*(not transpose) else f'%{label_fmt}'%v
     return _plot_base(CatalogFuncs.plot_panel, cat, matching_type,

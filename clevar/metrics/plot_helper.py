@@ -53,7 +53,7 @@ def get_bin_label(edge_lower, edge_higher,
     format_func: function
         Function to format the values of the bins
     """
-    return f'[${format_func(edge_lower)}$:${format_func(edge_higher)}$]'
+    return f'[${format_func(edge_lower)}$ : ${format_func(edge_higher)}$]'
 def add_panel_bin_label(axes, edges_lower, edges_higher,
                         format_func=lambda v:v):
     """
