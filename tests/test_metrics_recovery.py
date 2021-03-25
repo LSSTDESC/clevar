@@ -51,6 +51,7 @@ def test_plot_panel():
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
                redshift_label=None, mass_label=None, recovery_label=None,)
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, add_label=True, label_fmt='.2f')
+    rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=True)
 def test_plot2D():
     cat = get_test_data()[0]
     matching_type = 'self'
