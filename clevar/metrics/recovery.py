@@ -49,7 +49,8 @@ class ArrayFuncs():
     Class of plot functions with arrays as inputs
     """
     def plot(values1, values2, bins1, bins2, is_matched, shape='steps',
-             ax=None, plt_kwargs={}, lines_kwargs_list=None):
+             ax=None, plt_kwargs={}, lines_kwargs_list=None,
+             add_legend=False, legend_format=lambda v: v, legend_kwargs={}):
         """
         Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
 
@@ -74,6 +75,12 @@ class ArrayFuncs():
         lines_kwargs_list: list, None
             List of additional arguments for plotting each line (using pylab.plot).
             Must have same size as len(bins2)-1
+        add_legend: bool
+            Add legend of bins
+        legend_format: function
+            Function to format the values of the bins in legend
+        legned_kwargs: dict
+            Additional arguments for pylab.legend
 
         Returns
         -------
@@ -84,11 +91,14 @@ class ArrayFuncs():
         ph.add_grid(ax)
         recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
         lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in edges2[:-1]])
-        for rec_line, l_kwargs in zip(recovery.T, lines_kwargs_list):
+        for rec_line, l_kwargs, e0, e1 in zip(recovery.T, lines_kwargs_list, edges2, edges2[1:]):
             kwargs = {}
+            kwargs['label'] = ph.get_bin_label(e0, e1, legend_format) if add_legend else None
             kwargs.update(plt_kwargs)
             kwargs.update(l_kwargs)
             ph.plot_hist_line(rec_line, edges1, ax, shape, kwargs)
+            if add_legend:
+                ax.legend(**legend_kwargs)
         return ax
     def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
                    plt_kwargs={}, panel_kwargs_list=None,
@@ -120,6 +130,11 @@ class ArrayFuncs():
             Must have same size as len(bins2)-1
         fig_kwargs: dict
             Additional arguments for plt.subplots
+        add_label: bool
+            Add bin label to panel
+        label_format: function
+            Function to format the values of the bins
+
 
         Returns
         -------
@@ -265,6 +280,12 @@ class CatalogFuncs():
         lines_kwargs_list: list, None
             List of additional arguments for plotting each line (using pylab.plot).
             Must have same size as len(bins2)-1
+        add_legend: bool
+            Add legend of bins
+        legend_format: function
+            Function to format the values of the bins in legend
+        legned_kwargs: dict
+            Additional arguments for pylab.legend
 
         Returns
         -------
@@ -318,6 +339,10 @@ class CatalogFuncs():
             Must have same size as len(bins2)-1
         fig_kwargs: dict
             Additional arguments for plt.subplots
+        add_label: bool
+            Add bin label to panel
+        label_format: function
+            Function to format the values of the bins
 
         Returns
         -------
@@ -466,7 +491,19 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
+    add_legend: bool
+        Add legend of bins
+    legend_format: function
+        Function to format the values of the bins in legend
+    legend_fmt: str
+        Format the values of binedges (ex: '.2f')
+    legned_kwargs: dict
+        Additional arguments for pylab.legend
     """
+    if 'legend_format' not in kwargs:
+        legend_fmt = kwargs.pop('legend_fmt') if 'legend_fmt' in kwargs else '.2f'
+        kwargs['legend_format'] = lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) \
+                                    if log_mass*(not transpose) else f'%{legend_fmt}'%v
     return _plot_base(CatalogFuncs.plot, cat, matching_type,
                       redshift_bins, mass_bins, transpose,
                       scale1='log' if log_mass*transpose else 'linear',
@@ -514,6 +551,12 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         Must have same size as len(bins2)-1
     fig_kwargs: dict
         Additional arguments for plt.subplots
+    add_label: bool
+        Add bin label to panel
+    label_format: function
+        Function to format the values of the bins
+    label_fmt: str
+        Format the values of binedges (ex: '.2f')
 
     Returns
     -------

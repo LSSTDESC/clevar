@@ -41,6 +41,7 @@ def test_plot():
     rc.plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
          redshift_label=None, mass_label=None, recovery_label=None)
     rc.plot(cat, matching_type, redshift_bins, mass_bins, shape='line')
+    rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True)
     assert_raises(ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins, shape='unknown')
 
 def test_plot_panel():
