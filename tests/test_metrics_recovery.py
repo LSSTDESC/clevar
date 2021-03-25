@@ -4,6 +4,7 @@ from clevar.catalog import Catalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
 from clevar.metrics import recovery as rc
+from numpy.testing import assert_raises
 
 def get_test_data():
     input1 = {
@@ -39,6 +40,9 @@ def test_plot():
     mass_bins = [1e13, 1e16]
     rc.plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
          redshift_label=None, mass_label=None, recovery_label=None)
+    rc.plot(cat, matching_type, redshift_bins, mass_bins, shape='line')
+    assert_raises(ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins, shape='unknown')
+
 def test_plot_panel():
     cat = get_test_data()[0]
     matching_type = 'self'
@@ -50,6 +54,7 @@ def test_plot2D():
     cat = get_test_data()[0]
     matching_type = 'self'
     redshift_bins = [0, 1]
-    mass_bins = [1e13, 1e16]
+    mass_bins = [1e13, 1e14, 1e15, 1e16]
     rc.plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
            redshift_label=None, mass_label=None, recovery_label=None,)
+    rc.plot2D(cat, matching_type, redshift_bins, mass_bins, add_num=True)

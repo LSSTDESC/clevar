@@ -128,8 +128,8 @@ class ArrayFuncs():
             Axes with the panels
         """
         recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
-        ni = int(np.floor(np.sqrt(len(edges2)-1)))
-        nj = ni if ni**2>=len(edges2)-1 else ni+1
+        nj = int(np.ceil(np.sqrt(edges2.size)))
+        ni = int(np.ceil(edges2.size/float(nj)))
         f, axes = plt.subplots(ni, nj, sharex=True, sharey=True, **fig_kwargs)
         panel_kwargs_list = none_val(panel_kwargs_list, [{} for m in edges2[:-1]])
         for ax, rec_line, p_kwargs in zip(axes.flatten(), recovery.T, panel_kwargs_list):
