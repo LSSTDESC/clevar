@@ -14,20 +14,23 @@ def test_parent():
     assert_raises(NotImplementedError, mt.multiple, None, None)
     assert_raises(NotImplementedError, mt.match_from_config, None, None, None, None)
 
-def _test_mt_results(mt, c1, c2, multiple_res1, unique_res1,
-                     multiple_res2, unique_res2):
+def _test_mt_results(mt, c1, c2, multiple_res1, multiple_res2,
+                    unique_res1, unique_res2, cross_res1, cross_res2):
     # Check multiple match
     assert_equal(c1.match['multi_self'], multiple_res1)
     assert_equal(c1.match['multi_other'], multiple_res1)
     assert_equal(c2.match['multi_self'], multiple_res2)
     assert_equal(c2.match['multi_other'], multiple_res2)
-    # Check unique with ang preference
+    # Check unique
     assert_equal(c1.match['self'], unique_res1)
     assert_equal(c1.match['other'], unique_res1)
     assert_equal(c2.match['self'], unique_res2)
     assert_equal(c2.match['other'], unique_res2)
+    # Check cross
+    assert_equal(c1.match['cross'], cross_res1)
+    assert_equal(c2.match['cross'], cross_res2)
 
-def test_data():
+def get_test_data():
     input1 = {
         'id': [f'CL{i}' for i in range(5)],
         'ra': [0., .0001, 0.00011, 25, 20],
@@ -40,7 +43,7 @@ def test_data():
     input2['mass'][:3] = input2['mass'][:3][::-1]
     return input1, input2
 def test_proximity(CosmoClass):
-    input1, input2 = test_data()
+    input1, input2 = get_test_data()
     c1 = Catalog('Cat1', **input1)
     c2 = Catalog('Cat2', **input2)
     print(c1.data)
@@ -70,17 +73,21 @@ def test_proximity(CosmoClass):
     mt.multiple(c2, c1)
     mt.unique(c1, c2, 'angular_proximity')
     mt.unique(c2, c1, 'angular_proximity')
-    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
-                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
+    c1.cross_match()
+    c2.cross_match()
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt, cross_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1], cross_res2=smt[:-1])
     # Check unique with mass preference
     for col in ('self', 'other'):
         c1.match[col] = None
         c2.match[col] = None
     mt.unique(c1, c2, 'more_massive')
     mt.unique(c2, c1, 'more_massive')
+    mt.cross_match(c1)
+    mt.cross_match(c2)
     smt = ['CL2', 'CL1', 'CL0', 'CL3', None]
-    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
-                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt, cross_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1], cross_res2=smt[:-1])
     # Check unique with z preference
     for col in ('self', 'other'):
         c1.match[col] = None
@@ -88,9 +95,11 @@ def test_proximity(CosmoClass):
     c2.match['other'][0] = 'CL3' # to force a replacement
     mt.unique(c1, c2, 'redshift_proximity')
     mt.unique(c2, c1, 'redshift_proximity')
+    mt.cross_match(c1)
+    mt.cross_match(c2)
     smt = ['CL1', 'CL0', 'CL2', 'CL3', None]
-    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
-                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt, cross_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1], cross_res2=smt[:-1])
     # Error for unkown preference
     assert_raises(ValueError, mt.unique, c1, c2, 'unknown')
     # Check save and load matching
@@ -143,7 +152,7 @@ def test_proximity(CosmoClass):
     mt.multiple(c1, c2, radius_selection='other')
     mt.multiple(c1, c2, radius_selection='min')
 def test_proximity_cfg(CosmoClass):
-    input1, input2 = test_data()
+    input1, input2 = get_test_data()
     c1 = Catalog('Cat1', **input1)
     c2 = Catalog('Cat2', **input2)
     print(c1.data)
@@ -177,19 +186,19 @@ def test_proximity_cfg(CosmoClass):
         # Check prep cat
     assert_allclose(c2.mt_input['ang'], np.ones(c2.size)/3600.)
         # Check match
-    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
-                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt, cross_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1], cross_res2=smt[:-1])
     ### test 1 ###
     mt_config['which_radius'] = 'cat1'
     c1._init_match_vals()
     c2._init_match_vals()
     mt.match_from_config(c1, c2, mt_config, cosmo=cosmo)
-    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
-                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt, cross_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1], cross_res2=smt[:-1])
     ### test 2 ###
     mt_config['which_radius'] = 'cat2'
     c1._init_match_vals()
     c2._init_match_vals()
     mt.match_from_config(c1, c2, mt_config, cosmo=cosmo)
-    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt,
-                     multiple_res2=mmt[:-1], unique_res2=smt[:-1])
+    _test_mt_results(mt, c1, c2, multiple_res1=mmt, unique_res1=smt, cross_res1=smt,
+                     multiple_res2=mmt[:-1], unique_res2=smt[:-1], cross_res2=smt[:-1])
