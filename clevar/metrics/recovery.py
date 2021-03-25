@@ -7,7 +7,7 @@ if os.environ.get('DISPLAY','') == 'test':
 import pylab as plt
 import numpy as np
 
-from ..utils import none_val, bin_masks
+from ..utils import none_val
 from . import plot_helper as ph
 
 def get_recovery_rate(values1, values2, bins1, bins2, is_matched):
@@ -29,16 +29,20 @@ def get_recovery_rate(values1, values2, bins1, bins2, is_matched):
 
     Returns
     -------
-    array (2D)
+    recovery: ndarray (2D)
         Recovery rate binned with (bin1, bin2). bins where no cluster was found have nan value.
+    edges1: ndarray
+        The bin edges along the first dimension.
+    edges2: ndarray
+        The bin edges along the second dimension.
     """
-    hist_all = np.histogram2d(values1, values2, bins=(bins1, bins2))[0]
+    hist_all, edges1, edges2 = np.histogram2d(values1, values2, bins=(bins1, bins2))
     hist_matched = np.histogram2d(values1[is_matched], values2[is_matched],
                                   bins=(bins1, bins2))[0]
     recovery = np.zeros(hist_all.shape)
     recovery[:] = np.nan
     recovery[hist_all>0] = hist_matched[hist_all>0]/hist_all[hist_all>0]
-    return recovery
+    return recovery, edges1, edges2
 class ArrayFuncs():
     """
     Class of plot functions with arrays as inputs
@@ -75,15 +79,15 @@ class ArrayFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        ax = plt.axes() if ax is None else ax
+        ax = none_val(ax, plt.axes())
         ph.add_grid(ax)
-        recovery = get_recovery_rate(values1, values2, bins1, bins2, is_matched).T
-        lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in bins2[:-1]])
-        for rec_line, l_kwargs in zip(recovery, lines_kwargs_list):
+        recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
+        lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in edges2[:-1]])
+        for rec_line, l_kwargs in zip(recovery.T, lines_kwargs_list):
             kwargs = {}
             kwargs.update(plt_kwargs)
             kwargs.update(l_kwargs)
-            ph.plot_hist_line(rec_line, bins1, ax, shape, kwargs)
+            ph.plot_hist_line(rec_line, edges1, ax, shape, kwargs)
         return ax
     def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
                    plt_kwargs={}, panel_kwargs_list=None,
@@ -123,18 +127,18 @@ class ArrayFuncs():
         ax: matplotlib.axes
             Axes with the panels
         """
-        ni = int(np.floor(np.sqrt(len(bins2)-1)))
-        nj = ni if ni**2>=len(bins2)-1 else ni+1
+        recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
+        ni = int(np.floor(np.sqrt(len(edges2)-1)))
+        nj = ni if ni**2>=len(edges2)-1 else ni+1
         f, axes = plt.subplots(ni, nj, sharex=True, sharey=True, **fig_kwargs)
-        recovery = get_recovery_rate(values1, values2, bins1, bins2, is_matched).T
-        panel_kwargs_list = none_val(panel_kwargs_list, [{} for m in bins2[:-1]])
-        for ax, rec_line, p_kwargs in zip(axes.flatten(), recovery, panel_kwargs_list):
+        panel_kwargs_list = none_val(panel_kwargs_list, [{} for m in edges2[:-1]])
+        for ax, rec_line, p_kwargs in zip(axes.flatten(), recovery.T, panel_kwargs_list):
             ph.add_grid(ax)
             kwargs = {}
             kwargs.update(plt_kwargs)
             kwargs.update(p_kwargs)
-            ph.plot_hist_line(rec_line, bins1, ax, shape, kwargs)
-        for ax in axes.flatten()[len(bins2)-1:]:
+            ph.plot_hist_line(rec_line, edges1, ax, shape, kwargs)
+        for ax in axes.flatten()[len(edges2)-1:]:
             ax.axis('off')
         return f, axes
     def plot2D(values1, values2, bins1, bins2, is_matched,
@@ -175,14 +179,14 @@ class ArrayFuncs():
         matplotlib.colorbar.Colorbar
             Colorbar of the recovey rates
         """
-        recovery = get_recovery_rate(values1, values2, bins1, bins2, is_matched).T
-        ax = plt.axes() if ax is None else ax
-        c = ax.pcolor(bins1, bins2, recovery, **plt_kwargs)
+        recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
+        ax = none_val(ax, plt.axes())
+        c = ax.pcolor(edges1, edges2, recovery.T, **plt_kwargs)
         if add_num:
             hist_all = np.histogram2d(values1, values2, bins=(bins1, bins2))[0]
             hist_matched = np.histogram2d(values1[is_matched], values2[is_matched],
                                   bins=(bins1, bins2))[0]
-            xp, yp = .5*(bins1[:-1]+bins1[1:]), .5*(bins2[:-1]+bins2[1:])
+            xp, yp = .5*(edges1[:-1]+edges1[1:]), .5*(edges2[:-1]+edges2[1:])
             for x, ht_, hb_ in zip(xp, hist_matched, hist_all):
                 for y, ht, hb in zip(yp, ht_, hb_):
                     plt.text(x, y, f'$\\frac{{{ht:.0f}}}{{{hb:.0f}}}$', **num_kwargs)

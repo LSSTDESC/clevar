@@ -7,7 +7,7 @@ if os.environ.get('DISPLAY','') == 'test':
 import pylab as plt
 import numpy as np
 
-from ..utils import none_val, bin_masks
+from ..utils import none_val
 from ..geometry import convert_units
 from ..match import MatchedPairs
 from . import plot_helper as ph
