@@ -91,7 +91,7 @@ class ArrayFuncs():
         return ax
     def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
                    plt_kwargs={}, panel_kwargs_list=None,
-                   fig_kwargs={}):
+                   fig_kwargs={}, add_label=False, label_format=lambda v: v):
         """
         Plot recovery rate as lines in panels, with each line binned by bins1
         and each panel is based on the data inside a bins2 bin.
@@ -140,6 +140,9 @@ class ArrayFuncs():
             ph.plot_hist_line(rec_line, edges1, ax, shape, kwargs)
         for ax in axes.flatten()[len(edges2)-1:]:
             ax.axis('off')
+        if add_label:
+            ph.add_panel_bin_label(axes,  edges2[:-1], edges2[1:],
+                                   format_func=label_format)
         return f, axes
     def plot2D(values1, values2, bins1, bins2, is_matched,
                ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
@@ -507,6 +510,10 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
     ax: matplotlib.axes
         Axes with the panels
     """
+    if 'label_format' not in kwargs and 'label_fmt' in kwargs:
+        label_fmt = kwargs.pop('label_fmt')
+        kwargs['label_format'] = lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) \
+                                    if log_mass*(not transpose) else f'%{label_fmt}'%v
     return _plot_base(CatalogFuncs.plot_panel, cat, matching_type,
                       redshift_bins, mass_bins, transpose,
                       scale1='log' if log_mass*transpose else 'linear',
