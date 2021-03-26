@@ -143,6 +143,14 @@ class Match():
                 dat2['SkyCoord']).value
         elif MATCH_PREF=='redshift_proximity':
             return abs(dat1['z']-dat2['z'])
+    def cross_match(self, cat1):
+        """Makes cross matches of catalog, requires unique matches to be done first.
+        Parameters
+        ----------
+        cat1: clevar.Catalog
+            Base catalog
+        """
+        cat1.cross_match()
     def save_matches(self, cat1, cat2, out_dir, overwrite=False):
         """
         Saves the matching results
