@@ -16,9 +16,9 @@ class ArrayFuncs():
     """
     Class of plot functions with arrays as inputs
     """
-    def plot(values1, values2, values_color, err1=None, err2=None,
-               ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
-               err_kwargs={}):
+    def plot_color(values1, values2, values_color, err1=None, err2=None,
+                   ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
+                   err_kwargs={}):
         """
         Scatter plot with errorbars and color based on input
 
@@ -119,7 +119,7 @@ class ArrayFuncs():
         """
         values_color = ph.get_density_colors(values1, values2, bins1, bins2,
             ax_rotation=ax_rotation, rotation_resolution=rotation_resolution)
-        return ArrayFuncs.plot(values1, values2, values_color=values_color,
+        return ArrayFuncs.plot_color(values1, values2, values_color=values_color,
                 err1=err1, err2=err2, ax=ax, plt_kwargs=plt_kwargs,
                 add_cb=add_cb, cb_kwargs=cb_kwargs, err_kwargs=err_kwargs)
 class CatalogFuncs():
@@ -154,7 +154,7 @@ class CatalogFuncs():
         if add_err and f'{col}_err' in  mp.data2.colnames:
             err2 = mp.data2[f'{col}_err']
         return err1, err2
-    def plot(cat1, cat2, matching_type, col, col_color, color1=True, add_err=False,
+    def plot_color(cat1, cat2, matching_type, col, col_color, color1=True, add_err=False,
                ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
                err_kwargs={}):
         """
@@ -203,7 +203,7 @@ class CatalogFuncs():
         mp = MatchedPairs(cat1, cat2, matching_type)
         err1, err2 = CatalogFuncs._get_err(mp, col, add_err)
         values_color = mp.data1[col_color] if color1 else mp.data2[col_color]
-        return ArrayFuncs.plot(mp.data1[col], mp.data2[col],
+        return ArrayFuncs.plot_color(mp.data1[col], mp.data2[col],
                 values_color=values_color, err1=err1, err2=err2,
                 ax=ax, plt_kwargs=plt_kwargs, add_cb=add_cb,
                 cb_kwargs=cb_kwargs, err_kwargs=err_kwargs)
