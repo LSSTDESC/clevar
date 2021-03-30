@@ -22,8 +22,8 @@ class ArrayFuncs():
         """
         Scatter plot with errorbars and color based on input
 
-        Paramters
-        ---------
+        Parameters
+        ----------
         values1: array
             Component 1
         values2: array
@@ -81,8 +81,8 @@ class ArrayFuncs():
         """
         Scatter plot with errorbars and color based on point density
 
-        Paramters
-        ---------
+        Parameters
+        ----------
         values1: array
             Component 1
         values2: array
