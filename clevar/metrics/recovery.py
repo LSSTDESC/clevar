@@ -4,7 +4,6 @@ import matplotlib as mpl
 if os.environ.get('DISPLAY','') == 'test':
     print('no display found. Using non-interactive Agg backend')
     mpl.use('Agg')
-from matplotlib.ticker import ScalarFormatter, NullFormatter
 import pylab as plt
 import numpy as np
 
@@ -353,20 +352,8 @@ class CatalogFuncs():
         """
         fig, axes = CatalogFuncs._plot_base(ArrayFuncs.plot_panel,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-        log_xticks = [np.log10(ax.get_xticks()[ax.get_xticks()>0])
-                        for ax in axes.flatten()]
-        for ax in (axes[-1,:] if len(axes.shape)>1 else axes):
-            ax.set_xlabel(xlabel if xlabel else col1)
-            ax.set_xscale(scale1)
-        for ax in (axes[:,0] if len(axes.shape)>1 else axes[:1]):
-            ax.set_ylabel(ylabel if ylabel else 'recovery rate')
-        if scale1=='log':
-            for ax, xticks in zip(axes.flatten() if len(axes.shape)>1 else axes, log_xticks):
-                ax.xaxis.set_major_formatter(ScalarFormatter())
-                ax.xaxis.set_minor_formatter(NullFormatter())
-                ax.set_xticks(10**xticks)
-                ax.set_xticklabels([f'${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$'
-                                    for t in xticks], rotation=-45)
+        ph.nice_panel(axes, xlabel=none_val(xlabel, col1), ylabel=none_val(xlabel, col2),
+                      xscale=scale1, yscale='linear')
         return fig, axes
     def plot2D(cat, col1, col2, bins1, bins2, matching_type,
                xlabel=None, ylabel=None, scale1='linear', scale2='linear',
