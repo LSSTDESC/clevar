@@ -1,5 +1,12 @@
+# Set mpl backend run plots on github actions
+import os
+import matplotlib as mpl
+if os.environ.get('DISPLAY','') == 'test':
+    print('no display found. Using non-interactive Agg backend')
+    mpl.use('Agg')
 import numpy as np
 from scipy.interpolate import interp2d
+from matplotlib.ticker import ScalarFormatter, NullFormatter
 
 def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     """
@@ -123,3 +130,61 @@ def get_density_colors(x, y, xbins, ybins, ax_rotation=0,
     ym = .5*(yedges[:-1]+ yedges[1:])
     fz = interp2d(xm, ym, hist, kind='cubic')
     return np.array([fz(*coord)[0] for coord in zip(x2, y2)])
+def nice_panel(axes, xlabel=None, ylabel=None, xscale='linear', yscale='linear'):
+    """
+    Add nice labels and ticks to panel plot
+
+    Parameters
+    ----------
+    axes: array
+        Axes with the panels
+    bins1: array
+        Bins for component 1
+    bins2: array
+        Bins for component 2
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    xlabel: str
+        Label of x axis.
+    ylabel: str
+        Label of y axis.
+    xscale: str
+        Scale xaxis.
+    yscale: str
+        Scale yaxis.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    axes: array
+        Axes with the panels
+    """
+    log_xticks = [np.log10(ax.get_xticks()[ax.get_xticks()>0])
+                    for ax in axes.flatten()]
+    for ax in (axes[-1,:] if len(axes.shape)>1 else axes):
+        ax.set_xlabel(xlabel)
+        ax.set_xscale(xscale)
+    if xscale=='log':
+        for ax, xticks in zip(axes.flatten() if len(axes.shape)>1 else axes, log_xticks):
+            ax.xaxis.set_major_formatter(ScalarFormatter())
+            ax.xaxis.set_minor_formatter(NullFormatter())
+            ax.set_xticks(10**xticks)
+            ax.set_xticklabels([f'${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$'
+                                for t in xticks], rotation=-45)
+    log_yticks = [np.log10(ax.get_yticks()[ax.get_yticks()>0])
+                    for ax in axes.flatten()]
+    for ax in (axes[:,0] if len(axes.shape)>1 else axes[:1]):
+        ax.set_ylabel(ylabel)
+        ax.set_yscale(yscale)
+    if yscale=='log':
+        for ax, yticks in zip(axes.flatten() if len(axes.shape)>1 else axes, log_yticks):
+            ax.yaxis.set_major_formatter(ScalarFormatter())
+            ax.yaxis.set_minor_formatter(NullFormatter())
+            ax.set_yticks(10**yticks)
+            ax.set_yticklabels([f'${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$'
+                                for t in yticks], rotation=-45)
+    return
