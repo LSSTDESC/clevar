@@ -89,7 +89,7 @@ def add_panel_bin_label(axes, edges_lower, edges_higher,
         topax.set_xticks([])
         topax.set_xlabel(get_bin_label(vb, vt, format_func))
 def get_density_colors(x, y, xbins, ybins, ax_rotation=0, 
-                rotation_resolution=30):
+                rotation_resolution=30, xscale='linear', yscale='linear'):
     """
     Get colors of point based on density
 
@@ -107,6 +107,10 @@ def get_density_colors(x, y, xbins, ybins, ax_rotation=0,
         Angle (in degrees) for rotation of axis of binning. Overwrites use of xbins, ybins
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
+    xscale: str
+        Scale xaxis.
+    yscale: str
+        Scale yaxis.
 
     Returns
     -------
@@ -115,8 +119,10 @@ def get_density_colors(x, y, xbins, ybins, ax_rotation=0,
     """
     # Rotated points around anlgle
     sr, cr = np.sin(np.radians(ax_rotation)), np.cos(np.radians(ax_rotation))
-    x2 = np.array(x)*cr-np.array(y)*sr
-    y2 = np.array(x)*sr+np.array(y)*cr
+    scalefuncs = {'linear': lambda x:x, 'log': lambda x: np.log10(x)}
+    x2, y2 = scalefuncs[xscale](x), scalefuncs[yscale](y)
+    x2 = np.array(x2)*cr-np.array(y2)*sr
+    y2 = np.array(x2)*sr+np.array(y2)*cr
     if ax_rotation == 0:
         bins = (xbins, ybins)
     else:
