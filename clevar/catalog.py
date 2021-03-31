@@ -42,7 +42,11 @@ class ClData(APtable):
             item = ','.join([name_dict[i] for i in item.split(',')])
         out = APtable.__getitem__(self, item)
         return out
-
+    def get(self, key, default=None):
+        """
+        Return the column for key if key is in the dictionary, else default
+        """
+        return self[key] if key in self.colnames else default
 _matching_mask_funcs = {
     'cross': lambda match: match['cross']!=None,
     'self': lambda match: match['self']!=None,
