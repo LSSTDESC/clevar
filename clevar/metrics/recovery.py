@@ -144,8 +144,8 @@ class ArrayFuncs():
             Axes with the panels
         """
         recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
-        nj = int(np.ceil(np.sqrt(edges2.size)))
-        ni = int(np.ceil(edges2.size/float(nj)))
+        nj = int(np.ceil(np.sqrt(edges2[:-1].size)))
+        ni = int(np.ceil(edges2[:-1].size/float(nj)))
         fig_kwargs_ = dict(sharex=True, sharey=True, figsize=(8, 6))
         fig_kwargs_.update(fig_kwargs)
         f, axes = plt.subplots(ni, nj, **fig_kwargs_)
