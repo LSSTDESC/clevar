@@ -44,7 +44,10 @@ class ArrayFuncs():
             Axis of the plot
         """
         ax = plt.axes() if ax is None else ax
-        ax.scatter(values1, values2, **plt_kwargs)
+        ph.add_grid(ax)
+        plt_kwargs_ = {'s':1}
+        plt_kwargs_.update(plt_kwargs)
+        ax.scatter(values1, values2, **plt_kwargs_)
         if err1 is not None or err2 is not None:
             err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
             err_kwargs_.update(err_kwargs)
@@ -87,9 +90,12 @@ class ArrayFuncs():
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
         ax = plt.axes() if ax is None else ax
+        ph.add_grid(ax)
         isort = np.argsort(values_color)
         xp, yp, zp = [v[isort] for v in (values1, values2, values_color)]
-        sc = ax.scatter(xp, yp, c=zp, **plt_kwargs)
+        plt_kwargs_ = {'s':1}
+        plt_kwargs_.update(plt_kwargs)
+        sc = ax.scatter(xp, yp, c=zp, **plt_kwargs_)
         cb_kwargs_ = {'ax':ax}
         cb_kwargs_.update(cb_kwargs)
         cb = plt.colorbar(sc, **cb_kwargs_)
@@ -109,6 +115,7 @@ class ArrayFuncs():
         return ax
     def plot_density(values1, values2, bins1=30, bins2=30,
                      ax_rotation=0, rotation_resolution=30,
+                     xscale='linear', yscale='linear',
                      err1=None, err2=None,
                      ax=None, plt_kwargs={},
                      add_cb=True, cb_kwargs={},
@@ -131,6 +138,10 @@ class ArrayFuncs():
             Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
         rotation_resolution: int
             Number of bins to be used when ax_rotation!=0.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
         err1: array
             Error of component 1
         err2: array
@@ -154,7 +165,8 @@ class ArrayFuncs():
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
         values_color = ph.get_density_colors(values1, values2, bins1, bins2,
-            ax_rotation=ax_rotation, rotation_resolution=rotation_resolution)
+            ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
+            xscale=xscale, yscale=yscale)
         return ArrayFuncs.plot_color(values1, values2, values_color=values_color,
                 err1=err1, err2=err2, ax=ax, plt_kwargs=plt_kwargs,
                 add_cb=add_cb, cb_kwargs=cb_kwargs, err_kwargs=err_kwargs)
@@ -193,14 +205,16 @@ class ArrayFuncs():
         -------
         Same as plot_function
         """
-        nj = int(np.ceil(np.sqrt(len(bins_panel[:-1]))))
-        ni = int(np.ceil(len(bins_panel[:-1])/float(nj)))
+        edges = bins_panel if hasattr(bins_panel, '__len__') else\
+            np.linspace(min(values_panel), max(values_panel), bins_panel)
+        nj = int(np.ceil(np.sqrt(len(edges[:-1]))))
+        ni = int(np.ceil(len(edges[:-1])/float(nj)))
         fig_kwargs_ = dict(sharex=True, sharey=True, figsize=(8, 6))
         fig_kwargs_.update(fig_kwargs)
         f, axes = plt.subplots(ni, nj, **fig_kwargs_)
-        panel_kwargs_list = none_val(panel_kwargs_list, [{} for m in bins_panel[:-1]])
-        panel_kwargs_errlist = none_val(panel_kwargs_errlist, [{} for m in bins_panel[:-1]])
-        masks = [(values_panel>=v0)*(values_panel<v1) for v0, v1 in zip(bins_panel, bins_panel[1:])]
+        panel_kwargs_list = none_val(panel_kwargs_list, [{} for m in edges[:-1]])
+        panel_kwargs_errlist = none_val(panel_kwargs_errlist, [{} for m in edges[:-1]])
+        masks = [(values_panel>=v0)*(values_panel<v1) for v0, v1 in zip(edges, edges[1:])]
         for ax, mask, p_kwargs, p_e_kwargs in zip(axes.flatten(), masks,
                                     panel_kwargs_list, panel_kwargs_errlist):
             ph.add_grid(ax)
@@ -213,10 +227,10 @@ class ArrayFuncs():
             plot_function(ax=ax, plt_kwargs=kwargs, err_kwargs=kwargs_e,
                 **{k:v[mask] if (hasattr(v, '__len__') and len(v)==mask.size) else v
                 for k, v in plt_func_kwargs.items()})
-        for ax in axes.flatten()[len(bins_panel)-1:]:
+        for ax in axes.flatten()[len(edges)-1:]:
             ax.axis('off')
         if add_label:
-            ph.add_panel_bin_label(axes,  edges2[:-1], edges2[1:],
+            ph.add_panel_bin_label(axes,  edges[:-1], edges[1:],
                                    format_func=label_format)
         return f, axes
     def plot_panel(values1, values2, values_panel, bins_panel,
@@ -340,12 +354,13 @@ class ArrayFuncs():
             )
     def plot_density_panel(values1, values2, values_panel, bins_panel,
         bins1=30, bins2=30, ax_rotation=0, rotation_resolution=30,
+        xscale='linear', yscale='linear',
         err1=None, err2=None, plt_kwargs={},add_cb=True, cb_kwargs={},
         err_kwargs={}, panel_kwargs_list=None, panel_kwargs_errlist=None,
         fig_kwargs={}, add_label=False, label_format=lambda v: v):
 
         """
-        Scatter plot with errorbars and color based on point density
+        Scatter plot with errorbars and color based on point density with panels
 
         Parameters
         ----------
@@ -365,6 +380,10 @@ class ArrayFuncs():
             Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
         rotation_resolution: int
             Number of bins to be used when ax_rotation!=0.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
         err1: array
             Error of component 1
         err2: array
@@ -403,6 +422,7 @@ class ArrayFuncs():
             # _plot_panel arguments
             plot_function=ArrayFuncs.plot_density,
             values_panel=values_panel, bins_panel=bins_panel,
+            xscale=xscale, yscale=yscale,
             panel_kwargs_list=panel_kwargs_list, panel_kwargs_errlist=panel_kwargs_errlist,
             fig_kwargs=fig_kwargs, add_label=add_label, label_format=label_format,
             # plot_density arguments
@@ -412,44 +432,71 @@ class ArrayFuncs():
             )
 class CatalogFuncs():
     """
-    Class of plot functions with clevar.Catalog as inputs
+    Class of plot functions with clevar.Catalog as inputs.
+    Plot labels and scales are configured by this class.
     """
-    def _get_err(mp, col, add_err):
+    class_args = ('xlabel', 'ylabel', 'xscale', 'yscale', 'add_err')
+    def _prep_kwargs(cat1, cat2, matching_type, col, kwargs):
         """
-        Get err values for plotting
+        Prepare kwargs into args for this class and args for function
 
         Parameters
         ----------
+        cat1: clevar.Catalog
+            Catalog with matching information
+        cat2: clevar.Catalog
+            Catalog matched to
+        matching_type: str
+            Type of matching to be considered. Must be in:
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
+        col: str
+            Name of column to be plotted
+        kwargs: dict
+            Input arguments
+
+        Returns
+        -------
+        class_kwargs: str
+            Arguments for class
+        func_kwargs: str
+            Arguments for function
         mp: clevar.match.MatchedPairs
             Matched catalogs
-        col: str
-            Name of column to be plotted
-        add_err: bool
-            Add errorbars
-
-        Returns
-        -------
-        err1, err2: ndarray, None
-            Value of errors for plotting
         """
-        return (mp.data1[f'{col}_err'] if add_err and f'{col}_err' in  mp.data1.colnames\
-                else None,
-                mp.data2[f'{col}_err'] if add_err and f'{col}_err' in  mp.data2.colnames\
-                else None)
-        err1, err2 = None, None
-        if add_err and f'{col}_err' in  mp.data1.colnames:
-            err1 = mp.data1[f'{col}_err']
-        if add_err and f'{col}_err' in  mp.data2.colnames:
-            err2 = mp.data2[f'{col}_err']
-        return err1, err2
-    def plot(cat1, cat2, matching_type, col, add_err=False, **kwargs):
+        func_kwargs = {k:v for k, v in kwargs.items() if k not in CatalogFuncs.class_args}
+        mp = MatchedPairs(cat1, cat2, matching_type)
+        func_kwargs['values1'] = mp.data1[col]
+        func_kwargs['values2'] = mp.data2[col]
+        func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err') else None
+        func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err') else None
+        class_kwargs = {
+            'xlabel': kwargs.get('xlabel', f'${col}_{{{cat1.name}}}$'),
+            'ylabel': kwargs.get('ylabel', f'${col}_{{{cat2.name}}}$'),
+            'xscale': kwargs.get('xscale', 'linear'),
+            'yscale': kwargs.get('yscale', 'linear'),
+        }
+        return class_kwargs, func_kwargs, mp
+    def _fmt_plot(ax, **kwargs):
         """
-        Adapts a CatalogFuncs function to use a ArrayFuncs function.
+        Format plot (scale and label of ax)
 
         Parameters
         ----------
-        pltfunc: function
-            ArrayFuncs function
+        ax: matplotlib.axes
+            Ax to add plot
+        **kwargs
+            Other arguments
+        """
+        ax.set_xlabel(kwargs['xlabel'])
+        ax.set_ylabel(kwargs['ylabel'])
+        ax.set_xscale(kwargs['xscale'])
+        ax.set_yscale(kwargs['yscale'])
+    def plot(cat1, cat2, matching_type, col, **kwargs):
+        """
+        Scatter plot with errorbars and color based on input
+
+        Parameters
+        ----------
         cat1: clevar.Catalog
             Catalog with matching information
         cat2: clevar.Catalog
@@ -470,25 +517,31 @@ class CatalogFuncs():
             Additional arguments for pylab.scatter
         err_kwargs: dict
             Additional arguments for pylab.errorbar
+        xlabel: str
+            Label of x axis.
+        ylabel: str
+            Label of y axis.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
 
         Returns
         -------
         ax: matplotlib.axes
             Axis of the plot
         """
-        mp = MatchedPairs(cat1, cat2, matching_type)
-        err1, err2 = CatalogFuncs._get_err(mp, col, add_err)
-        ax = ArrayFuncs.plot(mp.data1[col], mp.data2[col], err1=err1, err2=err2, **kwargs)
+        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        ax = ArrayFuncs.plot(**f_kwargs)
+        CatalogFuncs._fmt_plot(ax, **cl_kwargs)
         return ax
     def plot_color(cat1, cat2, matching_type, col, col_color,
-                   color1=True, add_err=False, **kwargs):
+                   color1=True, **kwargs):
         """
-        Adapts a CatalogFuncs function to use a ArrayFuncs function.
+        Scatter plot with errorbars and color based on input
 
         Parameters
         ----------
-        pltfunc: function
-            ArrayFuncs function
         cat1: clevar.Catalog
             Catalog with matching information
         cat2: clevar.Catalog
@@ -517,6 +570,14 @@ class CatalogFuncs():
             Colorbar arguments
         err_kwargs: dict
             Additional arguments for pylab.errorbar
+        xlabel: str
+            Label of x axis.
+        ylabel: str
+            Label of y axis.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
 
         Returns
         -------
@@ -525,20 +586,18 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        mp = MatchedPairs(cat1, cat2, matching_type)
-        err1, err2 = CatalogFuncs._get_err(mp, col, add_err)
-        values_color = mp.data1[col_color] if color1 else mp.data2[col_color]
-        return ArrayFuncs.plot_color(mp.data1[col], mp.data2[col],
-                values_color=values_color, err1=err1, err2=err2, **kwargs)
-    def plot_density(cat1, cat2, matching_type, col, bins=30, add_err=False,
-                     ax_rotation=0, rotation_resolution=30, **kwargs):
+        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['values_color'] = mp.data1[col_color] if color1 else mp.data2[col_color]
+        res = ArrayFuncs.plot_color(**f_kwargs)
+        ax = res[0] if kwargs.get('add_cb', True) else res
+        CatalogFuncs._fmt_plot(ax, **cl_kwargs)
+        return res
+    def plot_density(cat1, cat2, matching_type, col, **kwargs):
         """
-        Adapts a CatalogFuncs function to use a ArrayFuncs function.
+        Scatter plot with errorbars and color based on point density
 
         Parameters
         ----------
-        pltfunc: function
-            ArrayFuncs function
         cat1: clevar.Catalog
             Catalog with matching information
         cat2: clevar.Catalog
@@ -569,6 +628,14 @@ class CatalogFuncs():
             Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
         rotation_resolution: int
             Number of bins to be used when ax_rotation!=0.
+        xlabel: str
+            Label of x axis.
+        ylabel: str
+            Label of y axis.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
 
         Returns
         -------
@@ -577,22 +644,21 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        mp = MatchedPairs(cat1, cat2, matching_type)
-        err1, err2 = CatalogFuncs._get_err(mp, col, add_err)
-        return ArrayFuncs.plot_density(mp.data1[col], mp.data2[col],
-                bins1=bins, bins2=bins, ax_rotation=ax_rotation,
-                rotation_resolution=rotation_resolution,
-                err1=err1, err2=err2, **kwargs)
+        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
+        f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
+        res = ArrayFuncs.plot_density(**f_kwargs)
+        ax = res[0] if kwargs.get('add_cb', True) else res
+        CatalogFuncs._fmt_plot(ax, **cl_kwargs)
+        return res
     def plot_panel(cat1, cat2, matching_type, col,
-        col_panel, panel_bins, panel_cat1=True,
-        add_err=False, **kwargs):
+        col_panel, bins_panel, panel_cat1=True,
+        **kwargs):
         """
-        Adapts a CatalogFuncs function to use a ArrayFuncs function.
+        Scatter plot with errorbars and color based on input with panels
 
         Parameters
         ----------
-        pltfunc: function
-            ArrayFuncs function
         cat1: clevar.Catalog
             Catalog with matching information
         cat2: clevar.Catalog
@@ -604,7 +670,7 @@ class CatalogFuncs():
             Name of column to be plotted
         col_panel: str
             Name of column to make panels
-        panel_bins: array
+        bins_panel: array
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
@@ -629,23 +695,32 @@ class CatalogFuncs():
             Add bin label to panel
         label_format: function
             Function to format the values of the bins
+        xlabel: str
+            Label of x axis.
+        ylabel: str
+            Label of y axis.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
 
         Returns
         -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
         ax: matplotlib.axes
-            Axis of the plot
-        matplotlib.colorbar.Colorbar (optional)
-            Colorbar of the recovey rates. Only returned if add_cb=True.
+            Axes with the panels
         """
-        mp = MatchedPairs(cat1, cat2, matching_type)
-        err1, err2 = CatalogFuncs._get_err(mp, col, add_err)
-        return ArrayFuncs.plot_panel(mp.data1[col], mp.data2[col], err1=err1, err2=err2,
-                values_panel=mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel],
-                bins_panel=panel_bins, **kwargs)
+        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['values_panel'] = mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel]
+        f_kwargs['bins_panel'] = bins_panel
+        fig, axes = ArrayFuncs.plot_panel(**f_kwargs)
+        ph.nice_panel(axes, **cl_kwargs)
+        return fig, axes
     def plot_color_panel(cat1, cat2, matching_type, col, col_color,
-        col_panel, panel_bins, panel_cat1=True, color1=True, add_err=False, **kwargs):
+        col_panel, bins_panel, panel_cat1=True, color1=True, **kwargs):
         """
-        Adapts a CatalogFuncs function to use a ArrayFuncs function.
+        Scatter plot with errorbars and color based on input with panels
 
         Parameters
         ----------
@@ -664,7 +739,7 @@ class CatalogFuncs():
             Name of column for color
         col_panel: str
             Name of column to make panels
-        panel_bins: array
+        bins_panel: array
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
@@ -694,7 +769,15 @@ class CatalogFuncs():
         add_label: bool
             Add bin label to panel
         label_format: function
-            Function to format the values of the bins
+            Function
+        xlabel: str
+            Label of x axis.
+        ylabel: str
+            Label of y axis.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
 
         Returns
         -------
@@ -703,19 +786,17 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        mp = MatchedPairs(cat1, cat2, matching_type)
-        err1, err2 = CatalogFuncs._get_err(mp, col, add_err)
-        values_color = mp.data1[col_color] if color1 else mp.data2[col_color]
-        return ArrayFuncs.plot_color_panel(mp.data1[col], mp.data2[col],
-                values_panel=mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel],
-                bins_panel=panel_bins,
-                values_color=values_color, err1=err1, err2=err2,
-                **kwargs)
+        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['values_color'] = mp.data1[col_color] if color1 else mp.data2[col_color]
+        f_kwargs['values_panel'] = mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel]
+        f_kwargs['bins_panel'] = bins_panel
+        fig, axes = ArrayFuncs.plot_color_panel(**f_kwargs)
+        ph.nice_panel(axes, **cl_kwargs)
+        return fig, axes
     def plot_density_panel(cat1, cat2, matching_type, col,
-        col_panel, panel_bins, panel_cat1=True,
-        bins=30, add_err=False, ax_rotation=0, rotation_resolution=30, **kwargs):
+        col_panel, bins_panel, panel_cat1=True, **kwargs):
         """
-        Adapts a CatalogFuncs function to use a ArrayFuncs function.
+        Scatter plot with errorbars and color based on point density with panels
 
         Parameters
         ----------
@@ -732,7 +813,7 @@ class CatalogFuncs():
             Name of column to be plotted
         col_panel: str
             Name of column to make panels
-        panel_bins: array
+        bins_panel: array
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
@@ -769,6 +850,14 @@ class CatalogFuncs():
             Add bin label to panel
         label_format: function
             Function to format the values of the bins
+        xlabel: str
+            Label of x axis.
+        ylabel: str
+            Label of y axis.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
 
         Returns
         -------
@@ -777,12 +866,373 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        mp = MatchedPairs(cat1, cat2, matching_type)
-        err1, err2 = CatalogFuncs._get_err(mp, col, add_err)
-        return ArrayFuncs.plot_density_panel(mp.data1[col], mp.data2[col],
-                values_panel=mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel],
-                bins_panel=panel_bins,
-                bins1=bins, bins2=bins, ax_rotation=ax_rotation,
-                rotation_resolution=rotation_resolution,
-                err1=err1, err2=err2, **kwargs)
-#def plot_z():
+        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['values_panel'] = mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel]
+        f_kwargs['bins_panel'] = bins_panel
+        f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
+        f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
+        fig, axes = ArrayFuncs.plot_density_panel(**f_kwargs)
+        ph.nice_panel(axes, **cl_kwargs)
+        return fig, axes
+def redshift(cat1, cat2, matching_type, **kwargs):
+    """
+    Scatter plot with errorbars and color based on input
+
+    Parameters
+    ----------
+    cat1: clevar.Catalog
+        Catalog with matching information
+    cat2: clevar.Catalog
+        Catalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    xlabel: str
+        Label of x axis.
+    ylabel: str
+        Label of y axis.
+
+    Returns
+    -------
+    ax: matplotlib.axes
+        Axis of the plot
+    """
+    return CatalogFuncs.plot(cat1, cat2, matching_type, col='z', **kwargs)
+def redshift_density(cat1, cat2, matching_type, **kwargs):
+    """
+    Scatter plot with errorbars and color based on point density
+
+    Parameters
+    ----------
+    cat1: clevar.Catalog
+        Catalog with matching information
+    cat2: clevar.Catalog
+        Catalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+    col: str
+        Name of column to be plotted
+    bins: array, int
+        Bins for density
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict
+        Colorbar arguments
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    ax_rotation: float
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
+    rotation_resolution: int
+        Number of bins to be used when ax_rotation!=0.
+    xlabel: str
+        Label of x axis.
+    ylabel: str
+        Label of y axis.
+    xscale: str
+        Scale xaxis.
+    yscale: str
+        Scale yaxis.
+
+    Returns
+    -------
+    ax: matplotlib.axes
+        Axis of the plot
+    matplotlib.colorbar.Colorbar (optional)
+        Colorbar of the recovey rates. Only returned if add_cb=True.
+    """
+    return CatalogFuncs.plot_density(cat1, cat2, matching_type, col='z', **kwargs)
+def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
+    """
+    Scatter plot with errorbars and color based on input
+
+    Parameters
+    ----------
+    cat1: clevar.Catalog
+        Catalog with matching information
+    cat2: clevar.Catalog
+        Catalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
+    log_mass: bool
+        Log scale for mass
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    xlabel: str
+        Label of x axis.
+    ylabel: str
+        Label of y axis.
+    xscale: str
+        Scale xaxis.
+    yscale: str
+        Scale yaxis.
+
+    Returns
+    -------
+    ax: matplotlib.axes
+        Axis of the plot
+    """
+    return CatalogFuncs.plot(cat1, cat2, matching_type, col='mass',
+            xscale='log' if log_mass else 'linear',
+            yscale='log' if log_mass else 'linear',
+            **kwargs)
+def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs):
+    """
+    Scatter plot with errorbars and color based on input
+
+    Parameters
+    ----------
+    cat1: clevar.Catalog
+        Catalog with matching information
+    cat2: clevar.Catalog
+        Catalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
+    log_mass: bool
+        Log scale for mass
+    color1: bool
+        Use catalog 1 for color. If false uses catalog 2
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict
+        Colorbar arguments
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    xlabel: str
+        Label of x axis.
+    ylabel: str
+        Label of y axis.
+
+    Returns
+    -------
+    ax: matplotlib.axes
+        Axis of the plot
+    matplotlib.colorbar.Colorbar (optional)
+        Colorbar of the recovey rates. Only returned if add_cb=True.
+    """
+    return CatalogFuncs.plot_color(cat1, cat2, matching_type, col='mass', col_color='z',
+            xscale='log' if log_mass else 'linear',
+            yscale='log' if log_mass else 'linear',
+            color1=color1, **kwargs)
+def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
+    """
+    Scatter plot with errorbars and color based on point density
+
+    Parameters
+    ----------
+    cat1: clevar.Catalog
+        Catalog with matching information
+    cat2: clevar.Catalog
+        Catalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+    log_mass: bool
+        Log scale for mass
+    col: str
+        Name of column to be plotted
+    bins: array, int
+        Bins for density
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict
+        Colorbar arguments
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    ax_rotation: float
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
+    rotation_resolution: int
+        Number of bins to be used when ax_rotation!=0.
+    xlabel: str
+        Label of x axis.
+    ylabel: str
+        Label of y axis.
+
+    Returns
+    -------
+    ax: matplotlib.axes
+        Axis of the plot
+    matplotlib.colorbar.Colorbar (optional)
+        Colorbar of the recovey rates. Only returned if add_cb=True.
+    """
+    return CatalogFuncs.plot_density(cat1, cat2, matching_type, col='mass',
+            xscale='log' if log_mass else 'linear',
+            yscale='log' if log_mass else 'linear',
+            **kwargs)
+def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwargs):
+    """
+    Scatter plot with errorbars and color based on input with panels
+
+    Parameters
+    ----------
+    cat1: clevar.Catalog
+        Catalog with matching information
+    cat2: clevar.Catalog
+        Catalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
+    redshift_bins: int, array
+        Redshift bins to make panels
+    log_mass: bool
+        Log scale for mass
+    panel_cat1: bool
+        Used catalog 1 for col_panel. If false uses catalog 2
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    panel_kwargs_list: list, None
+        List of additional arguments for plotting each panel (using pylab.plot).
+        Must have same size as len(bins2)-1
+    panel_kwargs_errlist: list, None
+        List of additional arguments for plotting each panel (using pylab.errorbar).
+        Must have same size as len(bins2)-1
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    add_label: bool
+        Add bin label to panel
+    label_format: function
+        Function to format the values of the bins
+    xlabel: str
+        Label of x axis.
+    ylabel: str
+        Label of y axis.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    ax: matplotlib.axes
+        Axes with the panels
+    """
+    return CatalogFuncs.plot_panel(cat1, cat2, matching_type, col='mass',
+            col_panel='z', bins_panel=redshift_bins,
+            xscale='log' if log_mass else 'linear',
+            yscale='log' if log_mass else 'linear',
+            **kwargs)
+def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwargs):
+    """
+    Scatter plot with errorbars and color based on point density with panels
+
+    Parameters
+    ----------
+    pltfunc: function
+        ArrayFuncs function
+    cat1: clevar.Catalog
+        Catalog with matching information
+    cat2: clevar.Catalog
+        Catalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+    redshift_bins: int, array
+        Redshift bins to make panels
+    log_mass: bool
+        Log scale for mass
+    panel_cat1: bool
+        Used catalog 1 for col_panel. If false uses catalog 2
+    bins: array, int
+        Bins for density
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict
+        Colorbar arguments
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    ax_rotation: float
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
+    rotation_resolution: int
+        Number of bins to be used when ax_rotation!=0.
+    panel_kwargs_list: list, None
+        List of additional arguments for plotting each panel (using pylab.plot).
+        Must have same size as len(bins2)-1
+    panel_kwargs_errlist: list, None
+        List of additional arguments for plotting each panel (using pylab.errorbar).
+        Must have same size as len(bins2)-1
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    add_label: bool
+        Add bin label to panel
+    label_format: function
+        Function to format the values of the bins
+    xlabel: str
+        Label of x axis.
+    ylabel: str
+        Label of y axis.
+
+    Returns
+    -------
+    ax: matplotlib.axes
+        Axis of the plot
+    matplotlib.colorbar.Colorbar (optional)
+        Colorbar of the recovey rates. Only returned if add_cb=True.
+    """
+    return CatalogFuncs.plot_density_panel(cat1, cat2, matching_type, col='mass',
+            col_panel='z', bins_panel=redshift_bins,
+            xscale='log' if log_mass else 'linear',
+            yscale='log' if log_mass else 'linear',
+            **kwargs)
