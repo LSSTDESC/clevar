@@ -96,8 +96,8 @@ class ArrayFuncs():
             kwargs.update(plt_kwargs)
             kwargs.update(l_kwargs)
             ph.plot_hist_line(rec_line, edges1, ax, shape, kwargs)
-            if add_legend:
-                ax.legend(**legend_kwargs)
+        if add_legend:
+            ax.legend(**legend_kwargs)
         return ax
     def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
                    plt_kwargs={}, panel_kwargs_list=None,

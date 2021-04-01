@@ -25,7 +25,7 @@ def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     ax.yaxis.grid(True, which='major', lw=major_lw)
     ax.xaxis.grid(True, which='minor', lw=minor_lw)
     ax.yaxis.grid(True, which='minor', lw=minor_lw)
-def plot_hist_line(hist_values, bins, ax, shape='steps', kwargs={}):
+def plot_hist_line(hist_values, bins, ax, shape='steps', **kwargs):
     """
     Plot recovey rate as lines. Can be in steps or continuous
 

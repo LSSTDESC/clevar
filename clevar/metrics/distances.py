@@ -68,7 +68,8 @@ def get_redshift_distances(cat1, cat2, matching_type, normalize=None):
     return (z1-z2)/{None:1, 'cat1':(1+z1), 'cat2':(1+z2), 'mean':.5*(2+z1+z2)}[normalize]
 class CatalogFuncs():
     def _histograms(distances, distance_bins, quantity2=None, bins2=None,
-                    shape='steps', ax=None, plt_kwargs={}, lines_kwargs_list=None):
+                    shape='steps', ax=None, plt_kwargs={}, lines_kwargs_list=None,
+                    add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
         """
         Plot histograms for distances.
     
@@ -91,6 +92,12 @@ class CatalogFuncs():
         lines_kwargs_list: list, None
             List of additional arguments for plotting each line (using pylab.plot).
             Must have same size as len(bins2)-1
+        add_legend: bool
+            Add legend of bins
+        legend_format: function
+            Function to format the values of the bins in legend
+        legend_kwargs: dict
+            Additional arguments for pylab.legend
 
         Returns
         -------
@@ -102,13 +109,15 @@ class CatalogFuncs():
         lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in bin_masks])
         ax = none_val(ax, plt.axes())
         ph.add_grid(ax)
-        for m, l_kwargs in zip(bin_masks, lines_kwargs_list):
-            print(m[m].size, distances[m].min(), distances[m].max())
+        for m, l_kwargs, e0, e1 in zip(bin_masks, lines_kwargs_list, bins2, bins2[1:]):
             kwargs = {}
+            kwargs['label'] = ph.get_bin_label(e0, e1, legend_format) if add_legend else None
             kwargs.update(plt_kwargs)
             kwargs.update(l_kwargs)
             ph.plot_hist_line(*np.histogram(distances[m], bins=distance_bins),
                               ax=ax, shape=shape, **kwargs)
+        if add_legend:
+            ax.legend(**legend_kwargs)
         return ax
     def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units='degrees', cosmo=None,
                          col2=None, bins2=None, **kwargs):
@@ -217,7 +226,7 @@ class CatalogFuncs():
         return ax
 
 def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units='degrees', cosmo=None,
-                    mass_bins=None, mass_label=None, ax=None, **kwargs):
+                    mass_bins=None, mass_label=None, log_mass=True, ax=None, **kwargs):
     """
     Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
 
@@ -238,6 +247,8 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Cosmology (used if physical units required)
     mass_bins: array
         Bins for mass
+    log_mass: bool
+        Plot mass in log scale
 
     Other parameters
     ----------------
@@ -250,18 +261,28 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
+    add_legend: bool
+        Add legend of bins
+    legend_format: function
+        Function to format the values of the bins in legend
+    legend_kwargs: dict
+        Additional arguments for pylab.legend
 
     Returns
     -------
     ax: matplotlib.axes
         Axis of the plot
     """
+    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass else ".2f")
+    kwargs['legend_format'] = kwargs.get('legend_format',
+        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass else f'%{legend_fmt}'%v)
+    kwargs['add_legend'] = kwargs.get('add_legend', True)*(mass_bins is not None)
     return CatalogFuncs.central_position(cat1, cat2, matching_type, radial_bins=radial_bins,
             radial_bin_units=radial_bin_units, cosmo=cosmo, col2='mass', bins2=mass_bins,
             ax=ax, **kwargs)
 
 def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
-             mass_bins=None, mass_label=None, ax=None, **kwargs):
+             mass_bins=None, mass_label=None, log_mass=True, ax=None, **kwargs):
     """
     Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
 
@@ -281,6 +302,8 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         or 'mean' for (1+(z1+z2)/2).
     mass_bins: array
         Bins for mass
+    log_mass: bool
+        Plot mass in log scale
 
     Other parameters
     ----------------
@@ -293,12 +316,22 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
+    add_legend: bool
+        Add legend of bins
+    legend_format: function
+        Function to format the values of the bins in legend
+    legend_kwargs: dict
+        Additional arguments for pylab.legend
 
     Returns
     -------
     ax: matplotlib.axes
         Axis of the plot
     """
+    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass else ".2f")
+    kwargs['legend_format'] = kwargs.get('legend_format',
+        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass else f'%{legend_fmt}'%v)
+    kwargs['add_legend'] = kwargs.get('add_legend', True)*(mass_bins is not None)
     return CatalogFuncs.redshift(cat1, cat2, matching_type, redshift_bins=redshift_bins,
             normalize=normalize, col2='mass', bins2=mass_bins, ax=ax, **kwargs)
 
