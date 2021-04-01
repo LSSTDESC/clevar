@@ -95,7 +95,7 @@ class ArrayFuncs():
             kwargs['label'] = ph.get_bin_label(e0, e1, legend_format) if add_legend else None
             kwargs.update(plt_kwargs)
             kwargs.update(l_kwargs)
-            ph.plot_hist_line(rec_line, edges1, ax, shape, kwargs)
+            ph.plot_hist_line(rec_line, edges1, ax, shape, **kwargs)
         if add_legend:
             ax.legend(**legend_kwargs)
         return ax
@@ -154,7 +154,7 @@ class ArrayFuncs():
             kwargs = {}
             kwargs.update(plt_kwargs)
             kwargs.update(p_kwargs)
-            ph.plot_hist_line(rec_line, edges1, ax, shape, kwargs)
+            ph.plot_hist_line(rec_line, edges1, ax, shape, **kwargs)
         for ax in axes.flatten()[len(edges2)-1:]:
             ax.axis('off')
         if add_label:
