@@ -49,7 +49,7 @@ class ArrayFuncs():
     """
     def plot(values1, values2, bins1, bins2, is_matched, shape='steps',
              ax=None, plt_kwargs={}, lines_kwargs_list=None,
-             add_legend=False, legend_format=lambda v: v, legend_kwargs={}):
+             add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
         """
         Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
 
@@ -78,7 +78,7 @@ class ArrayFuncs():
             Add legend of bins
         legend_format: function
             Function to format the values of the bins in legend
-        legned_kwargs: dict
+        legend_kwargs: dict
             Additional arguments for pylab.legend
 
         Returns
@@ -283,7 +283,7 @@ class CatalogFuncs():
             Add legend of bins
         legend_format: function
             Function to format the values of the bins in legend
-        legned_kwargs: dict
+        legend_kwargs: dict
             Additional arguments for pylab.legend
 
         Returns
@@ -484,13 +484,13 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         Function to format the values of the bins in legend
     legend_fmt: str
         Format the values of binedges (ex: '.2f')
-    legned_kwargs: dict
+    legend_kwargs: dict
         Additional arguments for pylab.legend
     """
-    if 'legend_format' not in kwargs:
-        legend_fmt = kwargs.pop('legend_fmt') if 'legend_fmt' in kwargs else '.2f'
-        kwargs['legend_format'] = lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) \
-                                    if log_mass*(not transpose) else f'%{legend_fmt}'%v
+    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass*(not transpose) else ".2f")
+    kwargs['legend_format'] = kwargs.get('legend_format',
+        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass*(not transpose)\
+             else f'%{legend_fmt}'%v)
     return _plot_base(CatalogFuncs.plot, cat, matching_type,
                       redshift_bins, mass_bins, transpose,
                       scale1='log' if log_mass*transpose else 'linear',
@@ -552,7 +552,7 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
     ax: matplotlib.axes
         Axes with the panels
     """
-    label_fmt = kwargs.pop("label_fmt", ".2f")
+    label_fmt = kwargs.pop("label_fmt", ".1f" if log_mass*(not transpose) else ".2f")
     kwargs['label_format'] = kwargs.get('label_format',
         lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) if log_mass*(not transpose)\
              else f'%{label_fmt}'%v)
