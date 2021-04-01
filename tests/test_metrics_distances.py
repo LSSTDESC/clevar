@@ -40,3 +40,5 @@ def test_redshift():
     cat1, cat2 = get_test_data()
     dt.redshift(cat1, cat2, 'self', redshift_bins=20, normalize=None,
              mass_bins=None, mass_label=None, ax=None)
+    dt.redshift(cat1, cat2, 'self', redshift_bins=20, normalize=None,
+             mass_bins=[1e14, 1e16], mass_label=None, ax=None)

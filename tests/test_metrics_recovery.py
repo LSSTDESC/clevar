@@ -48,7 +48,7 @@ def test_plot_panel():
     cat = get_test_data()[0]
     matching_type = 'self'
     redshift_bins = [0, 0.5, 1]
-    mass_bins = [1e13, 1e14, 1e16]
+    mass_bins = [1e13, 1e14, 1e15, 1e16]
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
                redshift_label=None, mass_label=None, recovery_label=None,)
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, add_label=True, label_fmt='.2f')
