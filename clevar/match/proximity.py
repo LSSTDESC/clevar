@@ -222,3 +222,7 @@ class ProximityMatch(Match):
         if match_config['type'] in ('cat2', 'cross'):
             print("\n## Finding unique matches of catalog 2")
             self.unique(cat2, cat1, match_config['preference'])
+
+        if match_config['type'] == 'cross':
+            self.cross_match(cat1)
+            self.cross_match(cat2)

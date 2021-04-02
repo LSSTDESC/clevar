@@ -36,3 +36,5 @@ def test_adding_quantities():
     # Check create ids
     c = Catalog('test', ra=[0, 0, 0])
     assert_equal(c.data['id'], ['0', '1', '2'])
+    # Check inexistent mask
+    assert_raises(ValueError, c.get_matching_mask, 'made up mask')
