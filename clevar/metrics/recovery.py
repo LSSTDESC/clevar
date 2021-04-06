@@ -86,7 +86,7 @@ class ArrayFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        ax = none_val(ax, plt.axes())
+        ax = plt.axes() if ax is None else ax
         ph.add_grid(ax)
         recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
         lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in edges2[:-1]])
@@ -200,7 +200,7 @@ class ArrayFuncs():
             Colorbar of the recovey rates
         """
         recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
-        ax = none_val(ax, plt.axes())
+        ax = plt.axes() if ax is None else ax
         c = ax.pcolor(edges1, edges2, recovery.T, **plt_kwargs)
         if add_num:
             hist_all = np.histogram2d(values1, values2, bins=(bins1, bins2))[0]
@@ -209,7 +209,8 @@ class ArrayFuncs():
             xp, yp = .5*(edges1[:-1]+edges1[1:]), .5*(edges2[:-1]+edges2[1:])
             for x, ht_, hb_ in zip(xp, hist_matched, hist_all):
                 for y, ht, hb in zip(yp, ht_, hb_):
-                    plt.text(x, y, f'$\\frac{{{ht:.0f}}}{{{hb:.0f}}}$', **num_kwargs)
+                    if hb>0:
+                        plt.text(x, y, f'$\\frac{{{ht:.0f}}}{{{hb:.0f}}}$', **num_kwargs)
         return ax, plt.colorbar(c, **cb_kwargs)
 class CatalogFuncs():
     """
@@ -235,7 +236,7 @@ class CatalogFuncs():
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
-            'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
         **kwargs:
             Additional arguments to be passed to pltfunc
         """
@@ -260,7 +261,7 @@ class CatalogFuncs():
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
-            'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
 
         Other parameters
         ----------------
@@ -317,7 +318,7 @@ class CatalogFuncs():
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
-            'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
 
         Other parameters
         ----------------
@@ -375,7 +376,7 @@ class CatalogFuncs():
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
-            'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
 
         Other parameters
         ----------------
@@ -427,7 +428,7 @@ def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins,
         Catalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
     redshift_bins: array
         Bins for redshift
     mass_bins: array
@@ -451,7 +452,7 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         Catalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
     redshift_bins: array
         Bins for redshift
     mass_bins: array
@@ -509,7 +510,7 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         Catalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
     redshift_bins: array
         Bins for redshift
     mass_bins: array
@@ -573,7 +574,7 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
         Catalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
     redshift_bins: array
         Bins for redshift
     mass_bins: array

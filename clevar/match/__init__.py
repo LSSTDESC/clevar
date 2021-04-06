@@ -11,8 +11,8 @@ class MatchedPairs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'cross', 'self', 'other'
+            'mt_cross', 'mt_self', 'mt_other'
         """
         is_matched = cat1.get_matching_mask(matching_type)
-        self.data1 = cat1.data[is_matched]
-        self.data2 = cat2.data[cat2.ids2inds(cat1.match[matching_type][is_matched])]
+        self.data1 = cat1[is_matched]
+        self.data2 = cat2[cat2.ids2inds(cat1[matching_type][is_matched])]

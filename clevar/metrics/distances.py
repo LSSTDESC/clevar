@@ -24,7 +24,7 @@ def get_central_distances(cat1, cat2, matching_type, units='degrees', cosmo=None
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other'
+        'mt_cross', 'mt_self', 'mt_other'
     units: str
         Units of output distance
     cosmo: clevar.Cosmology
@@ -52,7 +52,7 @@ def get_redshift_distances(cat1, cat2, matching_type, normalize=None):
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other'
+        'mt_cross', 'mt_self', 'mt_other'
     normalize: str, None
         Normalize difference by (1+z). Can be 'cat1' for (1+z1), 'cat2' for (1+z2)
         or 'mean' for (1+(z1+z2)/2).
@@ -132,7 +132,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
         radial_bins: array
             Bins for radial distances
         radial_bin_units: str
@@ -185,7 +185,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
         redshift_bins: array
             Bins for redshift distances
         col2: str
@@ -238,7 +238,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
     radial_bins: array
         Bins for radial distances
     radial_bin_units: str
@@ -294,7 +294,7 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
     redshift_bins: array
         Bins for redshift distances
     normalize: str, None
