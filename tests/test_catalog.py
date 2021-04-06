@@ -10,6 +10,8 @@ def test_adding_quantities():
     for k, v in quantities.items():
         assert_equal(c[k], v)
     assert_equal(c.size, len(quantities['ra']))
+    c.__str__()
+    c._repr_html_()
     # Check init match values
     empty_list = np.array([None for i in range(c.size)], dtype=np.ndarray)
     for i in range(c.size):

@@ -91,9 +91,7 @@ class Catalog():
     def __delitem__(self, item):
         del self.data[item]
     def __str__(self):
-        return self.data.__str__()
-    def __repr__(self):
-        return self.data.__repr__()
+        return f'{self.name}:\n{self.data.__str__()}'
     def _repr_html_(self):
         return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
