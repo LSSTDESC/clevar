@@ -77,5 +77,26 @@ def pix2map(nside, pixels, values, null):
     outmap = np.zeros(12*nside**2)+null
     outmap[pixels] = values
     return outmap
+def neighbors_of_pixels(nside, pixels, nest=False):
+    '''
+    Get all neighbors of a pixel list
+
+    Parameters
+    ----------
+    nside: int
+        Healpix nside
+    pixels: array
+        Array of pixel indices
+    nest: bool
+        If ordering is nested
+
+    Return
+    ------
+    array
+        Neighbor pixels
+    '''
+    nbs = np.array(list(set(hp.get_all_neighbours(nside, pixels, nest=nest).flatten())))
+    return nbs[nbs>-1]
 hp.pix2mask = pix2mask
 hp.pix2map = pix2map
+hp.neighbors_of_pixels = neighbors_of_pixels
