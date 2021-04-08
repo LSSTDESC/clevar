@@ -168,50 +168,11 @@ class Match():
         """
         if not os.path.isdir(out_dir):
             os.system(f'mkdir {out_dir}')
-        self._save_match(cat1, f'{out_dir}/match1.fits', overwrite=overwrite)
-        self._save_match(cat2, f'{out_dir}/match2.fits', overwrite=overwrite)
-    def _save_match(self, cat, out_name, overwrite=False):
-        """
-        Saves the matching results of one catalog
-
-        Parameters
-        ----------
-        cat1: clevar.Catalog
-            Catalog
-        out_dir: str
-            Path of directory to save output
-        overwrite: bool
-            Overwrite saved files
-        """
-        out = ClData()
-        out['id'] = cat['id']
-        for col in ('mt_self', 'mt_other'):
-            out[col] = [c if c else '' for c in cat[col]]
-        for col in ('mt_multi_self', 'mt_multi_other'):
-            out[col] = [','.join(c) if c else '' for c in cat[col]]
-        out.write(out_name, overwrite=overwrite)
+        cat1.save_match(f'{out_dir}/match1.fits', overwrite=overwrite)
+        cat2.save_match(f'{out_dir}/match2.fits', overwrite=overwrite)
     def load_matches(self, cat1, cat2, out_dir):
         """
         Load matching results to catalogs
         """
-        mt1 = ClData.read(f'{out_dir}/match1.fits')
-        self._load_match(cat1, mt1)
-        del mt1
-        #return out1
-        mt2 = ClData.read(f'{out_dir}/match2.fits')
-        self._load_match(cat2, mt2)
-        del mt2
-    def _load_match(self, cat, mt):
-        """
-        Load matching results of one catalog
-        """
-        for col in ('mt_self', 'mt_other'):
-            cat[col] = np.array([c if c!='' else None for c in mt[col]], dtype=np.ndarray)
-        for col in ('mt_multi_self', 'mt_multi_other'):
-            cat[col] = np.array([None for c in mt[col]], dtype=np.ndarray)
-            for i, c in enumerate(mt[col]):
-                if len(c)>0:
-                    cat[col][i] = c.split(',')
-                else:
-                    cat[col][i] = []
-        cat.cross_match()
+        cat1.load_match(f'{out_dir}/match1.fits')
+        cat2.load_match(f'{out_dir}/match2.fits')

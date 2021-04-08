@@ -93,9 +93,11 @@ class Catalog():
     def __str__(self):
         return f'{self.name}:\n{self.data.__str__()}'
     def _repr_html_(self):
-        return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
+        data = self[[c for c in self.data.colnames if c!='SkyCoord']]
+        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
+        self.radius_unit = columns.pop('radius_unit', None)
         # Check all columns have same size
         names = [n for n in columns]
         sizes = [len(v) for v in columns.values()]
@@ -151,3 +153,142 @@ class Catalog():
         if matching_type not in _matching_mask_funcs:
             raise ValueError(f'matching_type ({matching_type}) must be in {list(_matching_mask_funcs.keys())}')
         return _matching_mask_funcs[matching_type](self.data)
+    def _add_ftpt_mask(self, ftpt, maskname):
+        """
+        Adds a mask based on the cluster position relative to a footprint.
+        It also considers zmax values on the footprint if available.
+
+        Parameters
+        ----------
+        ftpt: clevar.mask.Footprint object
+            Footprint
+        maskname: str
+            Name of mask to be added
+        """
+        self[f'ft_{maskname}'] = ftpt.zmax_masks_from_footprint(self['ra'], self['dec'],
+            self['z'] if 'z' in self.data.colnames else 1e-10)
+    def add_ftpt_masks(self, ftpt_self, ftpt_other):
+        """
+        Add masks based on the cluster position relative to both footprints.
+        It also considers zmax values on the footprint if available.
+
+        Parameters
+        ----------
+        ftpt_self: clevar.mask.Footprint object
+            Footprint of this catalog
+        ftpt_other: clevar.mask.Footprint object
+            Footprint of the other catalog
+        """
+        self._add_ftpt_mask(ftpt_self, 'self')
+        self._add_ftpt_mask(ftpt_other, 'other')
+    def add_ftpt_coverfrac(self, ftpt, aperture, aperture_unit, cosmo=None):
+        """
+        Computes and adds a cover fraction value. It considers zmax and detection fraction
+        when available in the footprint.
+
+        Parameters
+        ----------
+        ftpt: clevar.mask.Footprint object
+            Footprint used to compute the coverfration
+        ftpt_other: clevar.mask.Footprint object
+            Footprint of the other catalog
+        raduis: float
+            Radial aperture to compute the coverfraction
+        aperture_unit: float
+            Unit of radial aperture
+        cosmo: clevar.Cosmology object
+            Cosmology object for when aperture has physical units
+        """
+        num = f'{aperture}'
+        num = f'{aperture:.2f}' if len(num)>6 else num
+        self[f'cf_{num}_{aperture_unit}'] = [
+            ftpt._get_coverfrac(c['SkyCoord'], c['z'], aperture, aperture_unit, cosmo=cosmo)
+            for c in self]
+    def add_ftpt_coverfrac_nfw2D(self, ftpt, aperture, aperture_unit, cosmo=None):
+        """
+        Computes and adds a cover fraction value weighted by a nfw 2D flatcore window function.
+        It considers zmax and detection fraction when available in the footprint.
+
+        Parameters
+        ----------
+        ftpt: clevar.mask.Footprint object
+            Footprint used to compute the coverfration
+        ftpt_other: clevar.mask.Footprint object
+            Footprint of the other catalog
+        raduis: float
+            Radial aperture to compute the coverfraction
+        aperture_unit: float
+            Unit of radial aperture
+        cosmo: clevar.Cosmology object
+            Cosmology object for physical and angular convertions
+        """
+        num = f'{aperture}'
+        num = f'{aperture:.2f}' if len(num)>6 else num
+        self[f'cf_nfw_{num}_{aperture_unit}'] = [
+            ftpt._get_coverfrac_nfw2D(c['SkyCoord'], c['z'], c['radius'], self.radius_unit,
+                                      aperture, aperture_unit, cosmo=cosmo)
+            for c in self]
+    def save_match(self, filename, overwrite=False):
+        """
+        Saves the matching results of one catalog
+
+        Parameters
+        ----------
+        filename: str
+            Name of file
+        overwrite: bool
+            Overwrite saved files
+        """
+        out = ClData()
+        out['id'] = cat['id']
+        for col in ('mt_self', 'mt_other'):
+            out[col] = [c if c else '' for c in cat[col]]
+        for col in ('mt_multi_self', 'mt_multi_other'):
+            out[col] = [','.join(c) if c else '' for c in cat[col]]
+        out.write(filename, overwrite=overwrite)
+    def load_match(self, filename):
+        """
+        Load matching results to catalogs
+
+        Parameters
+        ----------
+        filename: str
+            Name of file with matching results
+        """
+        mt = ClData.read(filename)
+        for col in ('mt_self', 'mt_other'):
+            self[col] = np.array([c if c!='' else None for c in mt[col]], dtype=np.ndarray)
+        for col in ('mt_multi_self', 'mt_multi_other'):
+            self[col] = np.array([None for c in mt[col]], dtype=np.ndarray)
+            for i, c in enumerate(mt[col]):
+                if len(c)>0:
+                    cat[col][i] = c.split(',')
+                else:
+                    cat[col][i] = []
+        self.cross_match()
+    def save_footprint_quantities(self, filename, overwrite=False):
+        """
+        Saves the matching results of one catalog
+
+        Parameters
+        ----------
+        filename: str
+            Name of file
+        overwrite: bool
+            Overwrite saved files
+        """
+        out = self[['id']+[c for c in self.data.colnames if c[:2] in ('ft', 'cf')]]
+        out.write(filename, overwrite=overwrite)
+    def load_footprint_quantities(self, filename):
+        """
+        Load matching results to catalogs
+
+        Parameters
+        ----------
+        filename: str
+            Name of file with matching results
+        """
+        ftq = ClData.read(filename)
+        for col in ftq.colnames:
+            if col!='id':
+                self[col] = ftq[col]
