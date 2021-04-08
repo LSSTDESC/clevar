@@ -210,13 +210,16 @@ class ArrayFuncs():
             for x, ht_, hb_ in zip(xp, hist_matched, hist_all):
                 for y, ht, hb in zip(yp, ht_, hb_):
                     if hb>0:
-                        plt.text(x, y, f'$\\frac{{{ht:.0f}}}{{{hb:.0f}}}$', **num_kwargs)
-        return ax, plt.colorbar(c, **cb_kwargs)
+                        ax.text(x, y, f'$\\frac{{{ht:.0f}}}{{{hb:.0f}}}$', **num_kwargs)
+        cb_kwargs_ = {'ax':ax}
+        cb_kwargs_.update(cb_kwargs)
+        return ax, plt.colorbar(c, **cb_kwargs_)
 class CatalogFuncs():
     """
     Class of plot functions with clevar.Catalog as inputs
     """
-    def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type, **kwargs):
+    def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
+                   mask=None, mask_unmatched=None, **kwargs):
         """
         Adapts a CatalogFuncs function to use a ArrayFuncs function.
 
@@ -237,11 +240,18 @@ class CatalogFuncs():
         matching_type: str
             Type of matching to be considered. Must be in:
             'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+        mask: array
+            Mask unwanted clusters
+        mask_unmatched: array
+            Mask unwanted unmatched clusters (ex: out of footprint)
         **kwargs:
             Additional arguments to be passed to pltfunc
         """
-        return pltfunc(cat.data[col1], cat.data[col2], bins1, bins2,
-                       is_matched=cat.get_matching_mask(matching_type), **kwargs)
+        is_matched = cat.get_matching_mask(matching_type)
+        # mask_ to apply mask and mask_unmatched
+        mask_ = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
+        return pltfunc(cat[mask_][col1], cat[mask_][col2], bins1, bins2,
+                       is_matched=is_matched[mask_], **kwargs)
     def plot(cat, col1, col2, bins1, bins2, matching_type,
              xlabel=None, ylabel=None, scale1='linear', **kwargs):
         """
@@ -262,6 +272,10 @@ class CatalogFuncs():
         matching_type: str
             Type of matching to be considered. Must be in:
             'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+        mask: array
+            Mask unwanted clusters
+        mask_unmatched: array
+            Mask unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
@@ -319,6 +333,10 @@ class CatalogFuncs():
         matching_type: str
             Type of matching to be considered. Must be in:
             'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+        mask: array
+            Mask unwanted clusters
+        mask_unmatched: array
+            Mask unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
@@ -377,6 +395,10 @@ class CatalogFuncs():
         matching_type: str
             Type of matching to be considered. Must be in:
             'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+        mask: array
+            Mask unwanted clusters
+        mask_unmatched: array
+            Mask unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
