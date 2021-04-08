@@ -203,24 +203,26 @@ class Footprint():
         out += "zmax: [%g, %g]\n"%(self['zmax'].min(), self['zmax'].max())
         out += "detfrac: [%g, %g]"%(self['detfrac'].min(), self['detfrac'].max())
         return out
-    def _get_coverfrac(self, sk, z, aperture_radius, aperture_radius_unit, cosmo=None,
-        wtfunc=lambda pixels, sk: np.ones(len(pixels))):
+    def _get_coverfrac(self, cl_sk, cl_z, aperture_radius, aperture_radius_unit,
+                       cosmo=None, wtfunc=lambda pixels, sk: np.ones(len(pixels))):
         '''
         Get cover fraction
-    
+
         Parameters
         ----------
-        ra: float
-            RA in deg
-        dec: float
-            DEC in deg
-        z: float
-            Redshift
+        cl_sk: astropy.coordinates.SkyCoord
+            Cluster SkyCoord [degrees, frame='icrs']
+        cl_z: float
+            Cluster redshift
         aperture_radius: float
-            Radius for aperture in deg
+            Radius of aperture
+        aperture_radius_unit: str
+            Unit of aperture radius
+        cosmo: clevar.Cosmology object
+            Cosmology object for when radius has angular units
         wtfunc: function
-            Weight function
-    
+            Window function
+
         Returns
         -------
         float
@@ -228,24 +230,24 @@ class Footprint():
         '''
         pix_list = hp.query_disc(
             nside=self.nside, inclusive=True,
-            vec=hp.pixelfunc.ang2vec(sk.ra.value, sk.dec.value, lonlat=True),
+            vec=hp.pixelfunc.ang2vec(cl_sk.ra.value, cl_sk.dec.value, lonlat=True),
             radius=convert_units(aperture_radius, aperture_radius_unit, 'radians',
-                                 redshift=z, cosmo=cosmo)
+                                 redshift=cl_z, cosmo=cosmo)
             )
-        weights = wtfunc(pix_list, sk)
+        weights = wtfunc(pix_list, cl_sk)
         detfrac_vals = self.get_values_in_pixels('detfrac', pix_list, 0)
         zmax_vals = self.get_values_in_pixels('zmax', pix_list, 0)
         values = detfrac_vals*np.array(z<=zmax_vals, dtype=float)
         return sum(weights*values)/sum(weights)
     def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
-        aperture_radius, aperture_radius_unit, cosmo=None):
+                             aperture_radius, aperture_radius_unit, cosmo=None):
         '''
         Cover fraction with NFW 2D flatcore window
-    
+
         Parameters
         ----------
         cl_sk: astropy.coordinates.SkyCoord
-            Cluster SkyCoord [degrees]
+            Cluster SkyCoord [degrees, frame='icrs']
         cl_z: float
             Cluster redshift
         cl_radius: float
@@ -253,77 +255,97 @@ class Footprint():
         cl_radius_unit: str
             Unit of cluster radius
         aperture_radius: float
-            Window radius
+            Radius of aperture
         aperture_radius_unit: str
             Unit of aperture radius
         cosmo: clevar.Cosmology object
             Cosmology object for when radius has angular units
-    
+
         Returns
         -------
         float
         '''
         cl_radius_mpc = convert_units(cl_radius, cl_radius_unit, 'mpc',
-                                 redshift=cl_z, cosmo=cosmo)
+                                      redshift=cl_z, cosmo=cosmo)
         return self._get_coverfrac(cl_sk, cl_z, aperture_radius, aperture_radius_unit, cosmo=cosmo,
             wtfunc=lambda pix_list, cl_sk: self._nfw_flatcore_window_func(pix_list, cl_sk, cl_z,
                                                                        cl_radius_mpc, cosmo))
-    def get_coverfrac(ra, dec, z, aperture_radius, aperture_radius_unit, cosmo=None,
-        wtfunc=lambda pixels, sk: np.ones(len(pixels))):
+    def get_coverfrac(self, cl_ra, cl_dec, cl_z, aperture_radius, aperture_radius_unit,
+                      cosmo=None, wtfunc=lambda pixels, sk: np.ones(len(pixels))):
         '''
         Get cover fraction
-    
+
         Parameters
         ----------
-        ra: float
-            RA in deg
-        dec: float
-            DEC in deg
-        z: float
-            Redshift
-        ang: float
-            Radius for aperture in deg
-        ftpt: FootprintZmax
-            Footprint object, must have function add_maps pre run
+        cl_ra: float
+            Cluster RA in deg
+        cl_dec: float
+            Cluster DEC in deg
+        cl_z: float
+            Cluster redshift
+        aperture_radius: float
+            Radius of aperture
+        aperture_radius_unit: str
+            Unit of aperture radius
+        cosmo: clevar.Cosmology object
+            Cosmology object for when radius has angular units
         wtfunc: function
-            Weight function
-    
+            Window function
+
         Returns
         -------
         float
             Cover fraction
         '''
-        return self._get_coverfrac(SkyCoord(ra*u.deg, dec*u.deg, frame='icrs'),
-            z, aperture_radius, aperture_radius_unit, cosmo=cosmo, wtfunc=wtfunc)
-    def get_coverfrac_nfw2D(ra, dec, z, aperture_radius, aperture_radius_unit, cosmo=None):
+        return self._get_coverfrac(SkyCoord(cl_ra*u.deg, cl_dec*u.deg, frame='icrs'),
+                                   cl_z, aperture_radius, aperture_radius_unit,
+                                   cosmo=cosmo, wtfunc=wtfunc)
+    def get_coverfrac_nfw2D(self, cl_ra, cl_dec, cl_z, cl_radius, cl_radius_unit,
+                            aperture_radius, aperture_radius_unit, cosmo=None):
         '''
         Cover fraction with NFW 2D flatcore window
+
+        Parameters
+        ----------
+        cl_ra: float
+            Cluster RA in deg
+        cl_dec: float
+            Cluster DEC in deg
+        cl_z: float
+            Cluster redshift
+        cl_radius: float
+            Cluster radius
+        cl_radius_unit: str
+            Unit of cluster radius
+        aperture_radius: float
+            Radius of aperture
+        aperture_radius_unit: str
+            Unit of aperture radius
+        cosmo: clevar.Cosmology object
+            Cosmology object for when radius has angular units
+
+        Returns
+        -------
+        float
         '''
         return self._get_coverfrac_nfw2D(SkyCoord(ra*u.deg, dec*u.deg, frame='icrs'),
-            *args, **kwargs)
-    def _nfw_flatcore_window_func(self, pix_list, sk, z, r, cosmo):
+                                         cl_z, cl_radius, cl_radius_unit,
+                                         aperture_radius, aperture_radius_unit, cosmo=cosmo)
+    def _nfw_flatcore_window_func(self, pix_list, cl_sk, cl_z, cl_radius, cosmo):
         '''
         Get aperture function for NFW 2D Profile with a top-hat core
-    
+
         Parameters
         ----------
         pix_list: list
             List of pixels in the aperture
-        ra: float
-            RA in deg
-        dec: float
-            DEC in deg
-        z: float
-            Redshift
-        r: float
+        cl_sk: astropy.coordinates.SkyCoord
+            Cluster SkyCoord [degrees, frame='icrs']
+        cl_z: float
+            Cluster redshift
+        cl_radius: float
             Cluster radius in Mpc
-        deg1mpc: float
-            Size of 1 Mpc in degrees at the cluster redshift
-        ftpt: FootprintZmax
-            Footprint object
-        h: float
-            Hubble parameter
-    
+
         Returns
         -------
         array
@@ -332,7 +354,7 @@ class Footprint():
         Rs = 0.15/cosmo['h'] # 0.214Mpc
         Rcore = 0.1/cosmo['h'] # 0.142Mpc
         R = self.get_values_in_pixels('SkyCoord', pix_list, Rcore,
-            transform=lambda x: convert_units(sk.separation(x).value,
-                                              'degrees', 'mpc', z, cosmo)
+            transform=lambda x: convert_units(cl_sk.separation(x).value,
+                                              'degrees', 'mpc', cl_z, cosmo)
             )
-        return nfw2D_profile_flatcore(R, r, Rs, Rcore)
+        return nfw2D_profile_flatcore(R, cl_radius, Rs, Rcore)
