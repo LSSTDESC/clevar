@@ -241,7 +241,7 @@ class CatalogFuncs():
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+            'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
             Mask unwanted clusters
         mask_unmatched: array
@@ -275,7 +275,7 @@ class CatalogFuncs():
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+            'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
             Mask unwanted clusters
         mask_unmatched: array
@@ -336,7 +336,7 @@ class CatalogFuncs():
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+            'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
             Mask unwanted clusters
         mask_unmatched: array
@@ -398,7 +398,7 @@ class CatalogFuncs():
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+            'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
             Mask unwanted clusters
         mask_unmatched: array
@@ -454,7 +454,7 @@ def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins,
         Catalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+        'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
     redshift_bins: array
         Bins for redshift
     mass_bins: array
@@ -478,7 +478,7 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         Catalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+        'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
     redshift_bins: array
         Bins for redshift
     mass_bins: array
@@ -536,7 +536,7 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         Catalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+        'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
     redshift_bins: array
         Bins for redshift
     mass_bins: array
@@ -600,7 +600,7 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
         Catalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other', 'mt_multi_join'
+        'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
     redshift_bins: array
         Bins for redshift
     mass_bins: array
