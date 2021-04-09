@@ -46,6 +46,8 @@ class ProximityMatch(Match):
                         i2 = int(cat2.id_dict[id2])
                         cat2['mt_multi_other'][i2].append(cat1['id'][i])
         print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
+        cat1.remove_multiple_duplicates()
+        cat2.remove_multiple_duplicates()
     def prep_cat_for_match(self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1,
         cosmo=None):
         """
@@ -58,10 +60,10 @@ class ProximityMatch(Match):
         delta_z: float, string
             Defines the zmin, zmax for matching. If 'cat' uses redshift properties of the catalog,
             if 'spline.filename' interpolates data in 'filename' (z, zmin, zmax) fmt,
-            if float uses dist_z*(1+z),
+            if float uses delta_z*(1+z),
             if None does not use z.
         match_radius: string
-            Defines the radius for matching (in degrees). If 'cat' uses the radius in the catalog,
+            Defines the radius for matching. If 'cat' uses the radius in the catalog,
             else must be in format 'value unit'. (ex: '1 arcsec', '1 Mpc')
         n_delta_z: float
             Number of delta_z to be used in the matching
