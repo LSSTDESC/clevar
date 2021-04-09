@@ -17,10 +17,11 @@ def test_parent():
 def _test_mt_results(mt, c1, c2, multiple_res1, multiple_res2,
                     unique_res1, unique_res2, cross_res1, cross_res2):
     # Check multiple match
-    assert_equal(c1['mt_multi_self'], multiple_res1)
-    assert_equal(c1['mt_multi_other'], multiple_res1)
-    assert_equal(c2['mt_multi_self'], multiple_res2)
-    assert_equal(c2['mt_multi_other'], multiple_res2)
+    slists = lambda mmt: [sorted(l) for l in mmt]
+    assert_equal(slists(c1['mt_multi_self']), slists(multiple_res1))
+    assert_equal(slists(c1['mt_multi_other']), slists(multiple_res1))
+    assert_equal(slists(c2['mt_multi_self']), slists(multiple_res2))
+    assert_equal(slists(c2['mt_multi_other']), slists(multiple_res2))
     # Check unique
     assert_equal(c1['mt_self'], unique_res1)
     assert_equal(c1['mt_other'], unique_res1)
