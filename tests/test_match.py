@@ -160,6 +160,8 @@ def test_proximity_cfg(CosmoClass):
     # init match
     cosmo =  CosmoClass()
     mt = ProximityMatch()
+    # test wrong matching config
+    assert_raises(ValueError, mt.match_from_config, c1, c2, {'type':'unknown'}, cosmo=cosmo)
     ### test 0 ###
     mt_config = {
         'which_radius': 'max',

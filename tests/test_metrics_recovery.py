@@ -35,7 +35,7 @@ def get_test_data():
     return c1, c2
 def test_plot():
     cat = get_test_data()[0]
-    matching_type = 'self'
+    matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e16]
     rc.plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
@@ -46,7 +46,7 @@ def test_plot():
 
 def test_plot_panel():
     cat = get_test_data()[0]
-    matching_type = 'self'
+    matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
@@ -55,7 +55,7 @@ def test_plot_panel():
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=True)
 def test_plot2D():
     cat = get_test_data()[0]
-    matching_type = 'self'
+    matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
     rc.plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
