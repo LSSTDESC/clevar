@@ -34,11 +34,11 @@ def get_test_data():
     return c1, c2
 def test_central_position():
     cat1, cat2 = get_test_data()
-    dt.central_position(cat1, cat2, 'mt_self', radial_bins=20, radial_bin_units='degrees', cosmo=None,
+    dt.central_position(cat1, cat2, 'self', radial_bins=20, radial_bin_units='degrees', cosmo=None,
                     mass_bins=None, mass_label=None, ax=None)
 def test_redshift():
     cat1, cat2 = get_test_data()
-    dt.redshift(cat1, cat2, 'mt_self', redshift_bins=20, normalize=None,
+    dt.redshift(cat1, cat2, 'self', redshift_bins=20, normalize=None,
              mass_bins=None, mass_label=None, ax=None)
-    dt.redshift(cat1, cat2, 'mt_self', redshift_bins=20, normalize=None,
+    dt.redshift(cat1, cat2, 'self', redshift_bins=20, normalize=None,
              mass_bins=[1e14, 1e16], mass_label=None, ax=None)

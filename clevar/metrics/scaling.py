@@ -448,7 +448,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
         col: str
             Name of column to be plotted
         kwargs: dict
@@ -503,7 +503,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
         col: str
             Name of column to be plotted
         add_err: bool
@@ -548,7 +548,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
         col: str
             Name of column to be plotted
         col_color: str
@@ -608,7 +608,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
         col: str
             Name of column to be plotted
         bins: array, int
@@ -671,7 +671,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
         col: str
             Name of column to be plotted
         col_panel: str
@@ -718,7 +718,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
         col: str
             Name of column to be plotted
         col_panel: str
@@ -786,7 +786,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
         col: str
             Name of column to be plotted
         col_color: str
@@ -863,7 +863,7 @@ class CatalogFuncs():
             Catalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
-            'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+            'cross', 'self' (catalog 1), 'other'(catalog 2)
         col: str
             Name of column to be plotted
         col_panel: str
@@ -942,7 +942,7 @@ def redshift(cat1, cat2, matching_type, **kwargs):
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     add_err: bool
         Add errorbars
 
@@ -977,7 +977,7 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     col: str
         Name of column to be plotted
     bins: array, int
@@ -1030,7 +1030,7 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     log_mass: bool
         Log scale for mass
     color1: bool
@@ -1076,7 +1076,7 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     mass_bins: int, array
         Mass bins to make panels
     log_mass: bool
@@ -1136,7 +1136,7 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     mass_bins: int, array
         Mass bins to make panels
     log_mass: bool
@@ -1206,7 +1206,7 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     log_mass: bool
         Log scale for mass
     add_err: bool
@@ -1250,7 +1250,7 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     log_mass: bool
         Log scale for mass
     color1: bool
@@ -1298,7 +1298,7 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     log_mass: bool
         Log scale for mass
     col: str
@@ -1352,7 +1352,7 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     redshift_bins: int, array
         Redshift bins to make panels
     log_mass: bool
@@ -1415,7 +1415,7 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Catalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'mt_cross', 'mt_self' (catalog 1), 'mt_other'(catalog 2)
+        'cross', 'self' (catalog 1), 'other'(catalog 2)
     redshift_bins: int, array
         Redshift bins to make panels
     log_mass: bool

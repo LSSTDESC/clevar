@@ -207,10 +207,12 @@ class ArrayFuncs():
             hist_matched = np.histogram2d(values1[is_matched], values2[is_matched],
                                   bins=(bins1, bins2))[0]
             xp, yp = .5*(edges1[:-1]+edges1[1:]), .5*(edges2[:-1]+edges2[1:])
+            num_kwargs_ = {'va':'center', 'ha':'center'}
+            num_kwargs_.update(num_kwargs)
             for x, ht_, hb_ in zip(xp, hist_matched, hist_all):
                 for y, ht, hb in zip(yp, ht_, hb_):
                     if hb>0:
-                        ax.text(x, y, f'$\\frac{{{ht:.0f}}}{{{hb:.0f}}}$', **num_kwargs)
+                        ax.text(x, y, f'$\\frac{{{ht:.0f}}}{{{hb:.0f}}}$', **num_kwargs_)
         cb_kwargs_ = {'ax':ax}
         cb_kwargs_.update(cb_kwargs)
         return ax, plt.colorbar(c, **cb_kwargs_)
@@ -308,7 +310,7 @@ class CatalogFuncs():
         """
         ax = CatalogFuncs._plot_base(ArrayFuncs.plot,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-        ax.set_xlabel(xlabel if xlabel else col1)
+        ax.set_xlabel(xlabel if xlabel else f'${col1}_{{{cat.name}}}$')
         ax.set_ylabel(ylabel if ylabel else 'recovery rate')
         ax.set_xscale(scale1)
         return ax
@@ -432,8 +434,8 @@ class CatalogFuncs():
         """
         ax, cb = CatalogFuncs._plot_base(ArrayFuncs.plot2D,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-        ax.set_xlabel(xlabel if xlabel else col1)
-        ax.set_ylabel(ylabel if ylabel else col2)
+        ax.set_xlabel(xlabel if xlabel else f'${col1}_{{{cat.name}}}$')
+        ax.set_ylabel(ylabel if ylabel else f'${col2}_{{{cat.name}}}$')
         ax.set_xscale(scale1)
         ax.set_yscale(scale2)
         return ax, cb

@@ -48,12 +48,12 @@ class ClData(APtable):
         """
         return self[key] if key in self.colnames else default
 _matching_mask_funcs = {
-    'mt_cross': lambda match: match['mt_cross']!=None,
-    'mt_self': lambda match: match['mt_self']!=None,
-    'mt_other': lambda match: match['mt_other']!=None,
-    'mt_multi_self': lambda match: veclen(match['mt_multi_self'])>0,
-    'mt_multi_other': lambda match: veclen(match['mt_multi_other'])>0,
-    'mt_multi_join': lambda match: (veclen(match['mt_multi_self'])>0)+(veclen(match['mt_multi_other'])>0),
+    'cross': lambda match: match['mt_cross']!=None,
+    'self': lambda match: match['mt_self']!=None,
+    'other': lambda match: match['mt_other']!=None,
+    'multi_self': lambda match: veclen(match['mt_multi_self'])>0,
+    'multi_other': lambda match: veclen(match['mt_multi_other'])>0,
+    'multi_join': lambda match: (veclen(match['mt_multi_self'])>0)+(veclen(match['mt_multi_other'])>0),
 }
 class Catalog():
     """
@@ -240,11 +240,11 @@ class Catalog():
             Overwrite saved files
         """
         out = ClData()
-        out['id'] = cat['id']
+        out['id'] = self['id']
         for col in ('mt_self', 'mt_other'):
-            out[col] = [c if c else '' for c in cat[col]]
+            out[col] = [c if c else '' for c in self[col]]
         for col in ('mt_multi_self', 'mt_multi_other'):
-            out[col] = [','.join(c) if c else '' for c in cat[col]]
+            out[col] = [','.join(c) if c else '' for c in self[col]]
         out.write(filename, overwrite=overwrite)
     def load_match(self, filename):
         """
@@ -262,9 +262,9 @@ class Catalog():
             self[col] = np.array([None for c in mt[col]], dtype=np.ndarray)
             for i, c in enumerate(mt[col]):
                 if len(c)>0:
-                    cat[col][i] = c.split(',')
+                    self[col][i] = c.split(',')
                 else:
-                    cat[col][i] = []
+                    self[col][i] = []
         self.cross_match()
     def save_footprint_quantities(self, filename, overwrite=False):
         """

@@ -103,7 +103,7 @@ def test_proximity(CosmoClass):
     # Error for unkown preference
     assert_raises(ValueError, mt.unique, c1, c2, 'unknown')
     # Check save and load matching
-    mt.save_matches(c1, c2, out_dir='temp')
+    mt.save_matches(c1, c2, out_dir='temp', overwrite=True)
     c1_v2 = Catalog('Cat1', **input1)
     c2_v2 = Catalog('Cat2', **input2)
     mt.load_matches(c1_v2, c2_v2, out_dir='temp')
@@ -148,8 +148,8 @@ def test_proximity(CosmoClass):
                     match_radius='1 unknown', cosmo=cosmo)
     # Other multiple match configs
     mt.prep_cat_for_match(c1, **mt_config1)
-    mt.multiple(c1, c2, radius_selection='mt_self')
-    mt.multiple(c1, c2, radius_selection='mt_other')
+    mt.multiple(c1, c2, radius_selection='self')
+    mt.multiple(c1, c2, radius_selection='other')
     mt.multiple(c1, c2, radius_selection='min')
 def test_proximity_cfg(CosmoClass):
     input1, input2 = get_test_data()
@@ -163,7 +163,7 @@ def test_proximity_cfg(CosmoClass):
     ### test 0 ###
     mt_config = {
         'which_radius': 'max',
-        'type': 'mt_cross',
+        'type': 'cross',
         'preference': 'angular_proximity',
         'catalog1': {
             'delta_z':.2,

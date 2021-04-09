@@ -162,10 +162,10 @@ class ProximityMatch(Match):
         float, array
             Maximum angular distance allowed for matching
         """
-        if radius_selection=='mt_self':
+        if radius_selection=='self':
             f1 = np.ones(radius1.size)
             f2 = np.zeros(radius2.size)
-        elif radius_selection=='mt_other':
+        elif radius_selection=='other':
             f1 = np.zeros(radius1.size)
             f2 = np.ones(radius2.size)
         elif radius_selection=='max':
@@ -190,39 +190,41 @@ class ProximityMatch(Match):
         cosmo: clevar.Cosmology object
             Cosmology object for when radius has physical units
         """
-        if match_config['type'] in ('cat1', 'mt_cross'):
+        if match_config['type'] not in ('cat1', 'cat2', 'cross'):
+            raise ValueError("config type must be cat1, cat2 or cross")
+        if match_config['type'] in ('cat1', 'cross'):
             print("\n## Catalog 1")
             self.prep_cat_for_match(cat1, cosmo=cosmo, **match_config['catalog1'])
-        if match_config['type'] in ('cat2', 'mt_cross'):
+        if match_config['type'] in ('cat2', 'cross'):
             print("\n## Catalog 2")
             self.prep_cat_for_match(cat2, cosmo=cosmo, **match_config['catalog2'])
 
-        if match_config['type'] in ('cat1', 'mt_cross'):
+        if match_config['type'] in ('cat1', 'cross'):
             print("\n## Multiple match (catalog 1)")
             if match_config['which_radius'] == 'cat1':
-                radius_selection = 'mt_self'
+                radius_selection = 'self'
             elif match_config['which_radius'] == 'cat2':
-                radius_selection = 'mt_other'
+                radius_selection = 'other'
             else:
                 radius_selection = match_config['which_radius']
             self.multiple(cat1, cat2, radius_selection)
-        if match_config['type'] in ('cat2', 'mt_cross'):
+        if match_config['type'] in ('cat2', 'cross'):
             print("\n## Multiple match (catalog 2)")
             if match_config['which_radius'] == 'cat1':
-                radius_selection = 'mt_other'
+                radius_selection = 'other'
             elif match_config['which_radius'] == 'cat2':
-                radius_selection = 'mt_self'
+                radius_selection = 'self'
             else:
                 radius_selection = match_config['which_radius']
             self.multiple(cat2, cat1, radius_selection)
 
-        if match_config['type'] in ('cat1', 'mt_cross'):
+        if match_config['type'] in ('cat1', 'cross'):
             print("\n## Finding unique matches of catalog 1")
             self.unique(cat1, cat2, match_config['preference'])
-        if match_config['type'] in ('cat2', 'mt_cross'):
+        if match_config['type'] in ('cat2', 'cross'):
             print("\n## Finding unique matches of catalog 2")
             self.unique(cat2, cat1, match_config['preference'])
 
-        if match_config['type'] == 'mt_cross':
+        if match_config['type'] == 'cross':
             self.cross_match(cat1)
             self.cross_match(cat2)
