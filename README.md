@@ -61,8 +61,8 @@ To run the tests you can do:
 `ClEvaR` can be imported as a python library or as an executable based on configuration `yaml` files.
 Check detailed description of each usage below:
 
-- [`ClEvaR` library](RUN_LIB.md)
-- [`ClEvaR` executables](RUN_EXE.md)
+- [ClEvaR library](CLEVAR_LIB.md)
+- [ClEvaR executables](CLEVAR_EXE.md)
 
 ## Contributing <a name="contributing"></a>
 
