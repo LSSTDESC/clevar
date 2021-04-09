@@ -447,8 +447,7 @@ class CatalogFuncs():
         cat2: clevar.Catalog
             Catalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         kwargs: dict
@@ -502,8 +501,7 @@ class CatalogFuncs():
         cat2: clevar.Catalog
             Catalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         add_err: bool
@@ -547,8 +545,7 @@ class CatalogFuncs():
         cat2: clevar.Catalog
             Catalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_color: str
@@ -607,8 +604,7 @@ class CatalogFuncs():
         cat2: clevar.Catalog
             Catalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         bins: array, int
@@ -670,8 +666,7 @@ class CatalogFuncs():
         cat2: clevar.Catalog
             Catalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_panel: str
@@ -717,8 +712,7 @@ class CatalogFuncs():
         cat2: clevar.Catalog
             Catalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_panel: str
@@ -785,8 +779,7 @@ class CatalogFuncs():
         cat2: clevar.Catalog
             Catalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_color: str
@@ -862,8 +855,7 @@ class CatalogFuncs():
         cat2: clevar.Catalog
             Catalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_panel: str
@@ -941,8 +933,7 @@ def redshift(cat1, cat2, matching_type, **kwargs):
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     add_err: bool
         Add errorbars
 
@@ -976,8 +967,7 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
     bins: array, int
@@ -1029,8 +1019,7 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     color1: bool
@@ -1075,8 +1064,7 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     mass_bins: int, array
         Mass bins to make panels
     log_mass: bool
@@ -1135,8 +1123,7 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     mass_bins: int, array
         Mass bins to make panels
     log_mass: bool
@@ -1205,8 +1192,7 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     add_err: bool
@@ -1249,8 +1235,7 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     color1: bool
@@ -1297,8 +1282,7 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     col: str
@@ -1351,8 +1335,7 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins: int, array
         Redshift bins to make panels
     log_mass: bool
@@ -1414,8 +1397,7 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     cat2: clevar.Catalog
         Catalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins: int, array
         Redshift bins to make panels
     log_mass: bool

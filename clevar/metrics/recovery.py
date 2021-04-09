@@ -249,7 +249,9 @@ class CatalogFuncs():
         **kwargs:
             Additional arguments to be passed to pltfunc
         """
-        is_matched = cat.get_matching_mask(matching_type)
+        # convert matching type to the values expected by get_matching_mask
+        matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
+        is_matched = cat.get_matching_mask(matching_type_conv)
         # mask_ to apply mask and mask_unmatched
         mask_ = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
         return pltfunc(cat[mask_][col1], cat[mask_][col2], bins1, bins2,
