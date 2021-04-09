@@ -10,7 +10,7 @@ Library to validate cluster detection
 ## Table of contents
 1. [Requirements](#requirements)
 2. [Installation](#installation)
-3. [Overview](#overview)
+3. [Running ClEvaR](#running)
 4. [Contributing](#contributing)
 5. [Contact](#contact)
 
@@ -56,9 +56,13 @@ To run the tests you can do:
 
   `pytest`
 
-## Code overview and main features <a name="overview"></a>
+## Running ClEvaR <a name="running"></a>
 
-Overview of the code can be found [here](OVERVIEW.md)
+`ClEvaR` can be imported as a python library or as an executable based on configuration `yaml` files.
+Check detailed description of each usage below:
+
+- [`ClEvaR` library](RUN_LIB.md)
+- [`ClEvaR` executables](RUN_EXE.md)
 
 ## Contributing <a name="contributing"></a>
 
