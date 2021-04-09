@@ -39,7 +39,7 @@ def create_footprint(ra, dec, nside=None, min_density=2, neighbor_fill=None):
     ftpt = ftpt if neighbor_fill is None else fill_holes_conv(ftpt, neighbor_fill)
     print(f'Pixels in footprint: {ftpt["pixel"].size:,}')
     return ftpt
-def nside_from_density(ra, dec, min_densityity):
+def nside_from_density(ra, dec, min_density):
     '''
     Compute NSIDE based on a minimum density
 
@@ -49,7 +49,7 @@ def nside_from_density(ra, dec, min_densityity):
         Ra array in degrees
     dec: numpy array
         Dec array in degrees
-    min_densityity: float
+    min_density: float
         Threshold density of obj./pixel
 
     Returns
@@ -63,7 +63,8 @@ def nside_from_density(ra, dec, min_densityity):
     pixel = hp.ang2pix(nside, ra, dec, lonlat=True)
     pixel_set = np.array(list(set(pixel)))
     for n in range(2, 12):
-        if pixel.size/pixel_set.size < min_densityity:
+        print(f'NSIDE({nside}) -> {pixel.size/pixel_set.size} clusters per pixel')
+        if pixel.size/pixel_set.size < min_density:
             return nside, pixel_set
         nside = 2**n
         pixel = hp.ang2pix(nside, ra, dec, lonlat=True)

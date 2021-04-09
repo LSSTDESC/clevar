@@ -60,37 +60,3 @@ def nfw2D_profile_flatcore(R, Rc, Rs, Rcore):
     Sigma_core = nfw2D_profile(Rcore*np.ones(1), Rc, Rs)[0]
     Sigma[R<Rcore] = Sigma_core
     return Sigma
-def nfw_flatcore_window_func(pix_list, ra, dec, z, r,
-                             deg1mpc, ftpt, h=0.7):
-    '''
-    Get window function for NFW 2D Profile with a top-hat core
-
-    Parameters
-    ----------
-    pix_list: list
-        List of pixels in the window
-    ra: float
-        RA in deg
-    dec: float
-        DEC in deg
-    z: float
-        Redshift
-    r: float
-        Cluster radius in Mpc
-    deg1mpc: float
-        Size of 1 Mpc in degrees at the cluster redshift
-    ftpt: FootprintZmax
-        Footprint object
-    h: float
-        Hubble parameter
-
-    Returns
-    -------
-    array
-        Value of the window function at each pixel
-    '''
-    Rs = 0.15/h # 0.214Mpc
-    Rcore = 0.1/h # 0.142Mpc
-    sk = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
-    R = convert_units(sk.separation(ftpt['SkyCoord'][pix_list]).value, 'degrees', 'mpc')
-    return nfw2D_profile_flatcore(R, r, Rs, Rcore)

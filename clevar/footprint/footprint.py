@@ -63,9 +63,9 @@ class Footprint():
         pixels: array
             Pixels inside the footprint
         detfrac: array
-            Detection fraction
+            Detection fraction. If None, value 1 is assigned.
         zmax: array
-            Zmax
+            Zmax. If None, value 99 is assigned.
         '''
         self.nside = nside
         self.nest = nest
@@ -110,7 +110,7 @@ class Footprint():
                     for p in pixel_vals])
     def zmax_masks_from_footprint(self, ra, dec, z):
         '''
-        Create a mask for a catalog based on a footprint and edge pixels
+        Create a mask for a catalog based on a footprint
 
         Parameters
         ----------
@@ -124,80 +124,39 @@ class Footprint():
         Returns
         -------
         mask, mask
-            Arrays of booleans of objects in footprint and if edge
+            Arrays of booleans of objects in footprint
         '''
         pixels = hp.ang2pix(self.nside, ra, dec, nest=self.nest, lonlat=True)
         print("## creating visibility mask ##")
         #zmax_vals = self.get_map(self['zmax'])[pixels] old method
         zmax_vals = self.get_values_in_pixels('zmax', pixels, 0)
         return z<=zmax_vals
-    def save(self, filename, **kwargs):
-        """Saves FootprintZmax object to filename"""
-        self.data.meta['NSIDE'] = self.nside
-        self.data.meta['NEST'] = self.nest
-        self.data.write(filename, **kwargs)
     @classmethod
-    def load(self, filename, **kwargs):
-        """Loads FootprintZmax object to filename"""
-        self = FootprintZmax()
-        print("Reading")
-        data = ClData.read(filename, **kwargs)
-        print("Table read (%d objects)"%len(data))
-        self._check_table(data)
-        print("Table checked (nside=%d)"%values.meta['NSIDE'])
-        self.nside = data.meta['NSIDE']
-        self.nest = data.meta['NEST']
-        self.data = data
-        print("Zmax Ft created")
-        return self
-    @classmethod
-    def load_external(self, filename, nside, pixel_name, detfrac_name=None, zmax_name=None,
-            zmaxedge_name=None, nest=False):
-        """Loads fits file and converst to FootprintZmax object"""
-        self = FootprintZmax()
+    def read(self, filename, nside, pixel_name, detfrac_name=None, zmax_name=None,
+             nest=False):
+        """
+        Loads fits file and converst to FootprintZmax object
+
+        Parameters
+        ----------
+        filename: str
+            Name of input file
+        nside: int
+            Healpix nside
+        pixel_name: str
+            Name of pixel column
+        detfrac_name: str, None
+            Name of detection fraction colum. If None value 1 is assigned.
+        zmax_name:
+            Name of maximum redshit colum. If None value 99 is assigned.
+        """
+        self = Footprint()
         values = ClData.read(filename)
         self._add_values(nside=nside, nest=nest, 
             pixels=values[pixel_name],
             detfrac=values[detfrac_name] if detfrac_name is not None else None,
             zmax=values[zmax_name] if zmax_name is not None else None)
         return self
-    def _check_table(self, table):
-        '''
-        Checks that table has required meta and columns
-
-        Parameters
-        ----------
-        table: astropy Table
-            Tabke to be checked
-
-        Returns
-        -------
-        None
-        '''
-        miss_meta = self._miss_vals(('NSIDE', 'NEST'), table.meta)
-        if len(miss_meta)>0:
-            raise ValueError('Invalid file, missing %s in header'%miss_cols)
-        miss_cols = self._miss_vals(('pixel', 'detfrac', 'zmax'), table.colnames)
-        if len(miss_cols)>0:
-            raise ValueError('Invalid file, missing %s columns'%miss_cols)
-        return
-    def _miss_vals(self, required, table_list):
-        '''
-        Check if required values are in a table
-
-        Parameters
-        ----------
-        required: list, tuple of str
-            List of required values
-        table_list: list, tuple of str
-            List of existing values
-
-        Returns
-        -------
-        str
-            Comma separated missing values
-        '''
-        return ', '.join([c for c in required if c not in table_list])
     def __repr__(self,):
         out = f"FootprintZmax object with {len(self.data):,} pixels\n"
         out += "zmax: [%g, %g]\n"%(self['zmax'].min(), self['zmax'].max())
@@ -237,7 +196,7 @@ class Footprint():
         weights = wtfunc(pix_list, cl_sk)
         detfrac_vals = self.get_values_in_pixels('detfrac', pix_list, 0)
         zmax_vals = self.get_values_in_pixels('zmax', pix_list, 0)
-        values = detfrac_vals*np.array(z<=zmax_vals, dtype=float)
+        values = detfrac_vals*np.array(cl_z<=zmax_vals, dtype=float)
         return sum(weights*values)/sum(weights)
     def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
                              aperture_radius, aperture_radius_unit, cosmo=None):
@@ -328,7 +287,7 @@ class Footprint():
         -------
         float
         '''
-        return self._get_coverfrac_nfw2D(SkyCoord(ra*u.deg, dec*u.deg, frame='icrs'),
+        return self._get_coverfrac_nfw2D(SkyCoord(cl_ra*u.deg, cl_dec*u.deg, frame='icrs'),
                                          cl_z, cl_radius, cl_radius_unit,
                                          aperture_radius, aperture_radius_unit, cosmo=cosmo)
     def _nfw_flatcore_window_func(self, pix_list, cl_sk, cl_z, cl_radius, cosmo):

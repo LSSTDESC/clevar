@@ -40,25 +40,6 @@ def logbins(values, nbins):
 ########## Monkeypatching healpy #######################################
 ########################################################################
 import healpy as hp
-def pix2mask(nside, pixels):
-    '''
-    Create a mask from pixels
-
-    Parameters
-    ----------
-    nside: int
-        Healpix nside
-    pixels: array
-        Array of pixel indices
-
-    Returns
-    -------
-    outmask: array
-        Mask from pixels
-    '''
-    outmask = np.zeros(12*nside**2, dtype=bool)
-    outmask[pixels] = True
-    return outmask
 def pix2map(nside, pixels, values, null):
     '''
     Convert from pixels, values to map
@@ -97,6 +78,5 @@ def neighbors_of_pixels(nside, pixels, nest=False):
     '''
     nbs = np.array(list(set(hp.get_all_neighbours(nside, pixels, nest=nest).flatten())))
     return nbs[nbs>-1]
-hp.pix2mask = pix2mask
 hp.pix2map = pix2map
 hp.neighbors_of_pixels = neighbors_of_pixels
