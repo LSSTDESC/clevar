@@ -101,7 +101,7 @@ class ArrayFuncs():
         return ax
     def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
                    plt_kwargs={}, panel_kwargs_list=None,
-                   fig_kwargs={}, add_label=False, label_format=lambda v: v):
+                   fig_kwargs={}, add_label=True, label_format=lambda v: v):
         """
         Plot recovery rate as lines in panels, with each line binned by bins1
         and each panel is based on the data inside a bins2 bin.

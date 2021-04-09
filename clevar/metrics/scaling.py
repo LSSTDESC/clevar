@@ -466,8 +466,8 @@ class CatalogFuncs():
         mp = MatchedPairs(cat1, cat2, matching_type)
         func_kwargs['values1'] = mp.data1[col]
         func_kwargs['values2'] = mp.data2[col]
-        func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err') else None
-        func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err') else None
+        func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err', True) else None
+        func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err', True) else None
         class_kwargs = {
             'xlabel': kwargs.get('xlabel', f'${col}_{{{cat1.name}}}$'),
             'ylabel': kwargs.get('ylabel', f'${col}_{{{cat2.name}}}$'),
