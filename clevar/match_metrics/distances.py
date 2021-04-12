@@ -12,67 +12,13 @@ from ..geometry import convert_units
 from ..match import MatchedPairs
 from . import plot_helper as ph
 
-def get_central_distances(cat1, cat2, matching_type, units='degrees', cosmo=None):
-    """
-    Get distance of centers from cat1 to cat2.
-
-    Parameters
-    ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
-    matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self', 'other'
-    units: str
-        Units of output distance
-    cosmo: clevar.Cosmology
-        Cosmology (used if physical units required)
-
-    Returns
-    -------
-    array
-        Distances of cluster centers in input units
-    """
-    mp = MatchedPairs(cat1, cat2, matching_type)
-    sk1 = mp.data1['SkyCoord']
-    sk2 = mp.data2['SkyCoord']
-    return convert_units(sk1.separation(sk2).deg, 'degrees', units,
-        redshift=mp.data1['z'], cosmo=cosmo)
-def get_redshift_distances(cat1, cat2, matching_type, normalize=None):
-    """
-    Get redshift distances between cat1 and cat2.
-
-    Parameters
-    ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
-    matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self', 'other'
-    normalize: str, None
-        Normalize difference by (1+z). Can be 'cat1' for (1+z1), 'cat2' for (1+z2)
-        or 'mean' for (1+(z1+z2)/2).
-
-    Returns
-    -------
-    array
-        Redshift difference: z1-z2 (can be normalized)
-    """
-    mp = MatchedPairs(cat1, cat2, matching_type)
-    z1 = mp.data1['z']
-    z2 = mp.data2['z']
-    return (z1-z2)/{None:1, 'cat1':(1+z1), 'cat2':(1+z2), 'mean':.5*(2+z1+z2)}[normalize]
-class CatalogFuncs():
+class ClCatalogFuncs():
     def _histograms(distances, distance_bins, quantity2=None, bins2=None,
                     shape='steps', ax=None, plt_kwargs={}, lines_kwargs_list=None,
                     add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
         """
         Plot histograms for distances.
-    
+
         Parameters
         ----------
         distances: array
@@ -123,16 +69,15 @@ class CatalogFuncs():
                          col2=None, bins2=None, **kwargs):
         """
         Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
-    
+
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         radial_bins: array
             Bins for radial distances
         radial_bin_units: str
@@ -161,11 +106,14 @@ class CatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        ax = CatalogFuncs._histograms(distances=get_central_distances(cat1, cat2, matching_type,
-                                                                      units=radial_bin_units,
-                                                                      cosmo=cosmo),
-                                      distance_bins=radial_bins, 
-                                      quantity2=cat1.data[col2][cat1.get_matching_mask(matching_type)],
+        mp = MatchedPairs(cat1, cat2, matching_type)
+        sk1, sk2 = mp.data1['SkyCoord'], mp.data2['SkyCoord']
+        distances = convert_units(sk1.separation(sk2).deg, 'degrees',
+                                  radial_bin_units, redshift=mp.data1['z'],
+                                  cosmo=cosmo)
+        ax = ClCatalogFuncs._histograms(distances=distances,
+                                      distance_bins=radial_bins,
+                                      quantity2=mp.data1[col2],
                                       bins2=bins2, **kwargs)
         dist_labels = {'degrees':'deg', 'arcmin': 'arcmin', 'arcsec':'arcsec',
                         'pc':'pc', 'kpc':'kpc', 'mpc': 'Mpc'}
@@ -176,16 +124,15 @@ class CatalogFuncs():
                  normalize=None, **kwargs):
         """
         Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
-    
+
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         redshift_bins: array
             Bins for redshift distances
         col2: str
@@ -213,10 +160,17 @@ class CatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        ax = CatalogFuncs._histograms(distances=get_redshift_distances(cat1, cat2,
-                                                                       matching_type, normalize),
-                                      distance_bins=redshift_bins, 
-                                      quantity2=cat1.data[col2][cat1.get_matching_mask(matching_type)],
+        mp = MatchedPairs(cat1, cat2, matching_type)
+        z1, z2 = mp.data1['z'], mp.data2['z']
+        norm = {
+                None:1,
+                'cat1':(1+z1),
+                'cat2':(1+z2),
+                'mean':.5*(2+z1+z2),
+                }[normalize]
+        ax = ClCatalogFuncs._histograms(distances=(z1-z2)/norm,
+                                      distance_bins=redshift_bins,
+                                      quantity2=mp.data1[col2],
                                       bins2=bins2, **kwargs)
         dz = 'z_1-z_2'
         dist_labels = {None:f'${dz}$', 'cat1': f'$({dz})/(1+z_1)$',
@@ -232,13 +186,12 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     radial_bins: array
         Bins for radial distances
     radial_bin_units: str
@@ -277,7 +230,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
     kwargs['legend_format'] = kwargs.get('legend_format',
         lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass else f'%{legend_fmt}'%v)
     kwargs['add_legend'] = kwargs.get('add_legend', True)*(mass_bins is not None)
-    return CatalogFuncs.central_position(cat1, cat2, matching_type, radial_bins=radial_bins,
+    return ClCatalogFuncs.central_position(cat1, cat2, matching_type, radial_bins=radial_bins,
             radial_bin_units=radial_bin_units, cosmo=cosmo, col2='mass', bins2=mass_bins,
             ax=ax, **kwargs)
 
@@ -288,13 +241,12 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins: array
         Bins for redshift distances
     normalize: str, None
@@ -332,6 +284,6 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
     kwargs['legend_format'] = kwargs.get('legend_format',
         lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass else f'%{legend_fmt}'%v)
     kwargs['add_legend'] = kwargs.get('add_legend', True)*(mass_bins is not None)
-    return CatalogFuncs.redshift(cat1, cat2, matching_type, redshift_bins=redshift_bins,
+    return ClCatalogFuncs.redshift(cat1, cat2, matching_type, redshift_bins=redshift_bins,
             normalize=normalize, col2='mass', bins2=mass_bins, ax=ax, **kwargs)
 

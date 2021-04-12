@@ -1,9 +1,9 @@
-"""Tests for clevar/metrics/recovery"""
+"""Tests for clevar/match_metrics/recovery"""
 import numpy as np
-from clevar.catalog import Catalog
+from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
-from clevar.metrics import scaling
+from clevar.match_metrics import scaling
 from numpy.testing import assert_raises
 
 def get_test_data():
@@ -18,8 +18,8 @@ def get_test_data():
     input2 = {k:v[:4] for k, v in input1.items()}
     input2['z'][:2] = [.3, .2]
     input2['mass'][:3] = input2['mass'][:3][::-1]
-    c1 = Catalog('Cat1', **input1)
-    c2 = Catalog('Cat2', **input2)
+    c1 = ClCatalog('Cat1', **input1)
+    c2 = ClCatalog('Cat2', **input2)
     cosmo = CosmoClass()
     mt = ProximityMatch()
     mt_config1 = {'delta_z':.2,
@@ -36,38 +36,38 @@ def get_test_data():
     return c1, c2
 def test_z_simple():
     c1, c2 = get_test_data()
-    ax = scaling.redshift(c1, c2, 'self')
-    ax = scaling.redshift(c1, c2, 'self', add_err=True)
+    ax = scaling.redshift(c1, c2, 'cat1')
+    ax = scaling.redshift(c1, c2, 'cat1', add_err=True)
 def test_z_color():
     c1, c2 = get_test_data()
-    ax, cb = scaling.redshift_masscolor(c1, c2, 'self', add_err=True)
-    ax = scaling.redshift_masscolor(c1, c2, 'self', add_cb=False)
+    ax, cb = scaling.redshift_masscolor(c1, c2, 'cat1', add_err=True)
+    ax = scaling.redshift_masscolor(c1, c2, 'cat1', add_cb=False)
 def test_z_density():
     c1, c2 = get_test_data()
-    ax, cb = scaling.redshift_density(c1, c2, 'self', add_err=True)
-    ax, cb = scaling.redshift_density(c1, c2, 'self', ax_rotation=45)
+    ax, cb = scaling.redshift_density(c1, c2, 'cat1', add_err=True)
+    ax, cb = scaling.redshift_density(c1, c2, 'cat1', ax_rotation=45)
 def test_z_panel():
     c1, c2 = get_test_data()
-    fig, axes = scaling.redshift_masspanel(c1, c2, 'self', add_err=True, mass_bins=4)
+    fig, axes = scaling.redshift_masspanel(c1, c2, 'cat1', add_err=True, mass_bins=4)
 def test_z_density_panel():
     c1, c2 = get_test_data()
-    fig, axes = scaling.redshift_density_masspanel(c1, c2, 'self', add_err=True)
+    fig, axes = scaling.redshift_density_masspanel(c1, c2, 'cat1', add_err=True)
 def test_m_simple():
     c1, c2 = get_test_data()
-    ax = scaling.mass(c1, c2, 'self', add_err=True)
+    ax = scaling.mass(c1, c2, 'cat1', add_err=True)
 def test_m_color():
     c1, c2 = get_test_data()
-    ax, cb = scaling.mass_zcolor(c1, c2, 'self', add_err=True)
+    ax, cb = scaling.mass_zcolor(c1, c2, 'cat1', add_err=True)
 def test_m_density():
     c1, c2 = get_test_data()
-    ax, cb = scaling.mass_density(c1, c2, 'self', add_err=True)
+    ax, cb = scaling.mass_density(c1, c2, 'cat1', add_err=True)
 def test_m_panel():
     c1, c2 = get_test_data()
-    fig, axes = scaling.mass_zpanel(c1, c2, 'self', add_err=True)
+    fig, axes = scaling.mass_zpanel(c1, c2, 'cat1', add_err=True)
 def test_m_density_panel():
     c1, c2 = get_test_data()
-    fig, axes = scaling.mass_density_zpanel(c1, c2, 'self', add_err=True)
+    fig, axes = scaling.mass_density_zpanel(c1, c2, 'cat1', add_err=True)
 def test_color_panel():
     c1, c2 = get_test_data()
-    fig, axes = scaling.CatalogFuncs.plot_color_panel(c1, c2, 'self', 'mass',
+    fig, axes = scaling.ClCatalogFuncs.plot_color_panel(c1, c2, 'cat1', 'mass',
         col_color='z', col_panel='z', bins_panel=3)

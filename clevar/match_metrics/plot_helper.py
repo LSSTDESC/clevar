@@ -88,7 +88,7 @@ def add_panel_bin_label(axes, edges_lower, edges_higher,
         topax = ax.twiny()
         topax.set_xticks([])
         topax.set_xlabel(get_bin_label(vb, vt, format_func))
-def get_density_colors(x, y, xbins, ybins, ax_rotation=0, 
+def get_density_colors(x, y, xbins, ybins, ax_rotation=0,
                 rotation_resolution=30, xscale='linear', yscale='linear'):
     """
     Get colors of point based on density

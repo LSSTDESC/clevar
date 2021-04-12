@@ -16,18 +16,18 @@ class ProximityMatch(Match):
 
         Parameters
         ----------
-        cat1: clevar.Catalog
+        cat1: clevar.ClCatalog
             Base catalog
-        cat2: clevar.Catalog
+        cat2: clevar.ClCatalog
             Target catalog
         radius_selection: str (optional)
             Case of radius to be used, can be: max, min, self, other.
         """
-        ra2, dec2, sk2 = (cat2.data[c] for c in ('ra', 'dec', 'SkyCoord'))
+        ra2, dec2, sk2 = (cat2[c] for c in ('ra', 'dec', 'SkyCoord'))
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ('ang', 'zmin', 'zmax'))
         ang2max = ang2.max()
         for i, (ra1, dec1, sk1, ang1, z1min, z1max) in enumerate(zip(*(
-            [cat1.data[c] for c in ('ra', 'dec', 'SkyCoord')]+
+            [cat1[c] for c in ('ra', 'dec', 'SkyCoord')]+
             [cat1.mt_input[c] for c in ('ang', 'zmin', 'zmax')]
             ))):
             # crop in redshift range
@@ -41,11 +41,13 @@ class ProximityMatch(Match):
                     # makes circular crop
                     dist = sk1.separation(sk2[mask]).value
                     max_dist = self._max_mt_distance(ang1, ang2[mask], radius_selection=radius_selection)
-                    for id2 in cat2.data['id'][mask][dist<=max_dist]:
-                        cat1.match['multi_self'][i].append(id2)
+                    for id2 in cat2['id'][mask][dist<=max_dist]:
+                        cat1['mt_multi_self'][i].append(id2)
                         i2 = int(cat2.id_dict[id2])
-                        cat2.match['multi_other'][i2].append(cat1.data['id'][i])
-        print(f'* {len(cat1.match[veclen(cat1.match["multi_self"])>0]):,}/{cat1.size:,} objects matched.')
+                        cat2['mt_multi_other'][i2].append(cat1['id'][i])
+        print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
+        cat1.remove_multiple_duplicates()
+        cat2.remove_multiple_duplicates()
     def prep_cat_for_match(self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1,
         cosmo=None):
         """
@@ -53,15 +55,15 @@ class ProximityMatch(Match):
 
         Parameters
         ----------
-        cat: clevar.Catalog
-            Input Catalog
+        cat: clevar.ClCatalog
+            Input ClCatalog
         delta_z: float, string
             Defines the zmin, zmax for matching. If 'cat' uses redshift properties of the catalog,
             if 'spline.filename' interpolates data in 'filename' (z, zmin, zmax) fmt,
-            if float uses dist_z*(1+z),
+            if float uses delta_z*(1+z),
             if None does not use z.
         match_radius: string
-            Defines the radius for matching (in degrees). If 'cat' uses the radius in the catalog,
+            Defines the radius for matching. If 'cat' uses the radius in the catalog,
             else must be in format 'value unit'. (ex: '1 arcsec', '1 Mpc')
         n_delta_z: float
             Number of delta_z to be used in the matching
@@ -82,15 +84,15 @@ class ProximityMatch(Match):
             # Values from catalog
             if 'zmin' in cat.data.colnames and 'zmax' in cat.data.colnames:
                 print('* zmin|zmax from cat cols (zmin, zmax)')
-                cat.mt_input['zmin'] = self._rescale_z(cat.data['z'], cat.data['zmin'], n_delta_z)
-                cat.mt_input['zmax'] = self._rescale_z(cat.data['z'], cat.data['zmax'], n_delta_z)
+                cat.mt_input['zmin'] = self._rescale_z(cat['z'], cat['zmin'], n_delta_z)
+                cat.mt_input['zmax'] = self._rescale_z(cat['z'], cat['zmax'], n_delta_z)
             # create zmin/zmax if not there
             elif 'z_err' in cat.data.colnames:
                 print('* zmin|zmax from cat cols (err)')
-                cat.mt_input['zmin'] = cat.data['z']-n_delta_z*cat.data['z_err']
-                cat.mt_input['zmax'] = cat.data['z']+n_delta_z*cat.data['z_err']
+                cat.mt_input['zmin'] = cat['z']-n_delta_z*cat['z_err']
+                cat.mt_input['zmax'] = cat['z']+n_delta_z*cat['z_err']
             else:
-                raise ValueError('Catalog must contain zmin, zmax or z_err for this matching.')
+                raise ValueError('ClCatalog must contain zmin, zmax or z_err for this matching.')
         elif isinstance(delta_z, str):
             # zmin/zmax in auxiliar file
             print('* zmin|zmax from aux file')
@@ -98,18 +100,18 @@ class ProximityMatch(Match):
             zv, zvmin, zvmax = np.loadtxt(delta_z)
             zvmin = self._rescale_z(zv, zvmin, n_delta_z)
             zvmax = self._rescale_z(zv, zvmax, n_delta_z)
-            cat.mt_input['zmin'] = spline(zv, zvmin, k=k)(cat.data['z'])
-            cat.mt_input['zmax'] = spline(zv, zvmax, k=k)(cat.data['z'])
+            cat.mt_input['zmin'] = spline(zv, zvmin, k=k)(cat['z'])
+            cat.mt_input['zmax'] = spline(zv, zvmax, k=k)(cat['z'])
         elif isinstance(delta_z, (int, float)):
             # zmin/zmax from sigma_z*(1+z)
             print('* zmin|zmax from config value')
-            cat.mt_input['zmin'] = cat.data['z']-delta_z*(1.0+cat.data['z'])
-            cat.mt_input['zmax'] = cat.data['z']+delta_z*(1.0+cat.data['z'])
+            cat.mt_input['zmin'] = cat['z']-delta_z*(1.0+cat['z'])
+            cat.mt_input['zmax'] = cat['z']+delta_z*(1.0+cat['z'])
 
         # Set angular radius
         if match_radius == 'cat':
             print('* ang radius from cat')
-            in_rad, in_rad_unit = cat.data['rad'], cat.radius_unit
+            in_rad, in_rad_unit = cat['rad'], cat.radius_unit
         else:
             print('* ang radius from set scale')
             in_rad = None
@@ -125,7 +127,7 @@ class ProximityMatch(Match):
                 raise ValueError(f'Unknown radius unit in {match_radius}, must be in {units_bank.keys()}')
         # convert to degrees
         cat.mt_input['ang'] = convert_units(in_rad, in_rad_unit, 'degrees',
-                                redshift=cat.data['z'] if 'z' in cat.data.colnames else None,
+                                redshift=cat['z'] if 'z' in cat.data.colnames else None,
                                 cosmo=cosmo)
     def _rescale_z(self, z, zlim, n):
         """Rescale zmin/zmax by a factor n
@@ -181,20 +183,22 @@ class ProximityMatch(Match):
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog 1
-        cat2: clevar.Catalog
-            Catalog 2
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
         match_config: dict
             Dictionary with the matching configuration.
         cosmo: clevar.Cosmology object
             Cosmology object for when radius has physical units
         """
+        if match_config['type'] not in ('cat1', 'cat2', 'cross'):
+            raise ValueError("config type must be cat1, cat2 or cross")
         if match_config['type'] in ('cat1', 'cross'):
-            print("\n## Catalog 1")
+            print("\n## ClCatalog 1")
             self.prep_cat_for_match(cat1, cosmo=cosmo, **match_config['catalog1'])
         if match_config['type'] in ('cat2', 'cross'):
-            print("\n## Catalog 2")
+            print("\n## ClCatalog 2")
             self.prep_cat_for_match(cat2, cosmo=cosmo, **match_config['catalog2'])
 
         if match_config['type'] in ('cat1', 'cross'):

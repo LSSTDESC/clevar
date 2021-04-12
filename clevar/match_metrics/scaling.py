@@ -430,9 +430,9 @@ class ArrayFuncs():
             ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
             plt_kwargs=plt_kwargs, err_kwargs=err_kwargs,
             )
-class CatalogFuncs():
+class ClCatalogFuncs():
     """
-    Class of plot functions with clevar.Catalog as inputs.
+    Class of plot functions with clevar.ClCatalog as inputs.
     Plot labels and scales are configured by this class.
     """
     class_args = ('xlabel', 'ylabel', 'xscale', 'yscale', 'add_err')
@@ -442,13 +442,12 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         kwargs: dict
@@ -463,12 +462,12 @@ class CatalogFuncs():
         mp: clevar.match.MatchedPairs
             Matched catalogs
         """
-        func_kwargs = {k:v for k, v in kwargs.items() if k not in CatalogFuncs.class_args}
+        func_kwargs = {k:v for k, v in kwargs.items() if k not in ClCatalogFuncs.class_args}
         mp = MatchedPairs(cat1, cat2, matching_type)
         func_kwargs['values1'] = mp.data1[col]
         func_kwargs['values2'] = mp.data2[col]
-        func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err') else None
-        func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err') else None
+        func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err', True) else None
+        func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err', True) else None
         class_kwargs = {
             'xlabel': kwargs.get('xlabel', f'${col}_{{{cat1.name}}}$'),
             'ylabel': kwargs.get('ylabel', f'${col}_{{{cat2.name}}}$'),
@@ -497,13 +496,12 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         add_err: bool
@@ -531,9 +529,9 @@ class CatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         ax = ArrayFuncs.plot(**f_kwargs)
-        CatalogFuncs._fmt_plot(ax, **cl_kwargs)
+        ClCatalogFuncs._fmt_plot(ax, **cl_kwargs)
         return ax
     def plot_color(cat1, cat2, matching_type, col, col_color,
                    color1=True, color_log=False, **kwargs):
@@ -542,13 +540,12 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_color: str
@@ -588,13 +585,13 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['values_color'] = mp.data1[col_color] if color1 else mp.data2[col_color]
         f_kwargs['values_color'] = np.log10(f_kwargs['values_color']) if color_log\
                                     else f_kwargs['values_color']
         res = ArrayFuncs.plot_color(**f_kwargs)
         ax = res[0] if kwargs.get('add_cb', True) else res
-        CatalogFuncs._fmt_plot(ax, **cl_kwargs)
+        ClCatalogFuncs._fmt_plot(ax, **cl_kwargs)
         return res
     def plot_density(cat1, cat2, matching_type, col, **kwargs):
         """
@@ -602,13 +599,12 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         bins: array, int
@@ -648,12 +644,12 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
         f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
         res = ArrayFuncs.plot_density(**f_kwargs)
         ax = res[0] if kwargs.get('add_cb', True) else res
-        CatalogFuncs._fmt_plot(ax, **cl_kwargs)
+        ClCatalogFuncs._fmt_plot(ax, **cl_kwargs)
         return res
     def _get_panel_args(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=True, log_panel=False,
@@ -665,13 +661,12 @@ class CatalogFuncs():
         ----------
         panel_plot_function: function
             Plot function
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_panel: str
@@ -696,7 +691,7 @@ class CatalogFuncs():
         mp: clevar.match.MatchedPairs
             Matched catalogs
         """
-        cl_kwargs, f_kwargs, mp = CatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['values_panel'] = mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel]
         f_kwargs['bins_panel'] = bins_panel if hasattr(bins_panel, '__len__') or not log_panel \
                                             else logbins(f_kwargs['values_panel'], bins_panel)
@@ -712,13 +707,12 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_panel: str
@@ -766,7 +760,7 @@ class CatalogFuncs():
         ax: matplotlib.axes
             Axes with the panels
         """
-        cl_kwargs, f_kwargs, mp = CatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
         fig, axes = ArrayFuncs.plot_panel(**f_kwargs)
         ph.nice_panel(axes, **cl_kwargs)
@@ -780,13 +774,12 @@ class CatalogFuncs():
         ----------
         pltfunc: function
             ArrayFuncs function
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_color: str
@@ -842,7 +835,7 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        cl_kwargs, f_kwargs, mp = CatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
         f_kwargs['values_color'] = mp.data1[col_color] if color1 else mp.data2[col_color]
         fig, axes = ArrayFuncs.plot_color_panel(**f_kwargs)
@@ -857,13 +850,12 @@ class CatalogFuncs():
         ----------
         pltfunc: function
             ArrayFuncs function
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
-            Type of matching to be considered. Must be in:
-            'cross', 'self' (catalog 1), 'other'(catalog 2)
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
         col_panel: str
@@ -923,7 +915,7 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        cl_kwargs, f_kwargs, mp = CatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
         f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
         f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
@@ -936,13 +928,12 @@ def redshift(cat1, cat2, matching_type, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     add_err: bool
         Add errorbars
 
@@ -964,20 +955,19 @@ def redshift(cat1, cat2, matching_type, **kwargs):
     ax: matplotlib.axes
         Axis of the plot
     """
-    return CatalogFuncs.plot(cat1, cat2, matching_type, col='z', **kwargs)
+    return ClCatalogFuncs.plot(cat1, cat2, matching_type, col='z', **kwargs)
 def redshift_density(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on point density
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
     bins: array, int
@@ -1017,20 +1007,19 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
-    return CatalogFuncs.plot_density(cat1, cat2, matching_type, col='z', **kwargs)
+    return ClCatalogFuncs.plot_density(cat1, cat2, matching_type, col='z', **kwargs)
 def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs):
     """
     Scatter plot with errorbars and color based on input
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     color1: bool
@@ -1062,7 +1051,7 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
-    return CatalogFuncs.plot_color(cat1, cat2, matching_type, col='z', col_color='mass',
+    return ClCatalogFuncs.plot_color(cat1, cat2, matching_type, col='z', col_color='mass',
             color1=color1, color_log=log_mass, **kwargs)
 def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **kwargs):
     """
@@ -1070,13 +1059,12 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     mass_bins: int, array
         Mass bins to make panels
     log_mass: bool
@@ -1119,7 +1107,7 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         Axes with the panels
     """
     kwargs['label_fmt'] = kwargs.get('label_fmt', '.1f')
-    return CatalogFuncs.plot_panel(cat1, cat2, matching_type, col='z',
+    return ClCatalogFuncs.plot_panel(cat1, cat2, matching_type, col='z',
             col_panel='mass', bins_panel=mass_bins, log_panel=log_mass,
             **kwargs)
 def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **kwargs):
@@ -1130,13 +1118,12 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
     ----------
     pltfunc: function
         ArrayFuncs function
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     mass_bins: int, array
         Mass bins to make panels
     log_mass: bool
@@ -1191,7 +1178,7 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
     kwargs['label_fmt'] = kwargs.get('label_fmt', '.1f')
-    return CatalogFuncs.plot_density_panel(cat1, cat2, matching_type, col='z',
+    return ClCatalogFuncs.plot_density_panel(cat1, cat2, matching_type, col='z',
             col_panel='mass', bins_panel=mass_bins, log_panel=log_mass,
             **kwargs)
 def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
@@ -1200,13 +1187,12 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     add_err: bool
@@ -1234,7 +1220,7 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     ax: matplotlib.axes
         Axis of the plot
     """
-    return CatalogFuncs.plot(cat1, cat2, matching_type, col='mass',
+    return ClCatalogFuncs.plot(cat1, cat2, matching_type, col='mass',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             **kwargs)
@@ -1244,13 +1230,12 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     color1: bool
@@ -1282,7 +1267,7 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
-    return CatalogFuncs.plot_color(cat1, cat2, matching_type, col='mass', col_color='z',
+    return ClCatalogFuncs.plot_color(cat1, cat2, matching_type, col='mass', col_color='z',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             color1=color1, **kwargs)
@@ -1292,13 +1277,12 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     col: str
@@ -1336,7 +1320,7 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
-    return CatalogFuncs.plot_density(cat1, cat2, matching_type, col='mass',
+    return ClCatalogFuncs.plot_density(cat1, cat2, matching_type, col='mass',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             **kwargs)
@@ -1346,13 +1330,12 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins: int, array
         Redshift bins to make panels
     log_mass: bool
@@ -1396,7 +1379,7 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
     """
     kwargs['label_format'] = kwargs.get('label_format',
         lambda v: f'%{kwargs.pop("label_fmt", ".2f")}'%v)
-    return CatalogFuncs.plot_panel(cat1, cat2, matching_type, col='mass',
+    return ClCatalogFuncs.plot_panel(cat1, cat2, matching_type, col='mass',
             col_panel='z', bins_panel=redshift_bins,
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
@@ -1409,13 +1392,12 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     ----------
     pltfunc: function
         ArrayFuncs function
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
-        Type of matching to be considered. Must be in:
-        'cross', 'self' (catalog 1), 'other'(catalog 2)
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins: int, array
         Redshift bins to make panels
     log_mass: bool
@@ -1469,7 +1451,7 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
-    return CatalogFuncs.plot_density_panel(cat1, cat2, matching_type, col='mass',
+    return ClCatalogFuncs.plot_density_panel(cat1, cat2, matching_type, col='mass',
             col_panel='z', bins_panel=redshift_bins,
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',

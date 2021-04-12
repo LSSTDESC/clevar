@@ -130,20 +130,20 @@ def loadconf(config_file, consistency_configs=[], fail_action='ask'):
     return config
 def make_catalog(cat_config):
     """
-    Make a clevar.Catalog object based on config
+    Make a clevar.ClCatalog object based on config
 
     Parameters
     ----------
     cat_config: dict
-        Catalog configuration
+        ClCatalog configuration
 
     Returns
     -------
-    clevar.Catalog
-        Catalog based on input config
+    clevar.ClCatalog
+        ClCatalog based on input config
     """
     c0 = clevar.ClData.read(cat_config['file'])
-    cat = clevar.Catalog(cat_config['name'], 
+    cat = clevar.ClCatalog(cat_config['name'],
         **{k:c0[v] for k, v in cat_config['columns'].items()})
     cat.radius_unit = cat_config['radius_unit'] if 'radius_unit' in cat_config\
                         else None

@@ -1,9 +1,9 @@
-"""Tests for clevar/metrics/recovery"""
+"""Tests for clevar/match_metrics/recovery"""
 import numpy as np
-from clevar.catalog import Catalog
+from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
-from clevar.metrics import recovery as rc
+from clevar.match_metrics import recovery as rc
 from numpy.testing import assert_raises
 
 def get_test_data():
@@ -17,8 +17,8 @@ def get_test_data():
     input2 = {k:v[:4] for k, v in input1.items()}
     input2['z'][:2] = [.3, .2]
     input2['mass'][:3] = input2['mass'][:3][::-1]
-    c1 = Catalog('Cat1', **input1)
-    c2 = Catalog('Cat2', **input2)
+    c1 = ClCatalog('Cat1', **input1)
+    c2 = ClCatalog('Cat2', **input2)
     cosmo = CosmoClass()
     mt = ProximityMatch()
     mt_config1 = {'delta_z':.2,
@@ -35,7 +35,7 @@ def get_test_data():
     return c1, c2
 def test_plot():
     cat = get_test_data()[0]
-    matching_type = 'self'
+    matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e16]
     rc.plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
@@ -46,7 +46,7 @@ def test_plot():
 
 def test_plot_panel():
     cat = get_test_data()[0]
-    matching_type = 'self'
+    matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
@@ -55,7 +55,7 @@ def test_plot_panel():
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=True)
 def test_plot2D():
     cat = get_test_data()[0]
-    matching_type = 'self'
+    matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
     rc.plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,

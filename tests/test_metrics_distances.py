@@ -1,9 +1,9 @@
-"""Tests for clevar/metrics/distances"""
+"""Tests for clevar/match_metrics/distances"""
 import numpy as np
-from clevar.catalog import Catalog
+from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
-from clevar.metrics import distances as dt
+from clevar.match_metrics import distances as dt
 
 def get_test_data():
     input1 = {
@@ -16,8 +16,8 @@ def get_test_data():
     input2 = {k:v[:4] for k, v in input1.items()}
     input2['z'][:2] = [.3, .2]
     input2['mass'][:3] = input2['mass'][:3][::-1]
-    c1 = Catalog('Cat1', **input1)
-    c2 = Catalog('Cat2', **input2)
+    c1 = ClCatalog('Cat1', **input1)
+    c2 = ClCatalog('Cat2', **input2)
     cosmo = CosmoClass()
     mt = ProximityMatch()
     mt_config1 = {'delta_z':.2,
@@ -34,11 +34,11 @@ def get_test_data():
     return c1, c2
 def test_central_position():
     cat1, cat2 = get_test_data()
-    dt.central_position(cat1, cat2, 'self', radial_bins=20, radial_bin_units='degrees', cosmo=None,
+    dt.central_position(cat1, cat2, 'cat1', radial_bins=20, radial_bin_units='degrees', cosmo=None,
                     mass_bins=None, mass_label=None, ax=None)
 def test_redshift():
     cat1, cat2 = get_test_data()
-    dt.redshift(cat1, cat2, 'self', redshift_bins=20, normalize=None,
+    dt.redshift(cat1, cat2, 'cat1', redshift_bins=20, normalize=None,
              mass_bins=None, mass_label=None, ax=None)
-    dt.redshift(cat1, cat2, 'self', redshift_bins=20, normalize=None,
+    dt.redshift(cat1, cat2, 'cat1', redshift_bins=20, normalize=None,
              mass_bins=[1e14, 1e16], mass_label=None, ax=None)

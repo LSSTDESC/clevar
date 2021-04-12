@@ -5,14 +5,15 @@ class MatchedPairs():
         """
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
             'cross', 'self', 'other'
         """
-        is_matched = cat1.get_matching_mask(matching_type)
-        self.data1 = cat1.data[is_matched]
-        self.data2 = cat2.data[cat2.ids2inds(cat1.match[matching_type][is_matched])]
+        # convert matching type to the values expected by get_matching_mask
+        matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
+        self.data1 = cat1[cat1.get_matching_mask(matching_type_conv)]
+        self.data2 = cat2[cat2.ids2inds(self.data1[f'mt_{matching_type_conv}'])]
