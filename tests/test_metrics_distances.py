@@ -1,9 +1,9 @@
-"""Tests for clevar/metrics/distances"""
+"""Tests for clevar/match_metrics/distances"""
 import numpy as np
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
-from clevar.metrics import distances as dt
+from clevar.match_metrics import distances as dt
 
 def get_test_data():
     input1 = {

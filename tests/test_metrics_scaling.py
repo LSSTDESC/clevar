@@ -1,9 +1,9 @@
-"""Tests for clevar/metrics/recovery"""
+"""Tests for clevar/match_metrics/recovery"""
 import numpy as np
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
-from clevar.metrics import scaling
+from clevar.match_metrics import scaling
 from numpy.testing import assert_raises
 
 def get_test_data():
