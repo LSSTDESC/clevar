@@ -3,6 +3,8 @@
 `ClEvaR` can be used directly from the command line with `yml` configuration files.
 Some examples of config files can be found in the [demo](https://github.com/LSSTDESC/clevar/tree/main/demo) directory.
 
+* [Main readme](README.md)
+
 ## Loading `ClEvaR` environment
 
 The first step is to load the clevar functions into your environment using the `SOURCE_ME` file in the main directory of `ClEvaR`:

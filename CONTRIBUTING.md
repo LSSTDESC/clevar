@@ -53,7 +53,7 @@ To test this, first install the code by running `python setup.py install --user`
 
 If you are adding documentation either in the form of example jupyter notebooks or new python modules, your documentation will need to compile for our online documentation hosted by the LSST-DESC website: http://lsstdesc.org/clevar/
 
-We have done most of the hard work for you. Simply edit the configuration file, `docs/doc-config.ini`. If you are looking at add a module, put the module name under the `APIDOC` heading. If you are adding a demo notebook to demonstrate how to use the code, place the path from the `docs/` directory to the notebook under the `DEMO` heading. If you are adding an example notebook that shows off how to use `ClEvaR` to do science, place the path from the `docs/` directory to the notebook under the `EXAMPLE` heading. 
+We have done most of the hard work for you. Simply edit the configuration file, `docs/doc-config.ini`. If you are looking at add a module, put the module name under the `APIDOC` heading. If you are adding a demo notebook to demonstrate how to use the code, place the path from the `docs/` directory to the notebook under the `DEMO` heading. If you are adding an example notebook that shows off how to use `ClEvaR` to do science, place the path from the `docs/` directory to the notebook under the `EXAMPLE` heading.
 
 Once it has been added to the config file, simply run `./update_docs` from the top level directory of the repository and your documentation should compile and be linked in the correct places!
 
@@ -78,7 +78,7 @@ To ensure consistency between our code and documentation, we need to take care o
 
 1. In the branch of the pull request, change the version number of the code located in `clmm/__init__.py`, commit and push. If you are unsure of how you should change the version number, don't hesitate to ask!
 
-We use [semantic versioning](https://semver.org/), X.Y.Z. If the PR makes a small change, such as a bug fix, documentation updates, style changes, etc., increment Z. If the PR adds a new feature, such as adding support for a new profile, increment Y (and reset Z to 0). If a PR adds a feature or makes a change that breaks the old API, increment X (and reset Y and Z to 0). After the first tagged release of `ClEvaR`, anything that is a candidate to increment X should be extensively discussed beforehand. 
+We use [semantic versioning](https://semver.org/), X.Y.Z. If the PR makes a small change, such as a bug fix, documentation updates, style changes, etc., increment Z. If the PR adds a new feature, such as adding support for a new profile, increment Y (and reset Z to 0). If a PR adds a feature or makes a change that breaks the old API, increment X (and reset Y and Z to 0). After the first tagged release of `ClEvaR`, anything that is a candidate to increment X should be extensively discussed beforehand.
 
 2. "Squash and Merge" the pull request into master. It asks for a squashed commit message. This should be descriptive of the feature or bug resolved in the PR and should be pre-prended by a [conventional commit scope](https://www.conventionalcommits.org/).
 
