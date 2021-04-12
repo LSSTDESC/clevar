@@ -12,7 +12,7 @@ from ..geometry import convert_units
 from ..match import MatchedPairs
 from . import plot_helper as ph
 
-class CatalogFuncs():
+class ClCatalogFuncs():
     def _histograms(distances, distance_bins, quantity2=None, bins2=None,
                     shape='steps', ax=None, plt_kwargs={}, lines_kwargs_list=None,
                     add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
@@ -72,10 +72,10 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
             Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         radial_bins: array
@@ -111,7 +111,7 @@ class CatalogFuncs():
         distances = convert_units(sk1.separation(sk2).deg, 'degrees',
                                   radial_bin_units, redshift=mp.data1['z'],
                                   cosmo=cosmo)
-        ax = CatalogFuncs._histograms(distances=distances,
+        ax = ClCatalogFuncs._histograms(distances=distances,
                                       distance_bins=radial_bins,
                                       quantity2=mp.data1[col2],
                                       bins2=bins2, **kwargs)
@@ -127,10 +127,10 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
             Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         redshift_bins: array
@@ -168,7 +168,7 @@ class CatalogFuncs():
                 'cat2':(1+z2),
                 'mean':.5*(2+z1+z2),
                 }[normalize]
-        ax = CatalogFuncs._histograms(distances=(z1-z2)/norm,
+        ax = ClCatalogFuncs._histograms(distances=(z1-z2)/norm,
                                       distance_bins=redshift_bins,
                                       quantity2=mp.data1[col2],
                                       bins2=bins2, **kwargs)
@@ -186,10 +186,10 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     radial_bins: array
@@ -230,7 +230,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
     kwargs['legend_format'] = kwargs.get('legend_format',
         lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass else f'%{legend_fmt}'%v)
     kwargs['add_legend'] = kwargs.get('add_legend', True)*(mass_bins is not None)
-    return CatalogFuncs.central_position(cat1, cat2, matching_type, radial_bins=radial_bins,
+    return ClCatalogFuncs.central_position(cat1, cat2, matching_type, radial_bins=radial_bins,
             radial_bin_units=radial_bin_units, cosmo=cosmo, col2='mass', bins2=mass_bins,
             ax=ax, **kwargs)
 
@@ -241,10 +241,10 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
 
     Parameters
     ----------
-    cat1: clevar.Catalog
-        Catalog with matching information
-    cat2: clevar.Catalog
-        Catalog matched to
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins: array
@@ -284,6 +284,6 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
     kwargs['legend_format'] = kwargs.get('legend_format',
         lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass else f'%{legend_fmt}'%v)
     kwargs['add_legend'] = kwargs.get('add_legend', True)*(mass_bins is not None)
-    return CatalogFuncs.redshift(cat1, cat2, matching_type, redshift_bins=redshift_bins,
+    return ClCatalogFuncs.redshift(cat1, cat2, matching_type, redshift_bins=redshift_bins,
             normalize=normalize, col2='mass', bins2=mass_bins, ax=ax, **kwargs)
 

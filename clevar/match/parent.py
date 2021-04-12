@@ -15,9 +15,9 @@ class Match():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
+        cat1: clevar.ClCatalog
             Base catalog
-        cat2: clevar.Catalog
+        cat2: clevar.ClCatalog
             Target catalog
 
         Note
@@ -30,9 +30,9 @@ class Match():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
+        cat1: clevar.ClCatalog
             Base catalog
-        cat2: clevar.Catalog
+        cat2: clevar.ClCatalog
             Target catalog
         preference: str
             Preference to set best match
@@ -56,10 +56,10 @@ class Match():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog 1
-        cat2: clevar.Catalog
-            Catalog 2
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
         match_config: dict
             Dictionary with the matching configuration.
         cosmo: clevar.Cosmology object
@@ -76,11 +76,11 @@ class Match():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
+        cat1: clevar.ClCatalog
             Base catalog
         i: int
             Index of the cluster from cat1 to be matched
-        cat2: clevar.Catalog
+        cat2: clevar.ClCatalog
             Target catalog
         """
         inds2 = cat2.ids2inds(cat1['mt_multi_self'][i])
@@ -96,11 +96,11 @@ class Match():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
+        cat1: clevar.ClCatalog
             Base catalog
         i: int
             Index of the cluster from cat1 to be matched
-        cat2: clevar.Catalog
+        cat2: clevar.ClCatalog
             Target catalog
         MATCH_PREF: str
             Matching preference, can be 'angular_proximity' or 'redshift_proximity'
@@ -147,7 +147,7 @@ class Match():
         """Makes cross matches of catalog, requires unique matches to be done first.
         Parameters
         ----------
-        cat1: clevar.Catalog
+        cat1: clevar.ClCatalog
             Base catalog
         """
         cat1.cross_match()
@@ -157,10 +157,10 @@ class Match():
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog 1
-        cat2: clevar.Catalog
-            Catalog 2
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
         out_dir: str
             Path of directory to save output
         overwrite: bool

@@ -152,7 +152,7 @@ class Footprint():
         """
         self = Footprint()
         values = ClData.read(filename)
-        self._add_values(nside=nside, nest=nest, 
+        self._add_values(nside=nside, nest=nest,
             pixels=values[pixel_name],
             detfrac=values[detfrac_name] if detfrac_name is not None else None,
             zmax=values[zmax_name] if zmax_name is not None else None)

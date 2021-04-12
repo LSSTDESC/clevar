@@ -1,6 +1,6 @@
 """Tests for clevar/metrics/recovery"""
 import numpy as np
-from clevar.catalog import Catalog
+from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
 from clevar.metrics import scaling
@@ -18,8 +18,8 @@ def get_test_data():
     input2 = {k:v[:4] for k, v in input1.items()}
     input2['z'][:2] = [.3, .2]
     input2['mass'][:3] = input2['mass'][:3][::-1]
-    c1 = Catalog('Cat1', **input1)
-    c2 = Catalog('Cat2', **input2)
+    c1 = ClCatalog('Cat1', **input1)
+    c2 = ClCatalog('Cat2', **input2)
     cosmo = CosmoClass()
     mt = ProximityMatch()
     mt_config1 = {'delta_z':.2,
@@ -69,5 +69,5 @@ def test_m_density_panel():
     fig, axes = scaling.mass_density_zpanel(c1, c2, 'cat1', add_err=True)
 def test_color_panel():
     c1, c2 = get_test_data()
-    fig, axes = scaling.CatalogFuncs.plot_color_panel(c1, c2, 'cat1', 'mass',
+    fig, axes = scaling.ClCatalogFuncs.plot_color_panel(c1, c2, 'cat1', 'mass',
         col_color='z', col_panel='z', bins_panel=3)

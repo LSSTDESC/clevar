@@ -16,9 +16,9 @@ class ProximityMatch(Match):
 
         Parameters
         ----------
-        cat1: clevar.Catalog
+        cat1: clevar.ClCatalog
             Base catalog
-        cat2: clevar.Catalog
+        cat2: clevar.ClCatalog
             Target catalog
         radius_selection: str (optional)
             Case of radius to be used, can be: max, min, self, other.
@@ -55,8 +55,8 @@ class ProximityMatch(Match):
 
         Parameters
         ----------
-        cat: clevar.Catalog
-            Input Catalog
+        cat: clevar.ClCatalog
+            Input ClCatalog
         delta_z: float, string
             Defines the zmin, zmax for matching. If 'cat' uses redshift properties of the catalog,
             if 'spline.filename' interpolates data in 'filename' (z, zmin, zmax) fmt,
@@ -92,7 +92,7 @@ class ProximityMatch(Match):
                 cat.mt_input['zmin'] = cat['z']-n_delta_z*cat['z_err']
                 cat.mt_input['zmax'] = cat['z']+n_delta_z*cat['z_err']
             else:
-                raise ValueError('Catalog must contain zmin, zmax or z_err for this matching.')
+                raise ValueError('ClCatalog must contain zmin, zmax or z_err for this matching.')
         elif isinstance(delta_z, str):
             # zmin/zmax in auxiliar file
             print('* zmin|zmax from aux file')
@@ -183,10 +183,10 @@ class ProximityMatch(Match):
 
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog 1
-        cat2: clevar.Catalog
-            Catalog 2
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
         match_config: dict
             Dictionary with the matching configuration.
         cosmo: clevar.Cosmology object
@@ -195,10 +195,10 @@ class ProximityMatch(Match):
         if match_config['type'] not in ('cat1', 'cat2', 'cross'):
             raise ValueError("config type must be cat1, cat2 or cross")
         if match_config['type'] in ('cat1', 'cross'):
-            print("\n## Catalog 1")
+            print("\n## ClCatalog 1")
             self.prep_cat_for_match(cat1, cosmo=cosmo, **match_config['catalog1'])
         if match_config['type'] in ('cat2', 'cross'):
-            print("\n## Catalog 2")
+            print("\n## ClCatalog 2")
             self.prep_cat_for_match(cat2, cosmo=cosmo, **match_config['catalog2'])
 
         if match_config['type'] in ('cat1', 'cross'):

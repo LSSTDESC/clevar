@@ -216,21 +216,21 @@ class ArrayFuncs():
         cb_kwargs_ = {'ax':ax}
         cb_kwargs_.update(cb_kwargs)
         return ax, plt.colorbar(c, **cb_kwargs_)
-class CatalogFuncs():
+class ClCatalogFuncs():
     """
-    Class of plot functions with clevar.Catalog as inputs
+    Class of plot functions with clevar.ClCatalog as inputs
     """
     def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
                    mask=None, mask_unmatched=None, **kwargs):
         """
-        Adapts a CatalogFuncs function to use a ArrayFuncs function.
+        Adapts a ClCatalogFuncs function to use a ArrayFuncs function.
 
         Parameters
         ----------
         pltfunc: function
             ArrayFuncs function
-        cat: clevar.Catalog
-            Catalog with matching information
+        cat: clevar.ClCatalog
+            ClCatalog with matching information
         col1: str
             Name of column 1
         col2: str
@@ -263,8 +263,8 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat: clevar.Catalog
-            Catalog with matching information
+        cat: clevar.ClCatalog
+            ClCatalog with matching information
         col1: str
             Name of column 1
         col2: str
@@ -310,7 +310,7 @@ class CatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        ax = CatalogFuncs._plot_base(ArrayFuncs.plot,
+        ax = ClCatalogFuncs._plot_base(ArrayFuncs.plot,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
         ax.set_xlabel(xlabel if xlabel else f'${col1}_{{{cat.name}}}$')
         ax.set_ylabel(ylabel if ylabel else 'recovery rate')
@@ -324,8 +324,8 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat: clevar.Catalog
-            Catalog with matching information
+        cat: clevar.ClCatalog
+            ClCatalog with matching information
         col1: str
             Name of column 1
         col2: str
@@ -373,7 +373,7 @@ class CatalogFuncs():
         axes: array
             Axes with the panels
         """
-        fig, axes = CatalogFuncs._plot_base(ArrayFuncs.plot_panel,
+        fig, axes = ClCatalogFuncs._plot_base(ArrayFuncs.plot_panel,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
         ph.nice_panel(axes, xlabel=none_val(xlabel, col1), ylabel=none_val(xlabel, col2),
                       xscale=scale1, yscale='linear')
@@ -386,8 +386,8 @@ class CatalogFuncs():
 
         Parameters
         ----------
-        cat: clevar.Catalog
-            Catalog with matching information
+        cat: clevar.ClCatalog
+            ClCatalog with matching information
         col1: str
             Name of column 1
         col2: str
@@ -434,7 +434,7 @@ class CatalogFuncs():
         matplotlib.colorbar.Colorbar
             Colorbar of the recovey rates
         """
-        ax, cb = CatalogFuncs._plot_base(ArrayFuncs.plot2D,
+        ax, cb = ClCatalogFuncs._plot_base(ArrayFuncs.plot2D,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
         ax.set_xlabel(xlabel if xlabel else f'${col1}_{{{cat.name}}}$')
         ax.set_ylabel(ylabel if ylabel else f'${col2}_{{{cat.name}}}$')
@@ -444,14 +444,14 @@ class CatalogFuncs():
 def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins,
                transpose=False, **kwargs):
     """
-    Adapts a CatalogFuncs function for main functions using mass and redshift.
+    Adapts a ClCatalogFuncs function for main functions using mass and redshift.
 
     Parameters
     ----------
     pltfunc: function
-        CatalogFuncs function
-    cat: clevar.Catalog
-        Catalog with matching information
+        ClCatalogFuncs function
+    cat: clevar.ClCatalog
+        ClCatalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
@@ -474,8 +474,8 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
 
     Parameters
     ----------
-    cat: clevar.Catalog
-        Catalog with matching information
+    cat: clevar.ClCatalog
+        ClCatalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
@@ -518,7 +518,7 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
     kwargs['legend_format'] = kwargs.get('legend_format',
         lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass*(not transpose)\
              else f'%{legend_fmt}'%v)
-    return _plot_base(CatalogFuncs.plot, cat, matching_type,
+    return _plot_base(ClCatalogFuncs.plot, cat, matching_type,
                       redshift_bins, mass_bins, transpose,
                       scale1='log' if log_mass*transpose else 'linear',
                       xlabel=mass_label if transpose else redshift_label,
@@ -532,8 +532,8 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
 
     Parameters
     ----------
-    cat: clevar.Catalog
-        Catalog with matching information
+    cat: clevar.ClCatalog
+        ClCatalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
@@ -583,7 +583,7 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
     kwargs['label_format'] = kwargs.get('label_format',
         lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) if log_mass*(not transpose)\
              else f'%{label_fmt}'%v)
-    return _plot_base(CatalogFuncs.plot_panel, cat, matching_type,
+    return _plot_base(ClCatalogFuncs.plot_panel, cat, matching_type,
                       redshift_bins, mass_bins, transpose,
                       scale1='log' if log_mass*transpose else 'linear',
                       xlabel=mass_label if transpose else redshift_label,
@@ -596,8 +596,8 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
 
     Parameters
     ----------
-    cat: clevar.Catalog
-        Catalog with matching information
+    cat: clevar.ClCatalog
+        ClCatalog with matching information
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
@@ -636,7 +636,7 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
     matplotlib.colorbar.Colorbar
         Colorbar of the recovey rates
     """
-    return _plot_base(CatalogFuncs.plot2D, cat, matching_type,
+    return _plot_base(ClCatalogFuncs.plot2D, cat, matching_type,
                       redshift_bins, mass_bins, transpose,
                       scale1='log' if log_mass*transpose else 'linear',
                       scale2='log' if log_mass*(not transpose) else 'linear',

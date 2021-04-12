@@ -2,7 +2,7 @@
 import os
 import numpy as np
 import healpy as hp
-from clevar.catalog import Catalog
+from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology
 from clevar.footprint import Footprint
 from clevar.footprint.artificial import create_footprint
@@ -17,8 +17,8 @@ def get_test_data():
         'z': np.ones(100),
         'radius': np.ones(100),
     }
-    c1 = Catalog('Cat1', radius_unit='mpc', **{k:v[::2] for k, v in input0.items()})
-    c2 = Catalog('Cat2', radius_unit='mpc', **{k:v[1::2] for k, v in input0.items()})
+    c1 = ClCatalog('Cat1', radius_unit='mpc', **{k:v[::2] for k, v in input0.items()})
+    c2 = ClCatalog('Cat2', radius_unit='mpc', **{k:v[1::2] for k, v in input0.items()})
     return c1, c2
 def test_footprint():
     c1, c2 = get_test_data()
@@ -36,7 +36,7 @@ def test_footprint():
     assert(1>ftpt1.get_coverfrac_nfw2D(0, 0, 0.1, 1, 'arcsec', 1, 'arcsec', cosmo=cosmo))
     # Load external
     ftpt1.data.write('ftpt1.fits', overwrite=True)
-    ftpt1 = Footprint.read('ftpt1.fits', pixel_name='pixel', nside=nside) 
+    ftpt1 = Footprint.read('ftpt1.fits', pixel_name='pixel', nside=nside)
     os.system('rm -f ftpt1.fits')
     # Add quantities to catalog
     c1.add_ftpt_masks(ftpt1, ftpt2)

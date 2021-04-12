@@ -5,10 +5,10 @@ class MatchedPairs():
         """
         Parameters
         ----------
-        cat1: clevar.Catalog
-            Catalog with matching information
-        cat2: clevar.Catalog
-            Catalog matched to
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
         matching_type: str
             Type of matching to be considered. Must be in:
             'cross', 'self', 'other'

@@ -1,5 +1,5 @@
 """@file catalog.py
-The Catalog and improved Astropy table classes
+The ClCatalog and improved Astropy table classes
 """
 import numpy as np
 from astropy.table import Table as APtable
@@ -55,14 +55,14 @@ _matching_mask_funcs = {
     'multi_other': lambda match: veclen(match['mt_multi_other'])>0,
     'multi_join': lambda match: (veclen(match['mt_multi_self'])>0)+(veclen(match['mt_multi_other'])>0),
 }
-class Catalog():
+class ClCatalog():
     """
     Object to handle catalogs
 
     Attributes
     ----------
     name: str
-        Catalog name
+        ClCatalog name
     data: ClData
         Main catalog data (ex: id, ra, dec, z). Fixed values.
         Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
@@ -106,7 +106,7 @@ class Catalog():
         tab = " "*12
         if any(self.size!=s for s in sizes):
             raise ValueError(f"Column sizes inconsistent:\n"+
-                f"{tab}{'Catalog':10}: {self.size:,}\n"+
+                f"{tab}{'ClCatalog':10}: {self.size:,}\n"+
                 "\n".join([f"{tab}{k:10}: {l:,}" for k, l in zip(names, sizes)])
                 )
         if 'id' not in columns:

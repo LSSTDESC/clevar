@@ -1,10 +1,10 @@
-from clevar import Catalog
+from clevar import ClCatalog
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 
 def test_adding_quantities():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
-    c = Catalog(name='test', **quantities)
+    c = ClCatalog(name='test', **quantities)
     # Check init values
     assert_equal(c.name, 'test')
     for k, v in quantities.items():
@@ -34,9 +34,9 @@ def test_adding_quantities():
     assert_equal(c['mt_cross'], ['a', None])
     # Check fails
     quantities_fail = {'id': ['1'], 'ra': [12, 30], 'dec': [20], 'z': [0.5]}
-    assert_raises(ValueError, Catalog, name='test', ra=[0, 0], dec=[0])
+    assert_raises(ValueError, ClCatalog, name='test', ra=[0, 0], dec=[0])
     # Check create ids
-    c = Catalog('test', ra=[0, 0, 0])
+    c = ClCatalog('test', ra=[0, 0, 0])
     assert_equal(c['id'], ['0', '1', '2'])
     # Check inexistent mask
     assert_raises(ValueError, c.get_matching_mask, 'made up mask')

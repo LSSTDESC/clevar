@@ -4,7 +4,7 @@ import os
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 
-from clevar.catalog import Catalog
+from clevar.catalog import ClCatalog
 from clevar.match.parent import Match
 from clevar.match import ProximityMatch
 
@@ -45,8 +45,8 @@ def get_test_data():
     return input1, input2
 def test_proximity(CosmoClass):
     input1, input2 = get_test_data()
-    c1 = Catalog('Cat1', **input1)
-    c2 = Catalog('Cat2', **input2)
+    c1 = ClCatalog('Cat1', **input1)
+    c2 = ClCatalog('Cat2', **input2)
     print(c1.data)
     print(c2.data)
     # init match
@@ -105,8 +105,8 @@ def test_proximity(CosmoClass):
     assert_raises(ValueError, mt.unique, c1, c2, 'unknown')
     # Check save and load matching
     mt.save_matches(c1, c2, out_dir='temp', overwrite=True)
-    c1_v2 = Catalog('Cat1', **input1)
-    c2_v2 = Catalog('Cat2', **input2)
+    c1_v2 = ClCatalog('Cat1', **input1)
+    c2_v2 = ClCatalog('Cat2', **input2)
     mt.load_matches(c1_v2, c2_v2, out_dir='temp')
     for col in ('mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other'):
         assert_equal(c1[col], c1_v2[col])
@@ -154,8 +154,8 @@ def test_proximity(CosmoClass):
     mt.multiple(c1, c2, radius_selection='min')
 def test_proximity_cfg(CosmoClass):
     input1, input2 = get_test_data()
-    c1 = Catalog('Cat1', **input1)
-    c2 = Catalog('Cat2', **input2)
+    c1 = ClCatalog('Cat1', **input1)
+    c2 = ClCatalog('Cat2', **input2)
     print(c1.data)
     print(c2.data)
     # init match
