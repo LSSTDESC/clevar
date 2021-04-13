@@ -609,8 +609,10 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
-        bins: array, int
-            Bins for density
+        bins1: array, int
+            Bins of component 1 for density
+        bins2: array, int
+            Bins of component 2 for density
         add_err: bool
             Add errorbars
 
@@ -865,8 +867,10 @@ class ClCatalogFuncs():
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
-        bins: array, int
-            Bins for density
+        bins1: array, int
+            Bins of component 1 for density
+        bins2: array, int
+            Bins of component 2 for density
         log_panel: bool
             Scale of the panel values
         add_err: bool
@@ -971,8 +975,10 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins: array, int
-        Bins for density
+    bins1: array, int
+        Bins of redshift 1 for density
+    bins2: array, int
+        Bins of redshift 2 for density
     add_err: bool
         Add errorbars
 
@@ -1117,8 +1123,6 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
 
     Parameters
     ----------
-    pltfunc: function
-        ArrayFuncs function
     cat1: clevar.ClCatalog
         ClCatalog with matching information
     cat2: clevar.ClCatalog
@@ -1131,8 +1135,10 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Log scale for mass
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
-    bins: array, int
-        Bins for density
+    bins1: array, int
+        Bins of redshift 1 for density
+    bins2: array, int
+        Bins of redshift 2 for density
     add_err: bool
         Add errorbars
 
@@ -1286,10 +1292,10 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
-    col: str
-        Name of column to be plotted
-    bins: array, int
-        Bins for density
+    bins1: array, int
+        Bins of mass 1 for density
+    bins2: array, int
+        Bins of mass 2 for density
     add_err: bool
         Add errorbars
 
@@ -1391,8 +1397,6 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
 
     Parameters
     ----------
-    pltfunc: function
-        ArrayFuncs function
     cat1: clevar.ClCatalog
         ClCatalog with matching information
     cat2: clevar.ClCatalog
@@ -1405,8 +1409,10 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Log scale for mass
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
-    bins: array, int
-        Bins for density
+    bins1: array, int
+        Bins of mass 1 for density
+    bins2: array, int
+        Bins of mass 2 for density
     add_err: bool
         Add errorbars
 
