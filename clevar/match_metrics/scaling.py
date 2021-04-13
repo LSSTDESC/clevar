@@ -91,6 +91,8 @@ class ArrayFuncs():
         """
         ax = plt.axes() if ax is None else ax
         ph.add_grid(ax)
+        if len(values1)==0:
+            return (ax, None) if add_cb else ax
         isort = np.argsort(values_color)
         xp, yp, zp = [v[isort] for v in (values1, values2, values_color)]
         plt_kwargs_ = {'s':1}
@@ -166,7 +168,7 @@ class ArrayFuncs():
         """
         values_color = ph.get_density_colors(values1, values2, bins1, bins2,
             ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
-            xscale=xscale, yscale=yscale)
+            xscale=xscale, yscale=yscale) if len(values1)>0 else []
         return ArrayFuncs.plot_color(values1, values2, values_color=values_color,
                 err1=err1, err2=err2, ax=ax, plt_kwargs=plt_kwargs,
                 add_cb=add_cb, cb_kwargs=cb_kwargs, err_kwargs=err_kwargs)
