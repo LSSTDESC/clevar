@@ -7,7 +7,7 @@ if os.environ.get('DISPLAY','') == 'test':
 import pylab as plt
 import numpy as np
 
-from ..utils import none_val
+from ..utils import none_val, autobins, binmasks
 from ..geometry import convert_units
 from ..match import MatchedPairs
 from . import plot_helper as ph
@@ -50,17 +50,23 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        bins2 = none_val(bins2, [quantity2.min(), quantity2.max()+1])
-        bin_masks = [(quantity2>=b0)*(quantity2<b1) for b0, b1 in zip(bins2, bins2[1:])]
+        if quantity2 is not None:
+            bins2 = autobins(quantity2, bins2)
+            bin_masks = binmasks(quantity2, bins2)
+        else:
+            bins2 = [0, 1]
+            bin_masks = [np.ones(len(distances), dtype=bool)]
+            add_legend = False
         lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in bin_masks])
         ax = none_val(ax, plt.axes())
         ph.add_grid(ax)
+        distance_bins_ = np.histogram(distances, bins=distance_bins)[1]
         for m, l_kwargs, e0, e1 in zip(bin_masks, lines_kwargs_list, bins2, bins2[1:]):
             kwargs = {}
             kwargs['label'] = ph.get_bin_label(e0, e1, legend_format) if add_legend else None
             kwargs.update(plt_kwargs)
             kwargs.update(l_kwargs)
-            ph.plot_hist_line(*np.histogram(distances[m], bins=distance_bins),
+            ph.plot_hist_line(*np.histogram(distances[m], bins=distance_bins_),
                               ax=ax, shape=shape, **kwargs)
         if add_legend:
             ax.legend(**legend_kwargs)
@@ -113,7 +119,7 @@ class ClCatalogFuncs():
                                   cosmo=cosmo)
         ax = ClCatalogFuncs._histograms(distances=distances,
                                       distance_bins=radial_bins,
-                                      quantity2=mp.data1[col2],
+                                      quantity2=mp.data1[col2] if col2 in mp.data1.colnames else None,
                                       bins2=bins2, **kwargs)
         dist_labels = {'degrees':'deg', 'arcmin': 'arcmin', 'arcsec':'arcsec',
                         'pc':'pc', 'kpc':'kpc', 'mpc': 'Mpc'}
@@ -170,7 +176,7 @@ class ClCatalogFuncs():
                 }[normalize]
         ax = ClCatalogFuncs._histograms(distances=(z1-z2)/norm,
                                       distance_bins=redshift_bins,
-                                      quantity2=mp.data1[col2],
+                                      quantity2=mp.data1[col2] if col2 in mp.data1.colnames else None,
                                       bins2=bins2, **kwargs)
         dz = 'z_1-z_2'
         dist_labels = {None:f'${dz}$', 'cat1': f'$({dz})/(1+z_1)$',

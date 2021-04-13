@@ -18,24 +18,50 @@ def none_val(value, none_value):
         Value if value is not None else none_value
     """
     return value if value is not None else none_value
-def logbins(values, nbins):
+def autobins(values, bins, log=False):
     """
-    Make log10 spaced bins from data
+    Get bin values automatically from bins, values
 
     Parameters
     ----------
     values: array
         Data
-    nbins: int
-        Number of bins
+    bins: int, array
+        Bins/Number of bins
+    log: bool
+        Logspaced bins (used if bins is int)
 
     Returns
     -------
     ndarray
-        Log10 spaced bins based on values
+        Bins based on values
     """
-    logvals = np.log10(values)
-    return np.logspace(logvals.min(), logvals.max(), nbins)
+    if hasattr(bins, '__len__'):
+        return bins
+    if log:
+        logvals = np.log10(values)
+        return np.logspace(logvals.min(), logvals.max(), bins)
+    else:
+        return np.linspace(values.min(), values.max(), bins)
+def binmasks(values, bins):
+    """
+    Get corresponding masks for each bin. Last bin is inclusive.
+
+    Parameters
+    ----------
+    values: array
+        Data
+    bins: array
+        Bins
+
+    Returns
+    -------
+    bin_masks: list
+        List of masks for each bin
+    """
+    bin_masks = [(values>=b0)*(values<b1) for b0, b1 in zip(bins, bins[1:])]
+    bin_masks[-1] += values==bins[-1]
+    return bin_masks
 ########################################################################
 ########## Monkeypatching healpy #######################################
 ########################################################################
