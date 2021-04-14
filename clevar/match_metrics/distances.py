@@ -60,7 +60,7 @@ class ClCatalogFuncs():
             bin_masks = [np.ones(len(distances), dtype=bool)]
             add_legend = False
         lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in bin_masks])
-        ax = none_val(ax, plt.axes())
+        ax = plt.axes() if ax is None else ax
         ph.add_grid(ax)
         distance_bins_ = np.histogram(distances, bins=distance_bins)[1]
         for m, l_kwargs, e0, e1 in zip(bin_masks, lines_kwargs_list, bins2, bins2[1:]):
