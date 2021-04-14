@@ -116,9 +116,11 @@ def get_input_loop(options_msg, actions):
     actions: dict
         Dictionary with the actions to be made. Values must be (function, args, kwargs)
     """
-    action = input(f'\n{options_msg}\n')
-    while action not in actions:
-        action = input(f'Option {action} not valid. Please choose: {options_msg}\n')
+    loop = True
+    while loop:
+        action = input(f'\n{options_msg}\n')
+        loop = action not in actions
+        prt = print(f'Option {action} not valid. Please choose:') if loop else None
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
 def loadconf(config_file, consistency_configs=[], fail_action='ask'):
@@ -179,8 +181,8 @@ def make_catalog(cat_config):
     clevar.ClCatalog
         ClCatalog based on input config
     """
-    c0 = clevar.ClData.read(cat_config['file'])
-    cat = clevar.ClCatalog(cat_config['name'],
+    c0 = ClData.read(cat_config['file'])
+    cat = ClCatalog(cat_config['name'],
         **{k:c0[v] for k, v in cat_config['columns'].items()})
     cat.radius_unit = cat_config['radius_unit'] if 'radius_unit' in cat_config\
                         else None
@@ -200,12 +202,12 @@ def make_cosmology(cosmo_config):
         Cosmology based on the input config
     """
     if cosmo_config['backend'].lower()=='astropy':
-        CosmoClass = clevar.cosmology.AstroPyCosmology
-    elif cosmo_config['backend'].lower()=='astropy':
-        CosmoClass = clevar.cosmology.AstroPyCosmology
+        CosmoClass = cosmology.AstroPyCosmology
+    elif cosmo_config['backend'].lower()=='ccl':
+        CosmoClass = cosmology.CCLCosmology
     else:
         raise ValueError(f'Cosmology backend "{cosmo_config["backend"]}" not accepted')
-    parameters = cosmo_config['parameters'] if cosmo_config['parameters'] else {}
+    parameters = none_val(cosmo_config.get('parameters', None), {})
     return CosmoClass(**parameters)
 def make_bins(input_val, log=False):
     """
