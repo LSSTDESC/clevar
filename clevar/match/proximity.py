@@ -111,7 +111,7 @@ class ProximityMatch(Match):
         # Set angular radius
         if match_radius == 'cat':
             print('* ang radius from cat')
-            in_rad, in_rad_unit = cat['rad'], cat.radius_unit
+            in_rad, in_rad_unit = cat['radius'], cat.radius_unit
         else:
             print('* ang radius from set scale')
             in_rad = None
