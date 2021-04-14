@@ -112,6 +112,14 @@ class ProximityMatch(Match):
         if match_radius == 'cat':
             print('* ang radius from cat')
             in_rad, in_rad_unit = cat['rad'], cat.radius_unit
+            # when units is m#
+            if in_rad_unit.lower()!='mpc' and in_rad_unit[0].lower()=='m':
+                try:
+                    delta = float(in_rad_unit[1:])
+                except:
+                    raise ValueError(f"Mass unit ({in_rad_unit}) must be in format 'm#'")
+                in_rad = cosmo.eval_mass2radius(in_rad, cat['z'], delta, mass_type='critical')
+                in_rad_unit = 'mpc'
         else:
             print('* ang radius from set scale')
             in_rad = None
