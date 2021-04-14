@@ -1,7 +1,7 @@
 outpath: temp
 
 cosmology:
-    backend: Astropy
+    backend: Astropy # Options are Astropy, CCL
     parameters:
 
 catalog1:
@@ -50,7 +50,7 @@ match_metrics:
 
         figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize
         dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi
-        plot_case: simple, panel # Types of plots to be done. Options are simple, panel, 2D or all
+        plot_case: all # Types of plots to be done. Options are simple, panel, 2D or all
         matching_type: cross # options are cross, cat1, cat2, multi_cat1, multi_cat2, multi_join
         line_type: steps # line, steps
 
@@ -84,7 +84,7 @@ match_metrics:
 
         figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize
         dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi
-        plot_case: simple, panel # Types of plots to be done. Options are simple, panel, 2D or all
+        plot_case: simple panel 2D # Types of plots to be done. Options are simple, panel, 2D or all
         matching_type: cross # options are cross, cat1, cat2
         line_type: steps # line, steps
         radial_bins: 20 # bins for radial distances
