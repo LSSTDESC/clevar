@@ -1,3 +1,11 @@
 #!/usr/bin/env python
+import argparse
 from clevar import yaml
-yaml.match_metrics_recovery_rate()
+
+if __name__=="__main__":
+    # Get command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(dest='config_file', help='Configuration yaml file')
+    args = parser.parse_args()
+    # Run function
+    yaml.match_metrics_recovery_rate(args.config_file)

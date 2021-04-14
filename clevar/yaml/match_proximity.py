@@ -1,23 +1,25 @@
-import argparse
 import numpy as np
 import pylab as plt
 import os
 
 import clevar
 from . import helper_funcs as hf
-def run():
-    """Main plot function"""
-    # Get command line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument(dest='config_file', help='Configuration yaml file')
-    parser.add_argument('-oc','--overwrite-config', dest='overwrite_config', default=False, action='store_true', help='Overwrites config.log.yml file')
-    parser.add_argument('-om','--overwrite-matching', dest='overwrite_matching', default=False, action='store_true', help='Overwrites matching output files')
-    args = parser.parse_args()
+def run(config_file, overwrite_config, overwrite_matching):
+    """Main plot function
+
+    Parameters
+    ----------
+    config_file: str
+        Yaml file with configuration to run
+    overwrite_config: bool
+        Forces overwrite of config.log.yml file
+    overwrite_config: bool
+        Forces overwrite of matching output files
+    """
     # Create clevar objects from yml config
-    config = hf.loadconf(
-        config_file=args.config_file,
+    config = hf.loadconf(config_file,
         consistency_configs=['catalog1', 'catalog2','proximity_match'],
-        fail_action='orverwrite' if args.overwrite_config else 'ask'
+        fail_action='orverwrite' if overwrite_config else 'ask'
         )
     print("\n# Reading Catalog 1")
     c1 = hf.make_catalog(config['catalog1'])
@@ -41,10 +43,10 @@ def run():
         mt.match_from_config(c1, c2, config[match_step], cosmo=cosmo_)
     out1, out2 = f'{config["outpath"]}/match1.fits', f'{config["outpath"]}/match2.fits'
     check_actions = {'o': (lambda : None, [], {}), 'q': (exit, [], {}),}
-    if os.path.isfile(out1) and not args.overwrite_matching:
+    if os.path.isfile(out1) and not overwrite_matching:
         print(f"\n*** File '{out1}' already exist! ***")
         hf.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
-    if os.path.isfile(out2) and not args.overwrite_matching:
+    if os.path.isfile(out2) and not overwrite_matching:
         print(f"\n*** File '{out2}' already exist! ***")
         hf.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
     mt.save_matches(c1, c2, out_dir=config['outpath'], overwrite=True)

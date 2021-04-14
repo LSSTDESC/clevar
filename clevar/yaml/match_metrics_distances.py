@@ -1,18 +1,18 @@
-import argparse
 import numpy as np
 import pylab as plt
 
 import clevar
 from . import helper_funcs as hf
-def run():
-    """Main plot function"""
-    # Get command line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument(dest='config_file', help='Configuration yaml file')
-    args = parser.parse_args()
+def run(config_file):
+    """Main plot function
+
+    Parameters
+    ----------
+    config_file: str
+        Yaml file with configuration to run
+    """
     # Create clevar objects from yml config
-    config = hf.loadconf(
-        config_file=args.config_file,
+    config = hf.loadconf(config_file,
         consistency_configs=['catalog1', 'catalog2','proximity_match'],
         )
     print("\n# Reading Catalog 1")

@@ -1,3 +1,13 @@
 #!/usr/bin/env python
+import argparse
 from clevar import yaml
-yaml.match_proximity()
+
+if __name__=="__main__":
+    # Get command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(dest='config_file', help='Configuration yaml file')
+    parser.add_argument('-oc','--overwrite-config', dest='overwrite_config', default=False, action='store_true', help='Overwrites config.log.yml file')
+    parser.add_argument('-om','--overwrite-matching', dest='overwrite_matching', default=False, action='store_true', help='Overwrites matching output files')
+    args = parser.parse_args()
+    # Run function
+    yaml.match_proximity(args.config_file, args.overwrite_config, args.overwrite_matching)
