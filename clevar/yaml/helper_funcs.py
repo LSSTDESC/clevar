@@ -1,11 +1,14 @@
+"""@file yaml/helper_funcs.py
+Helper functions for command line execution
+"""
 import os, sys
 import yaml
 import argparse
 import numpy as np
 
-from ..catalog import ClData, ClCatalog
-from .. import cosmology
-from ..utils import none_val, veclen
+from clevar.catalog import ClData, ClCatalog
+from clevar import cosmology
+from clevar.utils import none_val, veclen
 ######################################################################
 ########## Monkeypatching yaml #######################################
 ######################################################################

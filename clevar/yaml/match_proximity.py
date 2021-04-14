@@ -1,10 +1,13 @@
+"""@file match_proximity.py
+Proximity matching functions for command line execution
+"""
 import numpy as np
 import pylab as plt
 import os
 import warnings
 
 import clevar
-from . import helper_funcs as hf
+from .helper_funcs import loadconf, make_catalog, make_cosmology, get_input_loop
 def run(config_file, overwrite_config, overwrite_matching):
     """Main plot function
 
@@ -18,16 +21,16 @@ def run(config_file, overwrite_config, overwrite_matching):
         Forces overwrite of matching output files
     """
     # Create clevar objects from yml config
-    config = hf.loadconf(config_file,
+    config = loadconf(config_file,
         consistency_configs=['catalog1', 'catalog2','proximity_match'],
         fail_action='orverwrite' if overwrite_config else 'ask'
         )
     print("\n# Reading Catalog 1")
-    c1 = hf.make_catalog(config['catalog1'])
+    c1 = make_catalog(config['catalog1'])
     print("\n# Reading Catalog 2")
-    c2 = hf.make_catalog(config['catalog2'])
+    c2 = make_catalog(config['catalog2'])
     print("\n# Creating Cosmology")
-    cosmo = hf.make_cosmology(config['cosmology'])
+    cosmo = make_cosmology(config['cosmology'])
     # Run matching
     mt = clevar.match.ProximityMatch()
     for match_step in sorted([c for c in config.keys()
@@ -35,7 +38,7 @@ def run(config_file, overwrite_config, overwrite_matching):
         prt_msg = '# Start matching' if match_step=='proximity_match'\
             else f'# Run step {match_step.replace("proximity_match_", "")}'
         print(f'\n{"#"*20}\n{prt_msg}\n{"#"*20}')
-        cosmo_ = hf.make_cosmology(config[match_step]['cosmology']) \
+        cosmo_ = make_cosmology(config[match_step]['cosmology']) \
                     if 'cosmology' in config[match_step] else cosmo
         if cosmo_!=cosmo:
             warn_msg = ('replacing default cosmology in matching with:\n    '+
@@ -47,6 +50,6 @@ def run(config_file, overwrite_config, overwrite_matching):
     save = True
     if (os.path.isfile(out1) or os.path.isfile(out2)) and not overwrite_matching:
         print(f"\n*** File '{out1}' or '{out2}' already exist! ***")
-        save = hf.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
+        save = get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
     if save:
         mt.save_matches(c1, c2, out_dir=config['outpath'], overwrite=True)

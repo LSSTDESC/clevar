@@ -1,8 +1,11 @@
+"""@file match_metrics_distances.py
+Matching metrics - distances functions for command line execution
+"""
 import numpy as np
 import pylab as plt
 
 import clevar
-from . import helper_funcs as hf
+from .helper_funcs import loadconf, make_catalog, make_cosmology, make_bins
 def run(config_file):
     """Main plot function
 
@@ -12,17 +15,17 @@ def run(config_file):
         Yaml file with configuration to run
     """
     # Create clevar objects from yml config
-    config = hf.loadconf(config_file,
+    config = loadconf(config_file,
         consistency_configs=['catalog1', 'catalog2','proximity_match'],
         )
     print("\n# Reading Catalog 1")
-    c1 = hf.make_catalog(config['catalog1'])
+    c1 = make_catalog(config['catalog1'])
     c1.load_match(f"{config['outpath']}/match1.fits")
     print("\n# Reading Catalog 2")
-    c2 = hf.make_catalog(config['catalog2'])
+    c2 = make_catalog(config['catalog2'])
     c2.load_match(f"{config['outpath']}/match2.fits")
     print("\n# Creating Cosmology")
-    cosmo = hf.make_cosmology(config['cosmology'])
+    cosmo = make_cosmology(config['cosmology'])
     # Print metrics
     from clevar.match_metrics import distances
     # prep configurations
@@ -53,8 +56,8 @@ def run(config_file):
             }
         dist_conf[cat].update(config.get('match_metrics', {}).get('distances', {}).get(cat, {}))
         # Format values
-        dist_conf[cat]['redshift_bins'] = hf.make_bins(dist_conf[cat]['redshift_bins'])
-        dist_conf[cat]['mass_bins'] = hf.make_bins(dist_conf[cat]['mass_bins'], dist_conf[cat]['log_mass'])
+        dist_conf[cat]['redshift_bins'] = make_bins(dist_conf[cat]['redshift_bins'])
+        dist_conf[cat]['mass_bins'] = make_bins(dist_conf[cat]['mass_bins'], dist_conf[cat]['log_mass'])
         dist_conf[cat] = {k: str_none(v) for k, v in dist_conf[cat].items()}
     ### Plots
     # Central distances

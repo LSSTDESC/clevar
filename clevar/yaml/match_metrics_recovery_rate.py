@@ -1,9 +1,12 @@
+"""@file match_metrics_recovery_rate.py
+Matching metrics - recovery rate functions for command line execution
+"""
 import argparse
 import numpy as np
 import pylab as plt
 
 import clevar
-from . import helper_funcs as hf
+from .helper_funcs import loadconf, make_catalog, make_cosmology, make_bins
 def run(config_file):
     """Main plot function
 
@@ -13,17 +16,17 @@ def run(config_file):
         Yaml file with configuration to run
     """
     # Create clevar objects from yml config
-    config = hf.loadconf(config_file,
+    config = loadconf(config_file,
         consistency_configs=['catalog1', 'catalog2','proximity_match'],
         )
     print("\n# Reading Catalog 1")
-    c1 = hf.make_catalog(config['catalog1'])
+    c1 = make_catalog(config['catalog1'])
     c1.load_match(f"{config['outpath']}/match1.fits")
     print("\n# Reading Catalog 2")
-    c2 = hf.make_catalog(config['catalog2'])
+    c2 = make_catalog(config['catalog2'])
     c2.load_match(f"{config['outpath']}/match2.fits")
     print("\n# Creating Cosmology")
-    cosmo = hf.make_cosmology(config['cosmology'])
+    cosmo = make_cosmology(config['cosmology'])
     # Print metrics
     from clevar.match_metrics import recovery
     # prep configurations
@@ -57,8 +60,8 @@ def run(config_file):
             }
         rec_conf[cat].update(config.get('match_metrics', {}).get('recovery', {}).get(cat, {}))
         # Format values
-        rec_conf[cat]['redshift_bins'] = hf.make_bins(rec_conf[cat]['redshift_bins'])
-        rec_conf[cat]['mass_bins'] = hf.make_bins(rec_conf[cat]['mass_bins'], rec_conf[cat]['log_mass'])
+        rec_conf[cat]['redshift_bins'] = make_bins(rec_conf[cat]['redshift_bins'])
+        rec_conf[cat]['mass_bins'] = make_bins(rec_conf[cat]['mass_bins'], rec_conf[cat]['log_mass'])
         rec_conf[cat] = {k: str_none(v) for k, v in rec_conf[cat].items()}
     ### Plots
     rec_name = f'{config["outpath"]}/rec_mt{rec_conf["matching_type"]}'
