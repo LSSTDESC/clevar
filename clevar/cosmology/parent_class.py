@@ -1,6 +1,6 @@
 # Cosmology object abstract superclass
 import numpy as np
-
+from .. constants import Constants as const
 
 class Cosmology:
     """
@@ -96,11 +96,11 @@ class Cosmology:
         """
         raise NotImplementedError
 
-    def get_E2Omega_m(self, z):
-        r"""Gets the value of the dimensionless matter density times hubble parameter (normalized at 0)
+    def get_E2(self, z):
+        r"""Gets hubble parameter squared (normalized at 0)
 
         .. math::
-            \Omega_m(z) = \frac{\rho_m(z)}{\rho_\mathrm{crit}(z)}\frac{H(z)^{2}}{H_{0}^{2}}.
+            \frac{H(z)^{2}}{H_{0}^{2}}.
 
         Parameters
         ----------
@@ -108,11 +108,8 @@ class Cosmology:
             Redshift.
         Returns
         -------
-        Omega_m : float
-            dimensionless matter density, :math:`\Omega_m(z)\;H(z)^{2}/H_{0}^{2}`.
-        Notes
-        -----
-        Need to decide if non-relativist neutrinos will contribute here.
+        E : float
+            Dimensionless normalized hubble parameter
         """
         raise NotImplementedError
 
@@ -233,3 +230,29 @@ class Cosmology:
             Distances in radians
         """
         return dist1/self.eval_da(redshift)
+
+    def eval_mass2radius(self, mass, z, delta=200, mass_type='background'):
+        """Computes the radius from M_Delta critical using h in units
+
+        Parameters
+        ----------
+        MASS: float, array
+            Mass of the volume in M_sun
+        z: float, array
+            Redshift
+        delta: int, float
+            Delta
+
+        Returns
+        -------
+        float, array
+            Radius in Mpc
+        """
+        rho = const.RHOCRIT.value*self['h'] # Critical density in Msun/Mpc^3
+        if mass_type=='backgound':
+            rho *= self.get_Omega_m(z)
+        elif mass_type=='critical':
+            rho *= self.get_E2(z)
+        else:
+            raise ValueError(f"mass_type '{mass_type}' must be background or critical")
+        return (3*mass/(4.*delta*np.pi*rho))**(1./3.)

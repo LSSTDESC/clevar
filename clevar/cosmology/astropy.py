@@ -58,8 +58,8 @@ class AstroPyCosmology(Cosmology):
     def get_Omega_m(self, z):
         return self.be_cosmo.Om(z)
 
-    def get_E2Omega_m(self, z):
-        return self.be_cosmo.Om(z)*(self.be_cosmo.H(z)/self.be_cosmo.H0)**2
+    def get_E2(self, z):
+        return (self.be_cosmo.H(z)/self.be_cosmo.H0)**2
 
     def eval_da_z1z2(self, z1, z2):
         return self.be_cosmo.angular_diameter_distance_z1z2(z1, z2).to_value(units.Mpc)
