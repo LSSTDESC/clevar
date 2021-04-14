@@ -1,6 +1,7 @@
 import numpy as np
 import pylab as plt
 import os
+import warnings
 
 import clevar
 from . import helper_funcs as hf
@@ -42,11 +43,10 @@ def run(config_file, overwrite_config, overwrite_matching):
             warnings.warn(warn_msg)
         mt.match_from_config(c1, c2, config[match_step], cosmo=cosmo_)
     out1, out2 = f'{config["outpath"]}/match1.fits', f'{config["outpath"]}/match2.fits'
-    check_actions = {'o': (lambda : None, [], {}), 'q': (exit, [], {}),}
-    if os.path.isfile(out1) and not overwrite_matching:
-        print(f"\n*** File '{out1}' already exist! ***")
-        hf.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
-    if os.path.isfile(out2) and not overwrite_matching:
-        print(f"\n*** File '{out2}' already exist! ***")
-        hf.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
-    mt.save_matches(c1, c2, out_dir=config['outpath'], overwrite=True)
+    check_actions = {'o': (lambda : True, [], {}), 'q': (lambda :False, [], {}),}
+    save = True
+    if (os.path.isfile(out1) or os.path.isfile(out2)) and not overwrite_matching:
+        print(f"\n*** File '{out1}' or '{out2}' already exist! ***")
+        save = hf.get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
+    if save:
+        mt.save_matches(c1, c2, out_dir=config['outpath'], overwrite=True)
