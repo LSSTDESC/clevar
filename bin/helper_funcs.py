@@ -170,3 +170,26 @@ def make_cosmology(cosmo_config):
         raise ValueError(f'Cosmology backend "{cosmo_config["backend"]}" not accepted')
     parameters = cosmo_config['parameters'] if cosmo_config['parameters'] else {}
     return CosmoClass(**parameters)
+def make_bins(input_val, log=False):
+    """
+    Make array for bins string input
+
+    Parameters
+    ----------
+    input_val: any
+        Value given by yaml config
+    log: bool
+        Use log scale
+
+    Returns
+    -------
+    int, array
+        Bins to be used
+    """
+    if isinstance(input_val, int):
+        return input_val
+    vals = input_val.split(' ')
+    if len(vals)!=3:
+        raise ValueError(f"Values ({input_val}) must be 1 intergers or 3 numbers (xmin, xmax, dx)")
+    out = np.arange(*np.array(vals, dtype=float))
+    return 10**out if log else out
