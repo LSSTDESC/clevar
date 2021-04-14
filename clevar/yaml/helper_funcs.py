@@ -3,8 +3,47 @@ import yaml
 import argparse
 import numpy as np
 
-import clevar
-from clevar.utils import veclen
+from ..catalog import ClData, ClCatalog
+from .. import cosmology
+from ..utils import none_val, veclen
+######################################################################
+########## Monkeypatching yaml #######################################
+######################################################################
+def read_yaml(filename):
+    """
+    Read yaml file
+
+    Parameters
+    ----------
+    filename: str
+        Name of yaml file
+
+    Returns
+    -------
+    config: dict
+        Dictionary with yaml file info
+    """
+    f = open(filename, 'r')
+    config = yaml.load(f, Loader=yaml.FullLoader)
+    f.close()
+    return config
+def write_yaml(config, filename):
+    """
+    Write yaml file
+
+    Parameters
+    ----------
+    config: dict
+        Dictionary to write
+    filename: str
+        Name of yaml file
+    """
+    f = open(filename, 'w')
+    yaml.dump(config, f)
+    f.close()
+yaml.write = write_yaml
+yaml.read = read_yaml
+########################################################################
 def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
     """
     Adds the differences between dictionaries to a list
@@ -104,22 +143,20 @@ def loadconf(config_file, consistency_configs=[], fail_action='ask'):
     print("\n## Loading config")
     if not os.path.isfile(config_file):
         raise ValueError(f'Config file "{config_file}" not found')
-    with open(config_file) as file:
-        config = yaml.load(file, Loader=yaml.FullLoader)
+    config = yaml.read(config_file)
     check_file = f'{config["outpath"]}/config.log.yml'
     if not os.path.isdir(config['outpath']):
         os.mkdir(config['outpath'])
         os.system(f'cp {config_file} {check_file}')
     else:
-        with open(check_file) as file:
-            check_config = yaml.load(file, Loader=yaml.FullLoader)
+        check_config = yaml.read(check_file)
         diff_configs = get_dicts_diff(config, check_config, keys=consistency_configs,
                                         header=['Name', 'New', 'Saved'],
                                         msg='\nConfigurations differs from saved config:\n')
         if len(diff_configs)>0:
             actions_loop = {
                 'o': (os.system, [f'cp {config_file} {check_file}'], {}),
-                'q': (exit, [], {}),
+                'q': (lambda _:0, [], {}),
                 }
             f, args, kwargs = {
                 'ask': (get_input_loop, ['Overwrite(o) and proceed or Quit(q)?', actions_loop], {}),
