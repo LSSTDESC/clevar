@@ -249,7 +249,7 @@ class Cosmology:
             Radius in Mpc
         """
         rho = const.RHOCRIT.value*self['h'] # Critical density in Msun/Mpc^3
-        if mass_type=='backgound':
+        if mass_type=='background':
             rho *= self.get_Omega_m(z)
         elif mass_type=='critical':
             rho *= self.get_E2(z)

@@ -17,7 +17,7 @@ def test_class():
     assert_raises(NotImplementedError, Cosmology.get_Omega_m, None, None)
     assert_raises(NotImplementedError, Cosmology.eval_da_z1z2, None, None, None)
     assert_raises(AttributeError, Cosmology.eval_da, None, None)
-    assert_raises(NotImplementedError, Cosmology.get_E2Omega_m, None, None)
+    assert_raises(NotImplementedError, Cosmology.get_E2, None, None)
 TOLERANCE = {'rtol': 1.0e-15}
 
 
@@ -84,7 +84,7 @@ def test_cosmo_basic(CosmoClass, cosmo_init):
     # Test get_<PAR>(z)
     Omega_m0 = cosmo['Omega_m0']
     assert_allclose(cosmo.get_Omega_m(0.0), Omega_m0, **TOLERANCE)
-    assert_allclose(cosmo.get_E2Omega_m(0.0), Omega_m0, **TOLERANCE)
+    assert_allclose(cosmo.get_E2(0.0), 1.0, **TOLERANCE)
     # Test getting all parameters
     for param in ("Omega_m0", "Omega_b0", "Omega_dm0", "Omega_k0", 'h', 'H0'):
         cosmo[param]
@@ -100,6 +100,9 @@ def test_cosmo_basic(CosmoClass, cosmo_init):
     assert_allclose(cosmo.eval_da_z1z2(0.0, z), cosmo.eval_da_z1z2(0.0, z), rtol=8.0e-15)
     # Test initializing cosmo
     test_cosmo = CosmoClass(be_cosmo=cosmo.be_cosmo)
+    # Test mass2radius
+    cosmo.eval_mass2radius(1e14, 0, delta=200, mass_type='background') # To add test here
+    assert_raises(ValueError, cosmo.eval_mass2radius, 1e14, 0, delta=200, mass_type="nonexistent")
 
 
 def _rad2mpc_helper(dist, redshift, cosmo, do_inverse):
