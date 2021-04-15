@@ -7,13 +7,13 @@ if os.environ.get('DISPLAY','') == 'test':
 import pylab as plt
 import numpy as np
 
-from ..utils import none_val
+from ..utils import none_val, autobins, binmasks
 from ..geometry import convert_units
 from ..match import MatchedPairs
 from . import plot_helper as ph
 
 class ClCatalogFuncs():
-    def _histograms(distances, distance_bins, quantity2=None, bins2=None,
+    def _histograms(distances, distance_bins, quantity2=None, bins2=None, log2=False,
                     shape='steps', ax=None, plt_kwargs={}, lines_kwargs_list=None,
                     add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
         """
@@ -29,6 +29,8 @@ class ClCatalogFuncs():
             Name of quantity 2 to bin
         bins2: array
             Bins for quantity 2
+        log2: bool
+            Log scale for quantity 2
         shape: str
             Shape of the lines. Can be steps or line.
         ax: matplotlib.axes
@@ -50,17 +52,23 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        bins2 = none_val(bins2, [quantity2.min(), quantity2.max()+1])
-        bin_masks = [(quantity2>=b0)*(quantity2<b1) for b0, b1 in zip(bins2, bins2[1:])]
+        if quantity2 is not None:
+            bins2 = autobins(quantity2, bins2, log2)
+            bin_masks = binmasks(quantity2, bins2)
+        else:
+            bins2 = [0, 1]
+            bin_masks = [np.ones(len(distances), dtype=bool)]
+            add_legend = False
         lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in bin_masks])
-        ax = none_val(ax, plt.axes())
+        ax = plt.axes() if ax is None else ax
         ph.add_grid(ax)
+        distance_bins_ = np.histogram(distances, bins=distance_bins)[1]
         for m, l_kwargs, e0, e1 in zip(bin_masks, lines_kwargs_list, bins2, bins2[1:]):
             kwargs = {}
             kwargs['label'] = ph.get_bin_label(e0, e1, legend_format) if add_legend else None
             kwargs.update(plt_kwargs)
             kwargs.update(l_kwargs)
-            ph.plot_hist_line(*np.histogram(distances[m], bins=distance_bins),
+            ph.plot_hist_line(*np.histogram(distances[m], bins=distance_bins_),
                               ax=ax, shape=shape, **kwargs)
         if add_legend:
             ax.legend(**legend_kwargs)
@@ -88,6 +96,9 @@ class ClCatalogFuncs():
             Name of quantity 2 (of cat1) to bin
         bins2: array
             Bins for quantity 2
+        log2: bool
+            Log scale for quantity 2
+
 
         Other parameters
         ----------------
@@ -113,7 +124,7 @@ class ClCatalogFuncs():
                                   cosmo=cosmo)
         ax = ClCatalogFuncs._histograms(distances=distances,
                                       distance_bins=radial_bins,
-                                      quantity2=mp.data1[col2],
+                                      quantity2=mp.data1[col2] if col2 in mp.data1.colnames else None,
                                       bins2=bins2, **kwargs)
         dist_labels = {'degrees':'deg', 'arcmin': 'arcmin', 'arcsec':'arcsec',
                         'pc':'pc', 'kpc':'kpc', 'mpc': 'Mpc'}
@@ -170,7 +181,7 @@ class ClCatalogFuncs():
                 }[normalize]
         ax = ClCatalogFuncs._histograms(distances=(z1-z2)/norm,
                                       distance_bins=redshift_bins,
-                                      quantity2=mp.data1[col2],
+                                      quantity2=mp.data1[col2] if col2 in mp.data1.colnames else None,
                                       bins2=bins2, **kwargs)
         dz = 'z_1-z_2'
         dist_labels = {None:f'${dz}$', 'cat1': f'$({dz})/(1+z_1)$',
@@ -180,7 +191,7 @@ class ClCatalogFuncs():
         return ax
 
 def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units='degrees', cosmo=None,
-                    mass_bins=None, mass_label=None, log_mass=True, ax=None, **kwargs):
+                     quantity_bins=None, bins=None, log_quantity=False, ax=None, **kwargs):
     """
     Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
 
@@ -198,10 +209,12 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Units of radial bins
     cosmo: clevar.Cosmology
         Cosmology (used if physical units required)
-    mass_bins: array
-        Bins for mass
-    log_mass: bool
-        Plot mass in log scale
+    quantity_bins: str
+        Column to bin the data
+    bins: array
+        Bins for quantity
+    log_quantity: bool
+        Display label in log fmt
 
     Other parameters
     ----------------
@@ -218,6 +231,8 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Add legend of bins
     legend_format: function
         Function to format the values of the bins in legend
+    legend_fmt: str
+        Format the values of binedges (ex: '.2f')
     legend_kwargs: dict
         Additional arguments for pylab.legend
 
@@ -226,16 +241,17 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
     ax: matplotlib.axes
         Axis of the plot
     """
-    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass else ".2f")
+    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_quantity else ".2f")
     kwargs['legend_format'] = kwargs.get('legend_format',
-        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass else f'%{legend_fmt}'%v)
-    kwargs['add_legend'] = kwargs.get('add_legend', True)*(mass_bins is not None)
+        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_quantity else f'%{legend_fmt}'%v)
+    kwargs['add_legend'] = kwargs.get('add_legend', True)*(bins is not None)
     return ClCatalogFuncs.central_position(cat1, cat2, matching_type, radial_bins=radial_bins,
-            radial_bin_units=radial_bin_units, cosmo=cosmo, col2='mass', bins2=mass_bins,
+            radial_bin_units=radial_bin_units, cosmo=cosmo, col2=quantity_bins, bins2=bins,
             ax=ax, **kwargs)
 
 def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
-             mass_bins=None, mass_label=None, log_mass=True, ax=None, **kwargs):
+             quantity_bins=None, bins=None, log_quantity=False,
+             ax=None, **kwargs):
     """
     Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
 
@@ -252,10 +268,12 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
     normalize: str, None
         Normalize difference by (1+z). Can be 'cat1' for (1+z1), 'cat2' for (1+z2)
         or 'mean' for (1+(z1+z2)/2).
-    mass_bins: array
-        Bins for mass
-    log_mass: bool
-        Plot mass in log scale
+    quantity_bins: str
+        Column to bin the data
+    bins: array
+        Bins for quantity
+    log_quantity: bool
+        Display label in log fmt
 
     Other parameters
     ----------------
@@ -272,6 +290,8 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         Add legend of bins
     legend_format: function
         Function to format the values of the bins in legend
+    legend_fmt: str
+        Format the values of binedges (ex: '.2f')
     legend_kwargs: dict
         Additional arguments for pylab.legend
 
@@ -280,10 +300,9 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
     ax: matplotlib.axes
         Axis of the plot
     """
-    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass else ".2f")
+    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_quantity else ".2f")
     kwargs['legend_format'] = kwargs.get('legend_format',
-        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass else f'%{legend_fmt}'%v)
-    kwargs['add_legend'] = kwargs.get('add_legend', True)*(mass_bins is not None)
+        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_quantity else f'%{legend_fmt}'%v)
+    kwargs['add_legend'] = kwargs.get('add_legend', True)*(bins is not None)
     return ClCatalogFuncs.redshift(cat1, cat2, matching_type, redshift_bins=redshift_bins,
-            normalize=normalize, col2='mass', bins2=mass_bins, ax=ax, **kwargs)
-
+            normalize=normalize, col2=quantity_bins, bins2=bins, ax=ax, **kwargs)

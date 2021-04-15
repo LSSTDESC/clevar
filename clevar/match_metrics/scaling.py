@@ -8,7 +8,7 @@ from matplotlib.ticker import ScalarFormatter, NullFormatter
 import pylab as plt
 import numpy as np
 
-from ..utils import none_val, logbins
+from ..utils import none_val, autobins
 from ..match import MatchedPairs
 from . import plot_helper as ph
 
@@ -91,6 +91,8 @@ class ArrayFuncs():
         """
         ax = plt.axes() if ax is None else ax
         ph.add_grid(ax)
+        if len(values1)==0:
+            return (ax, None) if add_cb else ax
         isort = np.argsort(values_color)
         xp, yp, zp = [v[isort] for v in (values1, values2, values_color)]
         plt_kwargs_ = {'s':1}
@@ -166,7 +168,7 @@ class ArrayFuncs():
         """
         values_color = ph.get_density_colors(values1, values2, bins1, bins2,
             ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
-            xscale=xscale, yscale=yscale)
+            xscale=xscale, yscale=yscale) if len(values1)>0 else []
         return ArrayFuncs.plot_color(values1, values2, values_color=values_color,
                 err1=err1, err2=err2, ax=ax, plt_kwargs=plt_kwargs,
                 add_cb=add_cb, cb_kwargs=cb_kwargs, err_kwargs=err_kwargs)
@@ -469,8 +471,8 @@ class ClCatalogFuncs():
         func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err', True) else None
         func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err', True) else None
         class_kwargs = {
-            'xlabel': kwargs.get('xlabel', f'${col}_{{{cat1.name}}}$'),
-            'ylabel': kwargs.get('ylabel', f'${col}_{{{cat2.name}}}$'),
+            'xlabel': none_val(kwargs.get('xlabel', None), f'${col}_{{{cat1.name}}}$'),
+            'ylabel': none_val(kwargs.get('ylabel', None), f'${col}_{{{cat2.name}}}$'),
             'xscale': kwargs.get('xscale', 'linear'),
             'yscale': kwargs.get('yscale', 'linear'),
         }
@@ -607,8 +609,10 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
-        bins: array, int
-            Bins for density
+        bins1: array, int
+            Bins of component 1 for density
+        bins2: array, int
+            Bins of component 2 for density
         add_err: bool
             Add errorbars
 
@@ -693,8 +697,7 @@ class ClCatalogFuncs():
         """
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['values_panel'] = mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel]
-        f_kwargs['bins_panel'] = bins_panel if hasattr(bins_panel, '__len__') or not log_panel \
-                                            else logbins(f_kwargs['values_panel'], bins_panel)
+        f_kwargs['bins_panel'] = autobins(f_kwargs['values_panel'], bins_panel, log_panel)
         label_fmt = f_kwargs.pop("label_fmt", ".2f")
         f_kwargs['label_format'] = f_kwargs.get('label_format',
             lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) if log_panel else  f'%{label_fmt}'%v)
@@ -864,8 +867,10 @@ class ClCatalogFuncs():
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
-        bins: array, int
-            Bins for density
+        bins1: array, int
+            Bins of component 1 for density
+        bins2: array, int
+            Bins of component 2 for density
         log_panel: bool
             Scale of the panel values
         add_err: bool
@@ -970,8 +975,10 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins: array, int
-        Bins for density
+    bins1: array, int
+        Bins of redshift 1 for density
+    bins2: array, int
+        Bins of redshift 2 for density
     add_err: bool
         Add errorbars
 
@@ -1116,8 +1123,6 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
 
     Parameters
     ----------
-    pltfunc: function
-        ArrayFuncs function
     cat1: clevar.ClCatalog
         ClCatalog with matching information
     cat2: clevar.ClCatalog
@@ -1130,8 +1135,10 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Log scale for mass
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
-    bins: array, int
-        Bins for density
+    bins1: array, int
+        Bins of redshift 1 for density
+    bins2: array, int
+        Bins of redshift 2 for density
     add_err: bool
         Add errorbars
 
@@ -1285,10 +1292,10 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
-    col: str
-        Name of column to be plotted
-    bins: array, int
-        Bins for density
+    bins1: array, int
+        Bins of mass 1 for density
+    bins2: array, int
+        Bins of mass 2 for density
     add_err: bool
         Add errorbars
 
@@ -1390,8 +1397,6 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
 
     Parameters
     ----------
-    pltfunc: function
-        ArrayFuncs function
     cat1: clevar.ClCatalog
         ClCatalog with matching information
     cat2: clevar.ClCatalog
@@ -1404,8 +1409,10 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Log scale for mass
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
-    bins: array, int
-        Bins for density
+    bins1: array, int
+        Bins of mass 1 for density
+    bins2: array, int
+        Bins of mass 2 for density
     add_err: bool
         Add errorbars
 

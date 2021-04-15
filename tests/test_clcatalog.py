@@ -12,6 +12,7 @@ def test_adding_quantities():
     assert_equal(c.size, len(quantities['ra']))
     c.__str__()
     c._repr_html_()
+    assert_raises(ValueError, c.__getitem__, 'unknown')
     # Check init match values
     empty_list = np.array([None for i in range(c.size)], dtype=np.ndarray)
     for i in range(c.size):

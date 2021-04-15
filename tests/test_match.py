@@ -141,7 +141,7 @@ def test_proximity(CosmoClass):
     assert_allclose(c1.mt_input['zmax'], c1['z']+.33)
     os.system('rm -rf zvals.dat')
         # radus in catalog
-    c1['rad'] = 1
+    c1['radius'] = 1
     c1.radius_unit = 'Mpc'
     mt.prep_cat_for_match(c1, delta_z='cat', match_radius='cat', cosmo=cosmo)
         # radus in unknown unit

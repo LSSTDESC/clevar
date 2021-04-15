@@ -39,6 +39,10 @@ class ClData(APtable):
         if isinstance(item, str):
             name_dict = {n.lower():n for n in self.colnames}
             item = item.lower()
+            missing_cols = [i for i in item.split(',') if i not in name_dict]
+            if len(missing_cols)>0:
+                missing_cols = ', '.join(missing_cols)
+                raise ValueError(f"Columns '{missing_cols}' not found in {name_dict.keys()}")
             item = ','.join([name_dict[i] for i in item.split(',')])
         out = APtable.__getitem__(self, item)
         return out
