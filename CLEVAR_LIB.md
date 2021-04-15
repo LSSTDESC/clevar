@@ -8,6 +8,6 @@ These include examples for:
 
 - [Basic matching of catalogs](examples/proximity_matching.ipynb)
 - [Detailed matching of catalogs](examples/proximity_matching_detailed.ipynb)
-- [Metrics of the matching and matched catalogs](examples/metrics.ipynb)
-- [Metrics of the matching and matched catalogs (Advanced)](examples/metrics_advanced.ipynb)
+- [Metrics of the matching and matched catalogs](examples/match_metrics.ipynb)
+- [Metrics of the matching and matched catalogs (Advanced)](examples/match_metrics_advanced.ipynb)
 - [Application of footprints](examples/footprint.ipynb)
