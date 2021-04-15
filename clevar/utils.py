@@ -62,6 +62,25 @@ def binmasks(values, bins):
     bin_masks = [(values>=b0)*(values<b1) for b0, b1 in zip(bins, bins[1:])]
     bin_masks[-1] += values==bins[-1]
     return bin_masks
+def str2dataunit(input_str, units_bank, err_msg=''):
+    """
+    Convert a string to a float with unit.
+    ex: '1mcp' -> (1, 'mpc')
+
+    Parameters
+    ----------
+    input_str: str
+        Input string
+    unit_bank: list
+        Bank of units available.
+    """
+    for unit in units_bank:
+        if unit.lower() in input_str.lower():
+            try:
+                return float(input_str.lower().replace(unit.lower(), '')), unit.lower()
+            except:
+                pass
+    raise ValueError(f"Unknown unit of '{input_str}', must be in {units_bank}. {err_msg}")
 ########################################################################
 ########## Monkeypatching healpy #######################################
 ########################################################################

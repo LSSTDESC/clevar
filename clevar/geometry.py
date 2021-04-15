@@ -50,12 +50,8 @@ def convert_units(dist1, unit1, unit2, redshift=None, cosmo=None):
         if redshift is None or cosmo is None:
             raise TypeError("Redshift and cosmology must be specified to convert units")
         # Redshift must be greater than zero for this approx
-        if hasattr(redshift, '__len__'):
-            if not all(redshift > 0.0):
-                raise ValueError("Redshift must be greater than 0.")
-        else:
-            if not redshift > 0.0:
-                raise ValueError("Redshift must be greater than 0.")
+        if not (np.array(redshift)>0.0).all():
+            raise ValueError("Redshift must be greater than 0.")
         # Convert angular to physical
         if (unit1 in angular_bank) and (unit2 in physical_bank):
             dist1_rad = (dist1*units_bank[unit1]).to(u.rad).value
