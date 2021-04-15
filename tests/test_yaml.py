@@ -48,9 +48,9 @@ def test_main():
     os.system('ln -s demo/cat1.fits')
     os.system('ln -s demo/cat2.fits')
     config_file = 'demo/config.yml'
-    overwrite_config, overwrite_matching = True, True
+    overwrite_config, overwrite_files = True, True
     # Match
-    clevar_yaml.match_proximity(config_file, overwrite_config, overwrite_matching)
+    clevar_yaml.match_proximity(config_file, overwrite_config, overwrite_files)
     # Match, used diff cosmology and overwrite
     config = yaml.read(config_file)
     print(config.keys())
@@ -58,10 +58,12 @@ def test_main():
     yaml.write(config, 'cfg.yml')
     original_input = mock.builtins.input
     mock.builtins.input = lambda _: 'q'
-    clevar_yaml.match_proximity('cfg.yml', overwrite_config, overwrite_matching=False)
+    clevar_yaml.match_proximity('cfg.yml', overwrite_config, overwrite_files=False)
     mock.builtins.input = original_input
     os.system("rm cfg.yml")
     # Footprint
+    os.system('rm ftpt1.fits')
+    os.system('rm ftpt2.fits')
     clevar_yaml.artificial_footprint(config_file, True, False, case='1')
     clevar_yaml.artificial_footprint(config_file, True, False, case='2')
     original_input = mock.builtins.input

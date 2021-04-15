@@ -1,5 +1,5 @@
-"""@file match_proximity.py
-Proximity matching functions for command line execution
+"""@file footprint.py
+Footprint functions for command line execution
 """
 import numpy as np
 import pylab as plt
@@ -8,8 +8,8 @@ import warnings
 
 import clevar
 from .helper_funcs import loadconf, make_catalog, make_cosmology, get_input_loop
-def artificial(config_file, overwrite_config, overwrite_matching, case):
-    """Main plot function
+def artificial(config_file, overwrite_config, overwrite_files, case):
+    """Function to create footprint
 
     Parameters
     ----------
@@ -17,8 +17,8 @@ def artificial(config_file, overwrite_config, overwrite_matching, case):
         Yaml file with configuration to run
     overwrite_config: bool
         Forces overwrite of config.log.yml file
-    overwrite_config: bool
-        Forces overwrite of matching output files
+    overwrite_files: bool
+        Forces overwrite of output files
     case: str
         Run for which catalog. Options: 1, 2, both
     """
@@ -32,7 +32,7 @@ def artificial(config_file, overwrite_config, overwrite_matching, case):
         print("\n# Creating footprint 1")
         save = True
         ftpt_cfg1 = config['catalog1']['footprint']
-        if os.path.isfile(ftpt_cfg1['file']) and not overwrite_matching:
+        if os.path.isfile(ftpt_cfg1['file']) and not overwrite_files:
             print(f"\n*** File '{ftpt_cfg1['file']}' already exist! ***")
             save = get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
         if save:
@@ -46,7 +46,7 @@ def artificial(config_file, overwrite_config, overwrite_matching, case):
         print("\n# Creating footprint 2")
         save = True
         ftpt_cfg2 = config['catalog2']['footprint']
-        if os.path.isfile(ftpt_cfg2['file']) and not overwrite_matching:
+        if os.path.isfile(ftpt_cfg2['file']) and not overwrite_files:
             print(f"\n*** File '{ftpt_cfg2['file']}' already exist! ***")
             save = get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
         if save:
