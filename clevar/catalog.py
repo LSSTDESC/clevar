@@ -214,18 +214,18 @@ class ClCatalog():
             'flat': {
                 'func': ftpt._get_coverfrac,
                 'get_args': lambda c: [c['SkyCoord'], c['z'], aperture, aperture_unit],
-                'colname': f'cf_{num}_{aperture_unit}',
+                'colname': f'{num}_{aperture_unit}',
             },
             'nfw2D': {
                 'func': ftpt._get_coverfrac_nfw2D,
                 'get_args': lambda c: [c['SkyCoord'], c['z'], c['radius'],
                                    self.radius_unit, aperture, aperture_unit],
-                'colname': f'cf_nfw_{num}_{aperture_unit}',
+                'colname': f'nfw_{num}_{aperture_unit}',
             },
         }.get(window, None)
         if window_cfg is None:
             raise ValueError(f"window ({window}) must be either 'flat' of 'nfw2D'")
-        self[none_val(colname, window_cfg['colname'])] = [
+        self[f"cf_{none_val(colname, window_cfg['colname'])}"] = [
             window_cfg['func'](*window_cfg['get_args'](c), cosmo=cosmo)
             for c in self]
     def save_match(self, filename, overwrite=False):
