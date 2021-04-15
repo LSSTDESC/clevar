@@ -315,6 +315,7 @@ class ClCatalogFuncs():
         ax.set_xlabel(xlabel if xlabel else f'${col1}_{{{cat.name}}}$')
         ax.set_ylabel(ylabel if ylabel else 'recovery rate')
         ax.set_xscale(scale1)
+        ax.set_ylim(-.01, 1.05)
         return ax
     def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
                    xlabel=None, ylabel=None, scale1='linear', **kwargs):
@@ -377,6 +378,7 @@ class ClCatalogFuncs():
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
         ph.nice_panel(axes, xlabel=none_val(xlabel, col1), ylabel=none_val(xlabel, col2),
                       xscale=scale1, yscale='linear')
+        axes.flatten()[0].set_ylim(-.01, 1.05)
         return fig, axes
     def plot2D(cat, col1, col2, bins1, bins2, matching_type,
                xlabel=None, ylabel=None, scale1='linear', scale2='linear',

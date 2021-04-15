@@ -1,10 +1,52 @@
+"""@file yaml/helper_funcs.py
+Helper functions for command line execution
+"""
 import os, sys
 import yaml
 import argparse
 import numpy as np
 
-import clevar
-from clevar.utils import veclen
+from clevar.catalog import ClData, ClCatalog
+from clevar import cosmology
+from clevar.utils import none_val, veclen
+######################################################################
+########## Monkeypatching yaml #######################################
+######################################################################
+def read_yaml(filename):
+    """
+    Read yaml file
+
+    Parameters
+    ----------
+    filename: str
+        Name of yaml file
+
+    Returns
+    -------
+    config: dict
+        Dictionary with yaml file info
+    """
+    f = open(filename, 'r')
+    config = yaml.load(f, Loader=yaml.FullLoader)
+    f.close()
+    return config
+def write_yaml(config, filename):
+    """
+    Write yaml file
+
+    Parameters
+    ----------
+    config: dict
+        Dictionary to write
+    filename: str
+        Name of yaml file
+    """
+    f = open(filename, 'w')
+    yaml.dump(config, f)
+    f.close()
+yaml.write = write_yaml
+yaml.read = read_yaml
+########################################################################
 def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
     """
     Adds the differences between dictionaries to a list
@@ -77,9 +119,11 @@ def get_input_loop(options_msg, actions):
     actions: dict
         Dictionary with the actions to be made. Values must be (function, args, kwargs)
     """
-    action = input(f'\n{options_msg}\n')
-    while action not in actions:
-        action = input(f'Option {action} not valid. Please choose: {options_msg}\n')
+    loop = True
+    while loop:
+        action = input(f'\n{options_msg}\n')
+        loop = action not in actions
+        prt = print(f'Option {action} not valid. Please choose:') if loop else None
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
 def loadconf(config_file, consistency_configs=[], fail_action='ask'):
@@ -104,22 +148,20 @@ def loadconf(config_file, consistency_configs=[], fail_action='ask'):
     print("\n## Loading config")
     if not os.path.isfile(config_file):
         raise ValueError(f'Config file "{config_file}" not found')
-    with open(config_file) as file:
-        config = yaml.load(file, Loader=yaml.FullLoader)
+    config = yaml.read(config_file)
     check_file = f'{config["outpath"]}/config.log.yml'
     if not os.path.isdir(config['outpath']):
         os.mkdir(config['outpath'])
         os.system(f'cp {config_file} {check_file}')
     else:
-        with open(check_file) as file:
-            check_config = yaml.load(file, Loader=yaml.FullLoader)
+        check_config = yaml.read(check_file)
         diff_configs = get_dicts_diff(config, check_config, keys=consistency_configs,
                                         header=['Name', 'New', 'Saved'],
                                         msg='\nConfigurations differs from saved config:\n')
         if len(diff_configs)>0:
             actions_loop = {
                 'o': (os.system, [f'cp {config_file} {check_file}'], {}),
-                'q': (exit, [], {}),
+                'q': (lambda _:0, [], {}),
                 }
             f, args, kwargs = {
                 'ask': (get_input_loop, ['Overwrite(o) and proceed or Quit(q)?', actions_loop], {}),
@@ -142,8 +184,8 @@ def make_catalog(cat_config):
     clevar.ClCatalog
         ClCatalog based on input config
     """
-    c0 = clevar.ClData.read(cat_config['file'])
-    cat = clevar.ClCatalog(cat_config['name'],
+    c0 = ClData.read(cat_config['file'])
+    cat = ClCatalog(cat_config['name'],
         **{k:c0[v] for k, v in cat_config['columns'].items()})
     cat.radius_unit = cat_config['radius_unit'] if 'radius_unit' in cat_config\
                         else None
@@ -163,10 +205,33 @@ def make_cosmology(cosmo_config):
         Cosmology based on the input config
     """
     if cosmo_config['backend'].lower()=='astropy':
-        CosmoClass = clevar.cosmology.AstroPyCosmology
-    elif cosmo_config['backend'].lower()=='astropy':
-        CosmoClass = clevar.cosmology.AstroPyCosmology
+        CosmoClass = cosmology.AstroPyCosmology
+    elif cosmo_config['backend'].lower()=='ccl':
+        CosmoClass = cosmology.CCLCosmology
     else:
         raise ValueError(f'Cosmology backend "{cosmo_config["backend"]}" not accepted')
-    parameters = cosmo_config['parameters'] if cosmo_config['parameters'] else {}
+    parameters = none_val(cosmo_config.get('parameters', None), {})
     return CosmoClass(**parameters)
+def make_bins(input_val, log=False):
+    """
+    Make array for bins string input
+
+    Parameters
+    ----------
+    input_val: any
+        Value given by yaml config
+    log: bool
+        Use log scale
+
+    Returns
+    -------
+    int, array
+        Bins to be used
+    """
+    if isinstance(input_val, int):
+        return input_val
+    vals = input_val.split(' ')
+    if len(vals)!=3:
+        raise ValueError(f"Values ({input_val}) must be 1 intergers or 3 numbers (xmin, xmax, dx)")
+    out = np.arange(*np.array(vals, dtype=float))
+    return 10**out if log else out
