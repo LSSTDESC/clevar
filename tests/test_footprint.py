@@ -41,7 +41,8 @@ def test_footprint():
     # Add quantities to catalog
     c1.add_ftpt_masks(ftpt1, ftpt2)
     c1.add_ftpt_coverfrac(ftpt2, 1, 'mpc', cosmo=cosmo)
-    c1.add_ftpt_coverfrac_nfw2D(ftpt2, 1, 'mpc', cosmo=cosmo)
+    c1.add_ftpt_coverfrac(ftpt2, 1, 'mpc', cosmo=cosmo, window='flat')
+    assert_raises(ValueError, c1.add_ftpt_coverfrac, ftpt2, 1, 'mpc', window='unknown')
     # save footprint quantities of catalog
     c1.save_footprint_quantities('cat1_ftq.fits', overwrite=True)
     c1.load_footprint_quantities('cat1_ftq.fits')
