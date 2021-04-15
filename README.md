@@ -1,5 +1,4 @@
 # Cluster Evalutaion Resources (ClEvaR)
-[![Build Status](https://travis-ci.org/LSSTDESC/clevar.svg?branch=main)](https://travis-ci.org/LSSTDESC/clevar)
 [![Build and Check](https://github.com/LSSTDESC/clevar/workflows/Build%20and%20Check/badge.svg)](https://github.com/LSSTDESC/clevar/actions?query=workflow%3A%22Build+and+Check%22)
 [![Coverage Status](https://coveralls.io/repos/github/LSSTDESC/clevar/badge.svg?branch=main)](https://coveralls.io/github/LSSTDESC/clevar?branch=main)
 Library to validate cluster detection

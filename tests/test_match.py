@@ -144,6 +144,16 @@ def test_proximity(CosmoClass):
     c1['radius'] = 1
     c1.radius_unit = 'Mpc'
     mt.prep_cat_for_match(c1, delta_z='cat', match_radius='cat', cosmo=cosmo)
+        # radus in catalog - mass units
+    c1['rad'] = 1e14
+    c1.radius_unit = 'M200c'
+    mt.prep_cat_for_match(c1, delta_z='cat', match_radius='cat', cosmo=cosmo)
+    c1.radius_unit = 'M200'
+    assert_raises(ValueError, mt.prep_cat_for_match, c1, delta_z='cat',
+                    match_radius='cat', cosmo=cosmo)
+    c1.radius_unit = 'MXXX'
+    assert_raises(ValueError, mt.prep_cat_for_match, c1, delta_z='cat',
+                    match_radius='cat', cosmo=cosmo)
         # radus in unknown unit
     assert_raises(ValueError, mt.prep_cat_for_match, c1, delta_z='cat',
                     match_radius='1 unknown', cosmo=cosmo)

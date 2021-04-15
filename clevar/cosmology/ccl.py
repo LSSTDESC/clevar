@@ -12,7 +12,7 @@ from .parent_class import Cosmology
 __all__ = []
 
 def _patch_rho_crit_to_cd2018(rho_crit_external):
-    r""" Convertion factor for rho_crit of any external modult to
+    r""" Convertion factor for rho_crit of any external module to
     CODATA 2018+IAU 2015
 
     rho_crit_external: float
@@ -69,9 +69,9 @@ class CCLCosmology(Cosmology):
     def get_Omega_m(self, z):
         return ccl.omega_x(self.be_cosmo, 1.0/(1.0+z), "matter")
 
-    def get_E2Omega_m(self, z):
+    def get_E2(self, z):
         a = 1.0/(1.0+z)
-        return ccl.omega_x(self.be_cosmo, a, "matter")*(ccl.h_over_h0(self.be_cosmo, a))**2
+        return (ccl.h_over_h0(self.be_cosmo, a))**2
 
     def eval_da_z1z2(self, z1, z2):
         a1 = 1.0/(1.0+z1)

@@ -1,5 +1,6 @@
 """ Provide a consistent set of constants to use through clevar """
 from enum import Enum
+import numpy as np
 import astropy.constants as astropyconst
 import astropy.units as u
 
@@ -40,6 +41,12 @@ class Constants(Enum):
 
     SOLAR_MASS = GNEWT_SOLAR_MASS/GNEWT
     """ Solar mass (kg)
+
+    Source: IAU 2015/CODATA 2018
+    """
+
+    RHOCRIT = 3.0*1e10*(PC_TO_METER*1.0e6)/(8.0*np.pi*GNEWT_SOLAR_MASS)
+    """ Critical density of the universe (Msun/Mpc^3/h^2)
 
     Source: IAU 2015/CODATA 2018
     """

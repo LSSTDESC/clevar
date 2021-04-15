@@ -4,7 +4,7 @@ from scipy.interpolate import InterpolatedUnivariateSpline as spline
 from .parent import Match
 from ..geometry import units_bank, convert_units
 from ..catalog import ClData
-from ..utils import veclen
+from ..utils import veclen, str2dataunit
 
 
 class ProximityMatch(Match):
@@ -112,19 +112,18 @@ class ProximityMatch(Match):
         if match_radius == 'cat':
             print('* ang radius from cat')
             in_rad, in_rad_unit = cat['radius'], cat.radius_unit
+            # when mass is passed to radius: m#b or m#c - background/critical
+            if in_rad_unit.lower()!='mpc' and in_rad_unit[0].lower()=='m':
+                print(f"    * Converting mass ({in_rad_unit}) ->radius")
+                delta, mtyp = str2dataunit(in_rad_unit[1:], ['b', 'c'],
+                    err_msg=f"Mass unit ({in_rad_unit}) must be in format 'm#b' (background) or 'm#c' (critical)")
+                in_rad = cosmo.eval_mass2radius(in_rad, cat['z'], delta,
+                            mass_type={'b':'backgoung', 'c':'critical'}[mtyp])
+                in_rad_unit = 'mpc'
         else:
             print('* ang radius from set scale')
-            in_rad = None
-            for unit in units_bank:
-                if unit in match_radius.lower():
-                    try:
-                        in_rad = float(match_radius.lower().replace(unit, ''))*np.ones(cat.size)
-                        in_rad_unit = unit
-                        break
-                    except:
-                        pass
-            if in_rad is None:
-                raise ValueError(f'Unknown radius unit in {match_radius}, must be in {units_bank.keys()}')
+            in_rad, in_rad_unit = str2dataunit(match_radius, units_bank.keys())
+            in_rad *= np.ones(cat.size)
         # convert to degrees
         cat.mt_input['ang'] = convert_units(in_rad, in_rad_unit, 'degrees',
                                 redshift=cat['z'] if 'z' in cat.data.colnames else None,
