@@ -61,6 +61,15 @@ def test_main():
     clevar_yaml.match_proximity('cfg.yml', overwrite_config, overwrite_matching=False)
     mock.builtins.input = original_input
     os.system("rm cfg.yml")
+    # Footprint
+    clevar_yaml.artificial_footprint(config_file, True, False, case='1')
+    clevar_yaml.artificial_footprint(config_file, True, False, case='2')
+    original_input = mock.builtins.input
+    mock.builtins.input = lambda _: 'q'
+    clevar_yaml.artificial_footprint(config_file, True, False, case='1')
+    clevar_yaml.artificial_footprint(config_file, True, False, case='2')
+    mock.builtins.input = original_input
+    os.system(f"rm {config['catalog1']['footprint']} {config['catalog2']['footprint']}")
     # Metrics
     clevar_yaml.match_metrics_distances(config_file)
     clevar_yaml.match_metrics_mass(config_file)

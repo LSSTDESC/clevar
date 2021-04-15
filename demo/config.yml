@@ -13,9 +13,13 @@ catalog1:
         z: Z
         mass: MASS
         radius: RADIUS_ARCMIN
-    radius_unit: ARCMIN
+    radius_unit: ARCMIN # Options: radians, degrees, arcmin, arcsec, pc, kpc, Mpc, M200b, M200c, M##b/c...
     labels: # Labels for plots. If not availble, column_{name} used
         mass: Mass1
+    footprint: # Footprint information. Used to create artificial footprint and on recovery rate
+        file: ftpt1.fits
+        nside: 4096 # healpix NSIDE
+        nest: False # healpix nested ordering. if false use ring
 
 catalog2:
     file: cat2.fits
@@ -26,9 +30,13 @@ catalog2:
         z: Z
         mass: MASS
         radius: RADIUS_ARCMIN
-    radius_unit: ARCMIN
+    radius_unit: ARCMIN # Options: radians, degrees, arcmin, arcsec, pc, kpc, Mpc, M200b, M200c, M##b/c...
     labels: # Labels for plots. If not availble, column_{name} used
         mass: Mass2
+    footprint: # Footprint information. Used to create artificial footprint and on recovery rate
+        file: ftpt2.fits
+        nside: 4096 # healpix NSIDE
+        nest: False # healpix nested ordering. if false use ring
 
 proximity_match:
     which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
