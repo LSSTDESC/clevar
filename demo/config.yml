@@ -20,6 +20,9 @@ catalog1:
         file: ftpt1.fits
         nside: 4096 # healpix NSIDE
         nest: False # healpix nested ordering. if false use ring
+        pixel_name: pixel # Name of pixel column of footprint
+        detfrac_name: None # Name of detfrac column of footprint. Use 'None' if not existing.
+        zmax_name: None # Name of zmax column of footprint. Use 'None' if not existing.
 
 catalog2:
     file: cat2.fits
@@ -37,6 +40,40 @@ catalog2:
         file: ftpt2.fits
         nside: 4096 # healpix NSIDE
         nest: False # healpix nested ordering. if false use ring
+        pixel_name: pixel # Name of pixel column of footprint
+        detfrac_name: None # Name of detfrac column of footprint. Use 'None' if not existing.
+        zmax_name: None # Name of zmax column of footprint. Use 'None' if not existing.
+
+masks: # Config to be used by make_masks and recovery rate
+    catalog1:
+        in_footprint1: # Flag if cluster is inside footprint.
+            which_footprint: self # which footprint to use for computaions. Options: self, other
+            name: self # Name for column
+        in_footprint2: # Flag if cluster is inside footprint.
+            which_footprint: other # which footprint to use for computaions. Options: self, other
+            name: other # Name for column. It will receive a ft_ prefix.
+        coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes
+            name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
+            which_footprint: other # which footprint to use for computaions. Options: self, other
+            aperture: 1 arcsec # Size of aperture with units
+            window_function: nfw2D # Window to weight the coverfraction. Options are flat, nfw2D
+        coverfraction_: # Like this one
+            name: other_1arcmin # Name for coverfraction column. It will receive a cf_ prefix.
+            which_footprint: other # which footprint to use for computaions. Options: self, other
+            aperture: 1 arcmin # Size of aperture with units
+            window_function: nfw2D # Window to weight the coverfraction. Options are flat, nfw2D
+    catalog2:
+        in_footprint1: # Flag if cluster is inside footprint.
+            which_footprint: self # which footprint to use for computaions. Options: self, other
+            name: self # Name for column
+        in_footprint2: # Flag if cluster is inside footprint.
+            which_footprint: other # which footprint to use for computaions. Options: self, other
+            name: other # Name for column. It will receive a ft_ prefix.
+        coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes
+            name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
+            which_footprint: other # which footprint to use for computaions. Options: self, other
+            aperture: 1 arcmin # Size of aperture with units
+            window_function: nfw2D # Window to weight the coverfraction. Options are flat, nfw2D
 
 proximity_match:
     which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.

@@ -7,3 +7,4 @@ from .match_metrics_recovery_rate import run as match_metrics_recovery_rate
 from .match_metrics_redshift import run as match_metrics_redshift
 from .match_proximity import run as match_proximity
 from .footprint import artificial as artificial_footprint
+from .footprint import make_masks as footprint_masks
