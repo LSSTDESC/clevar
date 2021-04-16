@@ -37,7 +37,7 @@ def autobins(values, bins, log=False):
         Bins based on values
     """
     if hasattr(bins, '__len__'):
-        return bins
+        return np.array(bins)
     if log:
         logvals = np.log10(values)
         return np.logspace(logvals.min(), logvals.max(), bins)
