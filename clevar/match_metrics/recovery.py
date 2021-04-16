@@ -245,9 +245,9 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in:
             'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
-            Mask unwanted clusters
+            Mask of unwanted clusters
         mask_unmatched: array
-            Mask unwanted unmatched clusters (ex: out of footprint)
+            Mask of unwanted unmatched clusters (ex: out of footprint)
         **kwargs:
             Additional arguments to be passed to pltfunc
         """
@@ -279,9 +279,9 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in:
             'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
-            Mask unwanted clusters
+            Mask of unwanted clusters
         mask_unmatched: array
-            Mask unwanted unmatched clusters (ex: out of footprint)
+            Mask of unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
@@ -341,9 +341,9 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in:
             'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
-            Mask unwanted clusters
+            Mask of unwanted clusters
         mask_unmatched: array
-            Mask unwanted unmatched clusters (ex: out of footprint)
+            Mask of unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
@@ -404,9 +404,9 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in:
             'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
-            Mask unwanted clusters
+            Mask of unwanted clusters
         mask_unmatched: array
-            Mask unwanted unmatched clusters (ex: out of footprint)
+            Mask of unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
@@ -491,6 +491,11 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         Transpose mass and redshift in plots
     log_mass: bool
         Plot mass in log scale
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
+
 
     Other parameters
     ----------------
@@ -549,6 +554,10 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         Transpose mass and redshift in plots
     log_mass: bool
         Plot mass in log scale
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
 
     Other parameters
     ----------------
@@ -613,6 +622,10 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
         Transpose mass and redshift in plots
     log_mass: bool
         Plot mass in log scale
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
 
     Other parameters
     ----------------
