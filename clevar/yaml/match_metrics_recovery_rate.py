@@ -110,21 +110,23 @@ def run(config_file):
             ax.set_xlim(rec_conf_cat['redshift_lim'])
             ax.set_ylim(rec_conf_cat['recovery_lim'])
             plt.savefig(f'{rec_name}_cat{i}_simple_redshift{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.close(fig)
             # by mass
             print(f"\n# Simple recovery catalog {i} by mass")
-            plt.clf()
-            ax = recovery.plot(c, **kwargs, transpose=True,
+            fig = plt.figure(figsize=rec_conf['figsize'])
+            ax = plt.axes()
+            recovery.plot(c, **kwargs, transpose=True, ax=ax,
                 add_legend=rec_conf['add_redshift_label'],
                 legend_fmt=rec_conf_cat['redshift_num_fmt'],
                 )
             ax.set_xlim(rec_conf_cat['mass_lim'])
             ax.set_ylim(rec_conf_cat['recovery_lim'])
             plt.savefig(f'{rec_name}_cat{i}_simple_mass{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.close(fig)
         # Panels plots
         if any(case in rec_conf['plot_case'] for case in ('panel', 'all')):
             # by redshift
             print(f"\n# Panel recovery catalog {i} by redshift")
-            plt.clf()
             fig, axes = recovery.plot_panel(c, **kwargs,
                 add_label=rec_conf['add_mass_label'],
                 label_fmt=rec_conf_cat['mass_num_fmt'],
@@ -134,9 +136,9 @@ def run(config_file):
             ax.set_xlim(rec_conf_cat['redshift_lim'])
             ax.set_ylim(rec_conf_cat['recovery_lim'])
             plt.savefig(f'{rec_name}_cat{i}_panel_redshift{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.close(fig)
             # by mass
             print(f"\n# Panel recovery catalog {i} by mass")
-            plt.clf()
             fig, axes = recovery.plot_panel(c, **kwargs, transpose=True,
                 add_label=rec_conf['add_redshift_label'],
                 label_fmt=rec_conf_cat['redshift_num_fmt'],
@@ -146,23 +148,26 @@ def run(config_file):
             ax.set_xlim(rec_conf_cat['mass_lim'])
             ax.set_ylim(rec_conf_cat['recovery_lim'])
             plt.savefig(f'{rec_name}_cat{i}_panel_mass{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.close(fig)
         # 2D plots
         kwargs.pop('shape')
         kwargs['add_cb'] = rec_conf['add_colorbar']
         if any(case in rec_conf['plot_case'] for case in ('2D', 'all')):
             # basic
             print(f"\n# 2D recovery catalog {i}")
-            plt.clf()
             fig = plt.figure(figsize=rec_conf['figsize'])
             ax = plt.axes()
             ax, cb = recovery.plot2D(c, **kwargs, ax=ax)
             ax.set_xlim(rec_conf_cat['redshift_lim'])
             ax.set_ylim(rec_conf_cat['mass_lim'])
             plt.savefig(f'{rec_name}_cat{i}_2D{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.close(fig)
             # with number
             print(f"\n# 2D recovery catalog {i} with numbers")
-            plt.clf()
-            axes, cb = recovery.plot2D(c, **kwargs, add_num=True)
+            fig = plt.figure(figsize=rec_conf['figsize'])
+            ax = plt.axes()
+            axes, cb = recovery.plot2D(c, **kwargs, ax=ax, add_num=True)
             ax.set_xlim(rec_conf_cat['redshift_lim'])
             ax.set_ylim(rec_conf_cat['mass_lim'])
             plt.savefig(f'{rec_name}_cat{i}_2D_num{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.close(fig)
