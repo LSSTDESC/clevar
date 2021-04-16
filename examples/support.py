@@ -62,5 +62,6 @@ def gen_cluster(N_clusters=1000, f1=0.7, f2=0.7, ra_min=0, ra_max=360,
     input2 = Data0[np.random.choice(range(N_clusters), int(N_clusters*f2), replace=False, p=prob)]
     input2['RA'] = np.random.normal(loc=input2['RA'], scale=1/3600.)
     input2['DEC'] = np.random.normal(loc=input2['DEC'], scale=1/3600.)
-    input2['Z'] = np.random.normal(loc=input2['Z'], scale=.01)
+    input2['Z'] = np.random.normal(loc=input2['Z'], scale=.03)
+    input2['MASS'] = np.exp(np.random.normal(loc=np.log(input2['MASS']), scale=.2))
     return input1, input2
