@@ -38,7 +38,7 @@ def get_recovery_rate(values1, values2, bins1, bins2, is_matched):
     """
     hist_all, edges1, edges2 = np.histogram2d(values1, values2, bins=(bins1, bins2))
     hist_matched = np.histogram2d(values1[is_matched], values2[is_matched],
-                                  bins=(bins1, bins2))[0]
+                                  bins=(edges1, edges2))[0]
     recovery = np.zeros(hist_all.shape)
     recovery[:] = np.nan
     recovery[hist_all>0] = hist_matched[hist_all>0]/hist_all[hist_all>0]
