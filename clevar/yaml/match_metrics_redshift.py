@@ -1,7 +1,6 @@
 """@file match_metrics_redshift.py
 Matching metrics - redshift rate functions for command line execution
 """
-import argparse
 import numpy as np
 import pylab as plt
 
@@ -64,7 +63,6 @@ def run(config_file):
     # Density Plot
     if any(case in z_conf['plot_case'] for case in ('density', 'all')):
         print(f"\n# Redshift density colors")
-        plt.clf()
         fig = plt.figure(figsize=z_conf['figsize'])
         ax = plt.axes()
         scaling.redshift_density(c1, c2, **kwargs, ax=ax,
@@ -74,21 +72,21 @@ def run(config_file):
             rotation_resolution=z_conf['rotation_resolution'],
             )
         plt.savefig(f'{z_name}_density.png', dpi=z_conf['dpi'])
+        plt.close(fig)
     for i in ('1', '2'):
         z_conf_cat = z_conf[f'catalog{i}']
         # z Color Plot
         if any(case in z_conf['plot_case'] for case in ('masscolor', 'all')):
             print(f"\n# Redshift (catalog {i} z colors)")
-            plt.clf()
             fig = plt.figure(figsize=z_conf['figsize'])
             ax = plt.axes()
             scaling.redshift_masscolor(c1, c2, **kwargs, ax=ax, color1=i=='1',
                                             log_mass=z_conf['log_mass'])
             plt.savefig(f'{z_name}_cat{i}zcolor.png', dpi=z_conf['dpi'])
+            plt.close(fig)
         # Panel density Plot
         if any(case in z_conf['plot_case'] for case in ('density_panel', 'all')):
             print(f"\n# Redshift density (catalog {i} z panel)")
-            plt.clf()
             fig, axes = scaling.redshift_density_masspanel(c1, c2, **kwargs, panel_cat1=i=='1',
                 bins1=z_conf['catalog1']['redshift_bins'],
                 bins2=z_conf['catalog2']['redshift_bins'],
@@ -99,3 +97,4 @@ def run(config_file):
                 fig_kwargs={'figsize': z_conf['figsize']},
                 )
             plt.savefig(f'{z_name}_density_cat{i}masspanel.png', dpi=z_conf['dpi'])
+            plt.close(fig)

@@ -44,13 +44,14 @@ def test_helper_functions():
     mock.builtins.input = original_input
 
 def test_main():
-    #"""
     os.system('ln -s demo/cat1.fits')
     os.system('ln -s demo/cat2.fits')
+    os.system('rm -rf temp')
+    # get demo config
     config_file = 'demo/config.yml'
-    overwrite_config, overwrite_matching = True, True
+    overwrite_config, overwrite_files = True, True
     # Match
-    clevar_yaml.match_proximity(config_file, overwrite_config, overwrite_matching)
+    clevar_yaml.match_proximity(config_file, overwrite_config, overwrite_files)
     # Match, used diff cosmology and overwrite
     config = yaml.read(config_file)
     print(config.keys())
@@ -58,9 +59,30 @@ def test_main():
     yaml.write(config, 'cfg.yml')
     original_input = mock.builtins.input
     mock.builtins.input = lambda _: 'q'
-    clevar_yaml.match_proximity('cfg.yml', overwrite_config, overwrite_matching=False)
+    clevar_yaml.match_proximity('cfg.yml', overwrite_config, overwrite_files=False)
     mock.builtins.input = original_input
     os.system("rm cfg.yml")
+    # Footprint
+    os.system(f"rm {config['catalog1']['footprint']} {config['catalog2']['footprint']}")
+    clevar_yaml.artificial_footprint(config_file, True, True, case='1')
+    clevar_yaml.artificial_footprint(config_file, True, True, case='2')
+    original_input = mock.builtins.input
+    mock.builtins.input = lambda _: 'q'
+    clevar_yaml.artificial_footprint(config_file, True, False, case='1')
+    clevar_yaml.artificial_footprint(config_file, True, False, case='2')
+    mock.builtins.input = original_input
+    # Masks
+    ftpt_quantities_file1 = f"{config['outpath']}/ftpt_quantities1.fits"
+    ftpt_quantities_file2 = f"{config['outpath']}/ftpt_quantities2.fits"
+    os.system(f"rm {ftpt_quantities_file1} {ftpt_quantities_file2}")
+    clevar_yaml.footprint_masks(config_file, True, False, case='1')
+    clevar_yaml.footprint_masks(config_file, True, False, case='2')
+    original_input = mock.builtins.input
+    mock.builtins.input = lambda _: 'q'
+    clevar_yaml.footprint_masks(config_file, True, False, case='1')
+    clevar_yaml.footprint_masks(config_file, True, False, case='2')
+    mock.builtins.input = original_input
+    os.system(f"rm {config['catalog1']['footprint']} {config['catalog2']['footprint']}")
     # Metrics
     clevar_yaml.match_metrics_distances(config_file)
     clevar_yaml.match_metrics_mass(config_file)
@@ -69,4 +91,3 @@ def test_main():
     os.system('rm cat1.fits')
     os.system('rm cat2.fits')
     os.system('rm -rf temp')
-    #"""

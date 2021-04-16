@@ -1,7 +1,7 @@
 outpath: temp
 
 cosmology:
-    backend: Astropy # Options are Astropy, CCL
+    backend: Astropy # Options are Astropy, CCL.
     parameters:
 
 catalog1:
@@ -13,9 +13,16 @@ catalog1:
         z: Z
         mass: MASS
         radius: RADIUS_ARCMIN
-    radius_unit: ARCMIN
-    labels: # Labels for plots. If not availble, column_{name} used
+    radius_unit: ARCMIN # Options: radians, degrees, arcmin, arcsec, pc, kpc, Mpc, M200b, M200c, M##b/c...
+    labels: # Labels for plots. If not availble, column_{name} used.
         mass: Mass1
+    footprint: # Footprint information. Used to create artificial footprint and on recovery rate.
+        file: ftpt1.fits
+        nside: 4096 # healpix NSIDE.
+        nest: False # healpix nested ordering. if false use ring.
+        pixel_name: pixel # Name of pixel column of footprint.
+        detfrac_name: None # Name of detfrac column of footprint. Use 'None' if not existing.
+        zmax_name: None # Name of zmax column of footprint. Use 'None' if not existing.
 
 catalog2:
     file: cat2.fits
@@ -26,14 +33,21 @@ catalog2:
         z: Z
         mass: MASS
         radius: RADIUS_ARCMIN
-    radius_unit: ARCMIN
-    labels: # Labels for plots. If not availble, column_{name} used
+    radius_unit: ARCMIN # Options: radians, degrees, arcmin, arcsec, pc, kpc, Mpc, M200b, M200c, M##b/c...
+    labels: # Labels for plots. If not availble, column_{name} used.
         mass: Mass2
+    footprint: # Footprint information. Used to create artificial footprint and on recovery rate.
+        file: ftpt2.fits
+        nside: 4096 # healpix NSIDE.
+        nest: False # healpix nested ordering. if false use ring.
+        pixel_name: pixel # Name of pixel column of footprint.
+        detfrac_name: None # Name of detfrac column of footprint. Use 'None' if not existing.
+        zmax_name: None # Name of zmax column of footprint. Use 'None' if not existing.
 
 proximity_match:
     which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
-    type: cross # options are cross, cat1, cat2
-    preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
+    type: cross # options are cross, cat1, cat2.
+    preference: more_massive # options are more_massive, angular_proximity or redshift_proximity.
     catalog1:
         delta_z: .2
         match_radius: 1 arcmin
@@ -41,118 +55,176 @@ proximity_match:
         delta_z: .2
         match_radius: 1 mpc
 
+masks: # Config to be used by make_masks and recovery rate.
+    catalog1:
+        in_footprint1: # Flag if cluster is inside footprint.
+            which_footprint: self # which footprint to use for computaions. Options: self, other.
+            name: self # Name for column.
+        in_footprint2: # Flag if cluster is inside footprint.
+            which_footprint: other # which footprint to use for computaions. Options: self, other.
+            name: other # Name for column. It will receive a ft_ prefix.
+        coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes.
+            name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
+            which_footprint: other # which footprint to use for computaions. Options: self, other.
+            aperture: 1 arcsec # Size of aperture with units.
+            window_function: nfw2D # Window to weight the coverfraction. Options are flat, nfw2D.
+        coverfraction_: # Like this one.
+            name: other_1arcmin # Name for coverfraction column. It will receive a cf_ prefix.
+            which_footprint: other # which footprint to use for computaions. Options: self, other.
+            aperture: 1 arcmin # Size of aperture with units.
+            window_function: nfw2D # Window to weight the coverfraction. Options are flat, nfw2D.
+    catalog2:
+        in_footprint1: # Flag if cluster is inside footprint.
+            which_footprint: self # which footprint to use for computaions. Options: self, other.
+            name: self # Name for column.
+        in_footprint2: # Flag if cluster is inside footprint.
+            which_footprint: other # which footprint to use for computaions. Options: self, other.
+            name: other # Name for column. It will receive a ft_ prefix.
+        coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes.
+            name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
+            which_footprint: other # which footprint to use for computaions. Options: self, other.
+            aperture: 1 arcmin # Size of aperture with units.
+            window_function: nfw2D # Window to weight the coverfraction. Options are flat, nfw2D.
+
 match_metrics:
 
-    figsize: 20 20 # Figure size of figures in cm
+    figsize: 20 20 # Figure size of figures in cm.
     dpi: 150 # The resolution in dots per inch.
 
-    recovery: # Recovery rate
+    recovery: # Recovery rate.
 
-        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize
-        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi
-        plot_case: all # Types of plots to be done. Options are simple, panel, 2D or all
-        matching_type: cross # options are cross, cat1, cat2, multi_cat1, multi_cat2, multi_join
-        line_type: steps # line, steps
-
-        catalog1:
-            log_mass: True
-            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label
-            recovery_label: None
-            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values
-            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx)
-            mass_lim: None # Mass limits in plots
-            redshift_lim: None # Redshift limits in plots
-            recovery_lim: None # Recovery rate limits in plots
-            add_mass_label: True # Add labels and legends of mass bins
-            add_redshift_label: True # Add labels and legends of redshift bins
-
-        catalog2:
-            log_mass: True
-            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label
-            recovery_label: None
-            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values
-            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx)
-            mass_lim: None # Mass limits in plots
-            redshift_lim: None # Redshift limits in plots
-            recovery_lim: None # Recovery rate limits in plots
-            add_mass_label: True # Add labels and legends of mass bins
-            add_redshift_label: True # Add labels and legends of redshift bins
-
-    distances: # Distances between matched pairs
-
-        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize
-        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi
-        plot_case: simple panel 2D # Types of plots to be done. Options are simple, panel, 2D or all
-        matching_type: cross # options are cross, cat1, cat2
-        line_type: steps # line, steps
-        radial_bins: 20 # bins for radial distances
-        radial_bin_units: arcmin # units of radial bins
-        delta_redshift_bins: 20 # bins for redshift distances
+        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize.
+        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi.
+        plot_case: all # Types of plots to be done. Options are simple, panel, 2D or all.
+        matching_type: cross # options are cross, cat1, cat2, multi_cat1, multi_cat2, multi_join.
+        line_type: steps # line, steps.
 
         catalog1:
             log_mass: True
-            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label
+            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
+            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
             recovery_label: None
-            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values
-            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx)
-            add_mass_label: True # Add labels and legends of mass bins
-            add_redshift_label: True # Add labels and legends of redshift bins
+            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
+            mass_lim: None # Mass limits in plots.
+            redshift_lim: None # Redshift limits in plots.
+            recovery_lim: None # Recovery rate limits in plots.
+            add_mass_label: True # Add labels and legends of mass bins.
+            add_redshift_label: True # Add labels and legends of redshift bins.
+
+            masks: # Mask objects used in the computation of recovery rates. Names must correspond to those in the main "masks" section.
+                case: Unmatched # Which clusters to mask on recovery rate computations. Options: None, All, Unmatched.
+                in_footprint1: # Flag if cluster is inside footprint.
+                    name: self # Name for column.
+                    use: True # Use this mask.
+                in_footprint2: # Flag if cluster is inside footprint.
+                    name: other # Name for column. It will receive a ft_ prefix.
+                    use: True # Use this mask.
+                coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes.
+                    name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
+                    min: 0.1 # Minimum value of cover_rate to be considered.
+                coverfraction_: # Like this one.
+                    name: other_1arcmin # Name for coverfraction column. It will receive a cf_ prefix.
+                    min: 0.1 # Minimum value of cover_rate to be considered.
 
         catalog2:
             log_mass: True
-            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label
+            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
+            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
             recovery_label: None
-            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values
-            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx)
-            add_mass_label: True # Add labels and legends of mass bins
-            add_redshift_label: True # Add labels and legends of redshift bins
+            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
+            mass_lim: None # Mass limits in plots.
+            redshift_lim: None # Redshift limits in plots.
+            recovery_lim: None # Recovery rate limits in plots.
+            add_mass_label: True # Add labels and legends of mass bins.
+            add_redshift_label: True # Add labels and legends of redshift bins.
 
-    mass: # Scaling relation
+            masks: # Mask objects used in the computation of recovery rates.
+                case: Unmatched # Which clusters to mask on recovery rate computations. Options: None, All, Unmatched.
+                in_footprint1: # Flag if cluster is inside footprint.
+                    name: self # Name for column.
+                    use: True # Use this mask.
+                in_footprint2: # Flag if cluster is inside footprint.
+                    name: other # Name for column. It will receive a ft_ prefix.
+                    use: True # Use this mask.
+                coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes.
+                    name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
+                    min: 0.1 # Minimum value of cover_rate to be considered.
 
-        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize
-        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi
-        plot_case: all # Types of plots to be done. Options are zcolors, density, density_panel
-        matching_type: cross # options are cross, cat1, cat2
-        add_redshift_label: True # Add redshift label in panels
-        add_err: True # Plot errorbars when available
-        add_cb: True # Add s in color plots
-        log_mass: True # Mass in log scale
-        ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of mass_bins in catalogs
+    distances: # Distances between matched pairs.
+
+        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize.
+        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi.
+        plot_case: simple panel 2D # Types of plots to be done. Options are simple, panel, 2D or all.
+        matching_type: cross # options are cross, cat1, cat2.
+        line_type: steps # line, steps.
+        radial_bins: 20 # bins for radial distances.
+        radial_bin_units: arcmin # units of radial bins.
+        delta_redshift_bins: 20 # bins for redshift distances.
+
+        catalog1:
+            log_mass: True
+            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
+            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+            recovery_label: None
+            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
+            add_mass_label: True # Add labels and legends of mass bins.
+            add_redshift_label: True # Add labels and legends of redshift bins.
+
+        catalog2:
+            log_mass: True
+            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
+            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+            recovery_label: None
+            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
+            add_mass_label: True # Add labels and legends of mass bins.
+            add_redshift_label: True # Add labels and legends of redshift bins.
+
+    mass: # Scaling relation.
+
+        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize.
+        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi.
+        plot_case: all # Types of plots to be done. Options are zcolors, density, density_panel.
+        matching_type: cross # options are cross, cat1, cat2.
+        add_redshift_label: True # Add redshift label in panels.
+        add_err: True # Plot errorbars when available.
+        add_cb: True # Add s in color plots.
+        log_mass: True # Mass in log scale.
+        ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of mass_bins in catalogs.
         rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
 
         catalog1:
-            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx)
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label
-            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values
+            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
 
         catalog2:
-            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx)
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label
-            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values
+            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
 
-    redshift: # Scaling relation
+    redshift: # Scaling relation.
 
-        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize
-        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi
-        plot_case: all # Types of plots to be done. Options are masscolors, density, density_panel
-        matching_type: cross # options are cross, cat1, cat2
-        add_mass_label: True # Add mass label in panels
-        add_err: True # Plot errorbars when available
-        add_cb: True # Add s in color plots
-        log_mass: True # Mass in log scale
-        ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of redshifts_bins in catalogs
+        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize.
+        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi.
+        plot_case: all # Types of plots to be done. Options are masscolors, density, density_panel.
+        matching_type: cross # options are cross, cat1, cat2.
+        add_mass_label: True # Add mass label in panels.
+        add_err: True # Plot errorbars when available.
+        add_cb: True # Add s in color plots.
+        log_mass: True # Mass in log scale.
+        ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of redshifts_bins in catalogs.
         rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
 
         catalog1:
-            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values
-            mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label
-            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx)
+            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+            mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
+            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
 
         catalog2:
-            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values
-            mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label
-            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx)
+            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+            mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
+            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).

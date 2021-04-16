@@ -38,7 +38,7 @@ def get_recovery_rate(values1, values2, bins1, bins2, is_matched):
     """
     hist_all, edges1, edges2 = np.histogram2d(values1, values2, bins=(bins1, bins2))
     hist_matched = np.histogram2d(values1[is_matched], values2[is_matched],
-                                  bins=(bins1, bins2))[0]
+                                  bins=(edges1, edges2))[0]
     recovery = np.zeros(hist_all.shape)
     recovery[:] = np.nan
     recovery[hist_all>0] = hist_matched[hist_all>0]/hist_all[hist_all>0]
@@ -201,7 +201,9 @@ class ArrayFuncs():
         """
         recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
         ax = plt.axes() if ax is None else ax
-        c = ax.pcolor(edges1, edges2, recovery.T, **plt_kwargs)
+        plt_kwargs_ = {'vmin':0, 'vmax':1}
+        plt_kwargs_.update(plt_kwargs)
+        c = ax.pcolor(edges1, edges2, recovery.T, **plt_kwargs_)
         if add_num:
             hist_all = np.histogram2d(values1, values2, bins=(bins1, bins2))[0]
             hist_matched = np.histogram2d(values1[is_matched], values2[is_matched],
@@ -243,9 +245,9 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in:
             'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
-            Mask unwanted clusters
+            Mask of unwanted clusters
         mask_unmatched: array
-            Mask unwanted unmatched clusters (ex: out of footprint)
+            Mask of unwanted unmatched clusters (ex: out of footprint)
         **kwargs:
             Additional arguments to be passed to pltfunc
         """
@@ -254,7 +256,9 @@ class ClCatalogFuncs():
         is_matched = cat.get_matching_mask(matching_type_conv)
         # mask_ to apply mask and mask_unmatched
         mask_ = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
-        return pltfunc(cat[mask_][col1], cat[mask_][col2], bins1, bins2,
+        # make sure bins stay consistent regardless of mask
+        edges1, edges2 = np.histogram2d(cat[col1], cat[col2], bins=(bins1, bins2))[1:]
+        return pltfunc(cat[mask_][col1], cat[mask_][col2], edges1, edges2,
                        is_matched=is_matched[mask_], **kwargs)
     def plot(cat, col1, col2, bins1, bins2, matching_type,
              xlabel=None, ylabel=None, scale1='linear', **kwargs):
@@ -277,9 +281,9 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in:
             'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
-            Mask unwanted clusters
+            Mask of unwanted clusters
         mask_unmatched: array
-            Mask unwanted unmatched clusters (ex: out of footprint)
+            Mask of unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
@@ -339,9 +343,9 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in:
             'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
-            Mask unwanted clusters
+            Mask of unwanted clusters
         mask_unmatched: array
-            Mask unwanted unmatched clusters (ex: out of footprint)
+            Mask of unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
@@ -402,9 +406,9 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in:
             'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
         mask: array
-            Mask unwanted clusters
+            Mask of unwanted clusters
         mask_unmatched: array
-            Mask unwanted unmatched clusters (ex: out of footprint)
+            Mask of unwanted unmatched clusters (ex: out of footprint)
 
         Other parameters
         ----------------
@@ -489,6 +493,11 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         Transpose mass and redshift in plots
     log_mass: bool
         Plot mass in log scale
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
+
 
     Other parameters
     ----------------
@@ -547,6 +556,10 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         Transpose mass and redshift in plots
     log_mass: bool
         Plot mass in log scale
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
 
     Other parameters
     ----------------
@@ -611,6 +624,10 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
         Transpose mass and redshift in plots
     log_mass: bool
         Plot mass in log scale
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
 
     Other parameters
     ----------------

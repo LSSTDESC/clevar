@@ -6,7 +6,7 @@ from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 
-from .utils import veclen
+from .utils import veclen, none_val
 
 class ClData(APtable):
     """
@@ -185,7 +185,8 @@ class ClCatalog():
         """
         self._add_ftpt_mask(ftpt_self, 'self')
         self._add_ftpt_mask(ftpt_other, 'other')
-    def add_ftpt_coverfrac(self, ftpt, aperture, aperture_unit, cosmo=None):
+    def add_ftpt_coverfrac(self, ftpt, aperture, aperture_unit, window='flat',
+        cosmo=None, colname=None):
         """
         Computes and adds a cover fraction value. It considers zmax and detection fraction
         when available in the footprint.
@@ -200,37 +201,32 @@ class ClCatalog():
             Radial aperture to compute the coverfraction
         aperture_unit: float
             Unit of radial aperture
+        window: str
+            Window to weight corverfrac. Options are: flat, nfw2D (with flat core)
         cosmo: clevar.Cosmology object
-            Cosmology object for when aperture has physical units
+            Cosmology object for when aperture has physical units. Required if nfw2D window used.
+        colname: str, None
+            Name of coverfrac column.
         """
         num = f'{aperture}'
         num = f'{aperture:.2f}' if len(num)>6 else num
-        self[f'cf_{num}_{aperture_unit}'] = [
-            ftpt._get_coverfrac(c['SkyCoord'], c['z'], aperture, aperture_unit, cosmo=cosmo)
-            for c in self]
-    def add_ftpt_coverfrac_nfw2D(self, ftpt, aperture, aperture_unit, cosmo=None):
-        """
-        Computes and adds a cover fraction value weighted by a nfw 2D flatcore window function.
-        It considers zmax and detection fraction when available in the footprint.
-
-        Parameters
-        ----------
-        ftpt: clevar.mask.Footprint object
-            Footprint used to compute the coverfration
-        ftpt_other: clevar.mask.Footprint object
-            Footprint of the other catalog
-        raduis: float
-            Radial aperture to compute the coverfraction
-        aperture_unit: float
-            Unit of radial aperture
-        cosmo: clevar.Cosmology object
-            Cosmology object for physical and angular convertions
-        """
-        num = f'{aperture}'
-        num = f'{aperture:.2f}' if len(num)>6 else num
-        self[f'cf_nfw_{num}_{aperture_unit}'] = [
-            ftpt._get_coverfrac_nfw2D(c['SkyCoord'], c['z'], c['radius'], self.radius_unit,
-                                      aperture, aperture_unit, cosmo=cosmo)
+        window_cfg = {
+            'flat': {
+                'func': ftpt._get_coverfrac,
+                'get_args': lambda c: [c['SkyCoord'], c['z'], aperture, aperture_unit],
+                'colname': f'{num}_{aperture_unit}',
+            },
+            'nfw2D': {
+                'func': ftpt._get_coverfrac_nfw2D,
+                'get_args': lambda c: [c['SkyCoord'], c['z'], c['radius'],
+                                   self.radius_unit, aperture, aperture_unit],
+                'colname': f'nfw_{num}_{aperture_unit}',
+            },
+        }.get(window, None)
+        if window_cfg is None:
+            raise ValueError(f"window ({window}) must be either 'flat' of 'nfw2D'")
+        self[f"cf_{none_val(colname, window_cfg['colname'])}"] = [
+            window_cfg['func'](*window_cfg['get_args'](c), cosmo=cosmo)
             for c in self]
     def save_match(self, filename, overwrite=False):
         """

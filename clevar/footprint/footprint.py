@@ -69,6 +69,7 @@ class Footprint():
         '''
         self.nside = nside
         self.nest = nest
+        self.data.meta.update({'nside':nside, 'nest':nest})
         self.data['pixel'] = np.array(pixels, dtype=int)
         self.data['detfrac'] = none_val(detfrac, 1)
         self.data['zmax'] = none_val(zmax, 99)

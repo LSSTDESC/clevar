@@ -8,7 +8,7 @@ import warnings
 
 import clevar
 from .helper_funcs import loadconf, make_catalog, make_cosmology, get_input_loop
-def run(config_file, overwrite_config, overwrite_matching):
+def run(config_file, overwrite_config, overwrite_files):
     """Main plot function
 
     Parameters
@@ -17,7 +17,7 @@ def run(config_file, overwrite_config, overwrite_matching):
         Yaml file with configuration to run
     overwrite_config: bool
         Forces overwrite of config.log.yml file
-    overwrite_config: bool
+    overwrite_files: bool
         Forces overwrite of matching output files
     """
     # Create clevar objects from yml config
@@ -48,7 +48,7 @@ def run(config_file, overwrite_config, overwrite_matching):
     out1, out2 = f'{config["outpath"]}/match1.fits', f'{config["outpath"]}/match2.fits'
     check_actions = {'o': (lambda : True, [], {}), 'q': (lambda :False, [], {}),}
     save = True
-    if (os.path.isfile(out1) or os.path.isfile(out2)) and not overwrite_matching:
+    if (os.path.isfile(out1) or os.path.isfile(out2)) and not overwrite_files:
         print(f"\n*** File '{out1}' or '{out2}' already exist! ***")
         save = get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
     if save:

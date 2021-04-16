@@ -70,7 +70,6 @@ def run(config_file):
         )
     dist_cent_name = f'{config["outpath"]}/dist_cent_{dist_conf["radial_bin_units"]}'
     print("\n# Central distace plot (no bins)")
-    plt.clf()
     fig = plt.figure(figsize=dist_conf['figsize'])
     ax = plt.axes()
     distances.central_position(c1, c2, **kwargs, ax=ax)
@@ -87,8 +86,8 @@ def run(config_file):
             add_legend=dist_conf['add_mass_label'],
             legend_fmt=dist_conf_cat['mass_num_fmt'])
         plt.savefig(f'{dist_cent_name}_cat{i}mass.png', dpi=dist_conf['dpi'])
+        plt.close(fig)
         print(f"\n# Central distace plot (catalog {i} redshift bins)")
-        plt.clf()
         fig = plt.figure(figsize=dist_conf['figsize'])
         ax = plt.axes()
         distances.central_position(*cats, **kwargs, ax=ax,
@@ -97,6 +96,7 @@ def run(config_file):
                 add_legend=dist_conf['add_redshift_label'],
                 legend_fmt=dist_conf_cat['redshift_num_fmt'])
         plt.savefig(f'{dist_cent_name}_cat{i}redshift.png', dpi=dist_conf['dpi'])
+        plt.close(fig)
     # Redshift distances
     kwargs.pop('radial_bins')
     kwargs.pop('radial_bin_units')
@@ -104,25 +104,31 @@ def run(config_file):
     kwargs['redshift_bins'] = dist_conf['delta_redshift_bins']
     dist_z_name = f'{config["outpath"]}/dist_z'
     print("\n# Redshift distance plot (no bins)")
-    plt.clf()
-    ax = distances.redshift(c1, c2, **kwargs)
+    fig = plt.figure(figsize=dist_conf['figsize'])
+    ax = plt.axes()
+    distances.redshift(c1, c2, ax=ax, **kwargs)
     plt.savefig(f'{dist_z_name}.png', dpi=dist_conf['dpi'])
+    plt.close(fig)
     for cats, i in zip([(c1, c2), (c2, c1)], ('1', '2')):
         dist_conf_cat = dist_conf[f'catalog{i}']
         print(f"\n# Redshift distance plot (catalog {i} mass bins)")
-        plt.clf()
-        ax = distances.redshift(*cats, **kwargs,
-                quantity_bins='mass',
-                bins=dist_conf_cat['mass_bins'],
-                log_quantity=dist_conf_cat['log_mass'],
-                add_legend=dist_conf['add_mass_label'],
-                legend_fmt=dist_conf_cat['mass_num_fmt'])
+        fig = plt.figure(figsize=dist_conf['figsize'])
+        ax = plt.axes()
+        distances.redshift(*cats, **kwargs, ax=ax,
+            quantity_bins='mass',
+            bins=dist_conf_cat['mass_bins'],
+            log_quantity=dist_conf_cat['log_mass'],
+            add_legend=dist_conf['add_mass_label'],
+            legend_fmt=dist_conf_cat['mass_num_fmt'])
         plt.savefig(f'{dist_z_name}_cat{i}mass.png', dpi=dist_conf['dpi'])
+        plt.close(fig)
         print(f"\n# Redshift distance plot (catalog {i} redshift bins)")
-        plt.clf()
-        ax = distances.redshift(*cats, **kwargs,
-                quantity_bins='z',
-                bins=dist_conf_cat['redshift_bins'],
-                add_legend=dist_conf['add_redshift_label'],
-                legend_fmt=dist_conf_cat['redshift_num_fmt'])
+        fig = plt.figure(figsize=dist_conf['figsize'])
+        ax = plt.axes()
+        distances.redshift(*cats, **kwargs, ax=ax,
+            quantity_bins='z',
+            bins=dist_conf_cat['redshift_bins'],
+            add_legend=dist_conf['add_redshift_label'],
+            legend_fmt=dist_conf_cat['redshift_num_fmt'])
         plt.savefig(f'{dist_z_name}_cat{i}redshift.png', dpi=dist_conf['dpi'])
+        plt.close(fig)

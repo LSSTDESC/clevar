@@ -4,7 +4,7 @@ import os, sys
 from ..utils import hp
 from .footprint import Footprint
 
-def create_footprint(ra, dec, nside=None, min_density=2, neighbor_fill=None):
+def create_footprint(ra, dec, nside=None, min_density=2, neighbor_fill=None, nest=False):
     '''
     Create footprint from (Ra, Dec). Can compute optimal NSIDE given a density
     and also fill holes.
@@ -23,6 +23,8 @@ def create_footprint(ra, dec, nside=None, min_density=2, neighbor_fill=None):
     neighbor_fill: int, None
         Minimum number of neighbors to fill a pixel: 1<n<8, optimal is 5.
         If None, the holes are not filled.
+    nest: bool
+        Nested ordering. If false use ring.
 
     Returns
     -------
@@ -30,16 +32,16 @@ def create_footprint(ra, dec, nside=None, min_density=2, neighbor_fill=None):
         Footprint
     '''
     # actually creates a mask with pixel density < dens
-    nside, pixel = nside_from_density(ra, dec, min_density) if nside is None\
-        else (nside, np.array(list(set(hp.ang2pix(nside, ra, dec, lonlat=True)))))
+    nside, pixel = nside_from_density(ra, dec, min_density, nest=nest) if nside is None\
+        else (nside, np.array(list(set(hp.ang2pix(nside, ra, dec, lonlat=True, nest=nest)))))
     print(f'Footprint NSIDE: {nside:,}')
     print(f'Pixels in footprint: {pixel.size:,}')
-    ftpt = Footprint(nside=nside, pixels=pixel)
+    ftpt = Footprint(nside=nside, pixels=pixel, nest=nest)
     # filling holes
-    ftpt = ftpt if neighbor_fill is None else fill_holes_conv(ftpt, neighbor_fill)
+    ftpt = ftpt if neighbor_fill is None else fill_holes_conv(ftpt, neighbor_fill, nest=nest)
     print(f'Pixels in footprint: {ftpt["pixel"].size:,}')
     return ftpt
-def nside_from_density(ra, dec, min_density):
+def nside_from_density(ra, dec, min_density, nest=False):
     '''
     Compute NSIDE based on a minimum density
 
@@ -51,6 +53,8 @@ def nside_from_density(ra, dec, min_density):
         Dec array in degrees
     min_density: float
         Threshold density of obj./pixel
+    nest: bool
+        Nested ordering. If false use ring.
 
     Returns
     -------
@@ -60,14 +64,14 @@ def nside_from_density(ra, dec, min_density):
         List of pixels in footprint
     '''
     nside = 2
-    pixel = hp.ang2pix(nside, ra, dec, lonlat=True)
+    pixel = hp.ang2pix(nside, ra, dec, lonlat=True, nest=nest)
     pixel_set = np.array(list(set(pixel)))
     for n in range(2, 12):
         print(f'NSIDE({nside}) -> {pixel.size/pixel_set.size} clusters per pixel')
         if pixel.size/pixel_set.size < min_density:
             return nside, pixel_set
         nside = 2**n
-        pixel = hp.ang2pix(nside, ra, dec, lonlat=True)
+        pixel = hp.ang2pix(nside, ra, dec, lonlat=True, nest=nest)
         pixel_set = np.array(list(set(pixel)))
     raise ValueError(f"NSIDE required > {2**n}")
 def fill_holes(ftpt, neighbor_fill, nest=False):
@@ -82,6 +86,8 @@ def fill_holes(ftpt, neighbor_fill, nest=False):
         Array with indices of healpy pixels of the footprint
     neighbor_fill: int
         Minimum number of neighbors to fill a pixel: 1<n<8, optimal is 5
+    nest: bool
+        Nested ordering. If false use ring.
 
     Returns
     -------
@@ -96,8 +102,8 @@ def fill_holes(ftpt, neighbor_fill, nest=False):
             0).sum()>=neighbor_fill
             ]
     return ftpt if len(add_pixels)==0 else\
-        Footprint(nside=ftpt.nside, pixels=np.append(ftpt['pixel'], add_pixels))
-def fill_holes_conv(ftpt, neighbor_fill):
+        Footprint(nside=ftpt.nside, pixels=np.append(ftpt['pixel'], add_pixels), nest=nest)
+def fill_holes_conv(ftpt, neighbor_fill, nest=False):
     '''
     Interactively fill holes in a footprint mask until convergence, updates ftpt input
 
@@ -107,6 +113,8 @@ def fill_holes_conv(ftpt, neighbor_fill):
         Footprint
     neighbor_fill: int
         Minimum number of neighbors to fill a pixel: 1<n<8, optimal is 5.
+    nest: bool
+        Nested ordering. If false use ring.
 
     Returns
     -------
@@ -118,7 +126,7 @@ def fill_holes_conv(ftpt, neighbor_fill):
         print('**** filling holes ****')
         while True:
             print('* filling')
-            ftpt = fill_holes(ftpt, neighbor_fill)
+            ftpt = fill_holes(ftpt, neighbor_fill, nest=nest)
             len_t = ftpt['pixel'].size
             print(f'   size: {len_l:,} -> {len_t:,} (+{len_t-len_l:,})')
             if len_l == len_t:

@@ -7,7 +7,9 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(dest='config_file', help='Configuration yaml file')
     parser.add_argument('-oc','--overwrite-config', dest='overwrite_config', default=False, action='store_true', help='Overwrites config.log.yml file')
-    parser.add_argument('-om','--overwrite-files', dest='overwrite_files', default=False, action='store_true', help='Overwrites matching output files')
+    parser.add_argument('-om','--overwrite-files', dest='overwrite_files', default=False, action='store_true', help='Overwrites output files')
+    parser.add_argument('-c','--case', dest='case', default='both', help='Run for each catalog? Options: 1, 2, both')
     args = parser.parse_args()
     # Run function
-    yaml.match_proximity(args.config_file, args.overwrite_config, args.overwrite_files)
+    yaml.footprint_masks(args.config_file, args.overwrite_config,
+                         args.overwrite_files, args.case)

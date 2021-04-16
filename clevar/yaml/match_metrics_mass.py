@@ -1,7 +1,6 @@
 """@file match_metrics_mass.py
 Matching metrics - mass functions for command line execution
 """
-import argparse
 import numpy as np
 import pylab as plt
 
@@ -64,7 +63,6 @@ def run(config_file):
     # Density Plot
     if any(case in mass_conf['plot_case'] for case in ('density', 'all')):
         print(f"\n# Mass density colors")
-        plt.clf()
         fig = plt.figure(figsize=mass_conf['figsize'])
         ax = plt.axes()
         scaling.mass_density(c1, c2, **kwargs, ax=ax,
@@ -74,20 +72,20 @@ def run(config_file):
             rotation_resolution=mass_conf['rotation_resolution'],
             )
         plt.savefig(f'{mass_name}_density.png', dpi=mass_conf['dpi'])
+        plt.close(fig)
     for i in ('1', '2'):
         mass_conf_cat = mass_conf[f'catalog{i}']
         # z Color Plot
         if any(case in mass_conf['plot_case'] for case in ('zcolor', 'all')):
             print(f"\n# Mass (catalog {i} z colors)")
-            plt.clf()
             fig = plt.figure(figsize=mass_conf['figsize'])
             ax = plt.axes()
             scaling.mass_zcolor(c1, c2, **kwargs, ax=ax, color1=i=='1')
             plt.savefig(f'{mass_name}_cat{i}zcolor.png', dpi=mass_conf['dpi'])
+            plt.close(fig)
         # Panel density Plot
         if any(case in mass_conf['plot_case'] for case in ('density_panel', 'all')):
             print(f"\n# Mass density (catalog {i} z panel)")
-            plt.clf()
             fig, axes = scaling.mass_density_zpanel(c1, c2, **kwargs, panel_cat1=i=='1',
                 bins1=mass_conf['catalog1']['mass_bins'],
                 bins2=mass_conf['catalog2']['mass_bins'],
@@ -98,3 +96,4 @@ def run(config_file):
                 fig_kwargs={'figsize': mass_conf['figsize']},
                 )
             plt.savefig(f'{mass_name}_density_cat{i}zpanel.png', dpi=mass_conf['dpi'])
+            plt.close(fig)
