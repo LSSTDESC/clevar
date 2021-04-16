@@ -256,7 +256,9 @@ class ClCatalogFuncs():
         is_matched = cat.get_matching_mask(matching_type_conv)
         # mask_ to apply mask and mask_unmatched
         mask_ = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
-        return pltfunc(cat[mask_][col1], cat[mask_][col2], bins1, bins2,
+        # make sure bins stay consistent regardless of mask
+        edges1, edges2 = np.histogram2d(cat[col1], cat[col2], bins=(bins1, bins2))[1:]
+        return pltfunc(cat[mask_][col1], cat[mask_][col2], edges1, edges2,
                        is_matched=is_matched[mask_], **kwargs)
     def plot(cat, col1, col2, bins1, bins2, matching_type,
              xlabel=None, ylabel=None, scale1='linear', **kwargs):
