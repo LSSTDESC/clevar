@@ -46,6 +46,8 @@ def test_helper_functions():
 def test_main():
     os.system('ln -s demo/cat1.fits')
     os.system('ln -s demo/cat2.fits')
+    os.system('rm -rf temp')
+    # get demo config
     config_file = 'demo/config.yml'
     overwrite_config, overwrite_files = True, True
     # Match
