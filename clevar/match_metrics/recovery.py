@@ -201,7 +201,9 @@ class ArrayFuncs():
         """
         recovery, edges1, edges2 = get_recovery_rate(values1, values2, bins1, bins2, is_matched)
         ax = plt.axes() if ax is None else ax
-        c = ax.pcolor(edges1, edges2, recovery.T, **plt_kwargs)
+        plt_kwargs_ = {'vmin':0, 'vmax':1}
+        plt_kwargs_.update(plt_kwargs)
+        c = ax.pcolor(edges1, edges2, recovery.T, **plt_kwargs_)
         if add_num:
             hist_all = np.histogram2d(values1, values2, bins=(bins1, bins2))[0]
             hist_matched = np.histogram2d(values1[is_matched], values2[is_matched],
