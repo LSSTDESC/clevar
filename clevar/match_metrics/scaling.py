@@ -546,7 +546,9 @@ class ArrayFuncs():
     def plot_density_metrics(values1, values2, bins1=30, bins2=30,
         ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
         err1=None, err2=None, metrics_mode='simple', plt_kwargs={}, add_cb=True, cb_kwargs={},
-        err_kwargs={}, bias_kwargs={}, scat_kwargs={}, fig_kwargs={}):
+        err_kwargs={}, bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
+        fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02),
+        ):
         """
         Scatter plot with errorbars and color based on point density with scatter and bias panels
 
@@ -591,6 +593,11 @@ class ArrayFuncs():
             Arguments for scatter plot. Used in pylab.fill_between
         fig_kwargs: dict
             Additional arguments for plt.subplots
+        fig_pos: tuple
+            List with edges for the figure. Must be in format (left, bottom, right, top)
+        fig_frac: tuple
+            Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+            and have values: [0, 1]. Colorbar is only used with add_cb key.
 
         Returns
         -------
@@ -602,23 +609,28 @@ class ArrayFuncs():
         fig_kwargs_ = dict(figsize=(8, 6))
         fig_kwargs_.update(fig_kwargs)
         fig = plt.figure(**fig_kwargs_)
-        left, bottom, right, top = (0.2, 0.2, 0.99, 0.99) # left, bottom, right, top
-        frac, gap = 0.8, 0.01 #
-        xmain, xgap, xpanel = (right-left)*np.array([frac, gap, 1-frac-gap])
-        ymain, ygap, ypanel = (top-bottom)*np.array([frac, gap, 1-frac-gap])
+        left, bottom, right, top = fig_pos
+        frac, gap, cb = fig_frac
+        cb = cb if add_cb else 0
+        xmain, xgap, xpanel = (right-left)*np.array([frac, gap, 1-frac-gap-cb])
+        ymain, ygap, ypanel, ycb = (top-bottom)*np.array([frac, gap, 1-frac-gap-cb, cb-gap])
         ax_m = fig.add_axes([left, bottom, xmain, ymain]) # main
         ax_v = fig.add_axes([left+xmain+xgap, bottom, xpanel, ymain]) # right
         ax_h = fig.add_axes([left, bottom+ymain+ygap, xmain, ypanel]) # top
         ax_l = fig.add_axes([left+xmain+xgap, bottom+ymain+ygap, xpanel, ypanel]) # label
+        ax_cb = fig.add_axes([left, bottom+ymain+2*ygap+ypanel, xmain+xgap+xpanel, ycb])\
+                    if add_cb else None
         # Main plot
-        add_cb = False
-        cb_kwargs_ = {'ax': ax_l}
+        cb_kwargs_ = {'cax': ax_cb, 'orientation': 'horizontal'}
         cb_kwargs_.update(cb_kwargs)
         ArrayFuncs.plot_density(values1, values2, bins1=bins1, bins2=bins2,
             ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
             xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=ax_m,
             plt_kwargs=plt_kwargs, add_cb=add_cb, cb_kwargs=cb_kwargs_,
             err_kwargs=err_kwargs)
+        if add_cb:
+            ax_cb.xaxis.tick_top()
+            ax_cb.xaxis.set_label_position('top')
         # Metrics plot
         bias_kwargs_ = {'label':'bias'}
         bias_kwargs_.update(bias_kwargs)
@@ -1247,18 +1259,25 @@ class ClCatalogFuncs():
             Scale xaxis.
         yscale: str
             Scale yaxis.
+        fig_pos: tuple
+            List with edges for the figure. Must be in format (left, bottom, right, top)
+        fig_frac: tuple
+            Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+            and have values: [0, 1]. Colorbar is only used with add_cb key.
 
         Returns
         -------
         fig: matplotlib.figure.Figure
             `matplotlib.figure.Figure` object
+        list
+            Axes with the panels (main, top, right, label)
         """
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
         f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
         fig, axes = ArrayFuncs.plot_density_metrics(**f_kwargs)
         axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
-        axes[0].set_xlabel(kwargs.get('label2', cl_kwargs['ylabel']))
+        axes[0].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
         return fig, axes
 
 ############################################################################################
@@ -1627,6 +1646,18 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
         Scale xaxis.
     yscale: str
         Scale yaxis.
+    fig_pos: tuple
+        List with edges for the figure. Must be in format (left, bottom, right, top)
+    fig_frac: tuple
+        Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+        and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    list
+        Axes with the panels (main, top, right, label)
     """
     metrics_mode = kwargs.pop('metrics_mode', 'redshift')
     return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='z',
@@ -2007,6 +2038,18 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Arguments for bias plot. Used in pylab.plot
     scat_kwargs: dict
         Arguments for scatter plot. Used in pylab.fill_between
+    fig_pos: tuple
+        List with edges for the figure. Must be in format (left, bottom, right, top)
+    fig_frac: tuple
+        Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+        and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    list
+        Axes with the panels (main, top, right, label)
     """
     metrics_mode = kwargs.pop('metrics_mode', 'log')
     return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='mass',
