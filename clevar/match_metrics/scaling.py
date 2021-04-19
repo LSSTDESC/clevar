@@ -604,7 +604,7 @@ class ArrayFuncs():
         fig: matplotlib.figure.Figure
             `matplotlib.figure.Figure` object
         list
-            Axes with the panels (main, top, right, label)
+            Axes with the panels (main, right, top, label)
         """
         fig_kwargs_ = dict(figsize=(8, 6))
         fig_kwargs_.update(fig_kwargs)
@@ -645,12 +645,17 @@ class ArrayFuncs():
         ax_l.legend(ax_v.collections+ax_v.lines, ['$\sigma$', '$bias$'])
         ax_m.set_xscale(xscale)
         ax_m.set_yscale(yscale)
+        # Horizontal
         ax_h.set_xscale(xscale)
-        ax_v.set_yscale(yscale)
         ax_h.set_xlim(ax_m.get_xlim())
+        ax_h.xaxis.set_minor_formatter(NullFormatter())
+        ax_h.xaxis.set_major_formatter(NullFormatter())
+        # Vertical
+        ax_v.set_yscale(yscale)
         ax_v.set_ylim(ax_m.get_ylim())
-        ax_h.set_xticklabels([])
-        ax_v.set_yticklabels([])
+        ax_v.yaxis.set_minor_formatter(NullFormatter())
+        ax_v.yaxis.set_major_formatter(NullFormatter())
+        # Label
         ax_l.axis('off')
         return fig, [ax_m, ax_v, ax_h, ax_l]
 
@@ -1270,7 +1275,7 @@ class ClCatalogFuncs():
         fig: matplotlib.figure.Figure
             `matplotlib.figure.Figure` object
         list
-            Axes with the panels (main, top, right, label)
+            Axes with the panels (main, right, top, label)
         """
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
@@ -1657,7 +1662,7 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     fig: matplotlib.figure.Figure
         `matplotlib.figure.Figure` object
     list
-        Axes with the panels (main, top, right, label)
+        Axes with the panels (main, right, top, label)
     """
     metrics_mode = kwargs.pop('metrics_mode', 'redshift')
     return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='z',
@@ -2049,7 +2054,7 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     fig: matplotlib.figure.Figure
         `matplotlib.figure.Figure` object
     list
-        Axes with the panels (main, top, right, label)
+        Axes with the panels (main, right, top, label)
     """
     metrics_mode = kwargs.pop('metrics_mode', 'log')
     return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='mass',
