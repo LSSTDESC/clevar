@@ -73,6 +73,27 @@ def run(config_file):
             )
         plt.savefig(f'{z_name}_density.png', dpi=z_conf['dpi'])
         plt.close(fig)
+    if any(case in z_conf['plot_case'] for case in ('scaling_metrics', 'all')):
+        print(f"\n# Redshift metrics")
+        fig, axes = scaling.redshift_metrics(c1, c2,
+            bins1=z_conf['catalog1']['redshift_bins'],
+            bins2=z_conf['catalog2']['redshift_bins'],
+            **{k:z_conf[k] for k in ('matching_type', 'xlabel', 'ylabel')},
+            fig_kwargs={'figsize': z_conf['figsize']},
+            )
+        plt.savefig(f'{z_name}_metrics.png', dpi=z_conf['dpi'])
+        plt.close(fig)
+    if any(case in z_conf['plot_case'] for case in ('density_metrics', 'all')):
+        print(f"\n# Redshift density metrics")
+        fig, axes = scaling.redshift_density_metrics(c1, c2, **kwargs,
+            bins1=z_conf['catalog1']['redshift_bins'],
+            bins2=z_conf['catalog2']['redshift_bins'],
+            ax_rotation=z_conf['ax_rotation'],
+            rotation_resolution=z_conf['rotation_resolution'],
+            fig_kwargs={'figsize': z_conf['figsize']},
+            )
+        plt.savefig(f'{z_name}_density_metrics.png', dpi=z_conf['dpi'])
+        plt.close(fig)
     for i in ('1', '2'):
         z_conf_cat = z_conf[f'catalog{i}']
         # z Color Plot

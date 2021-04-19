@@ -1961,7 +1961,7 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     bins2: array, int
         Bins for catalog 2
     mode: str
-        Mode to run (default=redshit). Options are:
+        Mode to run (default=log). Options are:
         simple - used simple difference
         redshift - metrics for (values2-values1)/(1+values1)
         log - metrics for log of values
@@ -2016,7 +2016,7 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     bins2: array, int
         Bins for component 2
     metrics_mode: str
-        Mode to run (default=redshit). Options are:
+        Mode to run (default=log). Options are:
         simple - used simple difference
         redshift - metrics for (values2-values1)/(1+values1)
         log - metrics for log of values
