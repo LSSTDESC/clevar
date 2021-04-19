@@ -490,7 +490,6 @@ class ArrayFuncs():
         scat_kwargs_.update(scat_kwargs)
         ax.plot(*bias_args, **bias_kwargs_)
         scat_func(values1_mid, -scat, scat, **scat_kwargs_)
-        set_scale({'log':'log'}.get(mode, 'linear'))
         return ax
     def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
                      bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
@@ -632,8 +631,10 @@ class ArrayFuncs():
                                  rotated=True)
         # Adjust plots
         ax_l.legend(ax_v.collections+ax_v.lines, ['$\sigma$', '$bias$'])
-        ax_m.set_xscale('log' if metrics_mode=='log' else 'linear')
-        ax_m.set_yscale('log' if metrics_mode=='log' else 'linear')
+        ax_m.set_xscale(xscale)
+        ax_m.set_yscale(yscale)
+        ax_h.set_xscale(xscale)
+        ax_v.set_yscale(yscale)
         ax_h.set_xlim(ax_m.get_xlim())
         ax_v.set_ylim(ax_m.get_ylim())
         ax_h.set_xticklabels([])
@@ -681,13 +682,11 @@ class ClCatalogFuncs():
         func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err', True) else None
         func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err', True) else None
         class_kwargs = {
-            'label1': none_val(kwargs.get('xlabel', None), f'${col}_{{{cat1.name}}}$'),
-            'label2': none_val(kwargs.get('ylabel', None), f'${col}_{{{cat2.name}}}$'),
-            'scale1': kwargs.get('xscale', 'linear'),
-            'scale2': kwargs.get('yscale', 'linear'),
+            'xlabel': none_val(kwargs.get('xlabel', None), f'${col}_{{{cat1.name}}}$'),
+            'ylabel': none_val(kwargs.get('ylabel', None), f'${col}_{{{cat2.name}}}$'),
+            'xscale': kwargs.get('xscale', 'linear'),
+            'yscale': kwargs.get('yscale', 'linear'),
         }
-        for col in ('label1', 'label2', 'scale1', 'scale2'):
-            class_kwargs[col] = kwargs.get(col, class_kwargs[col])
         return class_kwargs, func_kwargs, mp
     def _fmt_plot(ax, **kwargs):
         """
@@ -700,10 +699,10 @@ class ClCatalogFuncs():
         **kwargs
             Other arguments
         """
-        ax.set_xlabel(kwargs['label1'])
-        ax.set_ylabel(kwargs['label2'])
-        ax.set_xscale(kwargs['scale1'])
-        ax.set_yscale(kwargs['scale2'])
+        ax.set_xlabel(kwargs['xlabel'])
+        ax.set_ylabel(kwargs['ylabel'])
+        ax.set_xscale(kwargs['xscale'])
+        ax.set_yscale(kwargs['yscale'])
     def plot(cat1, cat2, matching_type, col, **kwargs):
         """
         Scatter plot with errorbars and color based on input
@@ -1045,10 +1044,10 @@ class ClCatalogFuncs():
 
         Returns
         -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
         ax: matplotlib.axes
             Axis of the plot
-        matplotlib.colorbar.Colorbar (optional)
-            Colorbar of the recovey rates. Only returned if add_cb=True.
         """
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
@@ -1125,10 +1124,10 @@ class ClCatalogFuncs():
 
         Returns
         -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
         ax: matplotlib.axes
             Axis of the plot
-        matplotlib.colorbar.Colorbar (optional)
-            Colorbar of the recovey rates. Only returned if add_cb=True.
         """
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
@@ -1160,6 +1159,9 @@ class ClCatalogFuncs():
             simple - used simple difference
             redshift - metrics for (values2-values1)/(1+values1)
             log - metrics for log of values
+
+        Other parameters
+        ----------------
         bias_kwargs: dict
             Arguments for bias plot. Used in pylab.plot
         scat_kwargs: dict
@@ -1179,6 +1181,8 @@ class ClCatalogFuncs():
 
         Returns
         -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
         ax: matplotlib.axes
             Axis of the plot
         """
@@ -1188,10 +1192,10 @@ class ClCatalogFuncs():
         fig, axes = ArrayFuncs.plot_metrics(**f_kwargs)
         axes[0].set_ylabel(cat1.name)
         axes[1].set_ylabel(cat2.name)
-        axes[0].set_xlabel(cl_kwargs['label1'])
-        axes[1].set_xlabel(cl_kwargs['label2'])
-        axes[0].set_xscale(cl_kwargs['scale1'])
-        axes[1].set_xscale(cl_kwargs['scale2'])
+        axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
+        axes[1].set_xlabel(kwargs.get('label2', cl_kwargs['ylabel']))
+        axes[0].set_xscale(kwargs.get('scale1', cl_kwargs['xscale']))
+        axes[1].set_xscale(kwargs.get('scale2', cl_kwargs['yscale']))
         return fig, axes
     def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
         """
@@ -1211,23 +1215,22 @@ class ClCatalogFuncs():
             Bins for component 1
         bins2: array, int
             Bins for component 2
-        ax_rotation: float
-            Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
-        rotation_resolution: int
-            Number of bins to be used when ax_rotation!=0.
-        xscale: str
-            Scale xaxis.
-        yscale: str
-            Scale yaxis.
-        err1: array
-            Error of component 1
-        err2: array
-            Error of component 2
         metrics_mode: str
             Mode to run. Options are:
             simple - used simple difference
             redshift - metrics for (values2-values1)/(1+values1)
             log - metrics for log of values
+        add_err: bool
+            Add errorbars
+
+        Other parameters
+        ----------------
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        ax_rotation: float
+            Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        rotation_resolution: int
+            Number of bins to be used when ax_rotation!=0.
         plt_kwargs: dict
             Additional arguments for pylab.scatter
         add_cb: bool
@@ -1240,8 +1243,10 @@ class ClCatalogFuncs():
             Arguments for bias plot. Used in pylab.plot
         scat_kwargs: dict
             Arguments for scatter plot. Used in pylab.fill_between
-        fig_kwargs: dict
-            Additional arguments for plt.subplots
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
 
         Returns
         -------
