@@ -52,6 +52,12 @@ def test_z_panel():
 def test_z_density_panel():
     c1, c2 = get_test_data()
     fig, axes = scaling.redshift_density_masspanel(c1, c2, 'cat1', add_err=True)
+def test_z_metrics():
+    c1, c2 = get_test_data()
+    fig, axes = scaling.redshift_metrics(c1, c2, 'cat1')
+def test_z_density_panel():
+    c1, c2 = get_test_data()
+    fig, axes = scaling.redshift_density_metrics(c1, c2, 'cat1')
 def test_m_simple():
     c1, c2 = get_test_data()
     ax = scaling.mass(c1, c2, 'cat1', add_err=True)
@@ -71,3 +77,9 @@ def test_color_panel():
     c1, c2 = get_test_data()
     fig, axes = scaling.ClCatalogFuncs.plot_color_panel(c1, c2, 'cat1', 'mass',
         col_color='z', col_panel='z', bins_panel=3)
+def test_m_metrics():
+    c1, c2 = get_test_data()
+    fig, axes = scaling.mass_metrics(c1, c2, 'cat1')
+def test_m_density_panel():
+    c1, c2 = get_test_data()
+    fig, axes = scaling.mass_density_metrics(c1, c2, 'cat1')

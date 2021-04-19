@@ -73,6 +73,27 @@ def run(config_file):
             )
         plt.savefig(f'{mass_name}_density.png', dpi=mass_conf['dpi'])
         plt.close(fig)
+    if any(case in mass_conf['plot_case'] for case in ('scaling_metrics', 'all')):
+        print(f"\n# Mass metrics")
+        fig, axes = scaling.mass_metrics(c1, c2,
+            bins1=mass_conf['catalog1']['mass_bins'],
+            bins2=mass_conf['catalog2']['mass_bins'],
+            **{k:mass_conf[k] for k in ('matching_type', 'log_mass', 'xlabel', 'ylabel')},
+            fig_kwargs={'figsize': mass_conf['figsize']},
+            )
+        plt.savefig(f'{mass_name}_metrics.png', dpi=mass_conf['dpi'])
+        plt.close(fig)
+    if any(case in mass_conf['plot_case'] for case in ('density_metrics', 'all')):
+        print(f"\n# Mass density metrics")
+        fig, axes = scaling.mass_density_metrics(c1, c2, **kwargs,
+            bins1=mass_conf['catalog1']['mass_bins'],
+            bins2=mass_conf['catalog2']['mass_bins'],
+            ax_rotation=mass_conf['ax_rotation'],
+            rotation_resolution=mass_conf['rotation_resolution'],
+            fig_kwargs={'figsize': mass_conf['figsize']},
+            )
+        plt.savefig(f'{mass_name}_density_metrics.png', dpi=mass_conf['dpi'])
+        plt.close(fig)
     for i in ('1', '2'):
         mass_conf_cat = mass_conf[f'catalog{i}']
         # z Color Plot

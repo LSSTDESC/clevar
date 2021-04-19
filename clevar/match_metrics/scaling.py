@@ -8,7 +8,7 @@ from matplotlib.ticker import ScalarFormatter, NullFormatter
 import pylab as plt
 import numpy as np
 
-from ..utils import none_val, autobins
+from ..utils import none_val, autobins, binmasks
 from ..match import MatchedPairs
 from . import plot_helper as ph
 
@@ -432,12 +432,240 @@ class ArrayFuncs():
             ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
             plt_kwargs=plt_kwargs, err_kwargs=err_kwargs,
             )
+    def _plot_metrics(values1, values2, bins=30, mode='redshift', ax=None,
+                      bias_kwargs={}, scat_kwargs={}, rotated=False):
+        """
+        Plot metrics of 1 component.
+
+        Parameters
+        ----------
+        values1: array
+            Component 1
+        values2: array
+            Component 2
+        bins: array, int
+            Bins for component 1
+        mode: str
+            Mode to run. Options are:
+            simple - used simple difference
+            redshift - metrics for (values2-values1)/(1+values1)
+            log - metrics for log of values
+        ax: matplotlib.axes
+            Ax to add plot
+        bias_kwargs: dict
+            Arguments for bias plot. Used in pylab.plot
+        scat_kwargs: dict
+            Arguments for scatter plot. Used in pylab.fill_between
+        rotated: bool
+            Rotate ax of plot
+
+        Returns
+        -------
+        ax: matplotlib.axes
+            Axis of the plot
+        """
+        edges1 = autobins(values1, bins, log=mode=='log')
+        bmask = np.array(binmasks(values1, edges1))
+        safe = [m[m].size>1 for m in bmask]
+        diff = {
+            'simple': lambda v1, v2: v2-v1,
+            'redshift': lambda v1, v2: (v2-v1)/(1+v1),
+            'log': lambda v1, v2: np.log10(v2)-np.log10(v1)
+            }[mode](values1, values2)
+        edges1 = np.log10(edges1) if mode=='log' else edges1
+        values1_mid = 0.5*(edges1[1:]+edges1[:-1])
+        values1_mid = 10**values1_mid if mode=='log' else values1_mid
+        values1_mid = values1_mid[safe]
+        bias, scat = np.array([[f(diff[m]) for m in bmask[safe]] for f in (np.mean, np.std)])
+        # set for rotation
+        ax = plt.axes() if ax is None else ax
+        ph.add_grid(ax)
+        bias_args = (bias, values1_mid) if rotated else (values1_mid, bias)
+        scat_func = ax.fill_betweenx if rotated else ax.fill_between
+        set_scale = ax.set_yscale if rotated else ax.set_xscale
+        # plot
+        bias_kwargs_ = {'color':'C0'}
+        bias_kwargs_.update(bias_kwargs)
+        scat_kwargs_ = {'alpha':.3, 'color':'C1'}
+        scat_kwargs_.update(scat_kwargs)
+        ax.plot(*bias_args, **bias_kwargs_)
+        scat_func(values1_mid, -scat, scat, **scat_kwargs_)
+        return ax
+    def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
+                     bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
+                     legend_kwargs={}):
+        """
+        Plot metrics of 1 component.
+
+        Parameters
+        ----------
+        values1: array
+            Component 1
+        values2: array
+            Component 2
+        bins1: array, int
+            Bins for component 1
+        bins2: array, int
+            Bins for component 2
+        mode: str
+            Mode to run. Options are:
+            simple - used simple difference
+            redshift - metrics for (values2-values1)/(1+values1)
+            log - metrics for log of values
+        bias_kwargs: dict
+            Arguments for bias plot. Used in pylab.plot
+        scat_kwargs: dict
+            Arguments for scatter plot. Used in pylab.fill_between
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        legend_kwargs: dict
+            Additional arguments for plt.legend
+
+        Returns
+        -------
+        ax: matplotlib.axes
+            Axis of the plot
+        """
+        fig_kwargs_ = dict(figsize=(8, 6))
+        fig_kwargs_.update(fig_kwargs)
+        f, axes = plt.subplots(2, **fig_kwargs_)
+        # default args
+        bias_kwargs_ = {'label':'bias'}
+        bias_kwargs_.update(bias_kwargs)
+        scat_kwargs_ = {'label':'scatter'}
+        scat_kwargs_.update(scat_kwargs)
+        ArrayFuncs._plot_metrics(values1, values2, bins=bins1, mode=mode, ax=axes[0],
+                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_)
+        ArrayFuncs._plot_metrics(values2, values1, bins=bins2, mode=mode, ax=axes[1],
+                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_)
+        axes[0].legend(**legend_kwargs)
+        axes[0].xaxis.tick_top()
+        axes[0].xaxis.set_label_position('top')
+        return f, axes
+
+    def plot_density_metrics(values1, values2, bins1=30, bins2=30,
+        ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
+        err1=None, err2=None, metrics_mode='simple', plt_kwargs={}, add_cb=True, cb_kwargs={},
+        err_kwargs={}, bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
+        fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02),
+        ):
+        """
+        Scatter plot with errorbars and color based on point density with scatter and bias panels
+
+        Parameters
+        ----------
+        values1: array
+            Component 1
+        values2: array
+            Component 2
+        bins1: array, int
+            Bins for component 1
+        bins2: array, int
+            Bins for component 2
+        ax_rotation: float
+            Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        rotation_resolution: int
+            Number of bins to be used when ax_rotation!=0.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
+        err1: array
+            Error of component 1
+        err2: array
+            Error of component 2
+        metrics_mode: str
+            Mode to run. Options are:
+            simple - used simple difference
+            redshift - metrics for (values2-values1)/(1+values1)
+            log - metrics for log of values
+        plt_kwargs: dict
+            Additional arguments for pylab.scatter
+        add_cb: bool
+            Plot colorbar
+        cb_kwargs: dict
+            Colorbar arguments
+        err_kwargs: dict
+            Additional arguments for pylab.errorbar
+        bias_kwargs: dict
+            Arguments for bias plot. Used in pylab.plot
+        scat_kwargs: dict
+            Arguments for scatter plot. Used in pylab.fill_between
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        fig_pos: tuple
+            List with edges for the figure. Must be in format (left, bottom, right, top)
+        fig_frac: tuple
+            Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+            and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+        Returns
+        -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
+        list
+            Axes with the panels (main, right, top, label)
+        """
+        fig_kwargs_ = dict(figsize=(8, 6))
+        fig_kwargs_.update(fig_kwargs)
+        fig = plt.figure(**fig_kwargs_)
+        left, bottom, right, top = fig_pos
+        frac, gap, cb = fig_frac
+        cb = cb if add_cb else 0
+        xmain, xgap, xpanel = (right-left)*np.array([frac, gap, 1-frac-gap-cb])
+        ymain, ygap, ypanel, ycb = (top-bottom)*np.array([frac, gap, 1-frac-gap-cb, cb-gap])
+        ax_m = fig.add_axes([left, bottom, xmain, ymain]) # main
+        ax_v = fig.add_axes([left+xmain+xgap, bottom, xpanel, ymain]) # right
+        ax_h = fig.add_axes([left, bottom+ymain+ygap, xmain, ypanel]) # top
+        ax_l = fig.add_axes([left+xmain+xgap, bottom+ymain+ygap, xpanel, ypanel]) # label
+        ax_cb = fig.add_axes([left, bottom+ymain+2*ygap+ypanel, xmain+xgap+xpanel, ycb])\
+                    if add_cb else None
+        # Main plot
+        cb_kwargs_ = {'cax': ax_cb, 'orientation': 'horizontal'}
+        cb_kwargs_.update(cb_kwargs)
+        ArrayFuncs.plot_density(values1, values2, bins1=bins1, bins2=bins2,
+            ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
+            xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=ax_m,
+            plt_kwargs=plt_kwargs, add_cb=add_cb, cb_kwargs=cb_kwargs_,
+            err_kwargs=err_kwargs)
+        if add_cb:
+            ax_cb.xaxis.tick_top()
+            ax_cb.xaxis.set_label_position('top')
+        # Metrics plot
+        bias_kwargs_ = {'label':'bias'}
+        bias_kwargs_.update(bias_kwargs)
+        scat_kwargs_ = {'label':'scatter'}
+        scat_kwargs_.update(scat_kwargs)
+        ArrayFuncs._plot_metrics(values1, values2, bins=bins1, mode=metrics_mode, ax=ax_h,
+                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_)
+        ArrayFuncs._plot_metrics(values2, values1, bins=bins2, mode=metrics_mode, ax=ax_v,
+                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
+                                 rotated=True)
+        # Adjust plots
+        ax_l.legend(ax_v.collections+ax_v.lines, ['$\sigma$', '$bias$'])
+        ax_m.set_xscale(xscale)
+        ax_m.set_yscale(yscale)
+        # Horizontal
+        ax_h.set_xscale(xscale)
+        ax_h.set_xlim(ax_m.get_xlim())
+        ax_h.xaxis.set_minor_formatter(NullFormatter())
+        ax_h.xaxis.set_major_formatter(NullFormatter())
+        # Vertical
+        ax_v.set_yscale(yscale)
+        ax_v.set_ylim(ax_m.get_ylim())
+        ax_v.yaxis.set_minor_formatter(NullFormatter())
+        ax_v.yaxis.set_major_formatter(NullFormatter())
+        # Label
+        ax_l.axis('off')
+        return fig, [ax_m, ax_v, ax_h, ax_l]
+
 class ClCatalogFuncs():
     """
     Class of plot functions with clevar.ClCatalog as inputs.
     Plot labels and scales are configured by this class.
     """
-    class_args = ('xlabel', 'ylabel', 'xscale', 'yscale', 'add_err')
+    class_args = ('xlabel', 'ylabel', 'xscale', 'yscale', 'add_err',
+                  'label1', 'label2', 'scale1', 'scale2')
     def _prep_kwargs(cat1, cat2, matching_type, col, kwargs):
         """
         Prepare kwargs into args for this class and args for function
@@ -833,10 +1061,10 @@ class ClCatalogFuncs():
 
         Returns
         -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
         ax: matplotlib.axes
             Axis of the plot
-        matplotlib.colorbar.Colorbar (optional)
-            Colorbar of the recovey rates. Only returned if add_cb=True.
         """
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
@@ -851,8 +1079,6 @@ class ClCatalogFuncs():
 
         Parameters
         ----------
-        pltfunc: function
-            ArrayFuncs function
         cat1: clevar.ClCatalog
             ClCatalog with matching information
         cat2: clevar.ClCatalog
@@ -915,10 +1141,10 @@ class ClCatalogFuncs():
 
         Returns
         -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
         ax: matplotlib.axes
             Axis of the plot
-        matplotlib.colorbar.Colorbar (optional)
-            Colorbar of the recovey rates. Only returned if add_cb=True.
         """
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
@@ -927,6 +1153,142 @@ class ClCatalogFuncs():
         fig, axes = ArrayFuncs.plot_density_panel(**f_kwargs)
         ph.nice_panel(axes, **cl_kwargs)
         return fig, axes
+    def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
+        """
+        Plot metrics.
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
+        matching_type: str
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+        col: str
+            Name of column to be plotted
+        bins1: array, int
+            Bins for catalog 1
+        bins2: array, int
+            Bins for catalog 2
+        mode: str
+            Mode to run. Options are:
+            simple - used simple difference
+            redshift - metrics for (values2-values1)/(1+values1)
+            log - metrics for log of values
+
+        Other parameters
+        ----------------
+        bias_kwargs: dict
+            Arguments for bias plot. Used in pylab.plot
+        scat_kwargs: dict
+            Arguments for scatter plot. Used in pylab.fill_between
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        legend_kwargs: dict
+            Additional arguments for plt.legend
+        label1: str
+            Label of component from catalog 1.
+        label2: str
+            Label of component from catalog 2.
+        scale1: str
+            Scale of component from catalog 1.
+        scale2: str
+            Scale of component from catalog 2.
+
+        Returns
+        -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
+        ax: matplotlib.axes
+            Axis of the plot
+        """
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs.pop('err1', None)
+        f_kwargs.pop('err2', None)
+        fig, axes = ArrayFuncs.plot_metrics(**f_kwargs)
+        axes[0].set_ylabel(cat1.name)
+        axes[1].set_ylabel(cat2.name)
+        axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
+        axes[1].set_xlabel(kwargs.get('label2', cl_kwargs['ylabel']))
+        axes[0].set_xscale(kwargs.get('scale1', cl_kwargs['xscale']))
+        axes[1].set_xscale(kwargs.get('scale2', cl_kwargs['yscale']))
+        return fig, axes
+    def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
+        """
+        Scatter plot with errorbars and color based on point density with scatter and bias panels
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
+        matching_type: str
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+        col: str
+            Name of column to be plotted
+        bins1: array, int
+            Bins for component 1
+        bins2: array, int
+            Bins for component 2
+        metrics_mode: str
+            Mode to run. Options are:
+            simple - used simple difference
+            redshift - metrics for (values2-values1)/(1+values1)
+            log - metrics for log of values
+        add_err: bool
+            Add errorbars
+
+        Other parameters
+        ----------------
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        ax_rotation: float
+            Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        rotation_resolution: int
+            Number of bins to be used when ax_rotation!=0.
+        plt_kwargs: dict
+            Additional arguments for pylab.scatter
+        add_cb: bool
+            Plot colorbar
+        cb_kwargs: dict
+            Colorbar arguments
+        err_kwargs: dict
+            Additional arguments for pylab.errorbar
+        bias_kwargs: dict
+            Arguments for bias plot. Used in pylab.plot
+        scat_kwargs: dict
+            Arguments for scatter plot. Used in pylab.fill_between
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
+        fig_pos: tuple
+            List with edges for the figure. Must be in format (left, bottom, right, top)
+        fig_frac: tuple
+            Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+            and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+        Returns
+        -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
+        list
+            Axes with the panels (main, right, top, label)
+        """
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
+        f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
+        fig, axes = ArrayFuncs.plot_density_metrics(**f_kwargs)
+        axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
+        axes[0].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
+        return fig, axes
+
+############################################################################################
+### Redshift Plots #########################################################################
+############################################################################################
+
 def redshift(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on input
@@ -1188,6 +1550,127 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
     return ClCatalogFuncs.plot_density_panel(cat1, cat2, matching_type, col='z',
             col_panel='mass', bins_panel=mass_bins, log_panel=log_mass,
             **kwargs)
+def redshift_metrics(cat1, cat2, matching_type, **kwargs):
+    """
+    Plot metrics.
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+    bins1: array, int
+        Bins for catalog 1
+    bins2: array, int
+        Bins for catalog 2
+    mode: str
+        Mode to run (default=redshit). Options are:
+        simple - used simple difference
+        redshift - metrics for (values2-values1)/(1+values1)
+        log - metrics for log of values
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    bias_kwargs: dict
+        Arguments for bias plot. Used in pylab.plot
+    scat_kwargs: dict
+        Arguments for scatter plot. Used in pylab.fill_between
+    legend_kwargs: dict
+        Additional arguments for plt.legend
+    label1: str
+        Label of component from catalog 1.
+    label2: str
+        Label of component from catalog 2.
+    scale1: str
+        Scale of component from catalog 1.
+    scale2: str
+        Scale of component from catalog 2.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    ax: matplotlib.axes
+        Axis of the plot
+    """
+    mode = kwargs.pop('mode', 'redshift')
+    return ClCatalogFuncs.plot_metrics(cat1, cat2, matching_type, col='z', mode=mode,
+                                       **kwargs)
+def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
+    """
+    Scatter plot with errorbars and color based on point density with scatter and bias panels
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+    col: str
+        Name of column to be plotted
+    bins1: array, int
+        Bins for component 1
+    bins2: array, int
+        Bins for component 2
+    metrics_mode: str
+        Mode to run (default=redshit). Options are:
+        simple - used simple difference
+        redshift - metrics for (values2-values1)/(1+values1)
+        log - metrics for log of values
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    ax_rotation: float
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+    rotation_resolution: int
+        Number of bins to be used when ax_rotation!=0.
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict
+        Colorbar arguments
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    bias_kwargs: dict
+        Arguments for bias plot. Used in pylab.plot
+    scat_kwargs: dict
+        Arguments for scatter plot. Used in pylab.fill_between
+    xscale: str
+        Scale xaxis.
+    yscale: str
+        Scale yaxis.
+    fig_pos: tuple
+        List with edges for the figure. Must be in format (left, bottom, right, top)
+    fig_frac: tuple
+        Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+        and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    list
+        Axes with the panels (main, right, top, label)
+    """
+    metrics_mode = kwargs.pop('metrics_mode', 'redshift')
+    return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='z',
+        metrics_mode=metrics_mode, **kwargs)
+
+############################################################################################
+### Mass Plots #############################################################################
+############################################################################################
 def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on input
@@ -1217,10 +1700,6 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Label of x axis.
     ylabel: str
         Label of y axis.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
 
     Returns
     -------
@@ -1463,3 +1942,122 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             **kwargs)
+def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
+    """
+    Plot metrics.
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+    log_mass: bool
+        Log scale for mass
+    bins1: array, int
+        Bins for catalog 1
+    bins2: array, int
+        Bins for catalog 2
+    mode: str
+        Mode to run (default=log). Options are:
+        simple - used simple difference
+        redshift - metrics for (values2-values1)/(1+values1)
+        log - metrics for log of values
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    bias_kwargs: dict
+        Arguments for bias plot. Used in pylab.plot
+    scat_kwargs: dict
+        Arguments for scatter plot. Used in pylab.fill_between
+    legend_kwargs: dict
+        Additional arguments for plt.legend
+    label1: str
+        Label of component from catalog 1.
+    label2: str
+        Label of component from catalog 2.
+    scale1: str
+        Scale of component from catalog 1.
+    scale2: str
+        Scale of component from catalog 2.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    ax: matplotlib.axes
+        Axis of the plot
+    """
+    mode = kwargs.pop('mode', 'log')
+    return ClCatalogFuncs.plot_metrics(cat1, cat2, matching_type, col='mass', mode=mode,
+            xscale='log' if log_mass else 'linear',
+            yscale='log' if log_mass else 'linear',
+            **kwargs)
+def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
+    """
+    Scatter plot with errorbars and color based on point density with scatter and bias panels
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+    log_mass: bool
+        Log scale for mass
+    bins1: array, int
+        Bins for component 1
+    bins2: array, int
+        Bins for component 2
+    metrics_mode: str
+        Mode to run (default=log). Options are:
+        simple - used simple difference
+        redshift - metrics for (values2-values1)/(1+values1)
+        log - metrics for log of values
+    add_err: bool
+        Add errorbars
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    ax_rotation: float
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+    rotation_resolution: int
+        Number of bins to be used when ax_rotation!=0.
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict
+        Colorbar arguments
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    bias_kwargs: dict
+        Arguments for bias plot. Used in pylab.plot
+    scat_kwargs: dict
+        Arguments for scatter plot. Used in pylab.fill_between
+    fig_pos: tuple
+        List with edges for the figure. Must be in format (left, bottom, right, top)
+    fig_frac: tuple
+        Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+        and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    list
+        Axes with the panels (main, right, top, label)
+    """
+    metrics_mode = kwargs.pop('metrics_mode', 'log')
+    return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='mass',
+            xscale='log' if log_mass else 'linear',
+            yscale='log' if log_mass else 'linear',
+            metrics_mode=metrics_mode, **kwargs)
