@@ -118,7 +118,7 @@ class ProximityMatch(Match):
                 delta, mtyp = str2dataunit(in_rad_unit[1:], ['b', 'c'],
                     err_msg=f"Mass unit ({in_rad_unit}) must be in format 'm#b' (background) or 'm#c' (critical)")
                 in_rad = cosmo.eval_mass2radius(in_rad, cat['z'], delta,
-                            mass_type={'b':'backgoung', 'c':'critical'}[mtyp])
+                            mass_type={'b':'background', 'c':'critical'}[mtyp])
                 in_rad_unit = 'mpc'
         else:
             print('* ang radius from set scale')

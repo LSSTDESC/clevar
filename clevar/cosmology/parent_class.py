@@ -248,11 +248,11 @@ class Cosmology:
         float, array
             Radius in Mpc
         """
-        rho = const.RHOCRIT.value*self['h'] # Critical density in Msun/Mpc^3
+        rho = const.RHOCRIT.value*self['h']**2*self.get_E2(z) # Critical density in Msun/Mpc^3
         if mass_type=='background':
             rho *= self.get_Omega_m(z)
         elif mass_type=='critical':
-            rho *= self.get_E2(z)
+            pass
         else:
             raise ValueError(f"mass_type '{mass_type}' must be background or critical")
         return (3*mass/(4.*delta*np.pi*rho))**(1./3.)
