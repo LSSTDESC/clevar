@@ -19,6 +19,7 @@ ClEvaR requires Python version 3.6 or later.  ClEvaR has the following dependenc
 - `numpy <http://www.numpy.org/>`_: 1.17 or later
 - `scipy <http://www.scipy.org/>`_: 1.3 or later
 - `astropy <https://www.astropy.org/>`_: 3.x or later
+- `healpy <https://healpy.readthedocs.io/en/latest/>`_: 1.14 or later (for footprint computations)
 - `matplotlib <https://matplotlib.org/>`_
 
 These are pip installable::
@@ -26,7 +27,7 @@ These are pip installable::
   pip install numpy scipy astropy matplotlib
 
 
-For the theoretical predictions of the signal, ClEvaR relies on existing libraries and **at least one of the following must be installed as well**:
+For comological computations, ClEvaR can use `astropy` or one of the following libraries (that must be installed):
 
 - `CCL <https://ccl.readthedocs.io/en/v2.0.0/>`_
 
