@@ -1,7 +1,7 @@
 # Cluster Evalutaion Resources (ClEvaR)
 [![Build and Check](https://github.com/LSSTDESC/clevar/workflows/Build%20and%20Check/badge.svg)](https://github.com/LSSTDESC/clevar/actions?query=workflow%3A%22Build+and+Check%22)
 [![Coverage Status](https://coveralls.io/repos/github/LSSTDESC/clevar/badge.svg?branch=main)](https://coveralls.io/github/LSSTDESC/clevar?branch=main)
-Library to validate cluster detection
+Library to validate cluster detection. A detailed documentation of the code can be found at [https://lsstdesc.org/clevar](https://lsstdesc.org/clevar).
 
 # Contriutors
 * [Michel Aguena](https://github.com/m-aguena) (LAPP / LIneA)
