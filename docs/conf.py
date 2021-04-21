@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 from unittest.mock import MagicMock
 
-MOCK_MODULES = []
+MOCK_MODULES = ['pyccl']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = MagicMock()
 
@@ -30,7 +30,7 @@ if on_rtd:
             return MagicMock()
 
     # For these modules, do a mock import
-    MOCK_MODULES = []
+    MOCK_MODULES = ['pyccl']
     sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- Load the version number ----------------------------------------------
