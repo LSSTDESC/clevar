@@ -1,7 +1,7 @@
 # Using `ClEvaR` as an executable
 
 `ClEvaR` can be used directly from the command line with `yml` configuration files.
-Some examples of config files can be found in the [demo](https://github.com/LSSTDESC/clevar/tree/main/demo) directory.
+Some examples of config files can be found in the [demo](demo/) directory.
 
 * [Main readme](README.md)
 
@@ -76,7 +76,7 @@ To plot each of the possible metrics of the matching, use the following commands
 ## Configuration file <a name="config"></a>
 
 All operations with command line require a `yml` configuration file.
-There is a example of a configuration file in [demo/config.yml](https://github.com/LSSTDESC/clevar/blob/main/demo/config.yml).
+There is a example of a configuration file in [demo/config.yml](demo/config.yml).
 Each different section of this file is described here.
 The main sections of this file are:
 
@@ -125,7 +125,7 @@ Configuration of input catalogs:
 Configuration for proximity matching.
 If you want a multi-step matching, add more sections with the prefix `proximity_match`.
 Each section name must be different or they will be overwritten.
-There is a example of a configuration file with multi-steps in [demo/config_2steps.yml](https://github.com/LSSTDESC/clevar/blob/main/demo/config_2steps.yml).
+There is a example of a configuration file with multi-steps in [demo/config_2steps.yml](demo/config_2steps.yml).
 
 * `which_radius` - Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
 * `type` - Options are cross, cat1, cat2.
