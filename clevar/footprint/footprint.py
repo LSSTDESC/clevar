@@ -18,16 +18,10 @@ class Footprint():
         Heapix NSIDE
     nest: bool
         If ordering is nested
-    pixels: array
-        Pixels inside the footprint
-    detfrac: array
-        Detection fraction
-    zmax: array
-        Zmax
-    detfrac_map: None, array
-        Map of Detection fraction, added by add_maps function
-    zmax_map: None, array
-        Map of Zmax, added by add_maps function
+    data: clevar.ClData
+        Data with columns: pixel, detfrac, zmax
+    pixel_dict: dict
+        Dictionary to point to pixel in data
     '''
     def __init__(self, *args, **kargs):
         '''
@@ -124,7 +118,7 @@ class Footprint():
 
         Returns
         -------
-        mask, mask
+        ndarray
             Arrays of booleans of objects in footprint
         '''
         pixels = hp.ang2pix(self.nside, ra, dec, nest=self.nest, lonlat=True)
@@ -202,7 +196,7 @@ class Footprint():
     def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
                              aperture_radius, aperture_radius_unit, cosmo=None):
         '''
-        Cover fraction with NFW 2D flatcore window
+        Cover fraction with NFW 2D flatcore window. It is computed using:
 
         Parameters
         ----------
@@ -232,8 +226,15 @@ class Footprint():
                                                                        cl_radius_mpc, cosmo))
     def get_coverfrac(self, cl_ra, cl_dec, cl_z, aperture_radius, aperture_radius_unit,
                       cosmo=None, wtfunc=lambda pixels, sk: np.ones(len(pixels))):
-        '''
-        Get cover fraction
+        r'''
+        Get cover fraction with a given window.
+
+        .. math::
+            CF(R) = \frac{\sum_{i\in{r_i<R}}w(r_i)df(r_i)}{\sum_{i\in{r_i<R}}w(r_i)}
+
+        where the index `i` represents pixels of the footprint,
+        :math:`R` is the aperture radius to be considered
+        and :math:`w` is the window function.
 
         Parameters
         ----------
@@ -262,8 +263,15 @@ class Footprint():
                                    cosmo=cosmo, wtfunc=wtfunc)
     def get_coverfrac_nfw2D(self, cl_ra, cl_dec, cl_z, cl_radius, cl_radius_unit,
                             aperture_radius, aperture_radius_unit, cosmo=None):
-        '''
-        Cover fraction with NFW 2D flatcore window
+        r'''
+        Cover fraction with NFW 2D flatcore window.
+
+        .. math::
+            CF(R) = \frac{\sum_{i\in{r_i<R}}w_{nfw}(r_i)df(r_i)}{\sum_{i\in{r_i<R}}w(r_i)}
+
+        where the index `i` represents pixels of the footprint,
+        :math:`R` is the aperture radius to be considered
+        and :math:`w_{nfw}` is the NFW 2D flatcore window function.
 
         Parameters
         ----------
@@ -287,6 +295,11 @@ class Footprint():
         Returns
         -------
         float
+
+        Notes
+        -----
+            The NFW 2D function was taken from section 3.1 of arXiv:1104.2089 and was
+            validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).
         '''
         return self._get_coverfrac_nfw2D(SkyCoord(cl_ra*u.deg, cl_dec*u.deg, frame='icrs'),
                                          cl_z, cl_radius, cl_radius_unit,

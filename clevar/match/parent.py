@@ -145,6 +145,7 @@ class Match():
             return abs(dat1['z']-dat2['z'])
     def cross_match(self, cat1):
         """Makes cross matches of catalog, requires unique matches to be done first.
+
         Parameters
         ----------
         cat1: clevar.ClCatalog
@@ -173,6 +174,15 @@ class Match():
     def load_matches(self, cat1, cat2, out_dir):
         """
         Load matching results to catalogs
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
+        out_dir: str
+            Path of directory with saved match files
         """
         cat1.load_match(f'{out_dir}/match1.fits')
         cat2.load_match(f'{out_dir}/match2.fits')

@@ -100,7 +100,7 @@ class Cosmology:
         r"""Gets hubble parameter squared (normalized at 0)
 
         .. math::
-            \frac{H(z)^{2}}{H_{0}^{2}}.
+            E^{2}(z) = \frac{H(z)^{2}}{H_{0}^{2}}.
 
         Parameters
         ----------
@@ -232,7 +232,12 @@ class Cosmology:
         return dist1/self.eval_da(redshift)
 
     def eval_mass2radius(self, mass, z, delta=200, mass_type='background'):
-        """Computes the radius from M_Delta critical using h in units
+        r"""Computes the radius from M_Delta
+
+        .. math::
+            R_{\Delta} = \left(\frac{3M_{\Delta}}{4\pi\Delta\rho}\right)^{1/3}
+
+        where :math:`\rho` can be background or matter.
 
         Parameters
         ----------

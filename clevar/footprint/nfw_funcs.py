@@ -3,26 +3,26 @@ import numpy as np
 
 def nfw2D_profile(R, Rc, Rs):
     '''
-    NFW 2D Profile
+    Approximation for NFW 2D Profile
 
     Parameters
     ----------
     R: array, float
-        Radius position on the profile in Mpc
+        Radius position on the profile in :math:`Mpc`
     Rc: float
         Central radius parameter of the profile
     Rs: float
-        Scale radius for normalization in Mpc
+        Scale radius for normalization in :math:`Mpc`
 
     Returns
     -------
     Sigma: array, float
-        Surface density in units of 1/Mpc^2
+        Surface density in units of :math:`1/Mpc^2`
 
     Notes
     -----
-        taken from Rykoff 2012 - section 3.1 & Bartelmann 1996 A&A
-        kNFW valid only for    Rs = 0.15/h # 0.214Mpc and Rcore = 0.1/h # 0.142Mpc
+        taken from section 3.1 of arXiv:1104.2089,
+        validated with Rs = 0.15 Mpc/h (0.214 :math:`Mpc`) and Rcore = 0.1 Mpc/h (0.142 :math:`Mpc`).
     '''
     x = R / Rs
     rho = np.log(Rc)
@@ -38,23 +38,23 @@ def nfw2D_profile(R, Rc, Rs):
     return Sigma
 def nfw2D_profile_flatcore(R, Rc, Rs, Rcore):
     '''
-    NFW 2D Profile with a top-hat core
+    Approximation for NFW 2D Profile with a top-hat core
 
     Parameters
     ----------
     R: array, float
-        Radius position on the profile in Mpc
+        Radius position on the profile in :math:`Mpc`
     Rc: float
         Central radius parameter of the profile
     Rs: float
-        Scale radius for normalization in Mpc
+        Scale radius for normalization in :math:`Mpc`
     Rc: float
-        Core radius of the profile in Mpc
+        Core radius of the profile in :math:`Mpc`
 
     Returns
     -------
     Sigma: array, float
-        Surface density in units of 1/Mpc^2
+        Surface density in units of :math:`1/Mpc^2`
     '''
     Sigma = nfw2D_profile(R, Rc, Rs)
     Sigma_core = nfw2D_profile(Rcore*np.ones(1), Rc, Rs)[0]
