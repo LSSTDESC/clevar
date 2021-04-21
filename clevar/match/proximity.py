@@ -58,13 +58,15 @@ class ProximityMatch(Match):
         cat: clevar.ClCatalog
             Input ClCatalog
         delta_z: float, string
-            Defines the zmin, zmax for matching. If 'cat' uses redshift properties of the catalog,
-            if 'spline.filename' interpolates data in 'filename' (z, zmin, zmax) fmt,
-            if float uses delta_z*(1+z),
-            if None does not use z.
+            Defines the zmin, zmax for matching. Options are:
+                `'cat'` - uses redshift properties of the catalog
+                `'spline.filename'` - interpolates data in 'filename' (z, zmin, zmax) fmt
+                `float` - uses delta_z*(1+z)
+                `None` - does not use z
         match_radius: string
-            Defines the radius for matching. If 'cat' uses the radius in the catalog,
-            else must be in format 'value unit'. (ex: '1 arcsec', '1 Mpc')
+            Defines the radius for matching. Options are:
+                `'cat'` - uses the radius in the catalog
+                `'value unit'` - used fixed value (ex: `1 arcsec`, `1 Mpc`)
         n_delta_z: float
             Number of delta_z to be used in the matching
         n_match_radius: float
