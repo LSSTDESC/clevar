@@ -13,7 +13,7 @@ Some examples of config files can be found in the [demo](https://github.com/LSST
  3. [Metrics of matching](#metrics)
 3. [Configuration file](#config)
  1. [cosmology](#config_cosmology)
- 2. [catalog1](and catalog2)](#config_cat)
+ 2. [catalog1 (and catalog2)](#config_cat)
  3. [proximity_match](#config_proximity_match)
  4. [masks](#config_mask)
  5. [match_metrics](#config_match_metrics)
@@ -22,7 +22,7 @@ Some examples of config files can be found in the [demo](https://github.com/LSST
   3. [Mass](#config_metics_mass)
   4. [redshift](#config_metics_redshift)
 
-## Loading `ClEvaR` environment <a name="environment"/a>
+## Loading `ClEvaR` environment <a name="environment"></a>
 
 The first step is to load the clevar functions into your environment using the `SOURCE_ME` file in the main directory of `ClEvaR`:
 
@@ -30,7 +30,7 @@ The first step is to load the clevar functions into your environment using the `
   source SOURCE_ME
 ```
 
-## Executing `ClEvaR` operations <a name="executing"/a>
+## Executing `ClEvaR` operations <a name="executing"></a>
 
 Once you sourced `ClEvaR` environment, you will be able to run its functions. All `ClEvaR` commands have a `clevar_` prefix and require a `.yml` configuration file.
 The examples below will assume you are using a confiration file named `config.yml`.
@@ -39,7 +39,7 @@ The examples below will assume you are using a confiration file named `config.ym
   clevar_<<function>> source SOURCE_ME
 ```
 
-### Matching catalogs <a name="matching"/a>
+### Matching catalogs <a name="matching"></a>
 
 Currently, only proximity matching is implemented in `ClEvaR`. To run this operation:
 
@@ -47,7 +47,7 @@ Currently, only proximity matching is implemented in `ClEvaR`. To run this opera
   clevar_match_proximity config.yml
 ```
 
-### Footprint application <a name="footprint"/a>
+### Footprint application <a name="footprint"></a>
 
 `ClEvaR` has inbuilt functionality to compute mask for the catalogs according to footprint criteria.
 For this operation, use:
@@ -62,7 +62,7 @@ It can also create a footprint based on cluster positions. This can be done usin
   clevar_artificial_footprint config.yml
 ```
 
-### Metrics of matching <a name="metrics"/a>
+### Metrics of matching <a name="metrics"></a>
 
 To plot each of the possible metrics of the matching, use the following commands:
 
@@ -73,9 +73,10 @@ To plot each of the possible metrics of the matching, use the following commands
   clevar_match_metrics_redshift config.yml
 ```
 
-## Configuration file <a name="config"/a>
+## Configuration file <a name="config"></a>
 
 All operations with command line require a `yml` configuration file.
+There is a example of a configuration file in [demo/config.yml](https://github.com/LSSTDESC/clevar/blob/main/demo/config.yml).
 Each different section of this file is described here.
 The main sections of this file are:
 
@@ -89,14 +90,14 @@ The main sections of this file are:
 
 Each configuration is detailed below.
 
-### cosmology <a name="config_cosmology"/a>
+### cosmology <a name="config_cosmology"></a>
 
 Configuration for comology package and parameters:
 
 * `backend` - Library for cosmology. Options are Astropy, CCL.
 * `parameters` - cosmological parameters.
 
-### catalog1 (and catalog2) <a name="config_cat"/a>
+### catalog1 (and catalog2) <a name="config_cat"></a>
 
 Configuration of input catalogs:
 
@@ -119,9 +120,12 @@ Configuration of input catalogs:
   * `detfrac_name` - Name of detfrac column of footprint. Use `None` if not existing.
   * `zmax_name` - Name of zmax column of footprint. Use `None` if not existing.
 
-### proximity_match <a name="config_proximity_match"/a>
+### proximity_match <a name="config_proximity_match"></a>
 
 Configuration for proximity matching.
+If you want a multi-step matching, add more sections with the prefix `proximity_match`.
+Each section name must be different or they will be overwritten.
+There is a example of a configuration file with multi-steps in [demo/config_2steps.yml](https://github.com/LSSTDESC/clevar/blob/main/demo/config_2steps.yml).
 
 * `which_radius` - Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
 * `type` - Options are cross, cat1, cat2.
@@ -133,7 +137,7 @@ Configuration for proximity matching.
   * `delta_z` - Defines the zmin, zmax for matching. If `cat` uses redshift properties of the catalog, if `spline.filename` interpolates data in `filename` (z, zmin, zmax) fmt, if `float` uses `delta_z*(1+z)`, if `None` does not use z.
   * `match_radius` - Radius to be used in the matching. If `cat` uses the radius in the catalog, else must be in format `value unit` (ex: `1 arcsec`, `1 Mpc`).
 
-### masks <a name="config_mask"/a>
+### masks <a name="config_mask"></a>
 
 Configuration to make masks for recovery rate computations.
 These configurations must be inside a section for the corresponding catalog (`catalog1` or `catalog2`):
@@ -149,7 +153,7 @@ These configurations must be inside a section for the corresponding catalog (`ca
 
 (\*) Each section name must be different or they will be overwritten.
 
-### match_metrics <a name="config_match_metrics"/a>
+### match_metrics <a name="config_match_metrics"></a>
 
 Configuration for the metric plots.
 There are two main parameters:
@@ -159,7 +163,7 @@ There are two main parameters:
 
 Each matching metrics operation are configured by subsections below.
 
-#### recovery <a name="config_metics_recovery"/a>
+#### recovery <a name="config_metics_recovery"></a>
 
 Configuration for recovery rate plots, main parameters are:
 
@@ -193,7 +197,7 @@ There are also configurations relative to each catalog that must be inside the c
 
 (\*) Each section name must be different or they will be overwritten.
 
-#### distances <a name="config_metics_distances"/a>
+#### distances <a name="config_metics_distances"></a>
 
 Configuration for distances of matched clusters, main parameters are:
 
@@ -217,7 +221,7 @@ There are also configurations relative to each catalog that must be inside the c
 * `add_mass_label` - Add labels and legends of mass bins.
 * `add_redshift_label` - Add labels and legends of redshift bins.
 
-#### mass <a name="config_metics_mass"/a>
+#### mass <a name="config_metics_mass"></a>
 
 Configuration for mass scaling relation, main parameters are:
 
@@ -237,7 +241,7 @@ There are also configurations relative to each catalog that must be inside the c
 * `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
 * `mass_bins` - Mass bins for density colors. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
 
-#### redshift - # Scaling relation <a name="config_metics_redshift"/a>
+#### redshift - # Scaling relation <a name="config_metics_redshift"></a>
 
 Configuration for mass scaling relation, main parameters are:
 
