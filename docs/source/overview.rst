@@ -1,55 +1,111 @@
 ******************
 Rapid overview
 ******************
-CLMM is a tool to estimate cluster masses from weak lensing data. 
-CLMM provides the initial building blocks for an end-to-end cluster weak 
-lensing pipeline that can be validated on mock data and run on real data 
-from LSST or other telescopes.
+ClEvaR provides a framework for easy matching of catalogs,
+and computation of the main metrics and scaling relations.
+This library has been developed in the LSST context,
+but can also be used with any set of catalogs.
 
-It is based on a data operations package to prepare the data vector, 
-a theory package to predict the signal from cluster properties and also 
-includes ways to generate mock catalogs of various complexity levels.
-A set of examples is also provided, ranging from demos of base functionalities 
-to end-to-end WL mass estimations. All are available in the `examples` folder of the project and some have been included in
-this documentation (see below).
+ClEvaR can be used as a python library for flexible use in scritps and notebooks,
+or as a command line executable.
+The executable mode is configured by an input `yaml` file and does not require a knowledge of the inner structure of the code.
+Details for this use can be found `here <https://github.com/LSSTDESC/clevar/blob/main/CLEVAR_EXE.md>`.
 
-The `GalaxyCluster` object
-==========================
+The code was developed with a object oriented design for easy integration with other libraries.
+It has specific objects for the catalogs, footprints, catalog matching, cosmology and functions for metrics and scaling relations.
+The cosmology object has a backend that can use either `astropy` or `CCL <https://github.com/LSSTDESC/CCL>`,
+with a possibility of adding others.
+A set of notebooks showing the different application of ClEvaR can be found in the
+`examples <https://github.com/LSSTDESC/clevar/blob/main/examples/>`
+folder of the project.
 
-The Galaxy cluster object is the core data structure in CLMM. It contains at least
- * The galaxy cluster metadata (unique_id, ra, dec, z)
- * A table of background galaxies: astropy Table containing at least for each galaxy galaxy_id, ra, dec, e1, e2, z
- * Additional attributes (e.g. binned radial shear profiles) are then added to the GalaxyCluster object at various steps of the analysis.
+The `ClCatalog` object
+======================
 
-Weak lensing signal measurement with the `dataops` package
-============================================================
+The `ClCatalog` object is the main data structure for cluster catalogs, holding the input and matching data,
+with some inbuilt functionality to facilitate the matching and footprint related processes.
+It contains:
+* The catalog name
+* A table with the input information (id, ra, dec, z, mass, radius), where matching information will be added.
+* A internal data with matching input information.
+* A dictionary for easy lookup of cluster by id in the main table.
+* Unit of the cluster radius (optional).
+* Customized labels of the catalog columns to be used in plots (optional).
 
-All the functions of the `dataops` package are also methods of the `GalaxyCluster` object. In a nutshell, the main functions are:
- * `compute_tangential_and_cross_components` calculates tangential shear, cross shear, and angular separation of each source galaxy relative to the (ra, dec) coordinates of the center of the cluster.
- * `make_radial_profile` averages the tangential and cross shear of galaxies in user-defined bins and support bins in rad, deg, arcmin, arcsec, kpc, or Mpc. The latter are easily generated thanks to the make_bins function.
+The `Matching` objects
+======================
 
-See `demo_dataops_functionality.ipynb` to see all functionalities and possible options.
+There are several `Matching` objects (currently only `ProximityMatching`) constructed with
+a unified api for a more intuitive use.
 
-Profile models and cosmology with `theory` and `cosmology` packages
-=========================================================================
+The first step of the matching is done using the `prep_cat_for_match` function where the necessary
+matching preparations are added
+to each catalogs. Then the catalogs are matched using `multiple`,
+where all candidates that satisfy the matching criteria are stored in the catalogs.
+The `unique` function makes the selection for the best candidates
+and makes sure each matching is unique.
+Finally `cross_match` checks is the same pairs are found in both directions.
 
-The `theory` package holds modules for evaluating theoretical models, whatever backend (cluster-toolkit, CCL or NumCosmo) the user has chosen to use. All is transparent to the user, but some backend will support more functionality than others. The default, that all backends support, is to use an NFW density profile for the cluster, with a M200,m mass definition.
+Another option is to use `match_from_config`, where all steps above are made according to a input
+configutaion dictionary.
 
-Each theory backend relies on a cosmology object, of a different type, depending on the backend. The CLMM cosmology superclass wraps these various types of object to make it transparent for the user.
+These objects also have internal functions to save and load the matching information:
+`save_matches` , `load_matches`.
 
-Finally, the theory package has both a functional and object-oriented interface and these may be used whatever the selected theory backend.
+The `Cosmology` objects
+=======================
 
-See `examples/demo_theory_functionality.ipynb` and `examples/demo_theory_functionality_oo.ipynb` for detailed examples of the functional and object-oriented interfaces respectively.
+There are several `Cosmology` objects (`AstropyCosmology`, `CCLCosmology`) constructed with
+a unified api for a more intuitive use. These objects have the following functions used by `ClEvaR`:
 
+* `get_Omega_m` - Gets the value of the dimensionless matter density.
+* `get_E2` - Gets hubble parameter squared.
+* `eval_da_z1z2` - Computes the angular diameter distance between z1 and z2.
+* `eval_da` - Computes the angular diameter distance between 0.0 and z.
+* `rad2mpc` - Convert between radians and Mpc using the small angle approximation.
+* `mpc2rad` - Convert between Mpc and radians using the small angle approximation.
+* `eval_mass2radius` - Computes the radius from M_Delta.
 
-Mock data generation
-========================
+Metrics and scaling relation of matched catalogs
+================================================
 
-In order to test/develop the code but also help new users or scientists new to the field to explore some of the effects affecting cluster WL mass reconstruction, a CLMM module allows us to generate mock datasets from a variety of ingredients (w/wo shape noise, w/wo photoz errors, etc.).
+Once the catalogs have been matched, it is possible to plot some metrics of the matching
+and scaling relations of the catalogs quantities using the `match_metrics` package.
+This package has three main modules `recovery`, `distances` and `scaling`.
 
-See `examples/demo_generate_mock_cluster.ipynb` for all possible use cases.
+The `recovery` module is used to compute the recovery rates (completeness, purity) of each catalog.
+The main functions of this module take `ClCatalogs` as inputs with pre-fixed columns:
 
-Galaxy cluster mass estimation
-==================================
+* `get_recovery_rate` - Get recovery rate binned in 2 components.
+* `plot` - Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
+* `plot_panel` - Plot recovery rate as lines in panels, with each line binned by redshift and each panel is based on the data inside a mass bin.
+* `plot2D` - Plot recovery rate as in 2D (redshift, mass) bins.
 
-CLMM was not designed to provide an end-to-end mass estimation pipeline, but to provide the building blocks to do so. How to use these blocks to make a mass estimation is exemplified in a series of notebooks using either simple scipy tools for the minimization or Numcosmo's more sophisticated statistical framework. Look for the notebooks called `ExampleXX_Fit_Halo_Mass_to_Shear_Catalog*` in the examples folder, e.g, `examples/Example3_Fit_Halo_Mass_to_Shear_Catalog.ipynb`.
+The `distances` module is used to compute the recovery rates (completeness, purity) of each catalog.
+The main functions of this module take `ClCatalogs` as inputs with pre-fixed columns:
+
+* `central_position` - Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
+* `redshift` - Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
+
+The `scaling` module is used to compute scaling relations of matched clusters, with
+focus on mass (or mass proxy) and redshifts.
+The main functions of this module take `ClCatalogs` as inputs with pre-fixed columns:
+
+* `redshift` - Scatter plot with errorbars and color based on input.
+* `redshift_density` - Scatter plot with errorbars and color based on point density.
+* `redshift_masscolor` - Scatter plot with errorbars and color based on input.
+* `redshift_masspanel` - Scatter plot with errorbars and color based on input with panels.
+* `redshift_density_masspanel` - Scatter plot with errorbars and color based on point density with panels.
+* `redshift_metrics` - Plot metrics.
+* `redshift_density_metrics` - Scatter plot with errorbars and color based on point density with scatter and bias panels.
+* `mass` - Scatter plot with errorbars and color based on input.
+* `mass_zcolor` - Scatter plot with errorbars and color based on input.
+* `mass_density` - Scatter plot with errorbars and color based on point density.
+* `mass_zpanel` - Scatter plot with errorbars and color based on input with panels.
+* `mass_density_zpanel` - Scatter plot with errorbars and color based on point density with panels.
+* `mass_metrics` - Plot metrics.
+* `mass_density_metrics` - Scatter plot with errorbars and color based on point density with scatter and bias panels.
+
+Each of these modules have internal classes named `ArrayFunc` and `CatalogFuncs` that makes the plots
+based on arrays and `ClCatalogs` (with generic columns) respectively.
+These classes can be used for a more flexible application of these functions.
