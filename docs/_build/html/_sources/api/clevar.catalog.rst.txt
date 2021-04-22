@@ -1,0 +1,7 @@
+clevar.catalog module
+=====================
+
+.. automodule:: clevar.catalog
+   :members:
+   :undoc-members:
+   :show-inheritance:

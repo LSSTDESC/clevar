@@ -1,0 +1,7 @@
+clevar.yaml.footprint module
+============================
+
+.. automodule:: clevar.yaml.footprint
+   :members:
+   :undoc-members:
+   :show-inheritance:

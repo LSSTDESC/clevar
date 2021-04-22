@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.catalog module &mdash; ClEvaR 0.0.8 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="clevar.constants module" href="clevar.constants.html" />
+    <link rel="prev" title="API Documentation" href="../api.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+      <li>clevar.catalog module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/clevar.catalog.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-clevar.catalog">
+<span id="clevar-catalog-module"></span><h1>clevar.catalog module<a class="headerlink" href="#module-clevar.catalog" title="Permalink to this headline">¶</a></h1>
+<p>&#64;file catalog.py
+The ClCatalog and improved Astropy table classes</p>
+<dl class="py class">
+<dt id="clevar.catalog.ClCatalog">
+<em class="property">class </em><code class="sig-prename descclassname">clevar.catalog.</code><code class="sig-name descname">ClCatalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object to handle catalogs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – ClCatalog name</p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="#clevar.catalog.ClData" title="clevar.catalog.ClData"><em>ClData</em></a>) – Main catalog data (ex: id, ra, dec, z). Fixed values.
+Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)</p></li>
+<li><p><strong>mt_input</strong> (<em>object</em>) – Constains the necessary inputs for the match (added by Match objects)</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Number of objects in the catalog</p></li>
+<li><p><strong>id_dict</strong> (<em>dict</em>) – Dictionary of indicies given the cluster id</p></li>
+<li><p><strong>radius_unit</strong> (<em>str</em><em>, </em><em>None</em>) – Unit of the radius column</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.add_ftpt_coverfrac">
+<code class="sig-name descname">add_ftpt_coverfrac</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ftpt</span></em>, <em class="sig-param"><span class="n">aperture</span></em>, <em class="sig-param"><span class="n">aperture_unit</span></em>, <em class="sig-param"><span class="n">window</span><span class="o">=</span><span class="default_value">'flat'</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colname</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.add_ftpt_coverfrac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.add_ftpt_coverfrac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes and adds a cover fraction value. It considers zmax and detection fraction
+when available in the footprint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ftpt</strong> (<em>clevar.mask.Footprint object</em>) – Footprint used to compute the coverfration</p></li>
+<li><p><strong>ftpt_other</strong> (<em>clevar.mask.Footprint object</em>) – Footprint of the other catalog</p></li>
+<li><p><strong>raduis</strong> (<em>float</em>) – Radial aperture to compute the coverfraction</p></li>
+<li><p><strong>aperture_unit</strong> (<em>float</em>) – Unit of radial aperture</p></li>
+<li><p><strong>window</strong> (<em>str</em>) – Window to weight corverfrac. Options are: flat, nfw2D (with flat core)</p></li>
+<li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when aperture has physical units. Required if nfw2D window used.</p></li>
+<li><p><strong>colname</strong> (<em>str</em><em>, </em><em>None</em>) – Name of coverfrac column.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.add_ftpt_masks">
+<code class="sig-name descname">add_ftpt_masks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ftpt_self</span></em>, <em class="sig-param"><span class="n">ftpt_other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.add_ftpt_masks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.add_ftpt_masks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add masks based on the cluster position relative to both footprints.
+It also considers zmax values on the footprint if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ftpt_self</strong> (<em>clevar.mask.Footprint object</em>) – Footprint of this catalog</p></li>
+<li><p><strong>ftpt_other</strong> (<em>clevar.mask.Footprint object</em>) – Footprint of the other catalog</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.cross_match">
+<code class="sig-name descname">cross_match</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.cross_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.cross_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes cross matches, requires unique matches to be done first.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.get_matching_mask">
+<code class="sig-name descname">get_matching_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matching_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.get_matching_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.get_matching_mask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.ids2inds">
+<code class="sig-name descname">ids2inds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ids</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.ids2inds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.ids2inds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the indicies of objects given an id list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ids</strong> (<em>list</em>) – List of object ids</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.load_footprint_quantities">
+<code class="sig-name descname">load_footprint_quantities</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.load_footprint_quantities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.load_footprint_quantities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load matching results to catalogs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Name of file with matching results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.load_match">
+<code class="sig-name descname">load_match</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.load_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.load_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load matching results to catalogs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Name of file with matching results</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.remove_multiple_duplicates">
+<code class="sig-name descname">remove_multiple_duplicates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.remove_multiple_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.remove_multiple_duplicates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes duplicates in multiple match columns</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.save_footprint_quantities">
+<code class="sig-name descname">save_footprint_quantities</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.save_footprint_quantities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.save_footprint_quantities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the matching results of one catalog</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Name of file</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Overwrite saved files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.ClCatalog.save_match">
+<code class="sig-name descname">save_match</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.save_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.save_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the matching results of one catalog</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Name of file</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Overwrite saved files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="clevar.catalog.ClData">
+<em class="property">class </em><code class="sig-prename descclassname">clevar.catalog.</code><code class="sig-name descname">ClData</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">astropy.table.table.Table</span></code></p>
+<p>ClData: A data object. It behaves as an astropy table but case independent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta</strong> (<em>dict</em>) – Dictionary with metadata for this object</p></li>
+<li><p><strong>as astropy tables</strong> (<em>Same</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="clevar.catalog.ClData.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClData.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClData.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the column for key if key is in the dictionary, else default</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

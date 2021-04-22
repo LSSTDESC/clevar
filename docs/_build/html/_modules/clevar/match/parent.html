@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.match.parent &mdash; ClEvaR 0.0.8 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../match.html">clevar.match</a> &raquo;</li>
+        
+      <li>clevar.match.parent</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clevar.match.parent</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">..catalog</span> <span class="kn">import</span> <span class="n">ClData</span>
+
+<div class="viewcode-block" id="Match"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match">[docs]</a><span class="k">class</span> <span class="nc">Match</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Matching Class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="Match.prep_cat_for_match"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.prep_cat_for_match">[docs]</a>    <span class="k">def</span> <span class="nf">prep_cat_for_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare the catalog for matching, will fill the cat.mt_input object.</span>
+<span class="sd">        Each method must implement its specifics preparations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+<div class="viewcode-block" id="Match.multiple"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.multiple">[docs]</a>    <span class="k">def</span> <span class="nf">multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Makes multiple matchig</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            Base catalog</span>
+<span class="sd">        cat2: clevar.ClCatalog</span>
+<span class="sd">            Target catalog</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">            Not implemented in parent class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+<div class="viewcode-block" id="Match.unique"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.unique">[docs]</a>    <span class="k">def</span> <span class="nf">unique</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">preference</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Makes unique matchig, requires multiple matching to be made first</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            Base catalog</span>
+<span class="sd">        cat2: clevar.ClCatalog</span>
+<span class="sd">            Target catalog</span>
+<span class="sd">        preference: str</span>
+<span class="sd">            Preference to set best match</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">i_vals</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">preference</span><span class="o">==</span><span class="s1">&#39;more_massive&#39;</span><span class="p">:</span>
+            <span class="n">set_unique</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_mpref</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">)</span>
+            <span class="n">i_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">])]</span>
+        <span class="k">elif</span> <span class="n">preference</span><span class="o">==</span><span class="s1">&#39;angular_proximity&#39;</span><span class="p">:</span>
+            <span class="n">set_unique</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_apref</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="s1">&#39;angular_proximity&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">preference</span><span class="o">==</span><span class="s1">&#39;redshift_proximity&#39;</span><span class="p">:</span>
+            <span class="n">set_unique</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_match_apref</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="s1">&#39;redshift_proximity&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;preference must be &#39;more_massive&#39;, &#39;angular_proximity&#39; or &#39;redshift_proximity&#39;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">i_vals</span><span class="p">:</span>
+            <span class="n">set_unique</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_self&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Match.match_from_config"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.match_from_config">[docs]</a>    <span class="k">def</span> <span class="nf">match_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">match_config</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make matching of catalogs based on a configuration dictionary</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            ClCatalog 1</span>
+<span class="sd">        cat2: clevar.ClCatalog</span>
+<span class="sd">            ClCatalog 2</span>
+<span class="sd">        match_config: dict</span>
+<span class="sd">            Dictionary with the matching configuration.</span>
+<span class="sd">        cosmo: clevar.Cosmology object</span>
+<span class="sd">            Cosmology object for when radius has physical units</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">            Not implemented in parent class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    <span class="k">def</span> <span class="nf">_match_mpref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make the unique match by mass preference</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            Base catalog</span>
+<span class="sd">        i: int</span>
+<span class="sd">            Index of the cluster from cat1 to be matched</span>
+<span class="sd">        cat2: clevar.ClCatalog</span>
+<span class="sd">            Target catalog</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inds2</span> <span class="o">=</span> <span class="n">cat2</span><span class="o">.</span><span class="n">ids2inds</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inds2</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i2</span> <span class="ow">in</span> <span class="n">inds2</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">][</span><span class="n">inds2</span><span class="p">])]:</span>
+                <span class="k">if</span> <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span>
+                    <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">return</span>
+    <span class="k">def</span> <span class="nf">_match_apref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">MATCH_PREF</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make the unique match by angular (or redshift) distance preference</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            Base catalog</span>
+<span class="sd">        i: int</span>
+<span class="sd">            Index of the cluster from cat1 to be matched</span>
+<span class="sd">        cat2: clevar.ClCatalog</span>
+<span class="sd">            Target catalog</span>
+<span class="sd">        MATCH_PREF: str</span>
+<span class="sd">            Matching preference, can be &#39;angular_proximity&#39; or &#39;redshift_proximity&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inds2</span> <span class="o">=</span> <span class="n">cat2</span><span class="o">.</span><span class="n">ids2inds</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">dists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dist_mt</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cat2</span><span class="p">[</span><span class="n">inds2</span><span class="p">],</span> <span class="n">MATCH_PREF</span><span class="p">)</span>
+        <span class="n">sort_d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">dists</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">dist</span><span class="p">,</span> <span class="n">i2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">dists</span><span class="p">[</span><span class="n">sort_d</span><span class="p">],</span> <span class="n">inds2</span><span class="p">[</span><span class="n">sort_d</span><span class="p">]):</span>
+            <span class="n">i1_replace</span> <span class="o">=</span> <span class="n">cat1</span><span class="o">.</span><span class="n">id_dict</span><span class="p">[</span><span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]]</span> <span class="k">if</span> <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span> \
+                            <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">i1_replace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span>
+                <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">return</span>
+            <span class="k">elif</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dist_mt</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="n">i1_replace</span><span class="p">],</span> <span class="n">cat2</span><span class="p">[</span><span class="n">i2</span><span class="p">],</span> <span class="n">MATCH_PREF</span><span class="p">):</span>
+                <span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span>
+                <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_match_apref</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">i1_replace</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">MATCH_PREF</span><span class="p">)</span>
+                <span class="k">return</span>
+    <span class="k">def</span> <span class="nf">_get_dist_mt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dat1</span><span class="p">,</span> <span class="n">dat2</span><span class="p">,</span> <span class="n">MATCH_PREF</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get distance for matching preference</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dat1: clevar.ClData</span>
+<span class="sd">            Data of base catalog</span>
+<span class="sd">        dat2: clevar.ClData</span>
+<span class="sd">            Data of target catalog</span>
+<span class="sd">        MATCH_PREF: str</span>
+<span class="sd">            Matching preference, can be &#39;angular_proximity&#39; or &#39;redshift_proximity&#39;</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        bool</span>
+<span class="sd">            If there was a match</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">MATCH_PREF</span><span class="o">==</span><span class="s1">&#39;angular_proximity&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dat1</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span>
+                <span class="n">dat2</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">elif</span> <span class="n">MATCH_PREF</span><span class="o">==</span><span class="s1">&#39;redshift_proximity&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dat1</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">dat2</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="Match.cross_match"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.cross_match">[docs]</a>    <span class="k">def</span> <span class="nf">cross_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Makes cross matches of catalog, requires unique matches to be done first.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            Base catalog</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cat1</span><span class="o">.</span><span class="n">cross_match</span><span class="p">()</span></div>
+<div class="viewcode-block" id="Match.save_matches"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.save_matches">[docs]</a>    <span class="k">def</span> <span class="nf">save_matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the matching results</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            ClCatalog 1</span>
+<span class="sd">        cat2: clevar.ClCatalog</span>
+<span class="sd">            ClCatalog 2</span>
+<span class="sd">        out_dir: str</span>
+<span class="sd">            Path of directory to save output</span>
+<span class="sd">        overwrite: bool</span>
+<span class="sd">            Overwrite saved files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">out_dir</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;mkdir </span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">cat1</span><span class="o">.</span><span class="n">save_match</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">/match1.fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span>
+        <span class="n">cat2</span><span class="o">.</span><span class="n">save_match</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">/match2.fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Match.load_matches"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.load_matches">[docs]</a>    <span class="k">def</span> <span class="nf">load_matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load matching results to catalogs</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            ClCatalog 1</span>
+<span class="sd">        cat2: clevar.ClCatalog</span>
+<span class="sd">            ClCatalog 2</span>
+<span class="sd">        out_dir: str</span>
+<span class="sd">            Path of directory with saved match files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cat1</span><span class="o">.</span><span class="n">load_match</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">/match1.fits&#39;</span><span class="p">)</span>
+        <span class="n">cat2</span><span class="o">.</span><span class="n">load_match</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s1">/match2.fits&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+clevar.cosmology.astropy module
+===============================
+
+.. automodule:: clevar.cosmology.astropy
+   :members:
+   :undoc-members:
+   :show-inheritance:
