@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.match_metrics.plot_helper module &mdash; ClEvaR 0.0.8 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="clevar.match_metrics.recovery module" href="clevar.match_metrics.recovery.html" />
+    <link rel="prev" title="clevar.match_metrics.distances module" href="clevar.match_metrics.distances.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="clevar.match_metrics.html">clevar.match_metrics package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="clevar.match_metrics.html">clevar.match_metrics package</a> &raquo;</li>
+        
+      <li>clevar.match_metrics.plot_helper module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/clevar.match_metrics.plot_helper.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-clevar.match_metrics.plot_helper">
+<span id="clevar-match-metrics-plot-helper-module"></span><h1>clevar.match_metrics.plot_helper module<a class="headerlink" href="#module-clevar.match_metrics.plot_helper" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="clevar.match_metrics.plot_helper.add_grid">
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">add_grid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">major_lw</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">minor_lw</span><span class="o">=</span><span class="default_value">0.1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#add_grid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.add_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a grid to ax</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
+<li><p><strong>major_lw</strong> (<em>float</em>) – Line width of major axes</p></li>
+<li><p><strong>minor_lw</strong> (<em>float</em>) – Line width of minor axes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.plot_helper.add_panel_bin_label">
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">add_panel_bin_label</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">edges_lower</em>, <em class="sig-param">edges_higher</em>, <em class="sig-param">format_func=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#add_panel_bin_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.add_panel_bin_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds label with bin range on the top of panel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axes</strong> (<em>matplotlib.axes</em>) – Axes with the panels</p></li>
+<li><p><strong>edges_lower</strong> (<em>array</em>) – Lower values of bins</p></li>
+<li><p><strong>edges_higher</strong> (<em>array</em>) – Higher values of bins</p></li>
+<li><p><strong>format_func</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.plot_helper.get_bin_label">
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">get_bin_label</code><span class="sig-paren">(</span><em class="sig-param">edge_lower</em>, <em class="sig-param">edge_higher</em>, <em class="sig-param">format_func=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#get_bin_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.get_bin_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get label with bin range</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edge_lower</strong> (<em>float</em>) – Lower values of bin</p></li>
+<li><p><strong>edge_higher</strong> (<em>float</em>) – Higher values of bin</p></li>
+<li><p><strong>format_func</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Label of bin</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>srt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.plot_helper.get_density_colors">
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">get_density_colors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">xbins</span></em>, <em class="sig-param"><span class="n">ybins</span></em>, <em class="sig-param"><span class="n">ax_rotation</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rotation_resolution</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">xscale</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">yscale</span><span class="o">=</span><span class="default_value">'linear'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#get_density_colors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.get_density_colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get colors of point based on density</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array</em>) – Values for x coordinate</p></li>
+<li><p><strong>y</strong> (<em>array</em>) – Values for y coordinate</p></li>
+<li><p><strong>xbins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for x</p></li>
+<li><p><strong>ybins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for y</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of xbins, ybins</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>xscale</strong> (<em>str</em>) – Scale xaxis.</p></li>
+<li><p><strong>yscale</strong> (<em>str</em>) – Scale yaxis.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Density value at location of each point</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.plot_helper.nice_panel">
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">nice_panel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">axes</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xscale</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">yscale</span><span class="o">=</span><span class="default_value">'linear'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#nice_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.nice_panel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add nice labels and ticks to panel plot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axes</strong> (<em>array</em>) – Axes with the panels</p></li>
+<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
+<li><p><strong>xlabel</strong> (<em>str</em>) – Label of x axis.</p></li>
+<li><p><strong>ylabel</strong> (<em>str</em>) – Label of y axis.</p></li>
+<li><p><strong>xscale</strong> (<em>str</em>) – Scale xaxis.</p></li>
+<li><p><strong>yscale</strong> (<em>str</em>) – Scale yaxis.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>) – <cite>matplotlib.figure.Figure</cite> object</p></li>
+<li><p><strong>axes</strong> (<em>array</em>) – Axes with the panels</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.plot_helper.plot_hist_line">
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">plot_hist_line</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hist_values</span></em>, <em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">'steps'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#plot_hist_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.plot_hist_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot recovey rate as lines. Can be in steps or continuous</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hist_values</strong> (<em>array</em>) – Values of each bin in the histogram</p></li>
+<li><p><strong>bins</strong> (<em>array</em>) – Bins of histogram</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
+<li><p><strong>shape</strong> (<em>str</em>) – Shape of the line. Can be steps or line.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

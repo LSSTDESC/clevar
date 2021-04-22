@@ -1,0 +1,445 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.match_metrics.plot_helper &mdash; ClEvaR 0.0.8 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>clevar.match_metrics.plot_helper</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clevar.match_metrics.plot_helper</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Set mpl backend run plots on github actions</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;DISPLAY&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;no display found. Using non-interactive Agg backend&#39;</span><span class="p">)</span>
+    <span class="n">mpl</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp2d</span>
+<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">ScalarFormatter</span><span class="p">,</span> <span class="n">NullFormatter</span>
+
+<div class="viewcode-block" id="add_grid"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_grid">[docs]</a><span class="k">def</span> <span class="nf">add_grid</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">major_lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">minor_lw</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a grid to ax</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ax: matplotlib.axes</span>
+<span class="sd">        Ax to add plot</span>
+<span class="sd">    major_lw: float</span>
+<span class="sd">        Line width of major axes</span>
+<span class="sd">    minor_lw: float</span>
+<span class="sd">        Line width of minor axes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">major_lw</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">major_lw</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">minor_lw</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">minor_lw</span><span class="p">)</span></div>
+<div class="viewcode-block" id="plot_hist_line"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.plot_hist_line">[docs]</a><span class="k">def</span> <span class="nf">plot_hist_line</span><span class="p">(</span><span class="n">hist_values</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;steps&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot recovey rate as lines. Can be in steps or continuous</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hist_values: array</span>
+<span class="sd">        Values of each bin in the histogram</span>
+<span class="sd">    bins: array</span>
+<span class="sd">        Bins of histogram</span>
+<span class="sd">    ax: matplotlib.axes</span>
+<span class="sd">        Ax to add plot</span>
+<span class="sd">    shape: str</span>
+<span class="sd">        Shape of the line. Can be steps or line.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">shape</span><span class="o">==</span><span class="s1">&#39;steps&#39;</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">hist_values</span><span class="p">,</span> <span class="n">hist_values</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="k">elif</span> <span class="n">shape</span><span class="o">==</span><span class="s1">&#39;line&#39;</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">hist_values</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;shape (</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">) must be &#39;steps&#39; or &#39;line&#39;&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<div class="viewcode-block" id="get_bin_label"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.get_bin_label">[docs]</a><span class="k">def</span> <span class="nf">get_bin_label</span><span class="p">(</span><span class="n">edge_lower</span><span class="p">,</span> <span class="n">edge_higher</span><span class="p">,</span>
+                  <span class="n">format_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span><span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get label with bin range</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    edge_lower: float</span>
+<span class="sd">        Lower values of bin</span>
+<span class="sd">    edge_higher: float</span>
+<span class="sd">        Higher values of bin</span>
+<span class="sd">    format_func: function</span>
+<span class="sd">        Function to format the values of the bins</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    srt</span>
+<span class="sd">        Label of bin</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;[$</span><span class="si">{</span><span class="n">format_func</span><span class="p">(</span><span class="n">edge_lower</span><span class="p">)</span><span class="si">}</span><span class="s1">$ : $</span><span class="si">{</span><span class="n">format_func</span><span class="p">(</span><span class="n">edge_higher</span><span class="p">)</span><span class="si">}</span><span class="s1">$]&#39;</span></div>
+<div class="viewcode-block" id="add_panel_bin_label"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_panel_bin_label">[docs]</a><span class="k">def</span> <span class="nf">add_panel_bin_label</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">edges_lower</span><span class="p">,</span> <span class="n">edges_higher</span><span class="p">,</span>
+                        <span class="n">format_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span><span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds label with bin range on the top of panel</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    axes: matplotlib.axes</span>
+<span class="sd">        Axes with the panels</span>
+<span class="sd">    edges_lower: array</span>
+<span class="sd">        Lower values of bins</span>
+<span class="sd">    edges_higher: array</span>
+<span class="sd">        Higher values of bins</span>
+<span class="sd">    format_func: function</span>
+<span class="sd">        Function to format the values of the bins</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">vb</span><span class="p">,</span> <span class="n">vt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">edges_lower</span><span class="p">,</span> <span class="n">edges_higher</span><span class="p">):</span>
+        <span class="n">topax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twiny</span><span class="p">()</span>
+        <span class="n">topax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+        <span class="n">topax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">get_bin_label</span><span class="p">(</span><span class="n">vb</span><span class="p">,</span> <span class="n">vt</span><span class="p">,</span> <span class="n">format_func</span><span class="p">))</span></div>
+<div class="viewcode-block" id="get_density_colors"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.get_density_colors">[docs]</a><span class="k">def</span> <span class="nf">get_density_colors</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xbins</span><span class="p">,</span> <span class="n">ybins</span><span class="p">,</span> <span class="n">ax_rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">rotation_resolution</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get colors of point based on density</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x: array</span>
+<span class="sd">        Values for x coordinate</span>
+<span class="sd">    y: array</span>
+<span class="sd">        Values for y coordinate</span>
+<span class="sd">    xbins: array, int</span>
+<span class="sd">        Bins for x</span>
+<span class="sd">    ybins: array, int</span>
+<span class="sd">        Bins for y</span>
+<span class="sd">    ax_rotation: float</span>
+<span class="sd">        Angle (in degrees) for rotation of axis of binning. Overwrites use of xbins, ybins</span>
+<span class="sd">    rotation_resolution: int</span>
+<span class="sd">        Number of bins to be used when ax_rotation!=0.</span>
+<span class="sd">    xscale: str</span>
+<span class="sd">        Scale xaxis.</span>
+<span class="sd">    yscale: str</span>
+<span class="sd">        Scale yaxis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        Density value at location of each point</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Rotated points around anlgle</span>
+    <span class="n">sr</span><span class="p">,</span> <span class="n">cr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">ax_rotation</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">ax_rotation</span><span class="p">))</span>
+    <span class="n">scalefuncs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linear&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">)}</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">scalefuncs</span><span class="p">[</span><span class="n">xscale</span><span class="p">](</span><span class="n">x</span><span class="p">),</span> <span class="n">scalefuncs</span><span class="p">[</span><span class="n">yscale</span><span class="p">](</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span><span class="o">*</span><span class="n">cr</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span><span class="o">*</span><span class="n">sr</span>
+    <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span><span class="o">*</span><span class="n">sr</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span><span class="o">*</span><span class="n">cr</span>
+    <span class="k">if</span> <span class="n">ax_rotation</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">xbins</span><span class="p">,</span> <span class="n">ybins</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x2</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x2</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">rotation_resolution</span><span class="p">),</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y2</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y2</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">rotation_resolution</span><span class="p">))</span>
+    <span class="c1"># Compute 2D rotated histogram</span>
+    <span class="n">hist</span><span class="p">,</span> <span class="n">xedges</span><span class="p">,</span> <span class="n">yedges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram2d</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">T</span>
+    <span class="c1"># Interpolate histogram</span>
+    <span class="n">xm</span> <span class="o">=</span> <span class="o">.</span><span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="n">xedges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span> <span class="n">xedges</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">ym</span> <span class="o">=</span> <span class="o">.</span><span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="n">yedges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span> <span class="n">yedges</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">fz</span> <span class="o">=</span> <span class="n">interp2d</span><span class="p">(</span><span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">hist</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fz</span><span class="p">(</span><span class="o">*</span><span class="n">coord</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)])</span></div>
+<div class="viewcode-block" id="nice_panel"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.nice_panel">[docs]</a><span class="k">def</span> <span class="nf">nice_panel</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add nice labels and ticks to panel plot</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    axes: array</span>
+<span class="sd">        Axes with the panels</span>
+<span class="sd">    bins1: array</span>
+<span class="sd">        Bins for component 1</span>
+<span class="sd">    bins2: array</span>
+<span class="sd">        Bins for component 2</span>
+
+<span class="sd">    Other parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    ax: matplotlib.axes</span>
+<span class="sd">        Ax to add plot</span>
+<span class="sd">    xlabel: str</span>
+<span class="sd">        Label of x axis.</span>
+<span class="sd">    ylabel: str</span>
+<span class="sd">        Label of y axis.</span>
+<span class="sd">    xscale: str</span>
+<span class="sd">        Scale xaxis.</span>
+<span class="sd">    yscale: str</span>
+<span class="sd">        Scale yaxis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig: matplotlib.figure.Figure</span>
+<span class="sd">        `matplotlib.figure.Figure` object</span>
+<span class="sd">    axes: array</span>
+<span class="sd">        Axes with the panels</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log_xticks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">()[</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()]</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="k">else</span> <span class="n">axes</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="n">xscale</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xscale</span><span class="o">==</span><span class="s1">&#39;log&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">xticks</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="k">else</span> <span class="n">axes</span><span class="p">,</span> <span class="n">log_xticks</span><span class="p">):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ScalarFormatter</span><span class="p">())</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">NullFormatter</span><span class="p">())</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">xticks</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="se">\\</span><span class="s1">times 10^</span><span class="se">{{</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">:</span><span class="s1">.0f</span><span class="se">}}</span><span class="si">}</span><span class="s1">$&#39;</span>
+                                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">xticks</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=-</span><span class="mi">45</span><span class="p">)</span>
+    <span class="n">log_yticks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()[</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()]</span>
+    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">(</span><span class="n">axes</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="k">else</span> <span class="n">axes</span><span class="p">[:</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">yscale</span><span class="o">==</span><span class="s1">&#39;log&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">yticks</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="k">else</span> <span class="n">axes</span><span class="p">,</span> <span class="n">log_yticks</span><span class="p">):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ScalarFormatter</span><span class="p">())</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_minor_formatter</span><span class="p">(</span><span class="n">NullFormatter</span><span class="p">())</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="n">yticks</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="se">\\</span><span class="s1">times 10^</span><span class="se">{{</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">:</span><span class="s1">.0f</span><span class="se">}}</span><span class="si">}</span><span class="s1">$&#39;</span>
+                                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">yticks</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=-</span><span class="mi">45</span><span class="p">)</span>
+    <span class="k">return</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

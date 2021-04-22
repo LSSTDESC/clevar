@@ -1,0 +1,412 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.footprint.footprint module &mdash; ClEvaR 0.0.8 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="clevar.footprint.nfw_funcs module" href="clevar.footprint.nfw_funcs.html" />
+    <link rel="prev" title="clevar.footprint.artificial module" href="clevar.footprint.artificial.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.8
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="clevar.footprint.html">clevar.footprint package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="clevar.footprint.html">clevar.footprint package</a> &raquo;</li>
+        
+      <li>clevar.footprint.footprint module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/clevar.footprint.footprint.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-clevar.footprint.footprint">
+<span id="clevar-footprint-footprint-module"></span><h1>clevar.footprint.footprint module<a class="headerlink" href="#module-clevar.footprint.footprint" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="clevar.footprint.footprint.Footprint">
+<em class="property">class </em><code class="sig-prename descclassname">clevar.footprint.footprint.</code><code class="sig-name descname">Footprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Functions for footprint management</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nside</strong> (<em>int</em>) – Heapix NSIDE</p></li>
+<li><p><strong>nest</strong> (<em>bool</em>) – If ordering is nested</p></li>
+<li><p><strong>data</strong> (<em>clevar.ClData</em>) – Data with columns: pixel, detfrac, zmax</p></li>
+<li><p><strong>pixel_dict</strong> (<em>dict</em>) – Dictionary to point to pixel in data</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="clevar.footprint.footprint.Footprint.get_coverfrac">
+<code class="sig-name descname">get_coverfrac</code><span class="sig-paren">(</span><em class="sig-param">cl_ra</em>, <em class="sig-param">cl_dec</em>, <em class="sig-param">cl_z</em>, <em class="sig-param">aperture_radius</em>, <em class="sig-param">aperture_radius_unit</em>, <em class="sig-param">cosmo=None</em>, <em class="sig-param">wtfunc=&lt;function Footprint.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_coverfrac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_coverfrac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cover fraction with a given window.</p>
+<div class="math notranslate nohighlight">
+\[CF(R) = \frac{\sum_{i\in{r_i&lt;R}}w(r_i)df(r_i)}{\sum_{i\in{r_i&lt;R}}w(r_i)}\]</div>
+<p>where the index <cite>i</cite> represents pixels of the footprint,
+<span class="math notranslate nohighlight">\(R\)</span> is the aperture radius to be considered
+and <span class="math notranslate nohighlight">\(w\)</span> is the window function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cl_ra</strong> (<em>float</em>) – Cluster RA in deg</p></li>
+<li><p><strong>cl_dec</strong> (<em>float</em>) – Cluster DEC in deg</p></li>
+<li><p><strong>cl_z</strong> (<em>float</em>) – Cluster redshift</p></li>
+<li><p><strong>aperture_radius</strong> (<em>float</em>) – Radius of aperture</p></li>
+<li><p><strong>aperture_radius_unit</strong> (<em>str</em>) – Unit of aperture radius</p></li>
+<li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when radius has angular units</p></li>
+<li><p><strong>wtfunc</strong> (<em>function</em>) – Window function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cover fraction</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.footprint.footprint.Footprint.get_coverfrac_nfw2D">
+<code class="sig-name descname">get_coverfrac_nfw2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cl_ra</span></em>, <em class="sig-param"><span class="n">cl_dec</span></em>, <em class="sig-param"><span class="n">cl_z</span></em>, <em class="sig-param"><span class="n">cl_radius</span></em>, <em class="sig-param"><span class="n">cl_radius_unit</span></em>, <em class="sig-param"><span class="n">aperture_radius</span></em>, <em class="sig-param"><span class="n">aperture_radius_unit</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_coverfrac_nfw2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_coverfrac_nfw2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cover fraction with NFW 2D flatcore window.</p>
+<div class="math notranslate nohighlight">
+\[CF(R) = \frac{\sum_{i\in{r_i&lt;R}}w_{nfw}(r_i)df(r_i)}{\sum_{i\in{r_i&lt;R}}w(r_i)}\]</div>
+<p>where the index <cite>i</cite> represents pixels of the footprint,
+<span class="math notranslate nohighlight">\(R\)</span> is the aperture radius to be considered
+and <span class="math notranslate nohighlight">\(w_{nfw}\)</span> is the NFW 2D flatcore window function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cl_ra</strong> (<em>float</em>) – Cluster RA in deg</p></li>
+<li><p><strong>cl_dec</strong> (<em>float</em>) – Cluster DEC in deg</p></li>
+<li><p><strong>cl_z</strong> (<em>float</em>) – Cluster redshift</p></li>
+<li><p><strong>cl_radius</strong> (<em>float</em>) – Cluster radius</p></li>
+<li><p><strong>cl_radius_unit</strong> (<em>str</em>) – Unit of cluster radius</p></li>
+<li><p><strong>aperture_radius</strong> (<em>float</em>) – Radius of aperture</p></li>
+<li><p><strong>aperture_radius_unit</strong> (<em>str</em>) – Unit of aperture radius</p></li>
+<li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when radius has angular units</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The NFW 2D function was taken from section 3.1 of arXiv:1104.2089 and was
+validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.footprint.footprint.Footprint.get_map">
+<code class="sig-name descname">get_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a internal quantity into a map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>array</em>) – Values in each pixel</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Healpix map with the given values, other pixels are zero</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Map</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.footprint.footprint.Footprint.get_values_in_pixels">
+<code class="sig-name descname">get_values_in_pixels</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">pixel_vals</em>, <em class="sig-param">bad_val</em>, <em class="sig-param">transform=&lt;function Footprint.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_values_in_pixels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_values_in_pixels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a internal quantity into a map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>array</em>) – Values in each pixel</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Healpix map with the given values, other pixels are zero</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Map</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.footprint.footprint.Footprint.read">
+<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">nside</span></em>, <em class="sig-param"><span class="n">pixel_name</span></em>, <em class="sig-param"><span class="n">detfrac_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">zmax_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">nest</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads fits file and converst to FootprintZmax object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Name of input file</p></li>
+<li><p><strong>nside</strong> (<em>int</em>) – Healpix nside</p></li>
+<li><p><strong>pixel_name</strong> (<em>str</em>) – Name of pixel column</p></li>
+<li><p><strong>detfrac_name</strong> (<em>str</em><em>, </em><em>None</em>) – Name of detection fraction colum. If None value 1 is assigned.</p></li>
+<li><p><strong>zmax_name</strong> – Name of maximum redshit colum. If None value 99 is assigned.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.footprint.footprint.Footprint.zmax_masks_from_footprint">
+<code class="sig-name descname">zmax_masks_from_footprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ra</span></em>, <em class="sig-param"><span class="n">dec</span></em>, <em class="sig-param"><span class="n">z</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.zmax_masks_from_footprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.zmax_masks_from_footprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a mask for a catalog based on a footprint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ra</strong> (<em>numpy array</em>) – Ra array in degrees</p></li>
+<li><p><strong>dec</strong> (<em>numpy array</em>) – Dec array in degrees</p></li>
+<li><p><strong>z</strong> (<em>numpy array</em>) – Redshift array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Arrays of booleans of objects in footprint</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
