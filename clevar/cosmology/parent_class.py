@@ -210,7 +210,7 @@ class Cosmology:
         return dist1*self.eval_da(redshift)
 
     def mpc2rad(self, dist1, redshift):
-        r""" Convert between radians and Mpc using the small angle approximation
+        r""" Convert between  Mpc and radians using the small angle approximation
         and :math:`d = D_A \theta`.
 
         Parameters

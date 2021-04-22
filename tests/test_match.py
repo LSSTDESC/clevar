@@ -10,7 +10,7 @@ from clevar.match import ProximityMatch
 
 def test_parent():
     mt = Match()
-    assert_raises(NotImplementedError, mt._prep_for_match, None)
+    assert_raises(NotImplementedError, mt.prep_cat_for_match, None)
     assert_raises(NotImplementedError, mt.multiple, None, None)
     assert_raises(NotImplementedError, mt.match_from_config, None, None, None, None)
 
