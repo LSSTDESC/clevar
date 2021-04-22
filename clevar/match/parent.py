@@ -8,7 +8,11 @@ class Match():
     """
     def __init__(self, ):
         self.type = None
-    def _prep_for_match(self, config):
+    def prep_cat_for_match(self, cat):
+        """
+        Prepare the catalog for matching, will fill the cat.mt_input object.
+        Each method must implement its specifics preparations.
+        """
         raise NotImplementedError
     def multiple(self, cat1, cat2):
         """Makes multiple matchig
