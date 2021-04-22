@@ -9,14 +9,14 @@ but can also be used with any set of catalogs.
 ClEvaR can be used as a python library for flexible use in scritps and notebooks,
 or as a command line executable.
 The executable mode is configured by an input `yaml` file and does not require a knowledge of the inner structure of the code.
-Details for this use can be found `here <https://github.com/LSSTDESC/clevar/blob/main/CLEVAR_EXE.md>`.
+Details for this use can be found `here <https://github.com/LSSTDESC/clevar/blob/main/CLEVAR_EXE.md>`_.
 
 The code was developed with a object oriented design for easy integration with other libraries.
 It has specific objects for the catalogs, footprints, catalog matching, cosmology and functions for metrics and scaling relations.
-The cosmology object has a backend that can use either `astropy` or `CCL <https://github.com/LSSTDESC/CCL>`,
+The cosmology object has a backend that can use either `astropy` or `CCL <https://github.com/LSSTDESC/CCL>`_,
 with a possibility of adding others.
 A set of notebooks showing the different application of ClEvaR can be found in the
-`examples <https://github.com/LSSTDESC/clevar/blob/main/examples/>`
+`examples <https://github.com/LSSTDESC/clevar/blob/main/examples/>`_
 folder of the project.
 
 The `ClCatalog` object
@@ -25,6 +25,7 @@ The `ClCatalog` object
 The `ClCatalog` object is the main data structure for cluster catalogs, holding the input and matching data,
 with some inbuilt functionality to facilitate the matching and footprint related processes.
 It contains:
+
 * The catalog name
 * A table with the input information (id, ra, dec, z, mass, radius), where matching information will be added.
 * A internal data with matching input information.
@@ -50,7 +51,7 @@ Another option is to use `match_from_config`, where all steps above are made acc
 configutaion dictionary.
 
 These objects also have internal functions to save and load the matching information:
-`save_matches` , `load_matches`.
+`save_matches`, `load_matches`.
 
 The `Cosmology` objects
 =======================
