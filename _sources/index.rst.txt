@@ -27,11 +27,11 @@ The source code is publically available at https://github.com/LSSTDESC/ClEvaR
    :maxdepth: 1
    :caption: Usage Demos
 
+   compiled-examples/proximity_matching.rst
+   compiled-examples/proximity_matching_detailed.rst
    compiled-examples/match_metrics.rst
    compiled-examples/match_metrics_advanced.rst
    compiled-examples/footprint.rst
-   compiled-examples/proximity_matching.rst
-   compiled-examples/proximity_matching_detailed.rst
 .. toctree::
    :maxdepth: 1
    :caption: Mass Fitting Examples
