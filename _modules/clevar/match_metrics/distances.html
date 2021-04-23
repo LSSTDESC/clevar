@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.distances &mdash; ClEvaR 0.0.8 documentation</title>
+  <title>clevar.match_metrics.distances &mdash; ClEvaR 0.0.9 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.0.8
+                0.0.9
               </div>
             
           
@@ -90,6 +90,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/match_metrics.html">Example of plotting match_metrics of matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/match_metrics_advanced.html">Advanced example of plotting metrics of matching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/footprint.html">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/footprint.html#match-catalogs">Match catalogs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/footprint.html#recovery-rate">Recovery rate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching.html">Simple example of matching based on proximity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching.html#save-and-load">Save and Load</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching_detailed.html">Detailed example of matching based on proximity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching_detailed.html#save-and-load">Save and Load</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -383,9 +395,10 @@
                                       <span class="n">distance_bins</span><span class="o">=</span><span class="n">redshift_bins</span><span class="p">,</span>
                                       <span class="n">quantity2</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">data1</span><span class="p">[</span><span class="n">col2</span><span class="p">]</span> <span class="k">if</span> <span class="n">col2</span> <span class="ow">in</span> <span class="n">mp</span><span class="o">.</span><span class="n">data1</span><span class="o">.</span><span class="n">colnames</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                                       <span class="n">bins2</span><span class="o">=</span><span class="n">bins2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">dz</span> <span class="o">=</span> <span class="s1">&#39;z_1-z_2&#39;</span>
-        <span class="n">dist_labels</span> <span class="o">=</span> <span class="p">{</span><span class="kc">None</span><span class="p">:</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="n">dz</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="s1">&#39;cat1&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;$(</span><span class="si">{</span><span class="n">dz</span><span class="si">}</span><span class="s1">)/(1+z_1)$&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;cat2&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;$(</span><span class="si">{</span><span class="n">dz</span><span class="si">}</span><span class="s1">)/(1+z_2)$&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;$(</span><span class="si">{</span><span class="n">dz</span><span class="si">}</span><span class="s1">)/(1+z_m)$&#39;</span><span class="p">,}</span>
+        <span class="n">zl1</span><span class="p">,</span> <span class="n">zl2</span> <span class="o">=</span> <span class="n">cat1</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">cat2</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
+        <span class="n">dz</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">zl1</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">zl2</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">dist_labels</span> <span class="o">=</span> <span class="p">{</span><span class="kc">None</span><span class="p">:</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="n">dz</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="s1">&#39;cat1&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;$(</span><span class="si">{</span><span class="n">dz</span><span class="si">}</span><span class="s1">)/(1+</span><span class="si">{</span><span class="n">zl1</span><span class="si">}</span><span class="s1">)$&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;cat2&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;$(</span><span class="si">{</span><span class="n">dz</span><span class="si">}</span><span class="s1">)/(1+</span><span class="si">{</span><span class="n">zl2</span><span class="si">}</span><span class="s1">)$&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;$(</span><span class="si">{</span><span class="n">dz</span><span class="si">}</span><span class="s1">)/(1+z_m)$&#39;</span><span class="p">,}</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">dist_labels</span><span class="p">[</span><span class="n">normalize</span><span class="p">])</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Number of matches&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ax</span></div></div>
