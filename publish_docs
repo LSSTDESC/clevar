@@ -3,8 +3,10 @@ git merge origin/main
 python setup.py install --user > /dev/null
 
 cd docs/
+sed -i -e "s/#'--execute'/'--execute'/g" conf.py
 make clean
 make html
+sed -i -e "s/'--execute'/#'--execute'/g" conf.py
 cd ..
 
 MASTERCOMMIT="$(git log --pretty=format:'%h' -n 1 main)"
