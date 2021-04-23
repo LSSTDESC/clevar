@@ -33,8 +33,6 @@ def run(config_file):
         'add_mass_label': True,
         'add_err': True,
         'add_cb': True,
-        'xlabel': config['catalog1'].get('labels', {}).get('z', None),
-        'ylabel': config['catalog2'].get('labels', {}).get('z', None),
         'log_mass': True,
         'ax_rotation': 45,
         'rotation_resolution': 30,
@@ -57,8 +55,7 @@ def run(config_file):
         z_conf[cat]['mass_bins'] = make_bins(z_conf[cat]['mass_bins'], z_conf['log_mass'])
         z_conf[cat] = {k: str_none(v) for k, v in z_conf[cat].items()}
     ### Plots
-    kwargs = {k:z_conf[k] for k in ('matching_type', 'add_err',
-                                    'add_cb', 'xlabel', 'ylabel')}
+    kwargs = {k:z_conf[k] for k in ('matching_type', 'add_err', 'add_cb')}
     z_name = f'{config["outpath"]}/redshift'
     # Density Plot
     if any(case in z_conf['plot_case'] for case in ('density', 'all')):
@@ -78,7 +75,7 @@ def run(config_file):
         fig, axes = scaling.redshift_metrics(c1, c2,
             bins1=z_conf['catalog1']['redshift_bins'],
             bins2=z_conf['catalog2']['redshift_bins'],
-            **{k:z_conf[k] for k in ('matching_type', 'xlabel', 'ylabel')},
+            matching_type=z_conf['matching_type'],
             fig_kwargs={'figsize': z_conf['figsize']},
             )
         plt.savefig(f'{z_name}_metrics.png', dpi=z_conf['dpi'])
