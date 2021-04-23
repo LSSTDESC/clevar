@@ -1,0 +1,421 @@
+Matching catalogs based on proximity (detailed)
+===============================================
+
+Here we show the specific steps of matching two catalogs based on
+proximity
+
+.. code:: ipython3
+
+    %load_ext autoreload
+    %autoreload 2
+
+ClCatalogs
+----------
+
+Given some input data
+
+.. code:: ipython3
+
+    import numpy as np
+    from astropy.table import Table
+    input1 = Table({ 
+        'ID': [f'CL{i}' for i in range(5)],
+        'RA': [0.0, 0.0001, 0.00011, 25, 20],
+        'DEC': [0.0, 0.0, 0.0, 0.0, 0.0],
+        'Z': [0.2, 0.3, 0.25, 0.4, 0.35],
+        'MASS': [10**13.5, 10**13.4, 10**13.3, 10**13.8, 10**14],
+        'RADIUS_ARCMIN': [1.0, 1.0, 1.0, 1.0, 1.0],
+    })
+    input2 = Table({
+        'ID': ['CL0', 'CL1', 'CL2', 'CL3'],
+        'RA': [0.0, 0.0001, 0.00011, 25],
+        'DEC': [0.0, 0, 0, 0],
+        'Z': [0.3, 0.2, 0.25, 0.4],
+        'MASS': [10**13.3, 10**13.4, 10**13.5, 10**13.8],
+        'RADIUS_ARCMIN': [1.0, 1.0, 1.0, 1.0],
+    })
+    display(input1)
+    display(input2)
+
+
+
+.. raw:: html
+
+    <i>Table length=5</i>
+    <table id="table139698135287600" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>ID</th><th>RA</th><th>DEC</th><th>Z</th><th>MASS</th><th>RADIUS_ARCMIN</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.2</td><td>31622776601683.793</td><td>1.0</td></tr>
+    <tr><td>CL1</td><td>0.0001</td><td>0.0</td><td>0.3</td><td>25118864315095.82</td><td>1.0</td></tr>
+    <tr><td>CL2</td><td>0.00011</td><td>0.0</td><td>0.25</td><td>19952623149688.83</td><td>1.0</td></tr>
+    <tr><td>CL3</td><td>25.0</td><td>0.0</td><td>0.4</td><td>63095734448019.43</td><td>1.0</td></tr>
+    <tr><td>CL4</td><td>20.0</td><td>0.0</td><td>0.35</td><td>100000000000000.0</td><td>1.0</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <i>Table length=4</i>
+    <table id="table139699718758608" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>ID</th><th>RA</th><th>DEC</th><th>Z</th><th>MASS</th><th>RADIUS_ARCMIN</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.3</td><td>19952623149688.83</td><td>1.0</td></tr>
+    <tr><td>CL1</td><td>0.0001</td><td>0.0</td><td>0.2</td><td>25118864315095.82</td><td>1.0</td></tr>
+    <tr><td>CL2</td><td>0.00011</td><td>0.0</td><td>0.25</td><td>31622776601683.793</td><td>1.0</td></tr>
+    <tr><td>CL3</td><td>25.0</td><td>0.0</td><td>0.4</td><td>63095734448019.43</td><td>1.0</td></tr>
+    </table>
+
+
+Create two ``ClCatalog`` objects. For the proximity matching it is
+necessary to have at least (``ra, dec``). If the redshift is used in the
+matching, it also must be included. The same goes for the mass:
+
+.. code:: ipython3
+
+    from clevar.catalog import ClCatalog
+    c1 = ClCatalog('Cat1', id=input1['ID'], ra=input1['RA'], dec=input1['DEC'], z=input1['Z'], mass=input1['MASS'])
+    c2 = ClCatalog('Cat2', id=input2['ID'], ra=input2['RA'], dec=input2['DEC'], z=input2['Z'], mass=input2['MASS'])
+    # Format for nice display
+    for c in ('ra', 'dec', 'z'):
+        c1[c].info.format = '.2f'
+        c2[c].info.format = '.2f'
+    for c in ('mass',):
+        c1[c].info.format = '.2e'
+        c2[c].info.format = '.2e'
+    display(c1)
+    display(c2)
+
+
+
+.. raw:: html
+
+    <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table139697294126240" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+    <table id="table139697266905152" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+Matching
+--------
+
+Import the ``ProximityMatch`` and create a object for matching
+
+.. code:: ipython3
+
+    from clevar.match import ProximityMatch
+    mt = ProximityMatch()
+
+Prepare the catalogs
+~~~~~~~~~~~~~~~~~~~~
+
+The first step is to prepare each catalog with the matching
+configuration:
+
+-  ``delta_z``: Defines redshift window for matching. The possible
+   values are:
+
+   -  ``'cat'``: uses redshift properties of the catalog
+   -  ``'spline.filename'``: interpolates data in ``'filename'``
+      assuming (z, zmin, zmax) format
+   -  ``float``: uses ``delta_z*(1+z)``
+   -  ``None``: does not use z
+
+-  ``match_radius``: Radius of the catalog to be used in the matching.
+   If ``'cat'`` uses the radius in the catalog, else must be in format
+   ``'value unit'``. (ex: ``'1 arcsec'``, ``'1 Mpc'``)
+
+In this case, because one of the configuraion radius has physical units,
+we also need a cosmology (``cosmo``) object to convert it to angular
+size (this is done internally).
+
+.. code:: ipython3
+
+    from clevar.cosmology import AstroPyCosmology
+    mt_config1 = {'delta_z':.2,
+                'match_radius': '1 mpc',
+                'cosmo':AstroPyCosmology()}
+    mt_config2 = {'delta_z':.2,
+                'match_radius': '1 arcsec'}
+    mt.prep_cat_for_match(c1, **mt_config1)
+    mt.prep_cat_for_match(c2, **mt_config2)
+
+
+.. parsed-literal::
+
+    ## Prep mt_cols
+    * zmin|zmax from config value
+    * ang radius from set scale
+    ## Prep mt_cols
+    * zmin|zmax from config value
+    * ang radius from set scale
+
+
+This will add values to the ``mt_input`` attribute of the catalogs:
+
+.. code:: ipython3
+
+    display(c1.mt_input)
+    display(c2.mt_input)
+
+
+
+.. raw:: html
+
+    <i>ClData length=5</i>
+    <table id="table139700126419744" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>zmin</th><th>zmax</th><th>ang</th></tr></thead>
+    <thead><tr><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>-0.04</td><td>0.44</td><td>0.08418388522320427</td></tr>
+    <tr><td>0.04</td><td>0.56</td><td>0.062361611333396835</td></tr>
+    <tr><td>0.00</td><td>0.50</td><td>0.0710414327593546</td></tr>
+    <tr><td>0.12</td><td>0.68</td><td>0.05169945411341919</td></tr>
+    <tr><td>0.08</td><td>0.62</td><td>0.05623291641697765</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <i>ClData length=4</i>
+    <table id="table139698117571584" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>zmin</th><th>zmax</th><th>ang</th></tr></thead>
+    <thead><tr><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>0.04</td><td>0.56</td><td>0.0002777777777777778</td></tr>
+    <tr><td>-0.04</td><td>0.44</td><td>0.0002777777777777778</td></tr>
+    <tr><td>0.00</td><td>0.50</td><td>0.0002777777777777778</td></tr>
+    <tr><td>0.12</td><td>0.68</td><td>0.0002777777777777778</td></tr>
+    </table>
+
+
+Multiple matching
+~~~~~~~~~~~~~~~~~
+
+The next step is to match the catalogs and store all candidates that
+pass the matching criteria. You can also pass the argument: -
+``radius_selection``: Given a pair of clusters, which radius will be
+used for the matching.
+
+.. code:: ipython3
+
+    %%time
+    mt.multiple(c1, c2)
+    mt.multiple(c2, c1)
+
+
+.. parsed-literal::
+
+    * 4/5 objects matched.
+    * 4/4 objects matched.
+    CPU times: user 20.9 ms, sys: 809 µs, total: 21.7 ms
+    Wall time: 21.5 ms
+
+
+This will fill the ``mt_multi_self`` and ``mt_multi_other`` columns:
+
+.. code:: ipython3
+
+    display(c1)
+    display(c2)
+
+
+
+.. raw:: html
+
+    <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table139698117571968" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>None</td><td>None</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>None</td><td>None</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>None</td><td>None</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>None</td><td>None</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td></tr>
+    <tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+    <table id="table139700126580160" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>None</td><td>None</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>None</td><td>None</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>None</td><td>None</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>None</td><td>None</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td></tr>
+    </table>
+
+
+Unique matching
+~~~~~~~~~~~~~~~
+
+Once all candidates are stored in each catalog, we can find the best
+candidates. You can also pass the argument: - ``preference``: In cases
+where there are multiple matched, how the best candidate will be chosen.
+
+.. code:: ipython3
+
+    %%time
+    mt.unique(c1, c2, preference='angular_proximity')
+    mt.unique(c2, c1, preference='angular_proximity')
+
+
+.. parsed-literal::
+
+    * 4/5 objects matched.
+    * 4/4 objects matched.
+    CPU times: user 24.7 ms, sys: 390 µs, total: 25.1 ms
+    Wall time: 24.9 ms
+
+
+This will fill the ``mt_self`` and ``mt_other`` columns:
+
+.. code:: ipython3
+
+    display(c1)
+    display(c2)
+
+
+
+.. raw:: html
+
+    <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table139700126414016" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td></tr>
+    <tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+    <table id="table139697266473136" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td></tr>
+    </table>
+
+
+Cross matching
+~~~~~~~~~~~~~~
+
+If you want to make sure the same pair was found in both directions:
+
+.. code:: ipython3
+
+    c1.cross_match()
+    c2.cross_match()
+
+This will fill the ``mt_cross`` column:
+
+.. code:: ipython3
+
+    display(c1)
+    display(c2)
+
+
+
+.. raw:: html
+
+    <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table139700126415456" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL0</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL1</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL2</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
+    <tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>None</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+    <table id="table139697266864960" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL0</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL1</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL2</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
+    </table>
+
+
+Save and Load
+-------------
+
+The results of the matching can easily be saved and load using
+``ClEvaR`` tools:
+
+.. code:: ipython3
+
+    mt.save_matches(c1, c2, out_dir='temp', overwrite=True)
+
+.. code:: ipython3
+
+    mt.load_matches(c1, c2, out_dir='temp')
+    display(c1)
+    display(c2)
+
+
+
+.. raw:: html
+
+    <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table139697266864912" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL0</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL1</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL2</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
+    <tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>None</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+    <table id="table139697266864480" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL0</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL1</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>[&apos;CL1&apos;, &apos;CL2&apos;, &apos;CL0&apos;]</td><td>CL2</td></tr>
+    <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
+    </table>
+
