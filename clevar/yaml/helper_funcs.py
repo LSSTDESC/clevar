@@ -187,8 +187,8 @@ def make_catalog(cat_config):
     c0 = ClData.read(cat_config['file'])
     cat = ClCatalog(cat_config['name'],
         **{k:c0[v] for k, v in cat_config['columns'].items()})
-    cat.radius_unit = cat_config['radius_unit'] if 'radius_unit' in cat_config\
-                        else None
+    cat.radius_unit = cat_config.get('radius_unit', None)
+    cat.labels.update(cat_config.get('labels', {}))
     return cat
 def make_cosmology(cosmo_config):
     """

@@ -51,8 +51,6 @@ def run(config_file):
             'redshift_num_fmt': '.1f',
             'redshift_bins': 10,
             'mass_bins': 5,
-            'mass_label': config[cat].get('labels', {}).get('mass', None),
-            'redshift_label': config[cat].get('labels', {}).get('redshift', None),
             }
         dist_conf[cat].update(config.get('match_metrics', {}).get('distances', {}).get(cat, {}))
         # Format values

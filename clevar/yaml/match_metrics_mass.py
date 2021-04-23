@@ -33,8 +33,6 @@ def run(config_file):
         'add_redshift_label': True,
         'add_err': True,
         'add_cb': True,
-        'xlabel': config['catalog1'].get('labels', {}).get('mass', None),
-        'ylabel': config['catalog2'].get('labels', {}).get('mass', None),
         'log_mass': True,
         'ax_rotation': 0,
         'rotation_resolution': 30,
@@ -58,7 +56,7 @@ def run(config_file):
         mass_conf[cat] = {k: str_none(v) for k, v in mass_conf[cat].items()}
     ### Plots
     kwargs = {k:mass_conf[k] for k in ('matching_type', 'log_mass', 'add_err',
-                                       'add_cb', 'xlabel', 'ylabel')}
+                                       'add_cb')}
     mass_name = f'{config["outpath"]}/mass'
     # Density Plot
     if any(case in mass_conf['plot_case'] for case in ('density', 'all')):
@@ -78,7 +76,7 @@ def run(config_file):
         fig, axes = scaling.mass_metrics(c1, c2,
             bins1=mass_conf['catalog1']['mass_bins'],
             bins2=mass_conf['catalog2']['mass_bins'],
-            **{k:mass_conf[k] for k in ('matching_type', 'log_mass', 'xlabel', 'ylabel')},
+            **{k:mass_conf[k] for k in ('matching_type', 'log_mass')},
             fig_kwargs={'figsize': mass_conf['figsize']},
             )
         plt.savefig(f'{mass_name}_metrics.png', dpi=mass_conf['dpi'])

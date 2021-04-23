@@ -316,7 +316,7 @@ class ClCatalogFuncs():
         """
         ax = ClCatalogFuncs._plot_base(ArrayFuncs.plot,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-        ax.set_xlabel(xlabel if xlabel else f'${col1}_{{{cat.name}}}$')
+        ax.set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
         ax.set_ylabel(ylabel if ylabel else 'recovery rate')
         ax.set_xscale(scale1)
         ax.set_ylim(-.01, 1.05)
@@ -380,7 +380,8 @@ class ClCatalogFuncs():
         """
         fig, axes = ClCatalogFuncs._plot_base(ArrayFuncs.plot_panel,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-        ph.nice_panel(axes, xlabel=none_val(xlabel, col1), ylabel=none_val(xlabel, col2),
+        ph.nice_panel(axes, xlabel=none_val(xlabel, f'${cat.labels[col1]}$'),
+                      ylabel=none_val(ylabel, 'recovery rate'),
                       xscale=scale1, yscale='linear')
         axes.flatten()[0].set_ylim(-.01, 1.05)
         return fig, axes
@@ -442,8 +443,8 @@ class ClCatalogFuncs():
         """
         ax, cb = ClCatalogFuncs._plot_base(ArrayFuncs.plot2D,
                 cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-        ax.set_xlabel(xlabel if xlabel else f'${col1}_{{{cat.name}}}$')
-        ax.set_ylabel(ylabel if ylabel else f'${col2}_{{{cat.name}}}$')
+        ax.set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
+        ax.set_ylabel(ylabel if ylabel else f'${cat.labels[col2]}$')
         ax.set_xscale(scale1)
         ax.set_yscale(scale2)
         return ax, cb

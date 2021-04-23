@@ -78,6 +78,8 @@ class ClCatalog():
         Dictionary of indicies given the cluster id
     radius_unit: str, None
         Unit of the radius column
+    labels: dict
+        Labels of data columns for plots
     """
     def __init__(self, name, **kwargs):
         self.name = name
@@ -86,9 +88,12 @@ class ClCatalog():
         self.size = None
         self.id_dict = {}
         self.radius_unit = None
+        self.labels = {}
         if len(kwargs)>0:
             self._add_values(**kwargs)
     def __setitem__(self, item, value):
+        if isinstance(item, str):
+            self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
         self.data[item] = value
     def __getitem__(self, item):
         return self.data[item]
@@ -102,6 +107,7 @@ class ClCatalog():
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         self.radius_unit = columns.pop('radius_unit', None)
+        self.labels.update(columns.pop('labels', {}))
         # Check all columns have same size
         names = [n for n in columns]
         sizes = [len(v) for v in columns.values()]
@@ -114,25 +120,25 @@ class ClCatalog():
                 "\n".join([f"{tab}{k:10}: {l:,}" for k, l in zip(names, sizes)])
                 )
         if 'id' not in columns:
-            self.data['id'] = np.array(range(self.size), dtype=str)
+            self['id'] = np.array(range(self.size), dtype=str)
         else:
-            self.data['id'] = np.array(columns['id'], dtype=str)
+            self['id'] = np.array(columns['id'], dtype=str)
         for k, v in columns.items():
             if k!='id':
-                self.data[k] = v
+                self[k] = v
         if 'ra' in self.data.colnames and 'dec' in self.data.colnames:
-            self.data['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
+            self['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
         self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
         self._init_match_vals()
     def _init_match_vals(self):
         """Fills self.match with default values"""
-        self.data['mt_self'] = None
-        self.data['mt_other'] = None
-        self.data['mt_multi_self']  = None
-        self.data['mt_multi_other'] = None
+        self['mt_self'] = None
+        self['mt_other'] = None
+        self['mt_multi_self']  = None
+        self['mt_multi_other'] = None
         for i in range(self.size):
-            self.data['mt_multi_self'][i] = []
-            self.data['mt_multi_other'][i] = []
+            self['mt_multi_self'][i] = []
+            self['mt_multi_other'][i] = []
     def ids2inds(self, ids):
         """Returns the indicies of objects given an id list.
 
@@ -147,12 +153,12 @@ class ClCatalog():
         for i in range(self.size):
             for col in ('mt_multi_self', 'mt_multi_other'):
                 if self[col][i]:
-                    self.data[col][i] = list(set(self[col][i]))
+                    self[col][i] = list(set(self[col][i]))
     def cross_match(self):
         """Makes cross matches, requires unique matches to be done first."""
-        self.data['mt_cross'] = None
+        self['mt_cross'] = None
         cross_mask = self['mt_self']==self['mt_other']
-        self.data['mt_cross'][cross_mask] = self['mt_self'][cross_mask]
+        self['mt_cross'][cross_mask] = self['mt_self'][cross_mask]
     def get_matching_mask(self, matching_type):
         if matching_type not in _matching_mask_funcs:
             raise ValueError(f'matching_type ({matching_type}) must be in {list(_matching_mask_funcs.keys())}')
