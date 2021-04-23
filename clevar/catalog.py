@@ -107,7 +107,7 @@ class ClCatalog():
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         self.radius_unit = columns.pop('radius_unit', None)
-        self.labels = columns.pop('labels', {})
+        self.labels.update(columns.pop('labels', {}))
         # Check all columns have same size
         names = [n for n in columns]
         sizes = [len(v) for v in columns.values()]
