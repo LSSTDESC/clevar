@@ -56,8 +56,6 @@ def run(config_file):
             'recovery_label': None,
             'redshift_bins': 10,
             'mass_bins': 5,
-            'mass_label': config[cat].get('labels', {}).get('mass', None),
-            'redshift_label': config[cat].get('labels', {}).get('redshift', None),
             'mass_lim': None,
             'redshift_lim': None,
             'recovery_lim': None,
@@ -77,8 +75,6 @@ def run(config_file):
             redshift_bins=rec_conf_cat['redshift_bins'],
             mass_bins=rec_conf_cat['mass_bins'],
             log_mass=rec_conf_cat['log_mass'],
-            mass_label=rec_conf_cat['mass_label'],
-            redshift_label=rec_conf_cat['redshift_label'],
             recovery_label=rec_conf_cat['recovery_label'],
             )
         mask = np.zeros(c.size, dtype=bool)

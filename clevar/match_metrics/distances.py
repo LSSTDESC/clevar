@@ -183,9 +183,10 @@ class ClCatalogFuncs():
                                       distance_bins=redshift_bins,
                                       quantity2=mp.data1[col2] if col2 in mp.data1.colnames else None,
                                       bins2=bins2, **kwargs)
-        dz = 'z_1-z_2'
-        dist_labels = {None:f'${dz}$', 'cat1': f'$({dz})/(1+z_1)$',
-                       'cat2': f'$({dz})/(1+z_2)$', 'mean': f'$({dz})/(1+z_m)$',}
+        zl1, zl2 = cat1.labels['z'], cat2.labels['z']
+        dz = f'{zl1}-{zl2}'
+        dist_labels = {None:f'${dz}$', 'cat1': f'$({dz})/(1+{zl1})$',
+                       'cat2': f'$({dz})/(1+{zl2})$', 'mean': f'$({dz})/(1+z_m)$',}
         ax.set_xlabel(dist_labels[normalize])
         ax.set_ylabel('Number of matches')
         return ax
