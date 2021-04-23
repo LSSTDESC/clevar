@@ -1,0 +1,429 @@
+Metrics of matching (simple)
+============================
+
+Example of the functions to plot match_metrics of matching.
+
+.. code:: ipython3
+
+    %load_ext autoreload
+    %autoreload 2
+
+.. code:: ipython3
+
+    import numpy as np
+    import pylab as plt
+
+Generate random data and add to catalog
+---------------------------------------
+
+.. code:: ipython3
+
+    # For reproducibility
+    np.random.seed(1)
+
+.. code:: ipython3
+
+    from support import gen_cluster
+    input1, input2 = gen_cluster()
+
+.. code:: ipython3
+
+    from clevar import ClCatalog
+    c1 = ClCatalog('Cat1', ra=input1['RA'], dec=input1['DEC'], z=input1['Z'], mass=input1['MASS'],
+                mass_err=input1['MASS_ERR'], z_err=input1['Z_ERR'])
+    c2 = ClCatalog('Cat2', ra=input2['RA'], dec=input2['DEC'], z=input2['Z'], mass=input2['MASS'],
+                mass_err=input2['MASS_ERR'], z_err=input2['Z_ERR'])
+    # Format for nice display
+    for c in ('ra', 'dec', 'z', 'z_err'):
+        c1[c].info.format = '.2f'
+        c2[c].info.format = '.2f'
+    for c in ('mass', 'mass_err'):
+        c1[c].info.format = '.2e'
+        c2[c].info.format = '.2e'
+
+Match catalogs
+--------------
+
+.. code:: ipython3
+
+    from clevar.match import ProximityMatch
+    from clevar.cosmology import AstroPyCosmology
+    
+    match_config = {
+        'type': 'cross', # options are cross, cat1, cat2
+        'which_radius': 'max', # Case of radius to be used, can be: cat1, cat2, min, max
+        'preference': 'angular_proximity', # options are more_massive, angular_proximity or redshift_proximity
+        'catalog1': {'delta_z':.2,
+                    'match_radius': '1 mpc'
+                    },
+        'catalog2': {'delta_z':.2,
+                    'match_radius': '10 arcsec'
+                    }
+    }
+    
+    cosmo = AstroPyCosmology()
+    mt = ProximityMatch()
+    mt.match_from_config(c1, c2, match_config, cosmo=cosmo)
+
+
+.. parsed-literal::
+
+    
+    ## ClCatalog 1
+    ## Prep mt_cols
+    * zmin|zmax from config value
+    * ang radius from set scale
+    
+    ## ClCatalog 2
+    ## Prep mt_cols
+    * zmin|zmax from config value
+    * ang radius from set scale
+    
+    ## Multiple match (catalog 1)
+    * 400/700 objects matched.
+    
+    ## Multiple match (catalog 2)
+    * 400/700 objects matched.
+    
+    ## Finding unique matches of catalog 1
+    * 400/700 objects matched.
+    
+    ## Finding unique matches of catalog 2
+    * 400/700 objects matched.
+
+
+Recovery rate
+-------------
+
+Compute recovery rates, they are computed in mass and redshift bins.
+There are several ways they can be displayed: - Single panel with
+multiple lines - Multiple panels - 2D color map
+
+.. code:: ipython3
+
+    from clevar.match_metrics import recovery
+
+.. code:: ipython3
+
+    zbins = np.linspace(0, 2, 6)
+    mbins = np.logspace(13, 14, 5)
+
+Simple plot
+~~~~~~~~~~~
+
+The recovery rates are shown as a function of redshift in mass bins.
+They can be displayed as a continuous line or with steps:
+
+.. code:: ipython3
+
+    ax = recovery.plot(c1, 'cross', zbins, mbins)
+    plt.show()
+    ax = recovery.plot(c1, 'cross', zbins, mbins, shape='line')
+    plt.show()
+
+
+
+.. image:: match_metrics_files/match_metrics_13_0.png
+
+
+
+.. image:: match_metrics_files/match_metrics_13_1.png
+
+
+They can also be transposed to be shown as a function of mass in
+redshift bins.
+
+.. code:: ipython3
+
+    ax = recovery.plot(c1, 'cross', zbins, mbins,
+                  shape='line', transpose=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_15_0.png
+
+
+Panels plots
+~~~~~~~~~~~~
+
+You can also have a panel for each bin:
+
+.. code:: ipython3
+
+    f, axes = recovery.plot_panel(c1, 'cross', zbins, mbins)
+    f, axes = recovery.plot_panel(c1, 'cross', zbins, mbins, transpose=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_17_0.png
+
+
+
+.. image:: match_metrics_files/match_metrics_17_1.png
+
+
+2D plots
+~~~~~~~~
+
+.. code:: ipython3
+
+    ax = recovery.plot2D(c1, 'cross', zbins, mbins)
+    plt.show()
+    ax = recovery.plot2D(c1, 'cross', zbins, mbins,
+                    add_num=True, num_kwargs={'fontsize':15})
+
+
+
+.. image:: match_metrics_files/match_metrics_19_0.png
+
+
+
+.. image:: match_metrics_files/match_metrics_19_1.png
+
+
+Distances of matching
+---------------------
+
+Here we evaluate the distance between the cluster centers and their
+redshifts. These distances can be shown for all matched clusters, or in
+bins:
+
+.. code:: ipython3
+
+    from clevar.match_metrics import distances
+
+.. code:: ipython3
+
+    ax = distances.central_position(c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees')
+
+
+
+.. image:: match_metrics_files/match_metrics_22_0.png
+
+
+.. code:: ipython3
+
+    ax = distances.central_position(c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees',
+                                    quantity_bins='mass', bins=mbins, log_quantity=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_23_0.png
+
+
+.. code:: ipython3
+
+    ax = distances.central_position(c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees',
+                                    quantity_bins='z', bins=zbins[::2], log_quantity=False)
+
+
+
+.. image:: match_metrics_files/match_metrics_24_0.png
+
+
+.. code:: ipython3
+
+    ax = distances.redshift(c1, c2, 'cross', redshift_bins=20, normalize='cat1')
+
+
+
+.. image:: match_metrics_files/match_metrics_25_0.png
+
+
+.. code:: ipython3
+
+    ax = distances.redshift(c1, c2, 'cross', redshift_bins=20, normalize='cat1',
+                            quantity_bins='mass', bins=mbins, log_quantity=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_26_0.png
+
+
+.. code:: ipython3
+
+    ax = distances.redshift(c1, c2, 'cross', redshift_bins=20, normalize='cat1',
+                            quantity_bins='z', bins=zbins[::2], log_quantity=False)
+
+
+
+.. image:: match_metrics_files/match_metrics_27_0.png
+
+
+Scaling Relations
+-----------------
+
+.. code:: ipython3
+
+    from clevar.match_metrics import scaling
+
+Redshift plots
+~~~~~~~~~~~~~~
+
+Simple plot
+^^^^^^^^^^^
+
+.. code:: ipython3
+
+    ax = scaling.redshift(c1, c2, 'cross')
+
+
+
+.. image:: match_metrics_files/match_metrics_32_0.png
+
+
+Color points by :math:`\log(M)` value
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    ax, cb = scaling.redshift_masscolor(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_34_0.png
+
+
+Color points by density at plot
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    ax, cb = scaling.redshift_density(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_36_0.png
+
+
+.. code:: ipython3
+
+    ax, cb = scaling.redshift_density(c1, c2, 'cross', ax_rotation=45)
+
+
+
+.. image:: match_metrics_files/match_metrics_37_0.png
+
+
+.. code:: ipython3
+
+    fig, axes = scaling.redshift_metrics(c1, c2, 'cross')
+
+
+
+.. image:: match_metrics_files/match_metrics_38_0.png
+
+
+.. code:: ipython3
+
+    fig, axes = scaling.redshift_density_metrics(c1, c2, 'cross', ax_rotation=45)
+
+
+
+.. image:: match_metrics_files/match_metrics_39_0.png
+
+
+Split data into mass bins
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    fig, axes = scaling.redshift_masspanel(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_41_0.png
+
+
+Split data into mass bins and color by density
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    fig, axes = scaling.redshift_density_masspanel(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_43_0.png
+
+
+Mass plots
+~~~~~~~~~~
+
+Simple plot
+^^^^^^^^^^^
+
+.. code:: ipython3
+
+    ax = scaling.mass(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_46_0.png
+
+
+Color points by redshift value
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    ax, cb = scaling.mass_zcolor(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_48_0.png
+
+
+Color points by density at plot
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    ax, cb = scaling.mass_density(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_50_0.png
+
+
+Split data into redshift bins
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    fig, axes = scaling.mass_zpanel(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_52_0.png
+
+
+Split data into redshift bins and color by density
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    fig, axes = scaling.mass_density_zpanel(c1, c2, 'cross', add_err=True)
+
+
+
+.. image:: match_metrics_files/match_metrics_54_0.png
+
+
+.. code:: ipython3
+
+    fig, axes = scaling.mass_metrics(c1, c2, 'cross')
+
+
+
+.. image:: match_metrics_files/match_metrics_55_0.png
+
+
+.. code:: ipython3
+
+    fig, axes = scaling.mass_density_metrics(c1, c2, 'cross', ax_rotation=45)
+
+
+
+.. image:: match_metrics_files/match_metrics_56_0.png
+
