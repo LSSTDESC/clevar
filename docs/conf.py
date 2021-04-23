@@ -137,7 +137,7 @@ for entry in config:
 outdir = 'compiled-examples/'
 nbconvert_opts = ['--to rst',
                   '--ExecutePreprocessor.kernel_name=python3',
-                  # '--execute',
+                   '--execute',
                   f'--output-dir {outdir}']
 
 for demo in [*demofiles, *examplefiles]:
