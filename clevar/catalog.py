@@ -51,6 +51,8 @@ class ClData(APtable):
         Return the column for key if key is in the dictionary, else default
         """
         return self[key] if key in self.colnames else default
+    def _repr_html_(self):
+        return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
 _matching_mask_funcs = {
     'cross': lambda match: match['mt_cross']!=None,
     'self': lambda match: match['mt_self']!=None,
@@ -102,8 +104,7 @@ class ClCatalog():
     def __str__(self):
         return f'{self.name}:\n{self.data.__str__()}'
     def _repr_html_(self):
-        data = self[[c for c in self.data.colnames if c!='SkyCoord']]
-        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{data._repr_html_()}'
+        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         self.radius_unit = columns.pop('radius_unit', None)

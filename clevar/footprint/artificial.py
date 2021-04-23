@@ -123,16 +123,16 @@ def fill_holes_conv(ftpt, neighbor_fill, nest=False):
     '''
     if neighbor_fill is not None:
         len_0 = len_l = ftpt['pixel'].size
-        print('**** filling holes ****')
+        print('### filling holes ###')
         while True:
-            print('* filling')
+            print(' - filling')
             ftpt = fill_holes(ftpt, neighbor_fill, nest=nest)
             len_t = ftpt['pixel'].size
             print(f'   size: {len_l:,} -> {len_t:,} (+{len_t-len_l:,})')
             if len_l == len_t:
                 break
             len_l = len_t
-        print('* Total Change:')
+        print(' Total Change:')
         print(f'   size: {len_0:,} -> {len_t:,} (+{len_t-len_0:,})')
-        print('**** filled! ****')
+        print('### filled! ###')
     return ftpt
