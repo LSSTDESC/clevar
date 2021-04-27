@@ -44,15 +44,17 @@ class Match():
         i_vals = range(cat1.size)
         if preference=='more_massive':
             set_unique = lambda cat1, i, cat2: self._match_mpref(cat1, i, cat2)
-            i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1['mass'])]
+            i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1['mass'])][::-1]
         elif preference=='angular_proximity':
             set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'angular_proximity')
         elif preference=='redshift_proximity':
             set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'redshift_proximity')
         else:
             raise ValueError("preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'")
+        print(f'Unique Matches ({cat1.name})')
         for i in i_vals:
-            set_unique(cat1, i, cat2)
+            if cat1['mt_self'][i] is None:
+                set_unique(cat1, i, cat2)
         print(f'* {len(cat1[cat1["mt_self"]!=None]):,}/{cat1.size:,} objects matched.')
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
@@ -89,7 +91,7 @@ class Match():
         """
         inds2 = cat2.ids2inds(cat1['mt_multi_self'][i])
         if len(inds2)>0:
-            for i2 in inds2[np.argsort(cat2['mass'][inds2])]:
+            for i2 in inds2[np.argsort(cat2['mass'][inds2])][::-1]:
                 if cat2['mt_other'][i2] is None:
                     cat1['mt_self'][i] = cat2['id'][i2]
                     cat2['mt_other'][i2] = cat1['id'][i]
