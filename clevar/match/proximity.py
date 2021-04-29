@@ -26,6 +26,7 @@ class ProximityMatch(Match):
         ra2, dec2, sk2 = (cat2[c] for c in ('ra', 'dec', 'SkyCoord'))
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ('ang', 'zmin', 'zmax'))
         ang2max = ang2.max()
+        print(f'Finding candidates ({cat1.name})')
         for i, (ra1, dec1, sk1, ang1, z1min, z1max) in enumerate(zip(*(
             [cat1[c] for c in ('ra', 'dec', 'SkyCoord')]+
             [cat1.mt_input[c] for c in ('ang', 'zmin', 'zmax')]
@@ -45,6 +46,7 @@ class ProximityMatch(Match):
                         cat1['mt_multi_self'][i].append(id2)
                         i2 = int(cat2.id_dict[id2])
                         cat2['mt_multi_other'][i2].append(cat1['id'][i])
+            print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
         print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
