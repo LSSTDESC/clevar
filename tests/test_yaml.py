@@ -83,6 +83,11 @@ def test_main():
     clevar_yaml.footprint_masks(config_file, True, False, case='2')
     mock.builtins.input = original_input
     os.system(f"rm {config['catalog1']['footprint']} {config['catalog2']['footprint']}")
+    # Write full files
+    clevar_yaml.write_full_output(config_file, True, True)
+    mock.builtins.input = lambda _: 'q'
+    clevar_yaml.write_full_output(config_file, True, False)
+    mock.builtins.input = original_input
     # Metrics
     clevar_yaml.match_metrics_distances(config_file)
     clevar_yaml.match_metrics_mass(config_file)
