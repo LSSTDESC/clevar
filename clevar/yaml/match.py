@@ -33,18 +33,20 @@ def proximity(config_file, overwrite_config, overwrite_files):
     cosmo = make_cosmology(config['cosmology'])
     # Run matching
     mt = clevar.match.ProximityMatch()
-    for match_step in sorted([c for c in config.keys()
-                            if 'proximity_match' in c]):
-        prt_msg = '# Start matching' if match_step=='proximity_match'\
-            else f'# Run step {match_step.replace("proximity_match_", "")}'
+    steps = sorted([c for c in config['proximity_match'] if 'step' in c])
+    for step in steps:
+        match_conf = {'type': config['proximity_match']['type']}
+        match_conf.update(config['proximity_match'][step])
+        prt_msg = '# Start matching' if len(steps)==1\
+            else f'# Run step {step.replace("step", "")}'
         print(f'\n{"#"*20}\n{prt_msg}\n{"#"*20}')
-        cosmo_ = make_cosmology(config[match_step]['cosmology']) \
-                    if 'cosmology' in config[match_step] else cosmo
+        cosmo_ = make_cosmology(match_conf['cosmology']) \
+                    if 'cosmology' in match_conf else cosmo
         if cosmo_!=cosmo:
             warn_msg = ('replacing default cosmology in matching with:\n    '+
-                    '\n    '.join([f'{k}: {v}' for k, v in config[match_step]['cosmology'].items()]))
+                    '\n    '.join([f'{k}: {v}' for k, v in match_conf['cosmology'].items()]))
             warnings.warn(warn_msg)
-        mt.match_from_config(c1, c2, config[match_step], cosmo=cosmo_)
+        mt.match_from_config(c1, c2, match_conf, cosmo=cosmo_)
     out1, out2 = f'{config["outpath"]}/match1.fits', f'{config["outpath"]}/match2.fits'
     check_actions = {'o': (lambda : True, [], {}), 'q': (lambda :False, [], {}),}
     save = True

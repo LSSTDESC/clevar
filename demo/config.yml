@@ -45,23 +45,24 @@ catalog2:
         zmax_name: None # Name of zmax column of footprint. Use 'None' if not existing.
 
 proximity_match:
-    which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
     type: cross # options are cross, cat1, cat2.
-    preference: more_massive # options are more_massive, angular_proximity or redshift_proximity.
-    catalog1:
-        delta_z: .2 # Defines the zmin, zmax for matching. Options are:
-                    #  'cat': uses redshift properties of the catalog.
-                    #  'spline.filename': interpolates data in 'filename' (z, zmin, zmax) fmt.
-                    #  float: uses delta_z*(1+z).
-                    #  None: does not use z.
-        match_radius: 1 arcmin # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
-    catalog2:
-        delta_z: .2 # Defines the zmin, zmax for matching. Options are:
-                    #  'cat': uses redshift properties of the catalog.
-                    #  'spline.filename': interpolates data in 'filename' (z, zmin, zmax) fmt.
-                    #  float: uses delta_z*(1+z).
-                    #  None: does not use z.
-        match_radius: 1 mpc # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
+    step1: # Add more steps with the same keys below if required
+        which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
+        preference: more_massive # options are more_massive, angular_proximity or redshift_proximity.
+        catalog1:
+            delta_z: .2 # Defines the zmin, zmax for matching. Options are:
+                        #  'cat': uses redshift properties of the catalog.
+                        #  'spline.filename': interpolates data in 'filename' (z, zmin, zmax) fmt.
+                        #  float: uses delta_z*(1+z).
+                        #  None: does not use z.
+            match_radius: 1 arcmin # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
+        catalog2:
+            delta_z: .2 # Defines the zmin, zmax for matching. Options are:
+                        #  'cat': uses redshift properties of the catalog.
+                        #  'spline.filename': interpolates data in 'filename' (z, zmin, zmax) fmt.
+                        #  float: uses delta_z*(1+z).
+                        #  None: does not use z.
+            match_radius: 1 mpc # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
 
 masks: # Config to be used by make_masks and recovery rate.
     catalog1:

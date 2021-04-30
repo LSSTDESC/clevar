@@ -55,7 +55,7 @@ def test_main():
     # Match, used diff cosmology and overwrite
     config = yaml.read(config_file)
     print(config.keys())
-    config['proximity_match'].update({'cosmology':{'backend': 'CCL'}})
+    config['proximity_match']['step1']['cosmology'] = {'backend': 'CCL'}
     yaml.write(config, 'cfg.yml')
     original_input = mock.builtins.input
     mock.builtins.input = lambda _: 'q'
