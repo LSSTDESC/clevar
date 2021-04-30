@@ -41,6 +41,7 @@ class Match():
         preference: str
             Preference to set best match
         """
+        self.cat1_mt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         i_vals = range(cat1.size)
         if preference=='more_massive':
             set_unique = lambda cat1, i, cat2: self._match_mpref(cat1, i, cat2)
@@ -54,7 +55,8 @@ class Match():
         print(f'Unique Matches ({cat1.name})')
         for i in i_vals:
             if cat1['mt_self'][i] is None:
-                set_unique(cat1, i, cat2)
+                self.cat1_mt[i] = set_unique(cat1, i, cat2)
+        self.cat1_mt *= (cat1['mt_self']!=None) # In case ang pref removes match
         print(f'* {len(cat1[cat1["mt_self"]!=None]):,}/{cat1.size:,} objects matched.')
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
@@ -88,6 +90,11 @@ class Match():
             Index of the cluster from cat1 to be matched
         cat2: clevar.ClCatalog
             Target catalog
+
+        Returns
+        -------
+        bool
+            Tells if the cluster was matched
         """
         inds2 = cat2.ids2inds(cat1['mt_multi_self'][i])
         if len(inds2)>0:
@@ -95,7 +102,8 @@ class Match():
                 if cat2['mt_other'][i2] is None:
                     cat1['mt_self'][i] = cat2['id'][i2]
                     cat2['mt_other'][i2] = cat1['id'][i]
-                    return
+                    return True
+        return False
     def _match_apref(self, cat1, i, cat2, MATCH_PREF):
         """
         Make the unique match by angular (or redshift) distance preference
@@ -110,6 +118,11 @@ class Match():
             Target catalog
         MATCH_PREF: str
             Matching preference, can be 'angular_proximity' or 'redshift_proximity'
+
+        Returns
+        -------
+        bool
+            Tells if the cluster was matched
         """
         inds2 = cat2.ids2inds(cat1['mt_multi_self'][i])
         dists = self._get_dist_mt(cat1[i], cat2[inds2], MATCH_PREF)
@@ -120,12 +133,13 @@ class Match():
             if i1_replace is None:
                 cat1['mt_self'][i] = cat2['id'][i2]
                 cat2['mt_other'][i2] = cat1['id'][i]
-                return
+                return True
             elif dist < self._get_dist_mt(cat1[i1_replace], cat2[i2], MATCH_PREF):
                 cat1['mt_self'][i] = cat2['id'][i2]
                 cat2['mt_other'][i2] = cat1['id'][i]
                 self._match_apref(cat1, i1_replace, cat2, MATCH_PREF)
-                return
+                return True
+        return False
     def _get_dist_mt(self, dat1, dat2, MATCH_PREF):
         """
         Get distance for matching preference
