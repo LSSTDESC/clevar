@@ -55,7 +55,7 @@ def test_main():
     # Match, used diff cosmology and overwrite
     config = yaml.read(config_file)
     print(config.keys())
-    config['proximity_match'].update({'cosmology':{'backend': 'CCL'}})
+    config['proximity_match']['step1']['cosmology'] = {'backend': 'CCL'}
     yaml.write(config, 'cfg.yml')
     original_input = mock.builtins.input
     mock.builtins.input = lambda _: 'q'
@@ -83,6 +83,11 @@ def test_main():
     clevar_yaml.footprint_masks(config_file, True, False, case='2')
     mock.builtins.input = original_input
     os.system(f"rm {config['catalog1']['footprint']} {config['catalog2']['footprint']}")
+    # Write full files
+    clevar_yaml.write_full_output(config_file, True, True)
+    mock.builtins.input = lambda _: 'q'
+    clevar_yaml.write_full_output(config_file, True, False)
+    mock.builtins.input = original_input
     # Metrics
     clevar_yaml.match_metrics_distances(config_file)
     clevar_yaml.match_metrics_mass(config_file)

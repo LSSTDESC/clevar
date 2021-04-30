@@ -23,6 +23,7 @@ class ProximityMatch(Match):
         radius_selection: str (optional)
             Case of radius to be used, can be: max, min, self, other.
         """
+        self.cat1_mmt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         ra2, dec2, sk2 = (cat2[c] for c in ('ra', 'dec', 'SkyCoord'))
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ('ang', 'zmin', 'zmax'))
         ang2max = ang2.max()
@@ -46,6 +47,7 @@ class ProximityMatch(Match):
                         cat1['mt_multi_self'][i].append(id2)
                         i2 = int(cat2.id_dict[id2])
                         cat2['mt_multi_other'][i2].append(cat1['id'][i])
+                        self.cat1_mmt[i] = True
             print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
         print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
