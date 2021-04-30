@@ -8,7 +8,7 @@ from unittest import mock
 
 from clevar import yaml as clevar_yaml
 
-def test_helper_functions():
+def test_yaml_helper_functions():
     from clevar.yaml import helper_funcs as hf
     hf.add_dicts_diff({'x':None}, {})
     hf.add_dicts_diff({'x':{'x':None}}, {'x':{}})

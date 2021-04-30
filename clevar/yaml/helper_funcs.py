@@ -210,7 +210,13 @@ def make_cosmology(cosmo_config):
         CosmoClass = cosmology.CCLCosmology
     else:
         raise ValueError(f'Cosmology backend "{cosmo_config["backend"]}" not accepted')
-    parameters = none_val(cosmo_config.get('parameters', None), {})
+    parameters = {
+        'H0': 70.0,
+        'Omega_b0': 0.05,
+        'Omega_dm0': 0.25,
+        'Omega_k0': 0.0,
+    }
+    parameters.update(cosmo_config.get('parameters', {}))
     return CosmoClass(**parameters)
 def make_bins(input_val, log=False):
     """

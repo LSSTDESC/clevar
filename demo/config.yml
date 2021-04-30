@@ -3,6 +3,10 @@ outpath: temp
 cosmology:
     backend: Astropy # Options are Astropy, CCL.
     parameters:
+        H0: 70.0
+        Omega_b0: 0.05
+        Omega_dm0: 0.25
+        Omega_k0: 0.0
 
 catalog1:
     file: cat1.fits
