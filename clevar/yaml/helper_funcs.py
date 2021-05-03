@@ -187,7 +187,7 @@ def loadconf(config_file, load_configs=[], fail_action='ask'):
                                         msg='\nConfigurations differs from saved config:\n')
         if len(diff_configs)>0:
             actions_loop = {
-                'o': (deep_update, [log_config, config], {}),
+                'o': (lambda: True, [], {}),
                 'q': (lambda: None, [], {}),
                 }
             f, args, kwargs = {
@@ -195,9 +195,9 @@ def loadconf(config_file, load_configs=[], fail_action='ask'):
                 'orverwrite': actions_loop['o'],
                 'quit': actions_loop['q'],
             }[fail_action]
-            log_config = f(*args, **kwargs)
-            if log_config is None:
+            if f(*args, **kwargs) is None:
                 return
+    deep_update(log_config, config)
     yaml.write(log_config, log_file)
     return config
 def make_catalog(cat_config):
