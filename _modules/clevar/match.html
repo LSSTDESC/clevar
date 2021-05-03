@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match &mdash; ClEvaR 0.0.11 documentation</title>
+  <title>clevar.match &mdash; ClEvaR 0.1.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.0.11
+                0.1.0
               </div>
             
           
@@ -133,11 +133,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/clevar.yaml.html">clevar.yaml package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
 </ul>
 </li>
 </ul>
@@ -221,10 +221,33 @@
 <span class="sd">            Type of matching to be considered. Must be in:</span>
 <span class="sd">            &#39;cross&#39;, &#39;self&#39;, &#39;other&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mask1</span><span class="p">,</span> <span class="n">mask2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matching_masks</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data1</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data2</span> <span class="o">=</span> <span class="n">cat2</span><span class="p">[</span><span class="n">mask2</span><span class="p">]</span>
+<div class="viewcode-block" id="MatchedPairs.matching_masks"><a class="viewcode-back" href="../../api/clevar.match.html#clevar.match.MatchedPairs.matching_masks">[docs]</a>    <span class="k">def</span> <span class="nf">matching_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cat1: clevar.ClCatalog</span>
+<span class="sd">            ClCatalog with matching information</span>
+<span class="sd">        cat2: clevar.ClCatalog</span>
+<span class="sd">            ClCatalog matched to</span>
+<span class="sd">        matching_type: str</span>
+<span class="sd">            Type of matching to be considered. Must be in:</span>
+<span class="sd">            &#39;cross&#39;, &#39;self&#39;, &#39;other&#39;</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        mask1: ndarray</span>
+<span class="sd">            Array of booleans to get catalog1 matched clusters</span>
+<span class="sd">        mask2: ndarray</span>
+<span class="sd">            Array of catalog2 indexes corresponding to catalog1 matched clusters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># convert matching type to the values expected by get_matching_mask</span>
         <span class="n">matching_type_conv</span> <span class="o">=</span> <span class="n">matching_type</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cat1&#39;</span><span class="p">,</span> <span class="s1">&#39;self&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cat2&#39;</span><span class="p">,</span> <span class="s1">&#39;other&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data1</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="n">cat1</span><span class="o">.</span><span class="n">get_matching_mask</span><span class="p">(</span><span class="n">matching_type_conv</span><span class="p">)]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data2</span> <span class="o">=</span> <span class="n">cat2</span><span class="p">[</span><span class="n">cat2</span><span class="o">.</span><span class="n">ids2inds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data1</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;mt_</span><span class="si">{</span><span class="n">matching_type_conv</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])]</span></div>
+        <span class="n">mask1</span> <span class="o">=</span> <span class="n">cat1</span><span class="o">.</span><span class="n">get_matching_mask</span><span class="p">(</span><span class="n">matching_type_conv</span><span class="p">)</span>
+        <span class="n">mask2</span> <span class="o">=</span> <span class="n">cat2</span><span class="o">.</span><span class="n">ids2inds</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="n">mask1</span><span class="p">][</span><span class="sa">f</span><span class="s1">&#39;mt_</span><span class="si">{</span><span class="n">matching_type_conv</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">mask1</span><span class="p">,</span> <span class="n">mask2</span></div></div>
 </pre></div>
 
            </div>
