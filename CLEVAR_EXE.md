@@ -96,6 +96,10 @@ Configuration for comology package and parameters:
 
 * `backend` - Library for cosmology. Options are Astropy, CCL.
 * `parameters` - cosmological parameters.
+  * `H0` - Hubble parameter
+  * `Omega_b0` - Baryonic matter fraction at `z=0`
+  * `Omega_dm0` - Cold dark matter fraction at `z=0`
+  * `Omega_k0` - Curvature fraction at `z=0`
 
 ### catalog1 (and catalog2) <a name="config_cat"></a>
 
