@@ -73,7 +73,7 @@ def write_output(config_file, overwrite_config, overwrite_files,
     """
     # Create clevar objects from yml config
     config = loadconf(config_file,
-        consistency_configs=['catalog1', 'catalog2', matching_method],
+        load_configs=['catalog1', 'catalog2', matching_method],
         fail_action='orverwrite' if overwrite_config else 'ask'
         )
     print("\n# Reading Catalog 1")
