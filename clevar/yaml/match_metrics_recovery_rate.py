@@ -17,8 +17,11 @@ def run(config_file):
     """
     # Create clevar objects from yml config
     config = loadconf(config_file,
-        consistency_configs=['catalog1', 'catalog2','proximity_match'],
+        load_configs=['catalog1', 'catalog2', 'cosmology', 'proximity_match',
+                      'masks', 'mt_metrics_recovery'],
         )
+    if config is None:
+        return
     print("\n# Reading Catalog 1")
     c1 = make_catalog(config['catalog1'])
     c1.load_match(f"{config['outpath']}/match1.fits")
@@ -34,35 +37,13 @@ def run(config_file):
     # Print metrics
     from clevar.match_metrics import recovery
     # prep configurations
-    rec_conf = {
-        'plot_case': 'all',
-        'matching_type': 'multi_join',
-        'line_type':'steps',
-        'add_mass_label': True,
-        'add_redshift_label': True,
-        'add_colorbar': True,
-        'figsize': config.get('match_metrics', {}).get('figsize', '20 20'),
-        'dpi': config.get('match_metrics', {}).get('dpi', '150'),
-        }
-    rec_conf.update(config.get('match_metrics', {}).get('recovery', {}))
+    rec_conf = {}
+    rec_conf.update(config['mt_metrics_recovery'])
+    # Format values
     rec_conf['figsize'] = np.array(rec_conf['figsize'].split(' '), dtype=float)/2.54
     rec_conf['dpi'] = int(rec_conf['dpi'])
     str_none = lambda x: None if str(x)=='None' else x
     for cat in ('catalog1', 'catalog2'):
-        rec_conf[cat] = {
-            'log_mass': True,
-            'mass_num_fmt': '.2f',
-            'redshift_num_fmt': '.1f',
-            'recovery_label': None,
-            'redshift_bins': 10,
-            'mass_bins': 5,
-            'mass_lim': None,
-            'redshift_lim': None,
-            'recovery_lim': None,
-            'masks':{'case':'None'},
-            }
-        rec_conf[cat].update(config.get('match_metrics', {}).get('recovery', {}).get(cat, {}))
-        # Format values
         rec_conf[cat]['redshift_bins'] = make_bins(rec_conf[cat]['redshift_bins'])
         rec_conf[cat]['mass_bins'] = make_bins(rec_conf[cat]['mass_bins'], rec_conf[cat]['log_mass'])
         rec_conf[cat] = {k: str_none(v) for k, v in rec_conf[cat].items()}
@@ -78,8 +59,8 @@ def run(config_file):
             recovery_label=rec_conf_cat['recovery_label'],
             )
         mask = np.zeros(c.size, dtype=bool)
-        mask_case = rec_conf_cat.get('masks', {}).get('case', 'None').lower()
-        if mask_case!='none':
+        mask_case = rec_conf_cat['masks']['case'].lower()
+        if mask_case is not None:
             for mtype, mconf in rec_conf_cat['masks'].items():
                 if mtype[:12]=='in_footprint' and mconf.get('use', False):
                     print(f"    # Adding footprint mask: {mconf}")
@@ -147,7 +128,7 @@ def run(config_file):
             plt.close(fig)
         # 2D plots
         kwargs.pop('shape')
-        kwargs['add_cb'] = rec_conf['add_colorbar']
+        kwargs['add_cb'] = rec_conf['add_cb']
         if any(case in rec_conf['plot_case'] for case in ('2D', 'all')):
             # basic
             print(f"\n# 2D recovery catalog {i}")

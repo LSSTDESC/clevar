@@ -16,8 +16,11 @@ def run(config_file):
     """
     # Create clevar objects from yml config
     config = loadconf(config_file,
-        consistency_configs=['catalog1', 'catalog2','proximity_match'],
+        load_configs=['catalog1', 'catalog2', 'cosmology',
+                      'proximity_match', 'mt_metrics_mass'],
         )
+    if config is None:
+        return
     print("\n# Reading Catalog 1")
     c1 = make_catalog(config['catalog1'])
     c1.load_match(f"{config['outpath']}/match1.fits")
@@ -27,30 +30,13 @@ def run(config_file):
     # Scaling Relations
     from clevar.match_metrics import scaling
     # prep configurations
-    mass_conf = {
-        'plot_case': 'all',
-        'matching_type': 'cross',
-        'add_redshift_label': True,
-        'add_err': True,
-        'add_cb': True,
-        'log_mass': True,
-        'ax_rotation': 0,
-        'rotation_resolution': 30,
-        'figsize': config.get('match_metrics', {}).get('figsize', '20 20'),
-        'dpi': config.get('match_metrics', {}).get('dpi', '150'),
-        }
-    mass_conf.update(config.get('match_metrics', {}).get('mass', {}))
+    mass_conf = {}
+    mass_conf.update(config['mt_metrics_mass'])
+    # Format values
     mass_conf['figsize'] = np.array(mass_conf['figsize'].split(' '), dtype=float)/2.54
     mass_conf['dpi'] = int(mass_conf['dpi'])
     str_none = lambda x: None if str(x)=='None' else x
     for cat in ('catalog1', 'catalog2'):
-        mass_conf[cat] = {
-            'redshift_bins': 10,
-            'redshift_num_fmt': '.1f',
-            'mass_bins': 5,
-            }
-        mass_conf[cat].update(config.get('match_metrics', {}).get('mass', {}).get(cat, {}))
-        # Format values
         mass_conf[cat]['redshift_bins'] = make_bins(mass_conf[cat]['redshift_bins'])
         mass_conf[cat]['mass_bins'] = make_bins(mass_conf[cat]['mass_bins'], mass_conf['log_mass'])
         mass_conf[cat] = {k: str_none(v) for k, v in mass_conf[cat].items()}
