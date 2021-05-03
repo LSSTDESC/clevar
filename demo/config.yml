@@ -3,6 +3,10 @@ outpath: temp
 cosmology:
     backend: Astropy # Options are Astropy, CCL.
     parameters:
+        H0: 70.0
+        Omega_b0: 0.05
+        Omega_dm0: 0.25
+        Omega_k0: 0.0
 
 catalog1:
     file: cat1.fits
@@ -45,23 +49,24 @@ catalog2:
         zmax_name: None # Name of zmax column of footprint. Use 'None' if not existing.
 
 proximity_match:
-    which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
     type: cross # options are cross, cat1, cat2.
-    preference: more_massive # options are more_massive, angular_proximity or redshift_proximity.
-    catalog1:
-        delta_z: .2 # Defines the zmin, zmax for matching. Options are:
-                    #  'cat': uses redshift properties of the catalog.
-                    #  'spline.filename': interpolates data in 'filename' (z, zmin, zmax) fmt.
-                    #  float: uses delta_z*(1+z).
-                    #  None: does not use z.
-        match_radius: 1 arcmin # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
-    catalog2:
-        delta_z: .2 # Defines the zmin, zmax for matching. Options are:
-                    #  'cat': uses redshift properties of the catalog.
-                    #  'spline.filename': interpolates data in 'filename' (z, zmin, zmax) fmt.
-                    #  float: uses delta_z*(1+z).
-                    #  None: does not use z.
-        match_radius: 1 mpc # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
+    step1: # Add more steps with the same keys below if required
+        which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
+        preference: more_massive # options are more_massive, angular_proximity or redshift_proximity.
+        catalog1:
+            delta_z: .2 # Defines the zmin, zmax for matching. Options are:
+                        #  'cat': uses redshift properties of the catalog.
+                        #  'spline.filename': interpolates data in 'filename' (z, zmin, zmax) fmt.
+                        #  float: uses delta_z*(1+z).
+                        #  None: does not use z.
+            match_radius: 1 arcmin # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
+        catalog2:
+            delta_z: .2 # Defines the zmin, zmax for matching. Options are:
+                        #  'cat': uses redshift properties of the catalog.
+                        #  'spline.filename': interpolates data in 'filename' (z, zmin, zmax) fmt.
+                        #  float: uses delta_z*(1+z).
+                        #  None: does not use z.
+            match_radius: 1 mpc # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
 
 masks: # Config to be used by make_masks and recovery rate.
     catalog1:
@@ -94,143 +99,135 @@ masks: # Config to be used by make_masks and recovery rate.
             aperture: 1 arcmin # Size of aperture with units.
             window_function: nfw2D # Window to weight the coverfraction. Options are flat, nfw2D.
 
-match_metrics:
+mt_metrics_recovery: # Recovery rate.
 
     figsize: 20 20 # Figure size of figures in cm.
     dpi: 150 # The resolution in dots per inch.
+    plot_case: all # Types of plots to be done. Options are simple, panel, 2D or all.
+    matching_type: cross # options are cross, cat1, cat2, multi_cat1, multi_cat2, multi_join.
+    line_type: steps # line, steps.
+    add_mass_label: True # Add labels and legends of mass bins.
+    add_redshift_label: True # Add labels and legends of redshift bins.
+    add_cb: True # Add color bar in color plots.
 
-    recovery: # Recovery rate.
+    catalog1:
+        log_mass: True
+        mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
+        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+        recovery_label: None
+        mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
+        mass_lim: None # Mass limits in plots. Must be 2 numbers (min, max) or None.
+        redshift_lim: None # Redshift limits in plots. Must be 2 numbers (min, max) or None.
+        recovery_lim: None # Recovery rate limits in plots. Must be 2 numbers (min, max) or None.
 
-        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize.
-        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi.
-        plot_case: all # Types of plots to be done. Options are simple, panel, 2D or all.
-        matching_type: cross # options are cross, cat1, cat2, multi_cat1, multi_cat2, multi_join.
-        line_type: steps # line, steps.
+        masks: # Mask objects used in the computation of recovery rates. Names must correspond to those in the main "masks" section.
+            case: Unmatched # Which clusters to mask on recovery rate computations. Options: None, All, Unmatched.
+            in_footprint1: # Flag if cluster is inside footprint.
+                name: self # Name for column.
+                use: True # Use this mask.
+            in_footprint2: # Flag if cluster is inside footprint.
+                name: other # Name for column. It will receive a ft_ prefix.
+                use: True # Use this mask.
+            coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes.
+                name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
+                min: 0.1 # Minimum value of cover fraction to be considered.
+            coverfraction_: # Like this one.
+                name: other_1arcmin # Name for coverfraction column. It will receive a cf_ prefix.
+                min: 0.1 # Minimum value of cover fraction to be considered.
 
-        catalog1:
-            log_mass: True
-            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
-            recovery_label: None
-            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
-            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
-            mass_lim: None # Mass limits in plots. Must be 2 numbers (min, max) or None.
-            redshift_lim: None # Redshift limits in plots. Must be 2 numbers (min, max) or None.
-            recovery_lim: None # Recovery rate limits in plots. Must be 2 numbers (min, max) or None.
-            add_mass_label: True # Add labels and legends of mass bins.
-            add_redshift_label: True # Add labels and legends of redshift bins.
+    catalog2:
+        log_mass: True
+        mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
+        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+        recovery_label: None
+        mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
+        mass_lim: None # Mass limits in plots. Must be 2 numbers (min, max) or None.
+        redshift_lim: None # Redshift limits in plots. Must be 2 numbers (min, max) or None.
+        recovery_lim: None # Recovery rate limits in plots. Must be 2 numbers (min, max) or None.
 
-            masks: # Mask objects used in the computation of recovery rates. Names must correspond to those in the main "masks" section.
-                case: Unmatched # Which clusters to mask on recovery rate computations. Options: None, All, Unmatched.
-                in_footprint1: # Flag if cluster is inside footprint.
-                    name: self # Name for column.
-                    use: True # Use this mask.
-                in_footprint2: # Flag if cluster is inside footprint.
-                    name: other # Name for column. It will receive a ft_ prefix.
-                    use: True # Use this mask.
-                coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes.
-                    name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
-                    min: 0.1 # Minimum value of cover fraction to be considered.
-                coverfraction_: # Like this one.
-                    name: other_1arcmin # Name for coverfraction column. It will receive a cf_ prefix.
-                    min: 0.1 # Minimum value of cover fraction to be considered.
+        masks: # Mask objects used in the computation of recovery rates.
+            case: Unmatched # Which clusters to mask on recovery rate computations. Options: None, All, Unmatched.
+            in_footprint1: # Flag if cluster is inside footprint.
+                name: self # Name for column.
+                use: True # Use this mask.
+            in_footprint2: # Flag if cluster is inside footprint.
+                name: other # Name for column. It will receive a ft_ prefix.
+                use: True # Use this mask.
+            coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes.
+                name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
+                min: 0.1 # Minimum value of cover fraction to be considered.
 
-        catalog2:
-            log_mass: True
-            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
-            recovery_label: None
-            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
-            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
-            mass_lim: None # Mass limits in plots. Must be 2 numbers (min, max) or None.
-            redshift_lim: None # Redshift limits in plots. Must be 2 numbers (min, max) or None.
-            recovery_lim: None # Recovery rate limits in plots. Must be 2 numbers (min, max) or None.
-            add_mass_label: True # Add labels and legends of mass bins.
-            add_redshift_label: True # Add labels and legends of redshift bins.
+mt_metrics_distances: # Distances between matched pairs.
 
-            masks: # Mask objects used in the computation of recovery rates.
-                case: Unmatched # Which clusters to mask on recovery rate computations. Options: None, All, Unmatched.
-                in_footprint1: # Flag if cluster is inside footprint.
-                    name: self # Name for column.
-                    use: True # Use this mask.
-                in_footprint2: # Flag if cluster is inside footprint.
-                    name: other # Name for column. It will receive a ft_ prefix.
-                    use: True # Use this mask.
-                coverfraction: # Many coverfractions can be computed by adding more "coverfraction" sections with any suffixes.
-                    name: other_1arcsec # Name for coverfraction column. It will receive a cf_ prefix.
-                    min: 0.1 # Minimum value of cover fraction to be considered.
+    figsize: 20 20 # Figure size of figures in cm.
+    dpi: 150 # The resolution in dots per inch.
+    plot_case: simple panel 2D # Types of plots to be done. Options are simple, panel, 2D or all.
+    matching_type: cross # options are cross, cat1, cat2.
+    line_type: steps # line, steps.
+    radial_bins: 20 # bins for radial distances. Can be number of bins, or (xmin, xmax, dx).
+    radial_bin_units: arcmin # units of radial bins.
+    delta_redshift_bins: 20 # bins for redshift distances. Can be number of bins, or (xmin, xmax, dx).
+    add_mass_label: True # Add labels and legends of mass bins.
+    add_redshift_label: True # Add labels and legends of redshift bins.
 
-    distances: # Distances between matched pairs.
+    catalog1:
+        log_mass: True
+        mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
+        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+        mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
 
-        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize.
-        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi.
-        plot_case: simple panel 2D # Types of plots to be done. Options are simple, panel, 2D or all.
-        matching_type: cross # options are cross, cat1, cat2.
-        line_type: steps # line, steps.
-        radial_bins: 20 # bins for radial distances. Can be number of bins, or (xmin, xmax, dx).
-        radial_bin_units: arcmin # units of radial bins.
-        delta_redshift_bins: 20 # bins for redshift distances. Can be number of bins, or (xmin, xmax, dx).
+    catalog2:
+        log_mass: True
+        mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
+        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+        mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
 
-        catalog1:
-            log_mass: True
-            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
-            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
-            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
-            add_mass_label: True # Add labels and legends of mass bins.
-            add_redshift_label: True # Add labels and legends of redshift bins.
+mt_metrics_mass: # Scaling relation.
 
-        catalog2:
-            log_mass: True
-            mass_num_fmt: .2f # Format the values of mass binedges (ex: '.2f') in label.
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
-            mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
-            redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
-            add_mass_label: True # Add labels and legends of mass bins.
-            add_redshift_label: True # Add labels and legends of redshift bins.
+    figsize: 20 20 # Figure size of figures in cm.
+    dpi: 150 # The resolution in dots per inch.
+    plot_case: all # Types of plots to be done. Options are zcolors, density, density_panel.
+    matching_type: cross # options are cross, cat1, cat2.
+    add_redshift_label: True # Add redshift label in panels.
+    add_err: True # Plot errorbars when available.
+    add_cb: True # Add color bar in color plots.
+    log_mass: True # Mass in log scale.
+    ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of mass_bins in catalogs.
+    rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
 
-    mass: # Scaling relation.
+    catalog1:
+        redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+        mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
 
-        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize.
-        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi.
-        plot_case: all # Types of plots to be done. Options are zcolors, density, density_panel.
-        matching_type: cross # options are cross, cat1, cat2.
-        add_redshift_label: True # Add redshift label in panels.
-        add_err: True # Plot errorbars when available.
-        add_cb: True # Add color bar in color plots.
-        log_mass: True # Mass in log scale.
-        ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of mass_bins in catalogs.
-        rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
+    catalog2:
+        redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+        mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
 
-        catalog1:
-            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
-            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+mt_metrics_redshift: # Scaling relation.
 
-        catalog2:
-            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
-            redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
-            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+    figsize: 20 20 # Figure size of figures in cm.
+    dpi: 150 # The resolution in dots per inch.
+    plot_case: all # Types of plots to be done. Options are masscolors, density, density_panel.
+    matching_type: cross # options are cross, cat1, cat2.
+    add_mass_label: True # Add mass label in panels.
+    add_err: True # Plot errorbars when available.
+    add_cb: True # Add color bar in color plots.
+    log_mass: True # Mass in log scale.
+    ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of redshifts_bins in catalogs.
+    rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
 
-    redshift: # Scaling relation.
+    catalog1:
+        mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
+        redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
 
-        figsize: 20 20 # Figure size of figures in cm. Overwrites match_metrics figsize.
-        dpi: 150 # The resolution in dots per inch. Overwrites match_metrics dpi.
-        plot_case: all # Types of plots to be done. Options are masscolors, density, density_panel.
-        matching_type: cross # options are cross, cat1, cat2.
-        add_mass_label: True # Add mass label in panels.
-        add_err: True # Plot errorbars when available.
-        add_cb: True # Add color bar in color plots.
-        log_mass: True # Mass in log scale.
-        ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of redshifts_bins in catalogs.
-        rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
-
-        catalog1:
-            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
-            mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
-            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
-
-        catalog2:
-            mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
-            mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
-            redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+    catalog2:
+        mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
+        redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).

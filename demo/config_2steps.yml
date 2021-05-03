@@ -27,24 +27,23 @@ catalog2:
     radius_unit: ARCMIN
 
 proximity_match:
-    which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
     type: cross # options are cross, cat1, cat2
-    preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
-    catalog1:
-        delta_z: .2
-        match_radius: .01 arcsec
-    catalog2:
-        delta_z: .2
-        match_radius: .01 arcsec
-            
-proximity_match_2:
-    which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
-    type: cross # options are cross, cat1, cat2
-    preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
-    catalog1:
-        delta_z: .2
-        match_radius: 1 arcmin
-    catalog2:
-        delta_z: .2
-        match_radius: 1 mpc
+    step1:
+        which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
+        preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
+        catalog1:
+            delta_z: .2
+            match_radius: .01 arcsec
+        catalog2:
+            delta_z: .2
+            match_radius: .01 arcsec
+    step2:
+        which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
+        preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
+        catalog1:
+            delta_z: .2
+            match_radius: 1 arcmin
+        catalog2:
+            delta_z: .2
+            match_radius: 1 mpc
             
