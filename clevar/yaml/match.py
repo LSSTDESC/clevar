@@ -22,9 +22,11 @@ def proximity(config_file, overwrite_config, overwrite_files):
     """
     # Create clevar objects from yml config
     config = loadconf(config_file,
-        consistency_configs=['catalog1', 'catalog2','proximity_match'],
+        load_configs=['catalog1', 'catalog2', 'cosmology', 'proximity_match', 'masks'],
         fail_action='orverwrite' if overwrite_config else 'ask'
         )
+    if config is None:
+        return
     print("\n# Reading Catalog 1")
     c1 = make_catalog(config['catalog1'])
     print("\n# Reading Catalog 2")

@@ -47,6 +47,8 @@ def write_yaml(config, filename):
 yaml.write = write_yaml
 yaml.read = read_yaml
 ########################################################################
+### dict functions #####################################################
+########################################################################
 def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
     """
     Adds the differences between dictionaries to a list
@@ -80,7 +82,7 @@ def get_dicts_diff(dict1, dict2, keys=None,
     Parameters
     ----------
     dict1, dict2: dict
-        Dictionaies to be compared
+        Dictionaries to be compared
     keys: list, None
         List of keys to be compared. If None, all keys are compared
     header: str
@@ -108,6 +110,29 @@ def get_dicts_diff(dict1, dict2, keys=None,
         for l in diff_lines[1:]:
             print(fmts%tuple(l))
     return diff_lines[1:]
+def deep_update(dict_base, dict_update):
+    """
+    Update a multi-layer dictionary.
+
+    Parameters
+    ----------
+    dict_base: dict
+        Dictionary to be updated
+    dict_update: dict
+        Dictionary with the updates
+
+    Returns
+    -------
+    dict_base: dict
+        Updated dictionary (the input dict is also updated)
+    """
+    for k, v in dict_update.items():
+        if isinstance(v, dict) and k in dict_base:
+            deep_update(dict_base[k], v)
+        else:
+            dict_base[k] = dict_update[k]
+    return dict_base
+########################################################################
 def get_input_loop(options_msg, actions):
     """
     Get input from fixed values
@@ -126,7 +151,7 @@ def get_input_loop(options_msg, actions):
         prt = print(f'Option {action} not valid. Please choose:') if loop else None
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
-def loadconf(config_file, consistency_configs=[], fail_action='ask'):
+def loadconf(config_file, load_configs=[], fail_action='ask'):
     """
     Load configuration from yaml file, creates output directory and config.log.yml
 
@@ -134,8 +159,8 @@ def loadconf(config_file, consistency_configs=[], fail_action='ask'):
     ----------
     config_file: str
         Yaml configuration file
-    consistency_configs: list
-        List of configurations to be checked with config.log.yml
+    load_configs: list
+        List of configurations loaded (will be checked with config.log.yml)
     fail_action: str
         Action to do when there is inconsistency in configs.
         Options are 'ask', 'overwrite' and 'quit'
@@ -148,27 +173,32 @@ def loadconf(config_file, consistency_configs=[], fail_action='ask'):
     print("\n## Loading config")
     if not os.path.isfile(config_file):
         raise ValueError(f'Config file "{config_file}" not found')
-    config = yaml.read(config_file)
-    check_file = f'{config["outpath"]}/config.log.yml'
+    base_cfg_file = f'{os.path.dirname(__file__)}/base_config.yml'
+    config = deep_update(yaml.read(base_cfg_file), yaml.read(config_file))
+    config = {k:config[k] for k in ["outpath"]+load_configs}
+    log_file = f'{config["outpath"]}/config.log.yml'
     if not os.path.isdir(config['outpath']):
         os.mkdir(config['outpath'])
-        os.system(f'cp {config_file} {check_file}')
+        log_config = config
     else:
-        check_config = yaml.read(check_file)
-        diff_configs = get_dicts_diff(config, check_config, keys=consistency_configs,
+        log_config = yaml.read(log_file)
+        diff_configs = get_dicts_diff(config, log_config, keys=load_configs,
                                         header=['Name', 'New', 'Saved'],
                                         msg='\nConfigurations differs from saved config:\n')
         if len(diff_configs)>0:
             actions_loop = {
-                'o': (os.system, [f'cp {config_file} {check_file}'], {}),
-                'q': (lambda _:0, [], {}),
+                'o': (deep_update, [log_config, config], {}),
+                'q': (lambda: None, [], {}),
                 }
             f, args, kwargs = {
                 'ask': (get_input_loop, ['Overwrite(o) and proceed or Quit(q)?', actions_loop], {}),
                 'orverwrite': actions_loop['o'],
                 'quit': actions_loop['q'],
             }[fail_action]
-            f(*args, **kwargs)
+            log_config = f(*args, **kwargs)
+            if log_config is None:
+                return
+    yaml.write(log_config, log_file)
     return config
 def make_catalog(cat_config):
     """
