@@ -99,7 +99,7 @@ def get_dicts_diff(dict1, dict2, keys=None,
     if keys is None:
         keys = set(list(dict1.keys())+list(dict2.keys()))
     for k in keys:
-        add_dicts_diff(dict1[k], dict2[k], pref=f'[{k}]', diff_lines=diff_lines)
+        add_dicts_diff(dict1.get(k, {}), dict2.get(k, {}), pref=f'[{k}]', diff_lines=diff_lines)
     if len(diff_lines)>1:
         diff_lines = np.array(diff_lines)
         max_sizes = [max(veclen(l)) for l in diff_lines.T]
@@ -182,7 +182,7 @@ def loadconf(config_file, load_configs=[], fail_action='ask'):
         log_config = config
     else:
         log_config = yaml.read(log_file)
-        diff_configs = get_dicts_diff(config, log_config, keys=load_configs,
+        diff_configs = get_dicts_diff(log_config, config, keys=load_configs,
                                         header=['Name', 'New', 'Saved'],
                                         msg='\nConfigurations differs from saved config:\n')
         if len(diff_configs)>0:
