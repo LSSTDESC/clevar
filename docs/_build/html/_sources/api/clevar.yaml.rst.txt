@@ -14,8 +14,8 @@ Submodules
 
    clevar.yaml.footprint
    clevar.yaml.helper_funcs
+   clevar.yaml.match
    clevar.yaml.match_metrics_distances
    clevar.yaml.match_metrics_mass
    clevar.yaml.match_metrics_recovery_rate
    clevar.yaml.match_metrics_redshift
-   clevar.yaml.match_proximity

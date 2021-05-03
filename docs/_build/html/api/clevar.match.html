@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match package &mdash; ClEvaR 0.0.11 documentation</title>
+  <title>clevar.match package &mdash; ClEvaR 0.1.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.0.11
+                0.1.0
               </div>
             
           
@@ -135,11 +135,11 @@
 <li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
 </ul>
 </li>
 </ul>
@@ -217,6 +217,28 @@
 <dt id="clevar.match.MatchedPairs">
 <em class="property">class </em><code class="sig-prename descclassname">clevar.match.</code><code class="sig-name descname">MatchedPairs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match.html#MatchedPairs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match.MatchedPairs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="clevar.match.MatchedPairs.matching_masks">
+<code class="sig-name descname">matching_masks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match.html#MatchedPairs.matching_masks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match.MatchedPairs.matching_masks" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
+‘cross’, ‘self’, ‘other’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>mask1</strong> (<em>ndarray</em>) – Array of booleans to get catalog1 matched clusters</p></li>
+<li><p><strong>mask2</strong> (<em>ndarray</em>) – Array of catalog2 indexes corresponding to catalog1 matched clusters</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <div class="section" id="submodules">

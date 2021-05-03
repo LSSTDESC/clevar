@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.yaml.helper_funcs module &mdash; ClEvaR 0.0.11 documentation</title>
+  <title>clevar.yaml.helper_funcs module &mdash; ClEvaR 0.1.0 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="clevar.yaml.match_metrics_distances module" href="clevar.yaml.match_metrics_distances.html" />
+    <link rel="next" title="clevar.yaml.match module" href="clevar.yaml.match.html" />
     <link rel="prev" title="clevar.yaml.footprint module" href="clevar.yaml.footprint.html" /> 
 </head>
 
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.0.11
+                0.1.0
               </div>
             
           
@@ -135,11 +135,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
 </ul>
 </li>
 </ul>
@@ -234,6 +234,26 @@ Helper functions for command line execution</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="clevar.yaml.helper_funcs.deep_update">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">deep_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_base</span></em>, <em class="sig-param"><span class="n">dict_update</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#deep_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.deep_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a multi-layer dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dict_base</strong> (<em>dict</em>) – Dictionary to be updated</p></li>
+<li><p><strong>dict_update</strong> (<em>dict</em>) – Dictionary with the updates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>dict_base</strong> – Updated dictionary (the input dict is also updated)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="clevar.yaml.helper_funcs.get_dicts_diff">
 <code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">get_dicts_diff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict1</span></em>, <em class="sig-param"><span class="n">dict2</span></em>, <em class="sig-param"><span class="n">keys</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">header</span><span class="o">=</span><span class="default_value">['Name', 'dict1', 'dict2']</span></em>, <em class="sig-param"><span class="n">msg</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#get_dicts_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.get_dicts_diff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the differences between dictionaries, accounting for nested dictionaries.
@@ -241,8 +261,8 @@ If there are differences, a table with the information is printed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dict1</strong> (<em>dict</em>) – Dictionaies to be compared</p></li>
-<li><p><strong>dict2</strong> (<em>dict</em>) – Dictionaies to be compared</p></li>
+<li><p><strong>dict1</strong> (<em>dict</em>) – Dictionaries to be compared</p></li>
+<li><p><strong>dict2</strong> (<em>dict</em>) – Dictionaries to be compared</p></li>
 <li><p><strong>keys</strong> (<em>list</em><em>, </em><em>None</em>) – List of keys to be compared. If None, all keys are compared</p></li>
 <li><p><strong>header</strong> (<em>str</em>) – Header for differences table</p></li>
 <li><p><strong>msg</strong> (<em>str</em>) – Message printed before the differences</p></li>
@@ -273,13 +293,13 @@ If there are differences, a table with the information is printed.</p>
 
 <dl class="py function">
 <dt id="clevar.yaml.helper_funcs.loadconf">
-<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">loadconf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em>, <em class="sig-param"><span class="n">consistency_configs</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">fail_action</span><span class="o">=</span><span class="default_value">'ask'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#loadconf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.loadconf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">loadconf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em>, <em class="sig-param"><span class="n">load_configs</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">fail_action</span><span class="o">=</span><span class="default_value">'ask'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#loadconf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.loadconf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load configuration from yaml file, creates output directory and config.log.yml</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config_file</strong> (<em>str</em>) – Yaml configuration file</p></li>
-<li><p><strong>consistency_configs</strong> (<em>list</em>) – List of configurations to be checked with config.log.yml</p></li>
+<li><p><strong>load_configs</strong> (<em>list</em>) – List of configurations loaded (will be checked with config.log.yml)</p></li>
 <li><p><strong>fail_action</strong> (<em>str</em>) – Action to do when there is inconsistency in configs.
 Options are ‘ask’, ‘overwrite’ and ‘quit’</p></li>
 </ul>

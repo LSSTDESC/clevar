@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; ClEvaR 0.0.11 documentation</title>
+  <title>Index &mdash; ClEvaR 0.1.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.0.11
+                0.1.0
               </div>
             
           
@@ -133,11 +133,11 @@
 <li class="toctree-l2"><a class="reference internal" href="api/clevar.yaml.html">clevar.yaml package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
 </ul>
 </li>
 </ul>
@@ -212,6 +212,7 @@
  <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
@@ -454,6 +455,13 @@
 </li>
       </ul></li>
       <li>
+    clevar.yaml.match
+
+      <ul>
+        <li><a href="api/clevar.yaml.match.html#module-clevar.yaml.match">module</a>
+</li>
+      </ul></li>
+      <li>
     clevar.yaml.match_metrics_distances
 
       <ul>
@@ -481,13 +489,6 @@
         <li><a href="api/clevar.yaml.match_metrics_redshift.html#module-clevar.yaml.match_metrics_redshift">module</a>
 </li>
       </ul></li>
-      <li>
-    clevar.yaml.match_proximity
-
-      <ul>
-        <li><a href="api/clevar.yaml.match_proximity.html#module-clevar.yaml.match_proximity">module</a>
-</li>
-      </ul></li>
       <li><a href="api/clevar.constants.html#clevar.constants.Constants.CLIGHT">CLIGHT (clevar.constants.Constants attribute)</a>
 </li>
       <li><a href="api/clevar.constants.html#clevar.constants.Constants.CLIGHT_KMS">CLIGHT_KMS (clevar.constants.Constants attribute)</a>
@@ -506,6 +507,14 @@
         <li><a href="api/clevar.match.parent.html#clevar.match.parent.Match.cross_match">(clevar.match.parent.Match method)</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.deep_update">deep_update() (in module clevar.yaml.helper_funcs)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -654,6 +663,8 @@
       </ul></li>
       <li><a href="api/clevar.match.html#clevar.match.MatchedPairs">MatchedPairs (class in clevar.match)</a>
 </li>
+      <li><a href="api/clevar.match.html#clevar.match.MatchedPairs.matching_masks">matching_masks() (clevar.match.MatchedPairs method)</a>
+</li>
       <li>
     module
 
@@ -704,6 +715,8 @@
 </li>
         <li><a href="api/clevar.yaml.helper_funcs.html#module-clevar.yaml.helper_funcs">clevar.yaml.helper_funcs</a>
 </li>
+        <li><a href="api/clevar.yaml.match.html#module-clevar.yaml.match">clevar.yaml.match</a>
+</li>
         <li><a href="api/clevar.yaml.match_metrics_distances.html#module-clevar.yaml.match_metrics_distances">clevar.yaml.match_metrics_distances</a>
 </li>
         <li><a href="api/clevar.yaml.match_metrics_mass.html#module-clevar.yaml.match_metrics_mass">clevar.yaml.match_metrics_mass</a>
@@ -711,8 +724,6 @@
         <li><a href="api/clevar.yaml.match_metrics_recovery_rate.html#module-clevar.yaml.match_metrics_recovery_rate">clevar.yaml.match_metrics_recovery_rate</a>
 </li>
         <li><a href="api/clevar.yaml.match_metrics_redshift.html#module-clevar.yaml.match_metrics_redshift">clevar.yaml.match_metrics_redshift</a>
-</li>
-        <li><a href="api/clevar.yaml.match_proximity.html#module-clevar.yaml.match_proximity">clevar.yaml.match_proximity</a>
 </li>
       </ul></li>
   </ul></td>
@@ -833,6 +844,8 @@
         <li><a href="api/clevar.match.proximity.html#clevar.match.proximity.ProximityMatch.prep_cat_for_match">(clevar.match.proximity.ProximityMatch method)</a>
 </li>
       </ul></li>
+      <li><a href="api/clevar.yaml.match.html#clevar.yaml.match.proximity">proximity() (in module clevar.yaml.match)</a>
+</li>
       <li><a href="api/clevar.match.proximity.html#clevar.match.proximity.ProximityMatch">ProximityMatch (class in clevar.match.proximity)</a>
 </li>
   </ul></td>
@@ -882,8 +895,6 @@
 </li>
         <li><a href="api/clevar.yaml.match_metrics_redshift.html#clevar.yaml.match_metrics_redshift.run">(in module clevar.yaml.match_metrics_redshift)</a>
 </li>
-        <li><a href="api/clevar.yaml.match_proximity.html#clevar.yaml.match_proximity.run">(in module clevar.yaml.match_proximity)</a>
-</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -918,6 +929,10 @@
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/clevar.yaml.match.html#clevar.yaml.match.write_output">write_output() (in module clevar.yaml.match)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.write_yaml">write_yaml() (in module clevar.yaml.helper_funcs)</a>
 </li>

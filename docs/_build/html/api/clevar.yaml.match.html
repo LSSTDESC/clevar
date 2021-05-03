@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.yaml.match_proximity module &mdash; ClEvaR 0.0.11 documentation</title>
+  <title>clevar.yaml.match module &mdash; ClEvaR 0.1.0 documentation</title>
   
 
   
@@ -37,7 +37,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="clevar.yaml.match_metrics_redshift module" href="clevar.yaml.match_metrics_redshift.html" /> 
+    <link rel="next" title="clevar.yaml.match_metrics_distances module" href="clevar.yaml.match_metrics_distances.html" />
+    <link rel="prev" title="clevar.yaml.helper_funcs module" href="clevar.yaml.helper_funcs.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -61,7 +62,7 @@
             
             
               <div class="version">
-                0.0.11
+                0.1.0
               </div>
             
           
@@ -134,11 +135,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.yaml.match module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.yaml.match_proximity module</a></li>
 </ul>
 </li>
 </ul>
@@ -193,13 +194,13 @@
         
           <li><a href="clevar.yaml.html">clevar.yaml package</a> &raquo;</li>
         
-      <li>clevar.yaml.match_proximity module</li>
+      <li>clevar.yaml.match module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/clevar.yaml.match_proximity.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/clevar.yaml.match.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -212,13 +213,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-clevar.yaml.match_proximity">
-<span id="clevar-yaml-match-proximity-module"></span><h1>clevar.yaml.match_proximity module<a class="headerlink" href="#module-clevar.yaml.match_proximity" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-clevar.yaml.match">
+<span id="clevar-yaml-match-module"></span><h1>clevar.yaml.match module<a class="headerlink" href="#module-clevar.yaml.match" title="Permalink to this headline">¶</a></h1>
 <p>&#64;file match_proximity.py
 Proximity matching functions for command line execution</p>
 <dl class="py function">
-<dt id="clevar.yaml.match_proximity.run">
-<code class="sig-prename descclassname">clevar.yaml.match_proximity.</code><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em>, <em class="sig-param"><span class="n">overwrite_config</span></em>, <em class="sig-param"><span class="n">overwrite_files</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/match_proximity.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.match_proximity.run" title="Permalink to this definition">¶</a></dt>
+<dt id="clevar.yaml.match.proximity">
+<code class="sig-prename descclassname">clevar.yaml.match.</code><code class="sig-name descname">proximity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em>, <em class="sig-param"><span class="n">overwrite_config</span></em>, <em class="sig-param"><span class="n">overwrite_files</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/match.html#proximity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.match.proximity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main plot function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file</strong> (<em>str</em>) – Yaml file with configuration to run</p></li>
+<li><p><strong>overwrite_config</strong> (<em>bool</em>) – Forces overwrite of config.log.yml file</p></li>
+<li><p><strong>overwrite_files</strong> (<em>bool</em>) – Forces overwrite of matching output files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.match.write_output">
+<code class="sig-prename descclassname">clevar.yaml.match.</code><code class="sig-name descname">write_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em>, <em class="sig-param"><span class="n">overwrite_config</span></em>, <em class="sig-param"><span class="n">overwrite_files</span></em>, <em class="sig-param"><span class="n">matching_method</span><span class="o">=</span><span class="default_value">'proximity_match'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/match.html#write_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.match.write_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main plot function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

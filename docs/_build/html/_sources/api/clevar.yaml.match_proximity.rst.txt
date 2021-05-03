@@ -1,7 +1,0 @@
-clevar.yaml.match\_proximity module
-===================================
-
-.. automodule:: clevar.yaml.match_proximity
-   :members:
-   :undoc-members:
-   :show-inheritance:

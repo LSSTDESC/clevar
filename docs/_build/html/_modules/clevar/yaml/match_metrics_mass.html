@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.yaml.match_metrics_mass &mdash; ClEvaR 0.0.11 documentation</title>
+  <title>clevar.yaml.match_metrics_mass &mdash; ClEvaR 0.1.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.0.11
+                0.1.0
               </div>
             
           
@@ -133,11 +133,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_proximity.html">clevar.yaml.match_proximity module</a></li>
 </ul>
 </li>
 </ul>
@@ -224,8 +224,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Create clevar objects from yml config</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">loadconf</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span>
-        <span class="n">consistency_configs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">,</span> <span class="s1">&#39;catalog2&#39;</span><span class="p">,</span><span class="s1">&#39;proximity_match&#39;</span><span class="p">],</span>
+        <span class="n">load_configs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">,</span> <span class="s1">&#39;catalog2&#39;</span><span class="p">,</span> <span class="s1">&#39;cosmology&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;proximity_match&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_metrics_mass&#39;</span><span class="p">],</span>
         <span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Reading Catalog 1&quot;</span><span class="p">)</span>
     <span class="n">c1</span> <span class="o">=</span> <span class="n">make_catalog</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">])</span>
     <span class="n">c1</span><span class="o">.</span><span class="n">load_match</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outpath&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/match1.fits&quot;</span><span class="p">)</span>
@@ -235,30 +238,13 @@
     <span class="c1"># Scaling Relations</span>
     <span class="kn">from</span> <span class="nn">clevar.match_metrics</span> <span class="kn">import</span> <span class="n">scaling</span>
     <span class="c1"># prep configurations</span>
-    <span class="n">mass_conf</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;plot_case&#39;</span><span class="p">:</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;matching_type&#39;</span><span class="p">:</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;add_redshift_label&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;add_err&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;add_cb&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;log_mass&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;ax_rotation&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s1">&#39;rotation_resolution&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
-        <span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;match_metrics&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="s1">&#39;20 20&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;dpi&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;match_metrics&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dpi&#39;</span><span class="p">,</span> <span class="s1">&#39;150&#39;</span><span class="p">),</span>
-        <span class="p">}</span>
-    <span class="n">mass_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;match_metrics&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="n">mass_conf</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">mass_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;mt_metrics_mass&#39;</span><span class="p">])</span>
+    <span class="c1"># Format values</span>
     <span class="n">mass_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mass_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">/</span><span class="mf">2.54</span>
     <span class="n">mass_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mass_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
     <span class="n">str_none</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">==</span><span class="s1">&#39;None&#39;</span> <span class="k">else</span> <span class="n">x</span>
     <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;catalog1&#39;</span><span class="p">,</span> <span class="s1">&#39;catalog2&#39;</span><span class="p">):</span>
-        <span class="n">mass_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;redshift_bins&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-            <span class="s1">&#39;redshift_num_fmt&#39;</span><span class="p">:</span> <span class="s1">&#39;.1f&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;mass_bins&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="n">mass_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;match_metrics&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="p">{}))</span>
-        <span class="c1"># Format values</span>
         <span class="n">mass_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_bins</span><span class="p">(</span><span class="n">mass_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">])</span>
         <span class="n">mass_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;mass_bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_bins</span><span class="p">(</span><span class="n">mass_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;mass_bins&#39;</span><span class="p">],</span> <span class="n">mass_conf</span><span class="p">[</span><span class="s1">&#39;log_mass&#39;</span><span class="p">])</span>
         <span class="n">mass_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">str_none</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mass_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
