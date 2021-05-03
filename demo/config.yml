@@ -102,7 +102,7 @@ masks: # Config to be used by make_masks and recovery rate.
 mt_metrics_recovery: # Recovery rate.
 
     figsize: 20 20 # Figure size of figures in cm.
-    dpi: 151 # The resolution in dots per inch.
+    dpi: 150 # The resolution in dots per inch.
     plot_case: all # Types of plots to be done. Options are simple, panel, 2D or all.
     matching_type: cross # options are cross, cat1, cat2, multi_cat1, multi_cat2, multi_join.
     line_type: steps # line, steps.
