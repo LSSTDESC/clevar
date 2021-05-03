@@ -111,6 +111,8 @@ match_metrics:
         plot_case: all # Types of plots to be done. Options are simple, panel, 2D or all.
         matching_type: cross # options are cross, cat1, cat2, multi_cat1, multi_cat2, multi_join.
         line_type: steps # line, steps.
+        add_mass_label: True # Add labels and legends of mass bins.
+        add_redshift_label: True # Add labels and legends of redshift bins.
 
         catalog1:
             log_mass: True
@@ -122,8 +124,6 @@ match_metrics:
             mass_lim: None # Mass limits in plots. Must be 2 numbers (min, max) or None.
             redshift_lim: None # Redshift limits in plots. Must be 2 numbers (min, max) or None.
             recovery_lim: None # Recovery rate limits in plots. Must be 2 numbers (min, max) or None.
-            add_mass_label: True # Add labels and legends of mass bins.
-            add_redshift_label: True # Add labels and legends of redshift bins.
 
             masks: # Mask objects used in the computation of recovery rates. Names must correspond to those in the main "masks" section.
                 case: Unmatched # Which clusters to mask on recovery rate computations. Options: None, All, Unmatched.
@@ -150,8 +150,6 @@ match_metrics:
             mass_lim: None # Mass limits in plots. Must be 2 numbers (min, max) or None.
             redshift_lim: None # Redshift limits in plots. Must be 2 numbers (min, max) or None.
             recovery_lim: None # Recovery rate limits in plots. Must be 2 numbers (min, max) or None.
-            add_mass_label: True # Add labels and legends of mass bins.
-            add_redshift_label: True # Add labels and legends of redshift bins.
 
             masks: # Mask objects used in the computation of recovery rates.
                 case: Unmatched # Which clusters to mask on recovery rate computations. Options: None, All, Unmatched.
@@ -175,6 +173,8 @@ match_metrics:
         radial_bins: 20 # bins for radial distances. Can be number of bins, or (xmin, xmax, dx).
         radial_bin_units: arcmin # units of radial bins.
         delta_redshift_bins: 20 # bins for redshift distances. Can be number of bins, or (xmin, xmax, dx).
+        add_mass_label: True # Add labels and legends of mass bins.
+        add_redshift_label: True # Add labels and legends of redshift bins.
 
         catalog1:
             log_mass: True
@@ -182,8 +182,6 @@ match_metrics:
             redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
             mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
             redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
-            add_mass_label: True # Add labels and legends of mass bins.
-            add_redshift_label: True # Add labels and legends of redshift bins.
 
         catalog2:
             log_mass: True
@@ -191,8 +189,6 @@ match_metrics:
             redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
             mass_bins: 4 # Mass bins. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
             redshift_bins: 10 # Redshift bins. Can be number of bins, or (xmin, xmax, dx).
-            add_mass_label: True # Add labels and legends of mass bins.
-            add_redshift_label: True # Add labels and legends of redshift bins.
 
     mass: # Scaling relation.
 
