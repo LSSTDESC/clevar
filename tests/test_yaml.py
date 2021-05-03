@@ -73,14 +73,17 @@ def test_yaml_funcs():
     yaml.write(config, 'cfg.yml')
     original_input = mock.builtins.input
     mock.builtins.input = lambda _: 'q'
-    clevar_yaml.match_proximity('cfg.yml', overwrite_config=True, overwrite_files=False)
+    clevar_yaml.match_proximity('cfg.yml', overwrite_config=False, overwrite_files=False)
+    config['cosmology'] = {'backend': 'CCL'}
+    yaml.write(config, 'cfg.yml')
+    clevar_yaml.match_proximity('cfg.yml', overwrite_config=False, overwrite_files=False)
     mock.builtins.input = original_input
-    os.system("rm cfg.yml")
     # Footprint overwrite
     original_input = mock.builtins.input
     mock.builtins.input = lambda _: 'q'
     clevar_yaml.artificial_footprint(config_file, True, False, case='1')
     clevar_yaml.artificial_footprint(config_file, True, False, case='2')
+    clevar_yaml.artificial_footprint('cfg.yml', False, True, case='2')
     mock.builtins.input = original_input
     # Masks overwrite
     original_input = mock.builtins.input
@@ -98,6 +101,7 @@ def test_yaml_funcs():
     os.system('rm cat1.fits')
     os.system('rm cat2.fits')
     os.system('rm -rf temp')
+    os.system("rm cfg.yml")
 
 def test_yaml_plots():
     # Get main files
@@ -108,8 +112,22 @@ def test_yaml_plots():
     clevar_yaml.match_metrics_mass(config_file)
     clevar_yaml.match_metrics_recovery_rate(config_file)
     clevar_yaml.match_metrics_redshift(config_file)
+    # Create different config for skiping run
+    config_diff = {}
+    config_diff.update(config)
+    for c in [c_ for c_ in config if c_[:10]=='mt_metrics']:
+        config_diff[c]['dpi'] = 10
+    yaml.write(config_diff, 'cfg.yml')
+    original_input = mock.builtins.input
+    mock.builtins.input = lambda _: 'q'
+    clevar_yaml.match_metrics_distances('cfg.yml')
+    clevar_yaml.match_metrics_mass('cfg.yml')
+    clevar_yaml.match_metrics_recovery_rate('cfg.yml')
+    clevar_yaml.match_metrics_redshift('cfg.yml')
+    mock.builtins.input = original_input
     # cleanup
     os.system(f"rm {config['catalog1']['footprint']} {config['catalog2']['footprint']}")
     os.system('rm cat1.fits')
     os.system('rm cat2.fits')
     os.system('rm -rf temp')
+    os.system('rm -r cfg.yml')
