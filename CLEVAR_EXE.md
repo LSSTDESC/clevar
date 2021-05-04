@@ -96,6 +96,10 @@ Configuration for comology package and parameters:
 
 * `backend` - Library for cosmology. Options are Astropy, CCL.
 * `parameters` - cosmological parameters.
+  * `H0` - Hubble parameter
+  * `Omega_b0` - Baryonic matter fraction at `z=0`
+  * `Omega_dm0` - Cold dark matter fraction at `z=0`
+  * `Omega_k0` - Curvature fraction at `z=0`
 
 ### catalog1 (and catalog2) <a name="config_cat"></a>
 
@@ -123,12 +127,12 @@ Configuration of input catalogs:
 ### proximity_match <a name="config_proximity_match"></a>
 
 Configuration for proximity matching.
-If you want a multi-step matching, add more sections with the prefix `proximity_match`.
-Each section name must be different or they will be overwritten.
+The main parameter is `type`, which selects if a one way or two way matching is done (options are cross, cat1, cat2).
+The other parameters must be encapsulated in a section with a `step` prefix.
+If you want a multi-step matching, add more `step` sections (each section name must be different or they will be overwritten).
 There is a example of a configuration file with multi-steps in [demo/config_2steps.yml](demo/config_2steps.yml).
 
 * `which_radius` - Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
-* `type` - Options are cross, cat1, cat2.
 * `preference` - Preference for multiple candidadtes. Options are `more_massive`, `angular_proximity` or `redshift_proximity`.
 * `catalog1` - Options for catalog 1
   * `delta_z` - Defines the zmin, zmax for matching. If `cat` uses redshift properties of the catalog, if `spline.filename` interpolates data in `filename` (z, zmin, zmax) fmt, if `float` uses `delta_z*(1+z)`, if `None` does not use z.

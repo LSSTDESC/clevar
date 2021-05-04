@@ -16,8 +16,11 @@ def run(config_file):
     """
     # Create clevar objects from yml config
     config = loadconf(config_file,
-        consistency_configs=['catalog1', 'catalog2','proximity_match'],
+        load_configs=['catalog1', 'catalog2', 'cosmology', 'proximity_match',
+                      'mt_metrics_distances'],
         )
+    if config is None:
+        return
     print("\n# Reading Catalog 1")
     c1 = make_catalog(config['catalog1'])
     c1.load_match(f"{config['outpath']}/match1.fits")
@@ -29,31 +32,13 @@ def run(config_file):
     # Print metrics
     from clevar.match_metrics import distances
     # prep configurations
-    dist_conf = {
-        'matching_type': 'cross',
-        'line_type':'steps',
-        'add_mass_label': True,
-        'add_redshift_label': True,
-        'radial_bins': 20,
-        'radial_bin_units': 'arcmin',
-        'delta_redshift_bins': 20,
-        'figsize': config.get('match_metrics', {}).get('figsize', '20 20'),
-        'dpi': config.get('match_metrics', {}).get('dpi', '150'),
-        }
-    dist_conf.update(config.get('match_metrics', {}).get('distances', {}))
+    dist_conf = {}
+    dist_conf.update(config['mt_metrics_distances'])
+    # Format values
     dist_conf['figsize'] = np.array(dist_conf['figsize'].split(' '), dtype=float)/2.54
     dist_conf['dpi'] = int(dist_conf['dpi'])
     str_none = lambda x: None if str(x)=='None' else x
     for cat in ('catalog1', 'catalog2'):
-        dist_conf[cat] = {
-            'log_mass': True,
-            'mass_num_fmt': '.2f',
-            'redshift_num_fmt': '.1f',
-            'redshift_bins': 10,
-            'mass_bins': 5,
-            }
-        dist_conf[cat].update(config.get('match_metrics', {}).get('distances', {}).get(cat, {}))
-        # Format values
         dist_conf[cat]['redshift_bins'] = make_bins(dist_conf[cat]['redshift_bins'])
         dist_conf[cat]['mass_bins'] = make_bins(dist_conf[cat]['mass_bins'], dist_conf[cat]['log_mass'])
         dist_conf[cat] = {k: str_none(v) for k, v in dist_conf[cat].items()}

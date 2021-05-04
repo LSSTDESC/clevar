@@ -24,9 +24,11 @@ def artificial(config_file, overwrite_config, overwrite_files, case):
     """
     # Create clevar objects from yml config
     config = loadconf(config_file,
-        consistency_configs=['catalog1', 'catalog2'],
+        load_configs=['catalog1', 'catalog2', 'cosmology', 'masks'],
         fail_action='orverwrite' if overwrite_config else 'ask'
         )
+    if config is None:
+        return
     check_actions = {'o': (lambda : True, [], {}), 'q': (lambda :False, [], {}),}
     if case in ('1', 'both'):
         print("\n# Creating footprint 1")
@@ -72,7 +74,7 @@ def make_masks(config_file, overwrite_config, overwrite_files, case):
     """
     # Create clevar objects from yml config
     config = loadconf(config_file,
-        consistency_configs=['catalog1', 'catalog2'],
+        load_configs=['catalog1', 'catalog2', 'cosmology', 'masks'],
         fail_action='orverwrite' if overwrite_config else 'ask'
         )
     check_actions = {'o': (lambda : True, [], {}), 'q': (lambda :False, [], {}),}

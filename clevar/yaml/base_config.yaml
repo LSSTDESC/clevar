@@ -1,0 +1,108 @@
+cosmology:
+    parameters:
+        H0: 70.0
+        Omega_b0: 0.05
+        Omega_dm0: 0.25
+        Omega_k0: 0.0
+catalog1:
+    footprint:
+        detfrac_name: None
+        zmax_name: None
+catalog2:
+    footprint:
+        detfrac_name: None
+        zmax_name: None
+mt_metrics_recovery:
+    figsize: 20 20
+    dpi: 150
+    plot_case: all
+    matching_type: multi_join
+    line_type: steps
+    add_mass_label: True
+    add_redshift_label: True
+    add_cb: True
+    catalog1:
+        log_mass: True
+        mass_num_fmt: .2f
+        redshift_num_fmt: .1f
+        recovery_label: None
+        mass_bins: 5
+        redshift_bins: 10
+        mass_lim: None
+        redshift_lim: None
+        recovery_lim: None
+        masks:
+            case: None
+    catalog2:
+        log_mass: True
+        mass_num_fmt: .2f
+        redshift_num_fmt: .1f
+        recovery_label: None
+        mass_bins: 5
+        redshift_bins: 10
+        mass_lim: None
+        redshift_lim: None
+        recovery_lim: None
+        masks:
+            case: None
+mt_metrics_distances:
+    figsize: 20 20
+    dpi: 150
+    plot_case: simple panel 2D
+    matching_type: cross
+    line_type: steps
+    radial_bins: 20
+    radial_bin_units: arcmin
+    delta_redshift_bins: 20
+    add_mass_label: True
+    add_redshift_label: True
+    catalog1:
+        log_mass: True
+        mass_num_fmt: .2f
+        redshift_num_fmt: .1f
+        mass_bins: 5
+        redshift_bins: 10
+    catalog2:
+        log_mass: True
+        mass_num_fmt: .2f
+        redshift_num_fmt: .1f
+        mass_bins: 5
+        redshift_bins: 10
+mt_metrics_mass:
+    figsize: 20 20
+    dpi: 150
+    plot_case: all
+    matching_type: cross
+    add_redshift_label: True
+    add_err: True
+    add_cb: True
+    log_mass: True
+    ax_rotation: 0
+    rotation_resolution: 30
+    catalog1:
+        redshift_bins: 10
+        redshift_num_fmt: .1f
+        mass_bins: 4
+    catalog2:
+        redshift_bins: 10
+        redshift_num_fmt: .1f
+        mass_bins: 4
+mt_metrics_redshift:
+    figsize: 20 20
+    dpi: 150
+    plot_case: all
+    matching_type: cross
+    add_mass_label: True
+    add_err: True
+    add_cb: True
+    log_mass: True
+    ax_rotation: 0
+    rotation_resolution: 30
+    catalog1:
+        mass_bins: 4
+        mass_num_fmt: .1f
+        redshift_bins: 10
+    catalog2:
+        mass_bins: 4
+        mass_num_fmt: .1f
+        redshift_bins: 10
