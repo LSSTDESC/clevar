@@ -665,8 +665,8 @@ class ClCatalogFuncs():
     Plot labels and scales are configured by this class.
     """
     class_args = ('xlabel', 'ylabel', 'xscale', 'yscale', 'add_err',
-                  'label1', 'label2', 'scale1', 'scale2')
-    def _prep_kwargs(cat1, cat2, matching_type, col, kwargs):
+                  'label1', 'label2', 'scale1', 'scale2', 'mask1', 'mask2')
+    def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
         """
         Prepare kwargs into args for this class and args for function
 
@@ -693,7 +693,9 @@ class ClCatalogFuncs():
             Matched catalogs
         """
         func_kwargs = {k:v for k, v in kwargs.items() if k not in ClCatalogFuncs.class_args}
-        mp = MatchedPairs(cat1, cat2, matching_type)
+        mp = MatchedPairs(cat1, cat2, matching_type,
+                          mask1=kwargs.get('mask1', None),
+                          mask2=kwargs.get('mask2', None))
         func_kwargs['values1'] = mp.data1[col]
         func_kwargs['values2'] = mp.data2[col]
         func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err', True) else None
@@ -736,6 +738,10 @@ class ClCatalogFuncs():
             Name of column to be plotted
         add_err: bool
             Add errorbars
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -786,6 +792,10 @@ class ClCatalogFuncs():
             Use log of col_color
         add_err: bool
             Add errorbars
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -843,6 +853,10 @@ class ClCatalogFuncs():
             Bins of component 2 for density
         add_err: bool
             Add errorbars
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -956,6 +970,10 @@ class ClCatalogFuncs():
             Scale of the panel values
         add_err: bool
             Add errorbars
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -1027,6 +1045,10 @@ class ClCatalogFuncs():
             Scale of the panel values
         add_err: bool
             Add errorbars
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -1101,6 +1123,10 @@ class ClCatalogFuncs():
             Scale of the panel values
         add_err: bool
             Add errorbars
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -1176,6 +1202,10 @@ class ClCatalogFuncs():
             simple - used simple difference
             redshift - metrics for (values2-values1)/(1+values1)
             log - metrics for log of values
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -1239,6 +1269,10 @@ class ClCatalogFuncs():
             log - metrics for log of values
         add_err: bool
             Add errorbars
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -1303,6 +1337,10 @@ def redshift(cat1, cat2, matching_type, **kwargs):
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1343,6 +1381,10 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
         Bins of redshift 2 for density
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1395,6 +1437,10 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
         Use catalog 1 for color. If false uses catalog 2
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1442,6 +1488,10 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         Used catalog 1 for col_panel. If false uses catalog 2
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1503,6 +1553,10 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Bins of redshift 2 for density
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1571,6 +1625,10 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
         simple - used simple difference
         redshift - metrics for (values2-values1)/(1+values1)
         log - metrics for log of values
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1626,6 +1684,10 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
         log - metrics for log of values
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1687,6 +1749,10 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Log scale for mass
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1728,6 +1794,10 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
         Use catalog 1 for color. If false uses catalog 2
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1777,6 +1847,10 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Bins of mass 2 for density
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1830,6 +1904,10 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         Used catalog 1 for col_panel. If false uses catalog 2
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1894,6 +1972,10 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Bins of mass 2 for density
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -1965,6 +2047,10 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         simple - used simple difference
         redshift - metrics for (values2-values1)/(1+values1)
         log - metrics for log of values
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -2022,6 +2108,10 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         log - metrics for log of values
     add_err: bool
         Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
