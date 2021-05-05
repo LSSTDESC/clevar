@@ -82,4 +82,5 @@ def test_m_metrics():
     fig, axes = scaling.mass_metrics(c1, c2, 'cat1')
 def test_m_density_panel():
     c1, c2 = get_test_data()
-    fig, axes = scaling.mass_density_metrics(c1, c2, 'cat1')
+    fig, axes = scaling.mass_density_metrics(c1, c2, 'cat1',
+                    mask1=c1['mass']>0, mask2=c2['mass']>0)

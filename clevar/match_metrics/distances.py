@@ -98,6 +98,10 @@ class ClCatalogFuncs():
             Bins for quantity 2
         log2: bool
             Log scale for quantity 2
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
 
         Other parameters
@@ -117,7 +121,9 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        mp = MatchedPairs(cat1, cat2, matching_type)
+        mp = MatchedPairs(cat1, cat2, matching_type,
+                          mask1=kwargs.pop('mask1', None),
+                          mask2=kwargs.pop('mask2', None))
         sk1, sk2 = mp.data1['SkyCoord'], mp.data2['SkyCoord']
         distances = convert_units(sk1.separation(sk2).deg, 'degrees',
                                   radial_bin_units, redshift=mp.data1['z'],
@@ -153,6 +159,10 @@ class ClCatalogFuncs():
         normalize: str, None
             Normalize difference by (1+z). Can be 'cat1' for (1+z1), 'cat2' for (1+z2)
             or 'mean' for (1+(z1+z2)/2).
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
 
         Other parameters
         ----------------
@@ -171,7 +181,9 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        mp = MatchedPairs(cat1, cat2, matching_type)
+        mp = MatchedPairs(cat1, cat2, matching_type,
+                          mask1=kwargs.pop('mask1', None),
+                          mask2=kwargs.pop('mask2', None))
         z1, z2 = mp.data1['z'], mp.data2['z']
         norm = {
                 None:1,
@@ -216,6 +228,10 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Bins for quantity
     log_quantity: bool
         Display label in log fmt
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
@@ -275,6 +291,10 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         Bins for quantity
     log_quantity: bool
         Display label in log fmt
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
 
     Other parameters
     ----------------
