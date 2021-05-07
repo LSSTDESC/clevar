@@ -16,6 +16,14 @@ class ArrayFuncs():
     """
     Class of plot functions with arrays as inputs
     """
+    def _add_powerlaw_fit(ax, values1, values2, err2, k=1, **kwargs):
+        log1, log2 = np.log(values1), np.log(values2)
+        logerr2 = None if err2 is None else err2/values2
+        func = lambda x, a, b: a*x+b
+        fit, cov = curve_fit(lambda x, a, b: a*x+b, log1, log2, sigma=logerr2)
+        print(fit)
+        sort = np.argsort(values1)
+        ax.plot(values1[sort], np.exp(func(log1[sort], *fit)))
     def plot(values1, values2, err1=None, err2=None,
                    ax=None, plt_kwargs={}, err_kwargs={}):
         """
@@ -202,7 +210,6 @@ class ArrayFuncs():
         **plt_func_kwargs
             All other parameters to be passed to plot_function
 
-
         Returns
         -------
         Same as plot_function
@@ -275,7 +282,6 @@ class ArrayFuncs():
         label_format: function
             Function to format the values of the bins
 
-
         Returns
         -------
         fig: matplotlib.figure.Figure
@@ -334,7 +340,6 @@ class ArrayFuncs():
             Add bin label to panel
         label_format: function
             Function to format the values of the bins
-
 
         Returns
         -------
@@ -658,6 +663,103 @@ class ArrayFuncs():
         # Label
         ax_l.axis('off')
         return fig, [ax_m, ax_v, ax_h, ax_l]
+    def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
+                  log_vals=False, log_aux=False, transpose=False,
+                  shape='steps', plt_kwargs={}, line_kwargs_list=None,
+                  fig_kwargs={}, legend_kwargs={},
+                  add_panel_label=True, panel_label_format=lambda v: v,
+                  add_line_label=True, line_label_format=lambda v: v):
+        """
+        Plot distribution of a parameter, binned by other component in panels,
+        and an optional secondary component in lines.
+
+        Parameters
+        ----------
+        values1: array
+            Component 1
+        values2: array
+            Component 2 (to bin data in panels)
+        bins1_dist: array
+            Bins for component 1
+        bins2: array
+            Bins for component 2
+        values_aux: array
+            Auxiliary component (to bin data in lines)
+        bins_aux: array
+            Bins for component aux
+        log_vals: bool
+            Log scale for values (and int bins)
+        log_aux: bool
+            Log scale for aux values (and int bins)
+        transpose: bool
+            Invert lines and panels
+        shape: str
+            Shape of the lines. Can be steps or line.
+        plt_kwargs: dict
+            Additional arguments for pylab.plot
+        line_kwargs_list: list, None
+            List of additional arguments for plotting each line (using pylab.plot).
+            Must have same size as len(bins_aux)-1
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        legend_kwargs: dict
+            Additional arguments for plt.legend
+        add_panel_label: bool
+            Add bin label to panel
+        panel_label_format: function
+            Function to format the values of the bins
+        add_line_label: bool
+            Add bin label to line
+        line_label_format: function
+            Function to format the values of the bins
+
+        Returns
+        -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
+        ax: matplotlib.axes
+            Axes with the panels
+        """
+        if transpose and (values_aux is None):
+            raise ValueError('transpose=true can only be used with values_aux!=None')
+        edges1_dist = autobins(values1, bins1_dist, log=log_vals)
+        edges2 = autobins(values2, bins2)
+        edges_aux = None if values_aux is None else autobins(values_aux, bins_aux, log_aux)
+        masks2 = binmasks(values2, edges2)
+        masks_aux = [np.ones(len(values1), dtype=bool)] if values_aux is None\
+                    else binmasks(values_aux, edges_aux)
+        steps1 = np.log(edges1_dist[1:])-np.log(edges1_dist[:-1]) if log_vals\
+                else edges1_dist[1:]-edges1_dist[:-1]
+        # Use quantities relative to panel and lines:
+        panel_masks, line_masks = (masks_aux, masks2) if transpose else (masks2, masks_aux)
+        panel_edges, line_edges = (edges_aux, edges2) if transpose else (edges2, edges_aux)
+        nj = int(np.ceil(np.sqrt(panel_edges[:-1].size)))
+        ni = int(np.ceil(panel_edges[:-1].size/float(nj)))
+        fig_kwargs_ = dict(sharex=True, figsize=(8, 6))
+        fig_kwargs_.update(fig_kwargs)
+        f, axes = plt.subplots(ni, nj, **fig_kwargs_)
+        line_kwargs_list = none_val(line_kwargs_list, [{}] if values_aux is None else
+            [{'label': ph.get_bin_label(vb, vt, line_label_format)}
+                for vb, vt in zip(line_edges, line_edges[1:])])
+        for ax, maskp in zip(axes.flatten(), panel_masks):
+            ph.add_grid(ax)
+            kwargs = {}
+            kwargs.update(plt_kwargs)
+            for maskl, p_kwargs in zip(line_masks, line_kwargs_list):
+                kwargs.update(p_kwargs)
+                hist = np.histogram(values1[maskp*maskl], bins=edges1_dist)[0]
+                ph.plot_hist_line(hist/(hist*steps1).sum(), edges1_dist,
+                                  ax=ax, shape=shape, **kwargs)
+            ax.set_xscale('log' if log_vals else 'linear')
+            ax.set_yticklabels([])
+        for ax in axes.flatten()[len(panel_edges)-1:]:
+            ax.axis('off')
+        if add_panel_label:
+            ph.add_panel_bin_label(axes,  panel_edges[:-1], panel_edges[1:],
+                                   format_func=panel_label_format)
+        if values_aux is not None:
+            axes.flatten()[0].legend(**legend_kwargs)
+        return f, axes
 
 class ClCatalogFuncs():
     """
@@ -1316,6 +1418,161 @@ class ClCatalogFuncs():
         axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
         axes[0].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
         return fig, axes
+    def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
+                  log_vals=False, log_aux=False, transpose=False, **kwargs):
+        """
+        Plot distribution of a cat1 column, binned by the cat2 column in panels,
+        with option for a second cat2 column in lines.
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
+        matching_type: str
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+        col: str
+            Name of column to be plotted
+        bins1: array
+            Bins for distribution of the cat1 column
+        bins2: array
+            Bins for cat2 column
+        col_aux: array
+            Auxiliary colum of cat2 (to bin data in lines)
+        bins_aux: array
+            Bins for component aux
+        log_vals: bool
+            Log scale for values (and int bins)
+        log_aux: bool
+            Log scale for aux values (and int bins)
+        transpose: bool
+            Invert lines and panels
+
+        Other parameters
+        ----------------
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        shape: str
+            Shape of the lines. Can be steps or line.
+        plt_kwargs: dict
+            Additional arguments for pylab.plot
+        line_kwargs_list: list, None
+            List of additional arguments for plotting each line (using pylab.plot).
+            Must have same size as len(bins_aux)-1
+        legend_kwargs: dict
+            Additional arguments for plt.legend
+        add_panel_label: bool
+            Add bin label to panel
+        panel_label_format: function
+            Function to format the values of the bins
+        add_line_label: bool
+            Add bin label to line
+        line_label_format: function
+            Function to format the values of the bins
+
+        Returns
+        -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
+        ax: matplotlib.axes
+            Axes with the panels
+        """
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs.pop('err1', None)
+        f_kwargs.pop('err2', None)
+        f_kwargs['values_aux'] = None if col_aux is None else mp.data2[col_aux]
+        f_kwargs['bins1_dist'] = bins1
+        f_kwargs['bins2'] = bins2
+        f_kwargs['bins_aux'] = bins_aux
+        f_kwargs['log_vals'] = log_vals
+        f_kwargs['log_aux'] = log_aux
+        f_kwargs['transpose'] = transpose
+        log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
+        ph._set_label_format(f_kwargs, 'panel_label_format', 'panel_label_fmt', log_panel)
+        ph._set_label_format(f_kwargs, 'line_label_format', 'line_label_fmt', log_line)
+        fig, axes = ArrayFuncs.plot_dist(**f_kwargs)
+        xlabel = kwargs.get('label', f'${cat1.labels[col]}$')
+        for ax in (axes[-1,:] if len(axes.shape)>1 else axes):
+            ax.set_xlabel(xlabel)
+        return fig, axes
+    def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
+                       log_vals=False, log_aux=False, transpose=False, mask=None, **kwargs):
+        """
+        Plot distribution of a cat1 column, binned by the same column in panels,
+        with option for a second column in lines. Is is useful to compare with plot_dist results.
+
+        Parameters
+        ----------
+        cat: clevar.ClCatalog
+            Input catalog
+        col: str
+            Name of column to be plotted
+        bins1: array
+            Bins for distribution of the column
+        bins2: array
+            Bins for panels
+        col_aux: array
+            Auxiliary colum (to bin data in lines)
+        bins_aux: array
+            Bins for component aux
+        log_vals: bool
+            Log scale for values (and int bins)
+        log_aux: bool
+            Log scale for aux values (and int bins)
+        transpose: bool
+            Invert lines and panels
+        mask: ndarray
+            Mask for catalog
+
+        Other parameters
+        ----------------
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        shape: str
+            Shape of the lines. Can be steps or line.
+        plt_kwargs: dict
+            Additional arguments for pylab.plot
+        line_kwargs_list: list, None
+            List of additional arguments for plotting each line (using pylab.plot).
+            Must have same size as len(bins_aux)-1
+        legend_kwargs: dict
+            Additional arguments for plt.legend
+        add_panel_label: bool
+            Add bin label to panel
+        panel_label_format: function
+            Function to format the values of the bins
+        add_line_label: bool
+            Add bin label to line
+        line_label_format: function
+            Function to format the values of the bins
+
+        Returns
+        -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
+        ax: matplotlib.axes
+            Axes with the panels
+        """
+        f_kwargs = {k:v for k, v in kwargs.items() if k not in ClCatalogFuncs.class_args}
+        mask = np.ones(cat.size, dtype=bool) if mask is None else mask
+        f_kwargs['values1'] = cat[col][mask]
+        f_kwargs['values2'] = cat[col][mask]
+        f_kwargs['values_aux'] = None if col_aux is None else cat[col_aux][mask]
+        f_kwargs['bins1_dist'] = bins1
+        f_kwargs['bins2'] = bins2
+        f_kwargs['bins_aux'] = bins_aux
+        f_kwargs['log_vals'] = log_vals
+        f_kwargs['log_aux'] = log_aux
+        f_kwargs['transpose'] = transpose
+        log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
+        ph._set_label_format(f_kwargs, 'panel_label_format', 'panel_label_fmt', log_panel)
+        ph._set_label_format(f_kwargs, 'line_label_format', 'line_label_fmt', log_line)
+        fig, axes = ArrayFuncs.plot_dist(**f_kwargs)
+        xlabel = kwargs.get('label', f'${cat.labels[col]}$')
+        for ax in (axes[-1,:] if len(axes.shape)>1 else axes):
+            ax.set_xlabel(xlabel)
+        return fig, axes
 
 ############################################################################################
 ### Redshift Plots #########################################################################
@@ -1727,6 +1984,138 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     metrics_mode = kwargs.pop('metrics_mode', 'redshift')
     return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='z',
         metrics_mode=metrics_mode, **kwargs)
+def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
+              log_mass=True, transpose=False, **kwargs):
+    """
+    Plot distribution of a cat1 redshift, binned by the cat2 redshift (in panels),
+    with option for cat2 mass bins (in lines).
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+    redshift_bins_dist: array
+        Bins for distribution of the cat1 redshift
+    redshift_bins: array
+        Bins for cat2 redshift
+    mass_bins: array
+        Bins for cat2 mass
+    log_mass: bool
+        Log scale for mass
+    transpose: bool
+        Invert lines and panels
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    shape: str
+        Shape of the lines. Can be steps or line.
+    plt_kwargs: dict
+        Additional arguments for pylab.plot
+    line_kwargs_list: list, None
+        List of additional arguments for plotting each line (using pylab.plot).
+        Must have same size as len(bins_aux)-1
+    legend_kwargs: dict
+        Additional arguments for plt.legend
+    add_panel_label: bool
+        Add bin label to panel
+    panel_label_format: function
+        Function to format the values of the bins
+    add_line_label: bool
+        Add bin label to line
+    line_label_format: function
+        Function to format the values of the bins
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    ax: matplotlib.axes
+        Axes with the panels
+    """
+    kwargs_ = {}
+    kwargs_.update(kwargs)
+    kwargs_.update({
+        'col': 'z',
+        'col_aux': 'mass',
+        'bins1': redshift_bins_dist,
+        'bins2': redshift_bins,
+        'bins_aux': mass_bins,
+        'log_vals': False,
+        'log_aux': log_mass,
+        'transpose': transpose,
+    })
+    return ClCatalogFuncs.plot_dist(cat1, cat2, matching_type, **kwargs_)
+def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
+                   log_mass=True, transpose=False, mask=None, **kwargs):
+    """
+    Plot distribution of a cat redshift, binned by redshift (in panels),
+    with option for mass bins (in lines).
+    Is is useful to compare with redshift_dist results.
+
+    Parameters
+    ----------
+    cat: clevar.ClCatalog
+        Input Catalog
+    redshift_bins_dist: array
+        Bins for distribution of redshift
+    redshift_bins: array
+        Bins for redshift panels
+    mass_bins: array
+        Bins for mass
+    log_mass: bool
+        Log scale for mass
+    transpose: bool
+        Invert lines and panels
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    shape: str
+        Shape of the lines. Can be steps or line.
+    plt_kwargs: dict
+        Additional arguments for pylab.plot
+    line_kwargs_list: list, None
+        List of additional arguments for plotting each line (using pylab.plot).
+        Must have same size as len(bins_aux)-1
+    legend_kwargs: dict
+        Additional arguments for plt.legend
+    add_panel_label: bool
+        Add bin label to panel
+    panel_label_format: function
+        Function to format the values of the bins
+    add_line_label: bool
+        Add bin label to line
+    line_label_format: function
+        Function to format the values of the bins
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    ax: matplotlib.axes
+        Axes with the panels
+    """
+    kwargs_ = {}
+    kwargs_.update(kwargs)
+    kwargs_.update({
+        'col': 'z',
+        'col_aux': 'mass',
+        'bins1': redshift_bins_dist,
+        'bins2': redshift_bins,
+        'bins_aux': mass_bins,
+        'log_vals': False,
+        'log_aux': log_mass,
+        'transpose': transpose,
+        'mask': mask,
+    })
+    return ClCatalogFuncs.plot_dist_self(cat, **kwargs_)
 
 ############################################################################################
 ### Mass Plots #############################################################################
@@ -2149,3 +2538,135 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             metrics_mode=metrics_mode, **kwargs)
+def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
+              log_mass=True, transpose=False, **kwargs):
+    """
+    Plot distribution of a cat1 mass, binned by the cat2 mass (in panels),
+    with option for cat2 redshift bins (in lines).
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+    mass_bins_dist: array
+        Bins for distribution of the cat1 mass
+    mass_bins: array
+        Bins for cat2 mass
+    redshift_bins: array
+        Bins for cat2 redshift
+    log_mass: bool
+        Log scale for mass
+    transpose: bool
+        Invert lines and panels
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    shape: str
+        Shape of the lines. Can be steps or line.
+    plt_kwargs: dict
+        Additional arguments for pylab.plot
+    line_kwargs_list: list, None
+        List of additional arguments for plotting each line (using pylab.plot).
+        Must have same size as len(bins_aux)-1
+    legend_kwargs: dict
+        Additional arguments for plt.legend
+    add_panel_label: bool
+        Add bin label to panel
+    panel_label_format: function
+        Function to format the values of the bins
+    add_line_label: bool
+        Add bin label to line
+    line_label_format: function
+        Function to format the values of the bins
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    ax: matplotlib.axes
+        Axes with the panels
+    """
+    kwargs_ = {}
+    kwargs_.update(kwargs)
+    kwargs_.update({
+        'col': 'mass',
+        'col_aux': 'z',
+        'bins1': mass_bins_dist,
+        'bins2': mass_bins,
+        'bins_aux': redshift_bins,
+        'log_vals': log_mass,
+        'log_aux': False,
+        'transpose': transpose,
+    })
+    return ClCatalogFuncs.plot_dist(cat1, cat2, matching_type, **kwargs_)
+def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
+                   log_mass=True, transpose=False, mask=None, **kwargs):
+    """
+    Plot distribution of a cat mass, binned by mass (in panels),
+    with option for redshift bins (in lines).
+    Is is useful to compare with mass_dist results.
+
+    Parameters
+    ----------
+    cat: clevar.ClCatalog
+        Input Catalog
+    mass_bins_dist: array
+        Bins for distribution of mass
+    mass_bins: array
+        Bins for mass panels
+    redshift_bins: array
+        Bins for redshift
+    log_mass: bool
+        Log scale for mass
+    transpose: bool
+        Invert lines and panels
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    shape: str
+        Shape of the lines. Can be steps or line.
+    plt_kwargs: dict
+        Additional arguments for pylab.plot
+    line_kwargs_list: list, None
+        List of additional arguments for plotting each line (using pylab.plot).
+        Must have same size as len(bins_aux)-1
+    legend_kwargs: dict
+        Additional arguments for plt.legend
+    add_panel_label: bool
+        Add bin label to panel
+    panel_label_format: function
+        Function to format the values of the bins
+    add_line_label: bool
+        Add bin label to line
+    line_label_format: function
+        Function to format the values of the bins
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    ax: matplotlib.axes
+        Axes with the panels
+    """
+    kwargs_ = {}
+    kwargs_.update(kwargs)
+    kwargs_.update({
+        'col': 'mass',
+        'col_aux': 'z',
+        'bins1': mass_bins_dist,
+        'bins2': mass_bins,
+        'bins_aux': redshift_bins,
+        'log_vals': log_mass,
+        'log_aux': False,
+        'transpose': transpose,
+        'mask': mask,
+    })
+    return ClCatalogFuncs.plot_dist_self(cat, **kwargs_)
