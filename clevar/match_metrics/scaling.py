@@ -940,9 +940,7 @@ class ClCatalogFuncs():
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['values_panel'] = mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel]
         f_kwargs['bins_panel'] = autobins(f_kwargs['values_panel'], bins_panel, log_panel)
-        label_fmt = f_kwargs.pop("label_fmt", ".2f")
-        f_kwargs['label_format'] = f_kwargs.get('label_format',
-            lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) if log_panel else  f'%{label_fmt}'%v)
+        ph._set_label_format(f_kwargs, 'label_format', 'label_fmt', log_panel)
         return cl_kwargs, f_kwargs, mp
     def plot_panel(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=True, log_panel=False,

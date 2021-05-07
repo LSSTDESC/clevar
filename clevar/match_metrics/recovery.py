@@ -595,10 +595,9 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
     ax: matplotlib.axes
         Axes with the panels
     """
-    label_fmt = kwargs.pop("label_fmt", ".1f" if log_mass*(not transpose) else ".2f")
-    kwargs['label_format'] = kwargs.get('label_format',
-        lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) if log_mass*(not transpose)\
-             else f'%{label_fmt}'%v)
+    log = log_mass*(not transpose)
+    ph._set_label_format(kwargs, 'label_format', 'label_fmt',
+                         log=log, default_fmt=".1f" if log else ".2f")
     return _plot_base(ClCatalogFuncs.plot_panel, cat, matching_type,
                       redshift_bins, mass_bins, transpose,
                       scale1='log' if log_mass*transpose else 'linear',
