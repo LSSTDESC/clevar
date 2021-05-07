@@ -194,3 +194,32 @@ def nice_panel(axes, xlabel=None, ylabel=None, xscale='linear', yscale='linear')
             ax.set_yticklabels([f'${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$'
                                 for t in yticks], rotation=-45)
     return
+def _set_label_format(kwargs, label_format_key, label_fmt_key, log,
+                      default_fmt='.2f'):
+    """
+    Set function for label formatting from dictionary and removes label_fmt_key.
+
+    Parameters
+    ----------
+    kwargs: dict
+        Dictionary with the input values
+    label_format_key: str
+        Name of the format function entry
+    label_fmt_key: str
+        Name of entry with format of values (ex: '.2f').
+        It is only used if label_format_key not in kwargs.
+    log: bool
+        Format labels with 10^log10(val) format.
+        It is only used if label_format_key not in kwargs.
+    default_fmt: str
+        Format of linear values (ex: '.2f') when (label_format_key, label_fmt_key) not in kwargs.
+
+
+    Returns
+    -------
+    function
+        Label format function
+    """
+    label_fmt = kwargs.pop(label_fmt_key, default_fmt)
+    kwargs[label_format_key] = kwargs.get(label_format_key,
+        lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) if log else f'%{label_fmt}'%v)

@@ -204,5 +204,8 @@ class Match():
         out_dir: str
             Path of directory with saved match files
         """
+        print(cat1.name)
         cat1.load_match(f'{out_dir}/match1.fits')
+        print()
+        print(cat2.name)
         cat2.load_match(f'{out_dir}/match2.fits')
