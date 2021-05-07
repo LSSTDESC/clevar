@@ -7,25 +7,122 @@ if os.environ.get('DISPLAY','') == 'test':
 from matplotlib.ticker import ScalarFormatter, NullFormatter
 import pylab as plt
 import numpy as np
+from scipy.optimize import curve_fit
 
 from ..utils import none_val, autobins, binmasks
 from ..match import MatchedPairs
 from . import plot_helper as ph
 
+def _prep_fit_data(x, y, yerr=None, statistics='mean', bins_x=None, bins_y=None):
+    """
+    Prepare data for fit with binning.
+
+    Parameters
+    ----------
+    x: array
+        Input values for fit
+    y: array
+        Values to be fitted
+    yerr: array, None
+        Errors of y
+    statistics: str
+        Statistics to be used. Options are:
+            `individual` - Use each point
+            `mode` - Use mode of y distribution in each x bin, requires bins_y.
+            `mean` - Use mean of y distribution in each x bin, requires bins_y.
+    bins_x: array, None
+        Bins for component x
+    bins_y: array, None
+        Bins for component y
+
+    Returns
+    -------
+    xdata, ydata, errdata: array
+        Data for fit
+    """
+    if statistics=='individual':
+        return x, y, yerr
+    elif statistics=='mode':
+        bins_hist = autobins(y, bins_y)
+        bins_hist_m = 0.5*(bins_hist[1:]+bins_hist[:-1])
+        stat_func = lambda vals: bins_hist_m[np.histogram(vals, bins=bins_hist)[0].argmax()]
+    elif statistics=='mean':
+        stat_func = lambda vals: np.mean(vals)
+    else:
+        raise ValueError(f'statistics ({statistics}) must be in (individual, mean, mode)')
+    point_masks = [m for m in binmasks(x, autobins(x, bins_x)) if m[m].size>1]
+    err = np.zeros(len(y)) if yerr is None else yerr
+    err_func = lambda vals, err: np.mean(np.sqrt(np.std(vals)**2+err**2))
+    return np.transpose([[np.mean(x[m]), stat_func(y[m]), err_func(y[m], err[m])]
+                            for m in point_masks])
 class ArrayFuncs():
     """
     Class of plot functions with arrays as inputs
     """
-    def _add_powerlaw_fit(ax, values1, values2, err2, k=1, **kwargs):
-        log1, log2 = np.log(values1), np.log(values2)
-        logerr2 = None if err2 is None else err2/values2
-        func = lambda x, a, b: a*x+b
-        fit, cov = curve_fit(lambda x, a, b: a*x+b, log1, log2, sigma=logerr2)
-        print(fit)
+    def _add_powerlaw_fit(ax, values1, values2, err2, **kwargs):
+        """
+        Add powerlaw fit to plot
+
+        Parameters
+        ----------
+        ax: matplotlib.axes
+            Ax to add plot
+        values1: array
+            Component 1
+        values2: array
+            Component 2
+        err2: array
+            Error of component 2
+        fit_mode: str
+            Statistics to be used in fit. Options are:
+                `individual` - Use each point
+                `mode` - Use mode of y distribution in each x bin, requires bins_y.
+                `mean` - Use mean of y distribution in each x bin, requires bins_y.
+        bins1: array, None
+            Bins for component 1 (default=10).
+        bins2: array, None
+            Bins for component 2 (default=30).
+        plt_kwargs: dict
+            Additional arguments for pylab.scatter.
+        legend_kwargs: dict
+            Additional arguments for plt.legend.
+        add_bindata: bool
+            Plot binned data used for fit.
+        bindata_kwargs: dict
+            Additional arguments for pylab.errorbar.
+        """
+        # Default parameters
+        fit_mode = kwargs.get('fit_mode', 'mode')
+        bins1 = kwargs.get('bins1', 10)
+        bins2 = kwargs.get('bins2', 30)
+        plot_kwargs = kwargs.get('plot_kwargs', {})
+        legend_kwargs = kwargs.get('legend_kwargs', {})
+        add_bindata = kwargs.get('add_bindata', True)
+        bindata_kwargs = kwargs.get('bindata_kwargs', {})
+        # data
+        log1, log2, logerr2 = _prep_fit_data(np.log(values1), np.log(values2),
+                    bins_x=np.log(bins1) if hasattr(bins1, '__len__') else bins1,
+                    bins_y=np.log(bins2) if hasattr(bins2, '__len__') else bins2,
+                    yerr=None if err2 is None else err2/values2,
+                    statistics=fit_mode)
+        if add_bindata:
+            eb_kwargs_ = {'elinewidth': 1, 'capsize': 2, 'fmt': '.',
+                          'ms': 10, 'ls': '', 'color': 'm'}
+            eb_kwargs_.update(bindata_kwargs)
+            ax.errorbar(np.exp(log1), np.exp(log2), yerr=logerr2*np.exp(log2), **eb_kwargs_)
+        # fit
+        pw_func = lambda x, a, b: a*x+b
+        fit, cov = curve_fit(pw_func, log1, log2, sigma=logerr2)
+        plot_kwargs_ = {'color': 'r', 'label': f'$f(x)={np.exp(fit[1]):.2f}\;x^{{{fit[0]:.2f}}}$'}
+        plot_kwargs_.update(plot_kwargs)
         sort = np.argsort(values1)
-        ax.plot(values1[sort], np.exp(func(log1[sort], *fit)))
+        ax.plot(values1[sort], np.exp(pw_func(np.log(values1)[sort], *fit)), **plot_kwargs_)
+        # legend
+        legend_kwargs_ = {}
+        legend_kwargs_.update(legend_kwargs)
+        ax.legend(**legend_kwargs_)
     def plot(values1, values2, err1=None, err2=None,
-                   ax=None, plt_kwargs={}, err_kwargs={}):
+             ax=None, plt_kwargs={}, err_kwargs={}, **kwargs):
         """
         Scatter plot with errorbars and color based on input
 
@@ -60,10 +157,15 @@ class ArrayFuncs():
             err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
             err_kwargs_.update(err_kwargs)
             ax.errorbar(values1, values2, xerr=err1, yerr=err2, **err_kwargs_)
+        if kwargs.get('add_fit', False):
+            kwargs['fit_err2'] = kwargs.get('fit_err2', err2)
+            ArrayFuncs._add_powerlaw_fit(ax, values1, values2,
+                                         **{k[4:]:v for k, v in kwargs.items()
+                                             if k[:4]=='fit_'})
         return ax
     def plot_color(values1, values2, values_color, err1=None, err2=None,
                    ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
-                   err_kwargs={}):
+                   err_kwargs={}, **kwargs):
         """
         Scatter plot with errorbars and color based on input
 
@@ -119,6 +221,11 @@ class ArrayFuncs():
             for i in range(xp.size):
                 ax.errorbar(xp[i], yp[i], xerr=xerr[i], yerr=yerr[i],
                     c=cols[i], **err_kwargs_)
+        if kwargs.get('add_fit', False):
+            kwargs['fit_err2'] = kwargs.get('fit_err2', err2)
+            ArrayFuncs._add_powerlaw_fit(ax, values1, values2,
+                                         **{k[4:]:v for k, v in kwargs.items()
+                                             if k[:4]=='fit_'})
         if add_cb:
             return ax, cb
         cb.remove()
@@ -129,7 +236,7 @@ class ArrayFuncs():
                      err1=None, err2=None,
                      ax=None, plt_kwargs={},
                      add_cb=True, cb_kwargs={},
-                     err_kwargs={}):
+                     err_kwargs={}, **kwargs):
 
         """
         Scatter plot with errorbars and color based on point density
@@ -179,7 +286,7 @@ class ArrayFuncs():
             xscale=xscale, yscale=yscale) if len(values1)>0 else []
         return ArrayFuncs.plot_color(values1, values2, values_color=values_color,
                 err1=err1, err2=err2, ax=ax, plt_kwargs=plt_kwargs,
-                add_cb=add_cb, cb_kwargs=cb_kwargs, err_kwargs=err_kwargs)
+                add_cb=add_cb, cb_kwargs=cb_kwargs, err_kwargs=err_kwargs, **kwargs)
     def _plot_panel(plot_function, values_panel, bins_panel,
                     panel_kwargs_list=None, panel_kwargs_errlist=None,
                     fig_kwargs={}, add_label=True, label_format=lambda v: v,
@@ -245,7 +352,7 @@ class ArrayFuncs():
     def plot_panel(values1, values2, values_panel, bins_panel,
                    err1=None, err2=None, plt_kwargs={}, err_kwargs={},
                    panel_kwargs_list=None, panel_kwargs_errlist=None,
-                   fig_kwargs={}, add_label=True, label_format=lambda v: v):
+                   fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
         """
         Scatter plot with errorbars and color based on input with panels
 
@@ -298,11 +405,13 @@ class ArrayFuncs():
             # plot arguments
             values1=values1, values2=values2, err1=err1, err2=err2,
             plt_kwargs=plt_kwargs, err_kwargs=err_kwargs,
+            # for fit
+            **kwargs,
             )
     def plot_color_panel(values1, values2, values_color, values_panel, bins_panel,
                    err1=None, err2=None, plt_kwargs={}, err_kwargs={},
                    panel_kwargs_list=None, panel_kwargs_errlist=None,
-                   fig_kwargs={}, add_label=True, label_format=lambda v: v):
+                   fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
         """
         Scatter plot with errorbars and color based on input with panels
 
@@ -358,13 +467,15 @@ class ArrayFuncs():
             values1=values1, values2=values2, err1=err1, err2=err2,
             values_color=values_color,
             plt_kwargs=plt_kwargs, err_kwargs=err_kwargs,
+            # for fit
+            **kwargs,
             )
     def plot_density_panel(values1, values2, values_panel, bins_panel,
         bins1=30, bins2=30, ax_rotation=0, rotation_resolution=30,
         xscale='linear', yscale='linear',
         err1=None, err2=None, plt_kwargs={},add_cb=True, cb_kwargs={},
         err_kwargs={}, panel_kwargs_list=None, panel_kwargs_errlist=None,
-        fig_kwargs={}, add_label=True, label_format=lambda v: v):
+        fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
 
         """
         Scatter plot with errorbars and color based on point density with panels
@@ -436,6 +547,8 @@ class ArrayFuncs():
             values1=values1, values2=values2, err1=err1, err2=err2, bins1=bins1, bins2=bins2,
             ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
             plt_kwargs=plt_kwargs, err_kwargs=err_kwargs,
+            # for fit
+            **kwargs,
             )
     def _plot_metrics(values1, values2, bins=30, mode='redshift', ax=None,
                       bias_kwargs={}, scat_kwargs={}, rotated=False):
@@ -552,8 +665,7 @@ class ArrayFuncs():
         ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
         err1=None, err2=None, metrics_mode='simple', plt_kwargs={}, add_cb=True, cb_kwargs={},
         err_kwargs={}, bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
-        fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02),
-        ):
+        fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02), **kwargs):
         """
         Scatter plot with errorbars and color based on point density with scatter and bias panels
 
@@ -748,7 +860,9 @@ class ArrayFuncs():
             for maskl, p_kwargs in zip(line_masks, line_kwargs_list):
                 kwargs.update(p_kwargs)
                 hist = np.histogram(values1[maskp*maskl], bins=edges1_dist)[0]
-                ph.plot_hist_line(hist/(hist*steps1).sum(), edges1_dist,
+                norm = (hist*steps1).sum()
+                norm = norm if norm>0 else 1
+                ph.plot_hist_line(hist/norm, edges1_dist,
                                   ax=ax, shape=shape, **kwargs)
             ax.set_xscale('log' if log_vals else 'linear')
             ax.set_yticklabels([])
@@ -802,6 +916,7 @@ class ClCatalogFuncs():
         func_kwargs['values2'] = mp.data2[col]
         func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err', True) else None
         func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err', True) else None
+        func_kwargs['fit_err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_fit_err', True) else None
         class_kwargs = {
             'xlabel': kwargs.get('xlabel', f'${cat1.labels[col]}$'),
             'ylabel': kwargs.get('ylabel', f'${cat2.labels[col]}$'),
@@ -1334,6 +1449,7 @@ class ClCatalogFuncs():
             Axis of the plot
         """
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs.pop('fit_err2', None)
         f_kwargs.pop('err1', None)
         f_kwargs.pop('err2', None)
         fig, axes = ArrayFuncs.plot_metrics(**f_kwargs)
@@ -1481,6 +1597,7 @@ class ClCatalogFuncs():
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs.pop('err1', None)
         f_kwargs.pop('err2', None)
+        f_kwargs.pop('fit_err2', None)
         f_kwargs['values_aux'] = None if col_aux is None else mp.data2[col_aux]
         f_kwargs['bins1_dist'] = bins1
         f_kwargs['bins2'] = bins2
