@@ -55,9 +55,15 @@ def test_z_density_panel():
 def test_z_metrics():
     c1, c2 = get_test_data()
     fig, axes = scaling.redshift_metrics(c1, c2, 'cat1')
-def test_z_density_panel():
+def test_z_density_metrics():
     c1, c2 = get_test_data()
     fig, axes = scaling.redshift_density_metrics(c1, c2, 'cat1')
+def test_z_dist():
+    c1, c2 = get_test_data()
+    fig, axes = scaling.redshift_dist(c1, c2, 'cat1')
+def test_z_dist_self():
+    c1, c2 = get_test_data()
+    fig, axes = scaling.redshift_dist_self(c1)
 def test_m_simple():
     c1, c2 = get_test_data()
     ax = scaling.mass(c1, c2, 'cat1', add_err=True)
@@ -80,7 +86,15 @@ def test_color_panel():
 def test_m_metrics():
     c1, c2 = get_test_data()
     fig, axes = scaling.mass_metrics(c1, c2, 'cat1')
-def test_m_density_panel():
+def test_m_density_metrics():
     c1, c2 = get_test_data()
     fig, axes = scaling.mass_density_metrics(c1, c2, 'cat1',
                     mask1=c1['mass']>0, mask2=c2['mass']>0)
+def test_m_dist():
+    c1, c2 = get_test_data()
+    fig, axes = scaling.mass_dist(c1, c2, 'cat1', mass_bins=6)
+def test_m_dist_self():
+    c1, c2 = get_test_data()
+    fig, axes = scaling.mass_dist_self(c1)
+    assert_raises(ValueError, scaling.ClCatalogFuncs.plot_dist_self,
+                  c1, col='mass', transpose=True, col_aux=None)
