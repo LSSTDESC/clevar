@@ -55,7 +55,8 @@ def plot_hist_line(hist_values, bins, ax, shape='steps', rotate=False, **kwargs)
         data = data[::-1]
     ax.plot(*data, **kwargs)
 def get_bin_label(edge_lower, edge_higher,
-                  format_func=lambda v:v):
+                  format_func=lambda v:v,
+                  prefix=''):
     """
     Get label with bin range
 
@@ -67,15 +68,17 @@ def get_bin_label(edge_lower, edge_higher,
         Higher values of bin
     format_func: function
         Function to format the values of the bins
+    prefix: str
+        Prefix to add to labels
 
     Returns
     -------
     srt
         Label of bin
     """
-    return f'[${format_func(edge_lower)}$ : ${format_func(edge_higher)}$]'
+    return f'${prefix}[{format_func(edge_lower)}$ : ${format_func(edge_higher)}]$'
 def add_panel_bin_label(axes, edges_lower, edges_higher,
-                        format_func=lambda v:v):
+                        format_func=lambda v:v, prefix=''):
     """
     Adds label with bin range on the top of panel
 
@@ -89,11 +92,13 @@ def add_panel_bin_label(axes, edges_lower, edges_higher,
         Higher values of bins
     format_func: function
         Function to format the values of the bins
+    prefix: str
+        Prefix to add to labels
     """
     for ax, vb, vt in zip(axes.flatten(), edges_lower, edges_higher):
         topax = ax.twiny()
         topax.set_xticks([])
-        topax.set_xlabel(get_bin_label(vb, vt, format_func))
+        topax.set_xlabel(get_bin_label(vb, vt, format_func, prefix))
 def get_density_colors(x, y, xbins, ybins, ax_rotation=0,
                 rotation_resolution=30, xscale='linear', yscale='linear'):
     """

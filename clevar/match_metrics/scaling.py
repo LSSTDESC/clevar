@@ -997,7 +997,7 @@ class ArrayFuncs():
     def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
                   log_vals=False, log_aux=False, transpose=False,
                   shape='steps', plt_kwargs={}, line_kwargs_list=None,
-                  fig_kwargs={}, legend_kwargs={},
+                  fig_kwargs={}, legend_kwargs={}, panel_label_prefix='',
                   add_panel_label=True, panel_label_format=lambda v: v,
                   add_line_label=True, line_label_format=lambda v: v):
         """
@@ -1039,6 +1039,8 @@ class ArrayFuncs():
             Add bin label to panel
         panel_label_format: function
             Function to format the values of the bins
+        panel_label_prefix: str
+            Prefix to add to panel label
         add_line_label: bool
             Add bin label to line
         line_label_format: function
@@ -1089,7 +1091,8 @@ class ArrayFuncs():
             ax.axis('off')
         if add_panel_label:
             ph.add_panel_bin_label(axes,  panel_edges[:-1], panel_edges[1:],
-                                   format_func=panel_label_format)
+                                   format_func=panel_label_format,
+                                   prefix=panel_label_prefix)
         if values_aux is not None:
             axes.flatten()[0].legend(**legend_kwargs)
         return f, axes
@@ -2143,6 +2146,7 @@ class ClCatalogFuncs():
         f_kwargs['log_vals'] = log_vals
         f_kwargs['log_aux'] = log_aux
         f_kwargs['transpose'] = transpose
+        f_kwargs['panel_label_prefix'] = f'{cat2.labels[col]}\,-\,'
         log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
         ph._set_label_format(f_kwargs, 'panel_label_format', 'panel_label_fmt', log_panel)
         ph._set_label_format(f_kwargs, 'line_label_format', 'line_label_fmt', log_line)
@@ -2220,6 +2224,7 @@ class ClCatalogFuncs():
         f_kwargs['log_vals'] = log_vals
         f_kwargs['log_aux'] = log_aux
         f_kwargs['transpose'] = transpose
+        f_kwargs['panel_label_prefix'] = f'{cat.labels[col]}\,-\,'
         log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
         ph._set_label_format(f_kwargs, 'panel_label_format', 'panel_label_fmt', log_panel)
         ph._set_label_format(f_kwargs, 'line_label_format', 'line_label_fmt', log_line)
