@@ -40,9 +40,9 @@ def autobins(values, bins, log=False):
         return np.array(bins)
     if log:
         logvals = np.log10(values)
-        return np.logspace(logvals.min(), logvals.max(), bins)
+        return np.logspace(logvals.min(), logvals.max(), bins+1)
     else:
-        return np.linspace(values.min(), values.max(), bins)
+        return np.linspace(values.min(), values.max(), bins+1)
 def binmasks(values, bins):
     """
     Get corresponding masks for each bin. Last bin is inclusive.
