@@ -75,7 +75,7 @@ class ArrayFuncs():
             Error of component 2
         log: bool
             Bin and fit in log values
-        mode: str
+        statistics: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires bins2.
@@ -96,7 +96,7 @@ class ArrayFuncs():
             Additional arguments for plt.legend.
         """
         # Default parameters
-        mode = kwargs.get('mode', 'mode')
+        mode = kwargs.get('statistics', 'mode')
         bins1 = kwargs.get('bins1', 10)
         bins2 = kwargs.get('bins2', 30)
         legend_kwargs = kwargs.get('legend_kwargs', {})
@@ -114,7 +114,7 @@ class ArrayFuncs():
                     bins_y=tfunc(bins2) if hasattr(bins2, '__len__') else bins2,
                     yerr=None if (err2 is None or not log) else err2/values2,
                     statistics=mode)
-        if add_bindata:
+        if add_bindata and not mode=='individual':
             eb_kwargs_ = {'elinewidth': 1, 'capsize': 2, 'fmt': '.',
                           'ms': 10, 'ls': '', 'color': 'm'}
             eb_kwargs_.update(bindata_kwargs)
@@ -166,8 +166,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -241,8 +241,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -351,8 +351,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -420,8 +420,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -518,8 +518,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -603,8 +603,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -706,8 +706,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -917,8 +917,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -1150,8 +1150,8 @@ class ArrayFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -1336,8 +1336,8 @@ class ClCatalogFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -1414,8 +1414,8 @@ class ClCatalogFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -1499,8 +1499,8 @@ class ClCatalogFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -1638,8 +1638,8 @@ class ClCatalogFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -1737,8 +1737,8 @@ class ClCatalogFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -1839,8 +1839,8 @@ class ClCatalogFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -2010,8 +2010,8 @@ class ClCatalogFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -2259,8 +2259,8 @@ class ClCatalogFuncs():
             Plot binned data used for fit.
         add_fit: bool
             Fit and plot binned dat.
-        fit_err2: array
-            Error of component 2
+        fit_err2: array, None
+            Error of component 2 (set to err2 if not provided).
         fit_mode: str
             Statistics to be used in fit. Options are:
                 `individual` - Use each point
@@ -2898,8 +2898,8 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
         Plot binned data used for fit.
     add_fit: bool
         Fit and plot binned dat.
-    fit_err2: array
-        Error of component 2
+    fit_err2: array, None
+        Error of component 2 (set to err2 if not provided).
     fit_mode: str
         Statistics to be used in fit. Options are:
             `individual` - Use each point
@@ -3544,8 +3544,8 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Plot binned data used for fit.
     add_fit: bool
         Fit and plot binned dat.
-    fit_err2: array
-        Error of component 2
+    fit_err2: array, None
+        Error of component 2 (set to err2 if not provided).
     fit_mode: str
         Statistics to be used in fit. Options are:
             `individual` - Use each point
