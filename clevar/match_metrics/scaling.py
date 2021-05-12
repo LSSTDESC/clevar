@@ -109,11 +109,14 @@ class ArrayFuncs():
         # set log/lin funcs
         tfunc, ifunc = (np.log, np.exp) if log else (lambda x:x, lambda x:x)
         # data
-        vbin_1, vbin_2, vbin_err2 = _prep_fit_data(tfunc(values1), tfunc(values2),
-                    bins_x=tfunc(bins1) if hasattr(bins1, '__len__') else bins1,
-                    bins_y=tfunc(bins2) if hasattr(bins2, '__len__') else bins2,
-                    yerr=None if (err2 is None or not log) else err2/values2,
-                    statistics=mode)
+        data = _prep_fit_data(tfunc(values1), tfunc(values2),
+                              bins_x=tfunc(bins1) if hasattr(bins1, '__len__') else bins1,
+                              bins_y=tfunc(bins2) if hasattr(bins2, '__len__') else bins2,
+                              yerr=None if (err2 is None or not log) else err2/values2,
+                              statistics=mode)
+        if len(data)==0:
+            return
+        vbin_1, vbin_2, vbin_err2 = data
         if add_bindata and not mode=='individual':
             eb_kwargs_ = {'elinewidth': 1, 'capsize': 2, 'fmt': '.',
                           'ms': 10, 'ls': '', 'color': 'm'}
