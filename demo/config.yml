@@ -190,7 +190,7 @@ mt_metrics_mass: # Scaling relation.
 
     figsize: 20 20 # Figure size of figures in cm.
     dpi: 150 # The resolution in dots per inch.
-    plot_case: all # Types of plots to be done. Options are zcolors, density, density_panel.
+    plot_case: all # Types of plots to be done. Options are zcolors, density, density_panel, distribution, self_distribution, density_dist.
     matching_type: cross # options are cross, cat1, cat2.
     add_redshift_label: True # Add redshift label in panels.
     add_err: True # Plot errorbars when available.
@@ -199,21 +199,34 @@ mt_metrics_mass: # Scaling relation.
     ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of mass_bins in catalogs.
     rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
 
+    add_bindata: True # Plot binned data to be used for fit.
+    add_fit: False # Fit and plot binned dat.
+    add_fit_err: True # Use error of component y in fit.
+    fit_statistics: mode # Statistics to be used in fit. Options are: individual, mode, mean
+
     catalog1:
-        redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
-        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+        redshift_bins: 5 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+        redshift_num_fmt: .2f # Format the values of redshift binedges (ex: '.2f') in label.
         mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        mass_bins_dist: 30 # Mass bins for distribution histograms. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label (10^mass_num_fmt is used if log_mass).
+        fit_mass_bins: 5 # Bins to compute statistics for fit.
+        fit_mass_bins_dist: 20 # Bins to compute distribution of catalog2 mass.
 
     catalog2:
-        redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
-        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
+        redshift_bins: 5 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+        redshift_num_fmt: .2f # Format the values of redshift binedges (ex: '.2f') in label.
         mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        mass_bins_dist: 30 # Mass bins for distribution histograms. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
+        mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label (10^mass_num_fmt is used if log_mass).
+        fit_mass_bins: 5 # Bins to compute statistics for fit.
+        fit_mass_bins_dist: 20 # Bins to compute distribution of catalog1 mass.
 
 mt_metrics_redshift: # Scaling relation.
 
     figsize: 20 20 # Figure size of figures in cm.
     dpi: 150 # The resolution in dots per inch.
-    plot_case: all # Types of plots to be done. Options are masscolors, density, density_panel.
+    plot_case: all # Types of plots to be done. Options are masscolors, density, density_panel, distribution, self_distribution, density_dist.
     matching_type: cross # options are cross, cat1, cat2.
     add_mass_label: True # Add mass label in panels.
     add_err: True # Plot errorbars when available.
