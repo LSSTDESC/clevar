@@ -464,7 +464,8 @@ class ArrayFuncs():
             kwargs_e.update(err_kwargs)
             kwargs_e.update(p_e_kwargs)
             plot_function(ax=ax, plt_kwargs=kwargs, err_kwargs=kwargs_e,
-                **{k:v[mask] if (hasattr(v, '__len__') and len(v)==mask.size) else v
+                **{k:v[mask] if (hasattr(v, '__len__') and len(v)==mask.size) and
+                (not isinstance(v, (str, dict))) else v
                 for k, v in plt_func_kwargs.items()})
         for ax in axes.flatten()[len(edges)-1:]:
             ax.axis('off')
