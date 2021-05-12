@@ -132,8 +132,7 @@ def run(config_file):
             print(f"\n# Mass density (catalog {i} m dist)")
             fig, axes = scaling.mass_dist(cats[i], cats[j],
                 **{k:mass_conf[k] for k in ('matching_type', 'log_mass')},
-                **{k:mass_conf[f'catalog{j}'][k] for k in
-                    ('mass_bins', 'redshift_bins')},
+                **{k:mass_conf[f'catalog{j}'][k] for k in ('mass_bins', 'redshift_bins')},
                 mass_bins_dist=mass_conf[f'catalog{i}']['mass_bins_dist'],
                 fig_kwargs={'figsize': mass_conf['figsize']},
                 panel_label_fmt=mass_conf[f'catalog{i}']['mass_num_fmt'],
@@ -147,8 +146,8 @@ def run(config_file):
             print(f"\n# Mass density (catalog {i} z panel)")
             fig, axes = scaling.mass_density_dist(cats[i], cats[j], **kwargs,
                 **fit_kwargs, **fit_kwargs_cat[i],
-                bins1=mass_conf['catalog1']['mass_bins'],
-                bins2=mass_conf['catalog2']['mass_bins'],
+                bins1=mass_conf[f'catalog{i}']['mass_bins'],
+                bins2=mass_conf[f'catalog{j}']['mass_bins'],
                 ax_rotation=mass_conf['ax_rotation'],
                 rotation_resolution=mass_conf['rotation_resolution'],
                 fig_kwargs={'figsize': mass_conf['figsize']},
