@@ -118,11 +118,15 @@ mt_metrics_redshift:
         mass_bins: 4
         mass_num_fmt: .1f
         redshift_bins: 10
+        redshift_bins_dist: 30
+        redshift_num_fmt: .1f
         fit_redshift_bins: 5
         fit_redshift_bins_dist: 20
     catalog2:
         mass_bins: 4
         mass_num_fmt: .1f
         redshift_bins: 10
+        redshift_bins_dist: 30
+        redshift_num_fmt: .1f
         fit_redshift_bins: 5
         fit_redshift_bins_dist: 20

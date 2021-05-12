@@ -244,6 +244,8 @@ mt_metrics_redshift: # Scaling relation.
         mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
         mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
         redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+        redshift_bins_dist: 30 # Redshift bins for distribution histograms. Can be number of bins, or (xmin, xmax, dx).
+        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
         fit_redshift_bins: 5 # Bins to compute statistics for fit.
         fit_redshift_bins_dist: 20 # Bins to compute distribution of catalog2 redshift.
 
@@ -251,5 +253,7 @@ mt_metrics_redshift: # Scaling relation.
         mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
         mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
         redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+        redshift_bins_dist: 30 # Redshift bins for distribution histograms. Can be number of bins, or (xmin, xmax, dx).
+        redshift_num_fmt: .1f # Format the values of redshift binedges (ex: '.2f') in label.
         fit_redshift_bins: 5 # Bins to compute statistics for fit.
         fit_redshift_bins_dist: 20 # Bins to compute distribution of catalog1 redshift.
