@@ -108,3 +108,5 @@ def test_m_density_dist():
                     fit_bins1=5, fit_bins2=3, fit_statistics='individual')
     assert_raises(ValueError, scaling.mass_density_dist, c1, c2, 'cat1',
                     add_fit=True, fit_statistics='unknown')
+    fig, axes = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True,
+                    fit_bins1=[1, 2], fit_bins2=3, fit_statistics='mode')
