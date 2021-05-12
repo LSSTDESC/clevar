@@ -1093,6 +1093,157 @@ class ArrayFuncs():
         if values_aux is not None:
             axes.flatten()[0].legend(**legend_kwargs)
         return f, axes
+    def plot_density_dist(values1, values2, bins1=30, bins2=30,
+        ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
+        err1=None, err2=None, metrics_mode='simple', plt_kwargs={}, add_cb=True, cb_kwargs={},
+        err_kwargs={}, bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
+        fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02), vline_kwargs={},
+        **kwargs):
+        """
+        Scatter plot with errorbars and color based on point density with distribution panels.
+
+        Parameters
+        ----------
+        values1: array
+            Component 1
+        values2: array
+            Component 2
+        bins1: array, int
+            Bins for component 1 (for density colors).
+        bins2: array, int
+            Bins for component 2 (for density colors).
+        ax_rotation: float
+            Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        rotation_resolution: int
+            Number of bins to be used when ax_rotation!=0.
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
+        err1: array
+            Error of component 1
+        err2: array
+            Error of component 2
+        plt_kwargs: dict
+            Additional arguments for pylab.scatter
+        add_cb: bool
+            Plot colorbar
+        cb_kwargs: dict
+            Colorbar arguments
+        err_kwargs: dict
+            Additional arguments for pylab.errorbar
+        bias_kwargs: dict
+            Arguments for bias plot. Used in pylab.plot
+        scat_kwargs: dict
+            Arguments for scatter plot. Used in pylab.fill_between
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        fig_pos: tuple
+            List with edges for the figure. Must be in format (left, bottom, right, top)
+        fig_frac: tuple
+            Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+            and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+        Fit Parameters
+        --------------
+        add_bindata: bool
+            Plot binned data used for fit.
+        add_fit: bool
+            Fit and plot binned dat.
+        fit_err2: array
+            Error of component 2
+        fit_mode: str
+            Statistics to be used in fit. Options are:
+                `individual` - Use each point
+                `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+                `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+        fit_bins1: array, None
+            Bins for component 1 (default=10).
+        fit_bins2: array, None
+            Bins for component 2 (default=30).
+        fit_legend_kwargs: dict
+            Additional arguments for plt.legend.
+        fit_bindata_kwargs: dict
+            Additional arguments for pylab.errorbar.
+        fit_plt_kwargs: dict
+            Additional arguments for plot of fit pylab.scatter.
+        vline_kwargs: dict
+            Arguments for vlines marking bins in main plot, used in plt.axvline.
+
+        Returns
+        -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
+        list
+            Axes with the panels (main, right, top, label)
+        """
+        # Fig
+        fig_kwargs_ = dict(figsize=(8, 6))
+        fig_kwargs_.update(fig_kwargs)
+        fig = plt.figure(**fig_kwargs_)
+        left, bottom, right, top = fig_pos
+        frac, gap, cb = fig_frac
+        cb = cb if add_cb else 0
+        xmain, xgap, xpanel = (right-left)*np.array([frac, gap, 1-frac-gap-cb])
+        ymain, ygap, ypanel, ycb = (top-bottom)*np.array([frac, gap, 1-frac-gap-cb, cb-gap])
+        ax_m = fig.add_axes([left, bottom, xmain, ymain]) # main
+        ax_cb = fig.add_axes([left+xmain+xgap, bottom, ycb, ymain]) if add_cb else None # cb
+        # Main plot
+        cb_kwargs_ = {'cax': ax_cb, 'orientation': 'vertical'}
+        cb_kwargs_.update(cb_kwargs)
+        ArrayFuncs.plot_density(values1, values2, bins1=bins1, bins2=bins2,
+            ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
+            xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=ax_m,
+            plt_kwargs=plt_kwargs, add_cb=add_cb, cb_kwargs=cb_kwargs_,
+            err_kwargs=err_kwargs)
+        if add_cb:
+            ax_cb.xaxis.tick_top()
+            ax_cb.xaxis.set_label_position('top')
+        ax_m.set_xscale(xscale)
+        ax_m.set_yscale(yscale)
+        # Add v lines
+        ax_m.xaxis.grid(False, which='both')
+        fit_bins1 = autobins(values1, kwargs.get('fit_bins1', 10), xscale=='log')
+        vline_kwargs_ = {'lw':.5, 'color':'0'}
+        vline_kwargs_.update(vline_kwargs)
+        for v in fit_bins1:
+            ax_m.axvline(v, **vline_kwargs_)
+        # Dist plot
+        fit_bins2 = autobins(values2, kwargs.get('fit_bins2', 30), yscale=='log')
+        masks1 = binmasks(values1, fit_bins1)
+        xlims = ax_m.get_xlim()
+        if xscale=='log':
+            xlims, fit_bins1 = np.log(xlims), np.log(fit_bins1)
+        xpos = [xmain*(x-xlims[0])/(xlims[1]-xlims[0]) for x in fit_bins1]
+        axes_h = [fig.add_axes([left+xl, bottom+ymain+ygap, xr-xl, ypanel]) # top
+                    for xl, xr in zip(xpos, xpos[1:])]
+        fit_line_kwargs_list = kwargs.get('fit_line_kwargs_list', [{} for m in masks1])
+        dlims = (np.inf, -np.inf)
+        for ax, mask, lkwarg in zip(axes_h, masks1, fit_line_kwargs_list):
+            ph.add_grid(ax)
+            kwargs_ = {}
+            kwargs_.update(kwargs.get('fit_plt_kwargs', {}))
+            kwargs_.update(lkwarg)
+            ph.plot_hist_line(*np.histogram(values2[mask], bins=fit_bins2),
+                              ax=ax, shape='line', rotate=True, **kwargs_)
+            ax.set_xlim(ax.get_xlim()[::-1])
+            ax.set_xticklabels([])
+            ax.set_yscale(xscale)
+            ax.yaxis.tick_right()
+            ax.yaxis.set_label_position('right')
+            dlims = min(dlims[0], ax.get_ylim()[0]), max(dlims[1], ax.get_ylim()[1])
+        for ax in axes_h:
+            ax.set_ylim(dlims)
+        for ax in axes_h[:-1]:
+            ax.set_yticklabels([])
+        # Bindata and fit
+        kwargs['fit_err2'] = kwargs.get('fit_err2', err2)
+        kwargs['fit_add_fit'] = kwargs.get('add_fit', False)
+        kwargs['fit_add_bindata'] = kwargs.get('add_bindata', kwargs['fit_add_fit'])
+        ArrayFuncs._add_bindata_and_powlawfit(ax_m, values1, values2,
+                                         **{k[4:]:v for k, v in kwargs.items()
+                                             if k[:4]=='fit_'})
+        return fig, [ax_m, axes_h]
 
 class ClCatalogFuncs():
     """
@@ -2077,6 +2228,102 @@ class ClCatalogFuncs():
         for ax in (axes[-1,:] if len(axes.shape)>1 else axes):
             ax.set_xlabel(xlabel)
         return fig, axes
+    def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
+        """
+        Scatter plot with errorbars and color based on point density with distribution panels.
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog with matching information
+        cat2: clevar.ClCatalog
+            ClCatalog matched to
+        matching_type: str
+            Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+        col: str
+            Name of column to be plotted
+        bins1: array, int
+            Bins for component 1 (for density colors).
+        bins2: array, int
+            Bins for component 2 (for density colors).
+        add_err: bool
+            Add errorbars
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
+
+        Fit Parameters
+        --------------
+        add_bindata: bool
+            Plot binned data used for fit.
+        add_fit: bool
+            Fit and plot binned dat.
+        fit_err2: array
+            Error of component 2
+        fit_mode: str
+            Statistics to be used in fit. Options are:
+                `individual` - Use each point
+                `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+                `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+        fit_bins1: array, None
+            Bins for component 1 (default=10).
+        fit_bins2: array, None
+            Bins for component 2 (default=30).
+        fit_legend_kwargs: dict
+            Additional arguments for plt.legend.
+        fit_bindata_kwargs: dict
+            Additional arguments for pylab.errorbar.
+        fit_plt_kwargs: dict
+            Additional arguments for plot of fit pylab.scatter.
+        vline_kwargs: dict
+            Arguments for vlines marking bins in main plot, used in plt.axvline.
+
+        Other parameters
+        ----------------
+        fig_kwargs: dict
+            Additional arguments for plt.subplots
+        ax_rotation: float
+            Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        rotation_resolution: int
+            Number of bins to be used when ax_rotation!=0.
+        plt_kwargs: dict
+            Additional arguments for pylab.scatter
+        add_cb: bool
+            Plot colorbar
+        cb_kwargs: dict
+            Colorbar arguments
+        err_kwargs: dict
+            Additional arguments for pylab.errorbar
+        bias_kwargs: dict
+            Arguments for bias plot. Used in pylab.plot
+        scat_kwargs: dict
+            Arguments for scatter plot. Used in pylab.fill_between
+        xscale: str
+            Scale xaxis.
+        yscale: str
+            Scale yaxis.
+        fig_pos: tuple
+            List with edges for the figure. Must be in format (left, bottom, right, top)
+        fig_frac: tuple
+            Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+            and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+        Returns
+        -------
+        fig: matplotlib.figure.Figure
+            `matplotlib.figure.Figure` object
+        list
+            Axes with the panels (main, right, top, label)
+        """
+        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
+        f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
+        fig, axes = ArrayFuncs.plot_density_dist(**f_kwargs)
+        axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
+        axes[0].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
+        axes[1][-1].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
+        return fig, axes
 
 ############################################################################################
 ### Redshift Plots #########################################################################
@@ -2620,6 +2867,95 @@ def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, ma
         'mask': mask,
     })
     return ClCatalogFuncs.plot_dist_self(cat, **kwargs_)
+def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
+    """
+    Scatter plot with errorbars and color based on point density with scatter and bias panels
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+    col: str
+        Name of column to be plotted
+    bins1: array, int
+        Bins for component 1 (for density colors).
+    bins2: array, int
+        Bins for component 2 (for density colors).
+    add_err: bool
+        Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit.
+    add_fit: bool
+        Fit and plot binned dat.
+    fit_err2: array
+        Error of component 2
+    fit_mode: str
+        Statistics to be used in fit. Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for component 1 (default=10).
+    fit_bins2: array, None
+        Bins for component 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+    vline_kwargs: dict
+        Arguments for vlines marking bins in main plot, used in plt.axvline.
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    ax_rotation: float
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+    rotation_resolution: int
+        Number of bins to be used when ax_rotation!=0.
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict
+        Colorbar arguments
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    bias_kwargs: dict
+        Arguments for bias plot. Used in pylab.plot
+    scat_kwargs: dict
+        Arguments for scatter plot. Used in pylab.fill_between
+    xscale: str
+        Scale xaxis.
+    yscale: str
+        Scale yaxis.
+    fig_pos: tuple
+        List with edges for the figure. Must be in format (left, bottom, right, top)
+    fig_frac: tuple
+        Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+        and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    list
+        Axes with the panels (main, right, top, label)
+    """
+    return ClCatalogFuncs.plot_density_dist(cat1, cat2, matching_type, col='z', **kwargs)
 
 ############################################################################################
 ### Mass Plots #############################################################################
@@ -3174,3 +3510,94 @@ def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=
         'mask': mask,
     })
     return ClCatalogFuncs.plot_dist_self(cat, **kwargs_)
+
+def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
+    """
+    Scatter plot with errorbars and color based on point density with scatter and bias panels
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2: clevar.ClCatalog
+        ClCatalog matched to
+    matching_type: str
+        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
+    col: str
+        Name of column to be plotted
+    bins1: array, int
+        Bins for component 1 (for density colors).
+    bins2: array, int
+        Bins for component 2 (for density colors).
+    add_err: bool
+        Add errorbars
+    mask1: array, None
+        Mask for clusters 1 properties, must have size=cat1.size
+    mask2: array, None
+        Mask for clusters 2 properties, must have size=cat2.size
+    log_mass: bool
+        Log scale for mass
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit.
+    add_fit: bool
+        Fit and plot binned dat.
+    fit_err2: array
+        Error of component 2
+    fit_mode: str
+        Statistics to be used in fit. Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for component 1 (default=10).
+    fit_bins2: array, None
+        Bins for component 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+    vline_kwargs: dict
+        Arguments for vlines marking bins in main plot, used in plt.axvline.
+
+    Other parameters
+    ----------------
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    ax_rotation: float
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+    rotation_resolution: int
+        Number of bins to be used when ax_rotation!=0.
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict
+        Colorbar arguments
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    bias_kwargs: dict
+        Arguments for bias plot. Used in pylab.plot
+    scat_kwargs: dict
+        Arguments for scatter plot. Used in pylab.fill_between
+    fig_pos: tuple
+        List with edges for the figure. Must be in format (left, bottom, right, top)
+    fig_frac: tuple
+        Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+        and have values: [0, 1]. Colorbar is only used with add_cb key.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+        `matplotlib.figure.Figure` object
+    list
+        Axes with the panels (main, right, top, label)
+    """
+    kwargs['fit_log'] = kwargs.get('fit_log', True)
+    kwargs['xscale'] = 'log' if log_mass else 'linear'
+    kwargs['yscale'] = 'log' if log_mass else 'linear'
+    return ClCatalogFuncs.plot_density_dist(cat1, cat2, matching_type, col='mass', **kwargs)
