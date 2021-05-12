@@ -81,7 +81,7 @@ mt_metrics_mass:
     rotation_resolution: 30
     add_bindata: False
     add_fit: False
-    add_fit_err: True
+    add_fit_err: False
     fit_statistics: mode
     catalog1:
         redshift_bins: 10
@@ -110,11 +110,19 @@ mt_metrics_redshift:
     log_mass: True
     ax_rotation: 0
     rotation_resolution: 30
+    add_bindata: False
+    add_fit: False
+    add_fit_err: False
+    fit_statistics: mode
     catalog1:
         mass_bins: 4
         mass_num_fmt: .1f
         redshift_bins: 10
+        fit_redshift_bins: 5
+        fit_redshift_bins_dist: 20
     catalog2:
         mass_bins: 4
         mass_num_fmt: .1f
         redshift_bins: 10
+        fit_redshift_bins: 5
+        fit_redshift_bins_dist: 20

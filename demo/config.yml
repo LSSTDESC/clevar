@@ -199,7 +199,7 @@ mt_metrics_mass: # Scaling relation.
     ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of mass_bins in catalogs.
     rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
 
-    add_bindata: True # Plot binned data to be used for fit.
+    add_bindata: False # Plot binned data to be used for fit.
     add_fit: False # Fit and plot binned dat.
     add_fit_err: True # Use error of component y in fit.
     fit_statistics: mode # Statistics to be used in fit. Options are: individual, mode, mean
@@ -235,12 +235,21 @@ mt_metrics_redshift: # Scaling relation.
     ax_rotation: 0 # For density plots. Angle (in degrees) for rotation of axis of binning. Overwrites use of redshifts_bins in catalogs.
     rotation_resolution: 30 # For density plots. Number of bins to be used when ax_rotation!=0.
 
+    add_bindata: False # Plot binned data to be used for fit.
+    add_fit: False # Fit and plot binned dat.
+    add_fit_err: True # Use error of component y in fit.
+    fit_statistics: mode # Statistics to be used in fit. Options are: individual, mode, mean
+
     catalog1:
         mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
         mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
         redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+        fit_redshift_bins: 5 # Bins to compute statistics for fit.
+        fit_redshift_bins_dist: 20 # Bins to compute distribution of catalog2 redshift.
 
     catalog2:
         mass_bins: 4 # Mass bins for density colors. Can be number of bins, or (xmin, xmax, dx). If log_mass provide log of values.
         mass_num_fmt: .1f # Format the values of mass binedges (ex: '.2f') in label.
         redshift_bins: 10 # Redshift bins for panels. Can be number of bins, or (xmin, xmax, dx).
+        fit_redshift_bins: 5 # Bins to compute statistics for fit.
+        fit_redshift_bins_dist: 20 # Bins to compute distribution of catalog1 redshift.

@@ -44,8 +44,7 @@ def run(config_file):
         mass_conf[cat] = {k: str_none(v) for k, v in mass_conf[cat].items()}
     ### Plots
     # config
-    kwargs = {k:mass_conf[k] for k in ('matching_type', 'log_mass', 'add_err',
-                                       'add_cb')}
+    kwargs = {k:mass_conf[k] for k in ('matching_type', 'log_mass', 'add_err', 'add_cb')}
     fit_kwargs = {k:mass_conf[k] for k in ('add_bindata', 'add_fit', 'add_fit_err', 'fit_statistics')}
     fit_kwargs_cat = {i:{
         'fit_bins1': mass_conf[f'catalog{i}']['fit_mass_bins'],
@@ -146,13 +145,12 @@ def run(config_file):
         # Panel density distribution
         if any(case in mass_conf['plot_case'] for case in ('density_dist', 'all')):
             print(f"\n# Mass density (catalog {i} z panel)")
-            fig, axes = scaling.mass_density_dist(c1, c2, **kwargs,
+            fig, axes = scaling.mass_density_dist(cats[i], cats[j], **kwargs,
                 **fit_kwargs, **fit_kwargs_cat[i],
                 bins1=mass_conf['catalog1']['mass_bins'],
                 bins2=mass_conf['catalog2']['mass_bins'],
                 ax_rotation=mass_conf['ax_rotation'],
                 rotation_resolution=mass_conf['rotation_resolution'],
-                redshift_bins=mass_conf[f'catalog{i}']['redshift_bins'],
                 fig_kwargs={'figsize': mass_conf['figsize']},
                 )
             plt.savefig(f'{mass_name}_density_cat{i}_dist.png', dpi=mass_conf['dpi'])
