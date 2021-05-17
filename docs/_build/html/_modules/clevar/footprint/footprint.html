@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.footprint.footprint &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>clevar.footprint.footprint &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -438,9 +438,10 @@
 <span class="sd">        Get cover fraction with a given window.</span>
 
 <span class="sd">        .. math::</span>
-<span class="sd">            CF(R) = \frac{\sum_{i\in{r_i&lt;R}}w(r_i)df(r_i)}{\sum_{i\in{r_i&lt;R}}w(r_i)}</span>
+<span class="sd">            CF(R) = \frac{\sum_{r_i&lt;R}w(r_i)df(r_i)}{\sum_{r_i&lt;R}w(r_i)}</span>
 
 <span class="sd">        where the index `i` represents pixels of the footprint,</span>
+<span class="sd">        :math:`r_i` is the distance between the cluster center and the pixel center,</span>
 <span class="sd">        :math:`R` is the aperture radius to be considered</span>
 <span class="sd">        and :math:`w` is the window function.</span>
 
@@ -475,9 +476,10 @@
 <span class="sd">        Cover fraction with NFW 2D flatcore window.</span>
 
 <span class="sd">        .. math::</span>
-<span class="sd">            CF(R) = \frac{\sum_{i\in{r_i&lt;R}}w_{nfw}(r_i)df(r_i)}{\sum_{i\in{r_i&lt;R}}w(r_i)}</span>
+<span class="sd">            CF(R) = \frac{\sum_{r_i&lt;R}w_{NFW}(r_i)df(r_i)}{\sum_{r_i&lt;R}w_{NFW}(r_i)}</span>
 
 <span class="sd">        where the index `i` represents pixels of the footprint,</span>
+<span class="sd">        :math:`r_i` is the distance between the cluster center and the pixel center,</span>
 <span class="sd">        :math:`R` is the aperture radius to be considered</span>
 <span class="sd">        and :math:`w_{nfw}` is the NFW 2D flatcore window function.</span>
 

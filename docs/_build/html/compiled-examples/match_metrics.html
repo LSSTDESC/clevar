@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Metrics of matching (simple) &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>Metrics of matching (simple) &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -417,74 +417,144 @@ bins:</p>
 </pre></div>
 </div>
 <img alt="../_images/match_metrics_37_0.png" src="../_images/match_metrics_37_0.png" />
+</div>
+<div class="section" id="evaluate-metrics-of-the-distribution">
+<h4>Evaluate metrics of the distribution<a class="headerlink" href="#evaluate-metrics-of-the-distribution" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_metrics</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_38_0.png" src="../_images/match_metrics_38_0.png" />
+<img alt="../_images/match_metrics_39_0.png" src="../_images/match_metrics_39_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_density_metrics</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">ax_rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_39_0.png" src="../_images/match_metrics_39_0.png" />
+<img alt="../_images/match_metrics_40_0.png" src="../_images/match_metrics_40_0.png" />
 </div>
 <div class="section" id="split-data-into-mass-bins">
 <h4>Split data into mass bins<a class="headerlink" href="#split-data-into-mass-bins" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_masspanel</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_41_0.png" src="../_images/match_metrics_41_0.png" />
+<img alt="../_images/match_metrics_42_0.png" src="../_images/match_metrics_42_0.png" />
 </div>
 <div class="section" id="split-data-into-mass-bins-and-color-by-density">
 <h4>Split data into mass bins and color by density<a class="headerlink" href="#split-data-into-mass-bins-and-color-by-density" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_density_masspanel</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_43_0.png" src="../_images/match_metrics_43_0.png" />
+<img alt="../_images/match_metrics_44_0.png" src="../_images/match_metrics_44_0.png" />
+</div>
+<div class="section" id="evaluate-the-distribution">
+<h4>Evaluate the distribution<a class="headerlink" href="#evaluate-the-distribution" title="Permalink to this headline">¶</a></h4>
+<p>See how the distribution of mass happens in each bin for one of the
+catalogs</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_dist_self</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">redshift_bins_dist</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span>
+                              <span class="n">mass_bins</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mf">13.0</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.2</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.5</span><span class="p">,</span> <span class="mf">1e15</span><span class="p">],</span>
+                              <span class="n">redshift_bins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span>
+                              <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)})</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">171</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">200</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mi">371</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mi">124</span> <span class="n">ms</span>
+</pre></div>
+</div>
+<img alt="../_images/match_metrics_46_1.png" src="../_images/match_metrics_46_1.png" />
+<p>Compare with the distribution on the other catalog</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_dist</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">redshift_bins_dist</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span>
+                              <span class="n">mass_bins</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mf">13.0</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.2</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.5</span><span class="p">,</span> <span class="mf">1e15</span><span class="p">],</span>
+                              <span class="n">redshift_bins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span>
+                              <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)})</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">361</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">231</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mi">591</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mi">321</span> <span class="n">ms</span>
+</pre></div>
+</div>
+<img alt="../_images/match_metrics_48_1.png" src="../_images/match_metrics_48_1.png" />
 </div>
 </div>
 <div class="section" id="mass-plots">
 <h3>Mass plots<a class="headerlink" href="#mass-plots" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="id2">
 <h4>Simple plot<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">add_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fit_bins1</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_46_0.png" src="../_images/match_metrics_46_0.png" />
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">clmmenv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">scipy</span><span class="o">/</span><span class="n">optimize</span><span class="o">/</span><span class="n">minpack</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">828</span><span class="p">:</span> <span class="n">OptimizeWarning</span><span class="p">:</span> <span class="n">Covariance</span> <span class="n">of</span> <span class="n">the</span> <span class="n">parameters</span> <span class="n">could</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">estimated</span>
+  <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Covariance of the parameters could not be estimated&#39;</span><span class="p">,</span>
+</pre></div>
+</div>
+<img alt="../_images/match_metrics_51_1.png" src="../_images/match_metrics_51_1.png" />
 </div>
 <div class="section" id="color-points-by-redshift-value">
 <h4>Color points by redshift value<a class="headerlink" href="#color-points-by-redshift-value" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="p">,</span> <span class="n">cb</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass_zcolor</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_48_0.png" src="../_images/match_metrics_48_0.png" />
+<img alt="../_images/match_metrics_53_0.png" src="../_images/match_metrics_53_0.png" />
 </div>
 <div class="section" id="id3">
 <h4>Color points by density at plot<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span><span class="p">,</span> <span class="n">cb</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass_density</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_50_0.png" src="../_images/match_metrics_50_0.png" />
+<img alt="../_images/match_metrics_55_0.png" src="../_images/match_metrics_55_0.png" />
 </div>
 <div class="section" id="split-data-into-redshift-bins">
 <h4>Split data into redshift bins<a class="headerlink" href="#split-data-into-redshift-bins" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass_zpanel</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_52_0.png" src="../_images/match_metrics_52_0.png" />
+<img alt="../_images/match_metrics_57_0.png" src="../_images/match_metrics_57_0.png" />
 </div>
 <div class="section" id="split-data-into-redshift-bins-and-color-by-density">
 <h4>Split data into redshift bins and color by density<a class="headerlink" href="#split-data-into-redshift-bins-and-color-by-density" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass_density_zpanel</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_54_0.png" src="../_images/match_metrics_54_0.png" />
+<img alt="../_images/match_metrics_59_0.png" src="../_images/match_metrics_59_0.png" />
+</div>
+<div class="section" id="id4">
+<h4>Evaluate metrics of the distribution<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass_metrics</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_55_0.png" src="../_images/match_metrics_55_0.png" />
+<img alt="../_images/match_metrics_61_0.png" src="../_images/match_metrics_61_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass_density_metrics</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">ax_rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_56_0.png" src="../_images/match_metrics_56_0.png" />
+<img alt="../_images/match_metrics_62_0.png" src="../_images/match_metrics_62_0.png" />
+</div>
+<div class="section" id="id5">
+<h4>Evaluate the distribution<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>See how the distribution of mass happens in each bin for one of the
+catalogs</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass_dist_self</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">mass_bins_dist</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span>
+                              <span class="n">mass_bins</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mf">13.0</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.2</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.5</span><span class="p">,</span> <span class="mf">1e14</span><span class="p">,</span> <span class="mf">1e15</span><span class="p">],</span>
+                              <span class="n">redshift_bins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span>
+                              <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)})</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">308</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">134</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mi">442</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mi">271</span> <span class="n">ms</span>
+</pre></div>
+</div>
+<img alt="../_images/match_metrics_64_1.png" src="../_images/match_metrics_64_1.png" />
+<p>Compare with the distribution on the other catalog</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">mass_dist</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">mass_bins_dist</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span>
+                              <span class="n">mass_bins</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mf">13.0</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.2</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.5</span><span class="p">,</span> <span class="mf">1e14</span><span class="p">,</span> <span class="mf">1e15</span><span class="p">],</span>
+                              <span class="n">redshift_bins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span>
+                              <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)})</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">161</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">231</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mi">391</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mi">130</span> <span class="n">ms</span>
+</pre></div>
+</div>
+<img alt="../_images/match_metrics_66_1.png" src="../_images/match_metrics_66_1.png" />
 </div>
 </div>
 </div>

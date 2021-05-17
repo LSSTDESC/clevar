@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.plot_helper module &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>clevar.match_metrics.plot_helper module &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -232,7 +232,7 @@
 
 <dl class="py function">
 <dt id="clevar.match_metrics.plot_helper.add_panel_bin_label">
-<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">add_panel_bin_label</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">edges_lower</em>, <em class="sig-param">edges_higher</em>, <em class="sig-param">format_func=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#add_panel_bin_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.add_panel_bin_label" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">add_panel_bin_label</code><span class="sig-paren">(</span><em class="sig-param">axes</em>, <em class="sig-param">edges_lower</em>, <em class="sig-param">edges_higher</em>, <em class="sig-param">format_func=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">prefix=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#add_panel_bin_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.add_panel_bin_label" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds label with bin range on the top of panel</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -241,6 +241,7 @@
 <li><p><strong>edges_lower</strong> (<em>array</em>) – Lower values of bins</p></li>
 <li><p><strong>edges_higher</strong> (<em>array</em>) – Higher values of bins</p></li>
 <li><p><strong>format_func</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Prefix to add to labels</p></li>
 </ul>
 </dd>
 </dl>
@@ -248,7 +249,7 @@
 
 <dl class="py function">
 <dt id="clevar.match_metrics.plot_helper.get_bin_label">
-<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">get_bin_label</code><span class="sig-paren">(</span><em class="sig-param">edge_lower</em>, <em class="sig-param">edge_higher</em>, <em class="sig-param">format_func=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#get_bin_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.get_bin_label" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">get_bin_label</code><span class="sig-paren">(</span><em class="sig-param">edge_lower</em>, <em class="sig-param">edge_higher</em>, <em class="sig-param">format_func=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">prefix=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#get_bin_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.get_bin_label" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get label with bin range</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -256,6 +257,7 @@
 <li><p><strong>edge_lower</strong> (<em>float</em>) – Lower values of bin</p></li>
 <li><p><strong>edge_higher</strong> (<em>float</em>) – Higher values of bin</p></li>
 <li><p><strong>format_func</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Prefix to add to labels</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -301,8 +303,8 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>axes</strong> (<em>array</em>) – Axes with the panels</p></li>
-<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
 </ul>
 </dd>
 <dt class="field-even">Other Parameters</dt>
@@ -326,15 +328,17 @@
 
 <dl class="py function">
 <dt id="clevar.match_metrics.plot_helper.plot_hist_line">
-<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">plot_hist_line</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hist_values</span></em>, <em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">'steps'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#plot_hist_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.plot_hist_line" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">plot_hist_line</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hist_values</span></em>, <em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">ax</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">'steps'</span></em>, <em class="sig-param"><span class="n">rotate</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#plot_hist_line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.plot_hist_line" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovey rate as lines. Can be in steps or continuous</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>hist_values</strong> (<em>array</em>) – Values of each bin in the histogram</p></li>
-<li><p><strong>bins</strong> (<em>array</em>) – Bins of histogram</p></li>
+<li><p><strong>bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins of histogram</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the line. Can be steps or line.</p></li>
+<li><p><strong>rotate</strong> (<em>bool</em>) – Invert x-y axes in plot</p></li>
+<li><p><strong>kwargs</strong> (<em>parameters</em>) – Additional parameters for plt.plot</p></li>
 </ul>
 </dd>
 </dl>

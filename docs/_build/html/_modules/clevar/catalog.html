@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.catalog &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>clevar.catalog &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -480,7 +480,13 @@
                     <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cross_match</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cross_match</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * Total objects:    </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * multiple (self):  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">veclen</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_multi_self&quot;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * multiple (other): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">veclen</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_multi_other&quot;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * unique (self):    </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_self&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * unique (other):   </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_other&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * cross:            </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_cross&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 <div class="viewcode-block" id="ClCatalog.save_footprint_quantities"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog.save_footprint_quantities">[docs]</a>    <span class="k">def</span> <span class="nf">save_footprint_quantities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the matching results of one catalog</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.distances &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>clevar.match_metrics.distances &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -231,11 +231,11 @@
 <span class="sd">        ----------</span>
 <span class="sd">        distances: array</span>
 <span class="sd">            Distances to be bined</span>
-<span class="sd">        distance_bins: array</span>
+<span class="sd">        distance_bins: array, int</span>
 <span class="sd">            Bins for distance</span>
 <span class="sd">        quantity2: str</span>
 <span class="sd">            Name of quantity 2 to bin</span>
-<span class="sd">        bins2: array</span>
+<span class="sd">        bins2: array, int</span>
 <span class="sd">            Bins for quantity 2</span>
 <span class="sd">        log2: bool</span>
 <span class="sd">            Log scale for quantity 2</span>
@@ -294,7 +294,7 @@
 <span class="sd">            ClCatalog matched to</span>
 <span class="sd">        matching_type: str</span>
 <span class="sd">            Type of matching to be considered. Must be in: &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;</span>
-<span class="sd">        radial_bins: array</span>
+<span class="sd">        radial_bins: array, int</span>
 <span class="sd">            Bins for radial distances</span>
 <span class="sd">        radial_bin_units: str</span>
 <span class="sd">            Units of radial bins</span>
@@ -302,10 +302,14 @@
 <span class="sd">            Cosmology (used if physical units required)</span>
 <span class="sd">        col2: str</span>
 <span class="sd">            Name of quantity 2 (of cat1) to bin</span>
-<span class="sd">        bins2: array</span>
+<span class="sd">        bins2: array, int</span>
 <span class="sd">            Bins for quantity 2</span>
 <span class="sd">        log2: bool</span>
 <span class="sd">            Log scale for quantity 2</span>
+<span class="sd">        mask1: array, None</span>
+<span class="sd">            Mask for clusters 1 properties, must have size=cat1.size</span>
+<span class="sd">        mask2: array, None</span>
+<span class="sd">            Mask for clusters 2 properties, must have size=cat2.size</span>
 
 
 <span class="sd">        Other parameters</span>
@@ -325,7 +329,9 @@
 <span class="sd">        ax: matplotlib.axes</span>
 <span class="sd">            Axis of the plot</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mp</span> <span class="o">=</span> <span class="n">MatchedPairs</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">)</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="n">MatchedPairs</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span>
+                          <span class="n">mask1</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mask1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                          <span class="n">mask2</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mask2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
         <span class="n">sk1</span><span class="p">,</span> <span class="n">sk2</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">data1</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">data2</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">]</span>
         <span class="n">distances</span> <span class="o">=</span> <span class="n">convert_units</span><span class="p">(</span><span class="n">sk1</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">sk2</span><span class="p">)</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="s1">&#39;degrees&#39;</span><span class="p">,</span>
                                   <span class="n">radial_bin_units</span><span class="p">,</span> <span class="n">redshift</span><span class="o">=</span><span class="n">mp</span><span class="o">.</span><span class="n">data1</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span>
@@ -352,15 +358,19 @@
 <span class="sd">            ClCatalog matched to</span>
 <span class="sd">        matching_type: str</span>
 <span class="sd">            Type of matching to be considered. Must be in: &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;</span>
-<span class="sd">        redshift_bins: array</span>
+<span class="sd">        redshift_bins: array, int</span>
 <span class="sd">            Bins for redshift distances</span>
 <span class="sd">        col2: str</span>
 <span class="sd">            Name of quantity 2 to bin</span>
-<span class="sd">        bins2: array</span>
+<span class="sd">        bins2: array, int</span>
 <span class="sd">            Bins for quantity 2</span>
 <span class="sd">        normalize: str, None</span>
 <span class="sd">            Normalize difference by (1+z). Can be &#39;cat1&#39; for (1+z1), &#39;cat2&#39; for (1+z2)</span>
 <span class="sd">            or &#39;mean&#39; for (1+(z1+z2)/2).</span>
+<span class="sd">        mask1: array, None</span>
+<span class="sd">            Mask for clusters 1 properties, must have size=cat1.size</span>
+<span class="sd">        mask2: array, None</span>
+<span class="sd">            Mask for clusters 2 properties, must have size=cat2.size</span>
 
 <span class="sd">        Other parameters</span>
 <span class="sd">        ----------------</span>
@@ -379,7 +389,9 @@
 <span class="sd">        ax: matplotlib.axes</span>
 <span class="sd">            Axis of the plot</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mp</span> <span class="o">=</span> <span class="n">MatchedPairs</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">)</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="n">MatchedPairs</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span>
+                          <span class="n">mask1</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mask1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                          <span class="n">mask2</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mask2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
         <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">data1</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">mp</span><span class="o">.</span><span class="n">data2</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="kc">None</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span>
@@ -412,7 +424,7 @@
 <span class="sd">        ClCatalog matched to</span>
 <span class="sd">    matching_type: str</span>
 <span class="sd">        Type of matching to be considered. Must be in: &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;</span>
-<span class="sd">    radial_bins: array</span>
+<span class="sd">    radial_bins: array, int</span>
 <span class="sd">        Bins for radial distances</span>
 <span class="sd">    radial_bin_units: str</span>
 <span class="sd">        Units of radial bins</span>
@@ -420,10 +432,14 @@
 <span class="sd">        Cosmology (used if physical units required)</span>
 <span class="sd">    quantity_bins: str</span>
 <span class="sd">        Column to bin the data</span>
-<span class="sd">    bins: array</span>
+<span class="sd">    bins: array, int</span>
 <span class="sd">        Bins for quantity</span>
 <span class="sd">    log_quantity: bool</span>
 <span class="sd">        Display label in log fmt</span>
+<span class="sd">    mask1: array, None</span>
+<span class="sd">        Mask for clusters 1 properties, must have size=cat1.size</span>
+<span class="sd">    mask2: array, None</span>
+<span class="sd">        Mask for clusters 2 properties, must have size=cat2.size</span>
 
 <span class="sd">    Other parameters</span>
 <span class="sd">    ----------------</span>
@@ -472,17 +488,21 @@
 <span class="sd">        ClCatalog matched to</span>
 <span class="sd">    matching_type: str</span>
 <span class="sd">        Type of matching to be considered. Must be in: &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;</span>
-<span class="sd">    redshift_bins: array</span>
+<span class="sd">    redshift_bins: array, int</span>
 <span class="sd">        Bins for redshift distances</span>
 <span class="sd">    normalize: str, None</span>
 <span class="sd">        Normalize difference by (1+z). Can be &#39;cat1&#39; for (1+z1), &#39;cat2&#39; for (1+z2)</span>
 <span class="sd">        or &#39;mean&#39; for (1+(z1+z2)/2).</span>
 <span class="sd">    quantity_bins: str</span>
 <span class="sd">        Column to bin the data</span>
-<span class="sd">    bins: array</span>
+<span class="sd">    bins: array, int</span>
 <span class="sd">        Bins for quantity</span>
 <span class="sd">    log_quantity: bool</span>
 <span class="sd">        Display label in log fmt</span>
+<span class="sd">    mask1: array, None</span>
+<span class="sd">        Mask for clusters 1 properties, must have size=cat1.size</span>
+<span class="sd">    mask2: array, None</span>
+<span class="sd">        Mask for clusters 2 properties, must have size=cat2.size</span>
 
 <span class="sd">    Other parameters</span>
 <span class="sd">    ----------------</span>

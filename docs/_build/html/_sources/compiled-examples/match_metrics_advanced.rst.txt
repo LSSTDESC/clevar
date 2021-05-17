@@ -206,7 +206,14 @@ panels based on a 2nd quantity - ``plot_color_panel``: Scaling relation
 of a quantity with the colors based on a 2nd quantity in panels based on
 a 3rd quantity - ``plot_density_panel``: Scaling relation of a quantity
 with the colors based on density of points in panels based on a 2rd
-quantity
+quantity - ``plot_metrics``: Metrics of quantity scaling relation. -
+``plot_density_metrics``: Scaling relation of a quantity with the colors
+based on density of points with scatter and bias panels - ``plot_dist``:
+Distribution of a quantity, binned by other component in panels, and an
+optional secondary component in lines. - ``plot_dist_self``:
+Distribution of a quantity, binned by the same quantity in panels, with
+option for a second quantity in lines. Is is useful to compare with
+plot_dist results.
 
 take the name of the quantity to be binned:
 
@@ -216,61 +223,122 @@ take the name of the quantity to be binned:
 
 .. code:: ipython3
 
-    ax = s_cf.plot(c1, c2, 'cross', col='mass', xscale='log', yscale='log')
+    ax = s_cf.plot(c1, c2, 'cross', col='mass', xscale='log', yscale='log', add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
 
 
 
-.. image:: match_metrics_advanced_files/match_metrics_advanced_23_0.png
+.. image:: match_metrics_advanced_files/match_metrics_advanced_23_1.png
 
 
 .. code:: ipython3
 
     ax = s_cf.plot_color(c1, c2, 'cross', col='mass', xscale='log', yscale='log',
-                         col_color='mass', color_log=True)
+                         col_color='mass', color_log=True, add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
 
 
 
-.. image:: match_metrics_advanced_files/match_metrics_advanced_24_0.png
+.. image:: match_metrics_advanced_files/match_metrics_advanced_24_1.png
 
 
 .. code:: ipython3
 
-    ax = s_cf.plot_density(c1, c2, 'cross', col='mass', xscale='log', yscale='log')
+    ax = s_cf.plot_density(c1, c2, 'cross', col='mass', xscale='log', yscale='log', add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
 
 
 
-.. image:: match_metrics_advanced_files/match_metrics_advanced_25_0.png
+.. image:: match_metrics_advanced_files/match_metrics_advanced_25_1.png
 
 
 .. code:: ipython3
 
     f, axes = s_cf.plot_panel(c1, c2, 'cross', col='mass', xscale='log', yscale='log',
-                             col_panel='z', bins_panel=zbins[::2])
+                             col_panel='z', bins_panel=zbins[::2], add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
 
 
 
-.. image:: match_metrics_advanced_files/match_metrics_advanced_26_0.png
+.. image:: match_metrics_advanced_files/match_metrics_advanced_26_1.png
 
 
 .. code:: ipython3
 
     f, axes = s_cf.plot_color_panel(c1, c2, 'cross', col='mass', xscale='log', yscale='log',
                              col_panel='z', bins_panel=zbins[::2],
-                             col_color='z')
+                             col_color='z', add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
 
 
 
-.. image:: match_metrics_advanced_files/match_metrics_advanced_27_0.png
+.. image:: match_metrics_advanced_files/match_metrics_advanced_27_1.png
 
 
 .. code:: ipython3
 
     f, axes = s_cf.plot_density_panel(c1, c2, 'cross', col='mass', xscale='log', yscale='log',
-                             col_panel='z', bins_panel=zbins[::2])
+                             col_panel='z', bins_panel=zbins[::2], add_fit=True, fit_bins1=20,
+                                     add_err=False)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
 
 
 
-.. image:: match_metrics_advanced_files/match_metrics_advanced_28_0.png
+.. image:: match_metrics_advanced_files/match_metrics_advanced_28_1.png
 
 
 .. code:: ipython3
@@ -299,4 +367,37 @@ take the name of the quantity to be binned:
 
 
 .. image:: match_metrics_advanced_files/match_metrics_advanced_31_0.png
+
+
+.. code:: ipython3
+
+    %%time
+    zbins2 = np.linspace(0, 1.2, 7)[1:]
+    rbins2 = [1, 5.5, 25, 50, c2['mass'].max()]
+    bins1 = 10**np.histogram(np.log10(c1['mass']), 20)[1]
+    s_cf.plot_dist(c1, c2, 'cross', 'mass', 
+                  bins1=21, bins2=[10**13.0, 10**13.2, 10**13.5, 1e14, 1e15],
+                  col_aux='z', bins_aux=4, shape='line',
+                  log_vals=True, fig_kwargs={'figsize':(15, 6)})
+
+
+.. parsed-literal::
+
+    CPU times: user 400 ms, sys: 206 ms, total: 606 ms
+    Wall time: 354 ms
+
+
+
+
+.. parsed-literal::
+
+    (<Figure size 1080x432 with 8 Axes>,
+     array([[<AxesSubplot:>, <AxesSubplot:>],
+            [<AxesSubplot:xlabel='$mass_{Cat1}$'>,
+             <AxesSubplot:xlabel='$mass_{Cat1}$'>]], dtype=object))
+
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_32_2.png
 

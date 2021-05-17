@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.distances module &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>clevar.match_metrics.distances module &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -229,12 +229,14 @@
 <li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
-<li><p><strong>radial_bins</strong> (<em>array</em>) – Bins for radial distances</p></li>
+<li><p><strong>radial_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for radial distances</p></li>
 <li><p><strong>radial_bin_units</strong> (<em>str</em>) – Units of radial bins</p></li>
 <li><p><strong>cosmo</strong> (<em>clevar.Cosmology</em>) – Cosmology (used if physical units required)</p></li>
 <li><p><strong>col2</strong> (<em>str</em>) – Name of quantity 2 (of cat1) to bin</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for quantity 2</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for quantity 2</p></li>
 <li><p><strong>log2</strong> (<em>bool</em>) – Log scale for quantity 2</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 1 properties, must have size=cat1.size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 2 properties, must have size=cat2.size</p></li>
 </ul>
 </dd>
 <dt class="field-even">Other Parameters</dt>
@@ -265,11 +267,13 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em>) – Bins for redshift distances</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift distances</p></li>
 <li><p><strong>col2</strong> (<em>str</em>) – Name of quantity 2 to bin</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for quantity 2</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for quantity 2</p></li>
 <li><p><strong>normalize</strong> (<em>str</em><em>, </em><em>None</em>) – Normalize difference by (1+z). Can be ‘cat1’ for (1+z1), ‘cat2’ for (1+z2)
 or ‘mean’ for (1+(z1+z2)/2).</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 1 properties, must have size=cat1.size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 2 properties, must have size=cat2.size</p></li>
 </ul>
 </dd>
 <dt class="field-even">Other Parameters</dt>
@@ -302,12 +306,14 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
-<li><p><strong>radial_bins</strong> (<em>array</em>) – Bins for radial distances</p></li>
+<li><p><strong>radial_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for radial distances</p></li>
 <li><p><strong>radial_bin_units</strong> (<em>str</em>) – Units of radial bins</p></li>
 <li><p><strong>cosmo</strong> (<em>clevar.Cosmology</em>) – Cosmology (used if physical units required)</p></li>
 <li><p><strong>quantity_bins</strong> (<em>str</em>) – Column to bin the data</p></li>
-<li><p><strong>bins</strong> (<em>array</em>) – Bins for quantity</p></li>
+<li><p><strong>bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for quantity</p></li>
 <li><p><strong>log_quantity</strong> (<em>bool</em>) – Display label in log fmt</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 1 properties, must have size=cat1.size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 2 properties, must have size=cat2.size</p></li>
 </ul>
 </dd>
 <dt class="field-even">Other Parameters</dt>
@@ -342,12 +348,14 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em>) – Bins for redshift distances</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift distances</p></li>
 <li><p><strong>normalize</strong> (<em>str</em><em>, </em><em>None</em>) – Normalize difference by (1+z). Can be ‘cat1’ for (1+z1), ‘cat2’ for (1+z2)
 or ‘mean’ for (1+(z1+z2)/2).</p></li>
 <li><p><strong>quantity_bins</strong> (<em>str</em>) – Column to bin the data</p></li>
-<li><p><strong>bins</strong> (<em>array</em>) – Bins for quantity</p></li>
+<li><p><strong>bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for quantity</p></li>
 <li><p><strong>log_quantity</strong> (<em>bool</em>) – Display label in log fmt</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 1 properties, must have size=cat1.size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 2 properties, must have size=cat2.size</p></li>
 </ul>
 </dd>
 <dt class="field-even">Other Parameters</dt>

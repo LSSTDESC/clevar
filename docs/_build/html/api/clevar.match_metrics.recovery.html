@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery module &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>clevar.match_metrics.recovery module &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -229,8 +229,8 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values1</strong> (<em>array</em>) – Component 1</p></li>
 <li><p><strong>values2</strong> (<em>array</em>) – Component 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
 <li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
@@ -260,8 +260,8 @@ Must have same size as len(bins2)-1</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values1</strong> (<em>array</em>) – Component 1</p></li>
 <li><p><strong>values2</strong> (<em>array</em>) – Component 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
 <li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
 <li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
@@ -291,8 +291,8 @@ and each panel is based on the data inside a bins2 bin.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values1</strong> (<em>array</em>) – Component 1</p></li>
 <li><p><strong>values2</strong> (<em>array</em>) – Component 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
 <li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
@@ -331,8 +331,8 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>col1</strong> (<em>str</em>) – Name of column 1</p></li>
 <li><p><strong>col2</strong> (<em>str</em>) – Name of column 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
 ‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
 <li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
@@ -373,8 +373,8 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>col1</strong> (<em>str</em>) – Name of column 1</p></li>
 <li><p><strong>col2</strong> (<em>str</em>) – Name of column 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
 ‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
 <li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
@@ -416,8 +416,8 @@ and each panel is based on the data inside a bins2 bin.</p>
 <li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>col1</strong> (<em>str</em>) – Name of column 1</p></li>
 <li><p><strong>col2</strong> (<em>str</em>) – Name of column 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
 ‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
 <li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
@@ -460,8 +460,8 @@ Must have same size as len(bins2)-1</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values1</strong> (<em>array</em>) – Component 1</p></li>
 <li><p><strong>values2</strong> (<em>array</em>) – Component 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em>) – Bins for component 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
 <li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
 </ul>
 </dd>
@@ -486,8 +486,8 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
 ‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em>) – Bins for redshift</p></li>
-<li><p><strong>mass_bins</strong> (<em>array</em>) – Bins for mass</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift</p></li>
+<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for mass</p></li>
 <li><p><strong>transpose</strong> (<em>bool</em>) – Transpose mass and redshift in plots</p></li>
 <li><p><strong>log_mass</strong> (<em>bool</em>) – Plot mass in log scale</p></li>
 <li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
@@ -523,8 +523,8 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
 ‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em>) – Bins for redshift</p></li>
-<li><p><strong>mass_bins</strong> (<em>array</em>) – Bins for mass</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift</p></li>
+<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for mass</p></li>
 <li><p><strong>transpose</strong> (<em>bool</em>) – Transpose mass and redshift in plots</p></li>
 <li><p><strong>log_mass</strong> (<em>bool</em>) – Plot mass in log scale</p></li>
 <li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
@@ -564,8 +564,8 @@ and each panel is based on the data inside a mass bin.</p>
 <li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
 <li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
 ‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em>) – Bins for redshift</p></li>
-<li><p><strong>mass_bins</strong> (<em>array</em>) – Bins for mass</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift</p></li>
+<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for mass</p></li>
 <li><p><strong>transpose</strong> (<em>bool</em>) – Transpose mass and redshift in plots</p></li>
 <li><p><strong>log_mass</strong> (<em>bool</em>) – Plot mass in log scale</p></li>
 <li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>

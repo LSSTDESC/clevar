@@ -309,13 +309,16 @@ Color points by density at plot
 .. image:: match_metrics_files/match_metrics_37_0.png
 
 
+Evaluate metrics of the distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. code:: ipython3
 
     fig, axes = scaling.redshift_metrics(c1, c2, 'cross')
 
 
 
-.. image:: match_metrics_files/match_metrics_38_0.png
+.. image:: match_metrics_files/match_metrics_39_0.png
 
 
 .. code:: ipython3
@@ -324,7 +327,7 @@ Color points by density at plot
 
 
 
-.. image:: match_metrics_files/match_metrics_39_0.png
+.. image:: match_metrics_files/match_metrics_40_0.png
 
 
 Split data into mass bins
@@ -336,7 +339,7 @@ Split data into mass bins
 
 
 
-.. image:: match_metrics_files/match_metrics_41_0.png
+.. image:: match_metrics_files/match_metrics_42_0.png
 
 
 Split data into mass bins and color by density
@@ -348,7 +351,53 @@ Split data into mass bins and color by density
 
 
 
-.. image:: match_metrics_files/match_metrics_43_0.png
+.. image:: match_metrics_files/match_metrics_44_0.png
+
+
+Evaluate the distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+See how the distribution of mass happens in each bin for one of the
+catalogs
+
+.. code:: ipython3
+
+    %%time
+    fig, axes = scaling.redshift_dist_self(c2, redshift_bins_dist=21,
+                                  mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e15],
+                                  redshift_bins=4, shape='line',
+                                  fig_kwargs={'figsize':(15, 6)})
+
+
+.. parsed-literal::
+
+    CPU times: user 171 ms, sys: 200 ms, total: 371 ms
+    Wall time: 124 ms
+
+
+
+.. image:: match_metrics_files/match_metrics_46_1.png
+
+
+Compare with the distribution on the other catalog
+
+.. code:: ipython3
+
+    %%time
+    fig, axes = scaling.redshift_dist(c1, c2, 'cross', redshift_bins_dist=21,
+                                  mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e15],
+                                  redshift_bins=4, shape='line',
+                                  fig_kwargs={'figsize':(15, 6)})
+
+
+.. parsed-literal::
+
+    CPU times: user 361 ms, sys: 231 ms, total: 591 ms
+    Wall time: 321 ms
+
+
+
+.. image:: match_metrics_files/match_metrics_48_1.png
 
 
 Mass plots
@@ -359,11 +408,17 @@ Simple plot
 
 .. code:: ipython3
 
-    ax = scaling.mass(c1, c2, 'cross', add_err=True)
+    ax = scaling.mass(c1, c2, 'cross', add_err=True, add_fit=True, fit_bins1=30)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
 
 
 
-.. image:: match_metrics_files/match_metrics_46_0.png
+.. image:: match_metrics_files/match_metrics_51_1.png
 
 
 Color points by redshift value
@@ -375,7 +430,7 @@ Color points by redshift value
 
 
 
-.. image:: match_metrics_files/match_metrics_48_0.png
+.. image:: match_metrics_files/match_metrics_53_0.png
 
 
 Color points by density at plot
@@ -387,7 +442,7 @@ Color points by density at plot
 
 
 
-.. image:: match_metrics_files/match_metrics_50_0.png
+.. image:: match_metrics_files/match_metrics_55_0.png
 
 
 Split data into redshift bins
@@ -399,7 +454,7 @@ Split data into redshift bins
 
 
 
-.. image:: match_metrics_files/match_metrics_52_0.png
+.. image:: match_metrics_files/match_metrics_57_0.png
 
 
 Split data into redshift bins and color by density
@@ -411,8 +466,11 @@ Split data into redshift bins and color by density
 
 
 
-.. image:: match_metrics_files/match_metrics_54_0.png
+.. image:: match_metrics_files/match_metrics_59_0.png
 
+
+Evaluate metrics of the distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ipython3
 
@@ -420,7 +478,7 @@ Split data into redshift bins and color by density
 
 
 
-.. image:: match_metrics_files/match_metrics_55_0.png
+.. image:: match_metrics_files/match_metrics_61_0.png
 
 
 .. code:: ipython3
@@ -429,5 +487,51 @@ Split data into redshift bins and color by density
 
 
 
-.. image:: match_metrics_files/match_metrics_56_0.png
+.. image:: match_metrics_files/match_metrics_62_0.png
+
+
+Evaluate the distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+See how the distribution of mass happens in each bin for one of the
+catalogs
+
+.. code:: ipython3
+
+    %%time
+    fig, axes = scaling.mass_dist_self(c2, mass_bins_dist=21,
+                                  mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e14, 1e15],
+                                  redshift_bins=4, shape='line',
+                                  fig_kwargs={'figsize':(15, 6)})
+
+
+.. parsed-literal::
+
+    CPU times: user 308 ms, sys: 134 ms, total: 442 ms
+    Wall time: 271 ms
+
+
+
+.. image:: match_metrics_files/match_metrics_64_1.png
+
+
+Compare with the distribution on the other catalog
+
+.. code:: ipython3
+
+    %%time
+    fig, axes = scaling.mass_dist(c1, c2, 'cross', mass_bins_dist=21,
+                                  mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e14, 1e15],
+                                  redshift_bins=4, shape='line',
+                                  fig_kwargs={'figsize':(15, 6)})
+
+
+.. parsed-literal::
+
+    CPU times: user 161 ms, sys: 231 ms, total: 391 ms
+    Wall time: 130 ms
+
+
+
+.. image:: match_metrics_files/match_metrics_66_1.png
 
