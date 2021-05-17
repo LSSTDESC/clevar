@@ -1,7 +1,8 @@
 from .proximity import ProximityMatch
+import numpy as np
 
 class MatchedPairs():
-    def __init__(self, cat1, cat2, matching_type):
+    def __init__(self, cat1, cat2, matching_type, mask1=None, mask2=None):
         """
         Parameters
         ----------
@@ -12,10 +13,16 @@ class MatchedPairs():
         matching_type: str
             Type of matching to be considered. Must be in:
             'cross', 'self', 'other'
+        mask1: array, None
+            Mask for clusters 1 properties, must have size=cat1.size
+        mask2: array, None
+            Mask for clusters 2 properties, must have size=cat2.size
         """
-        mask1, mask2 = self.matching_masks(cat1, cat2, matching_type)
-        self.data1 = cat1[mask1]
-        self.data2 = cat2[mask2]
+        mt1, mt2 = self.matching_masks(cat1, cat2, matching_type)
+        mask = np.ones(len(mt2), dtype=bool) if mask1 is None else mask1[mt1]
+        mask = mask if mask2 is None else mask*mask2[mt2]
+        self.data1 = cat1[mt1][mask]
+        self.data2 = cat2[mt2][mask]
     def matching_masks(self, cat1, cat2, matching_type):
         """
         Parameters

@@ -230,9 +230,10 @@ class Footprint():
         Get cover fraction with a given window.
 
         .. math::
-            CF(R) = \frac{\sum_{i\in{r_i<R}}w(r_i)df(r_i)}{\sum_{i\in{r_i<R}}w(r_i)}
+            CF(R) = \frac{\sum_{r_i<R}w(r_i)df(r_i)}{\sum_{r_i<R}w(r_i)}
 
         where the index `i` represents pixels of the footprint,
+        :math:`r_i` is the distance between the cluster center and the pixel center,
         :math:`R` is the aperture radius to be considered
         and :math:`w` is the window function.
 
@@ -267,9 +268,10 @@ class Footprint():
         Cover fraction with NFW 2D flatcore window.
 
         .. math::
-            CF(R) = \frac{\sum_{i\in{r_i<R}}w_{nfw}(r_i)df(r_i)}{\sum_{i\in{r_i<R}}w(r_i)}
+            CF(R) = \frac{\sum_{r_i<R}w_{NFW}(r_i)df(r_i)}{\sum_{r_i<R}w_{NFW}(r_i)}
 
         where the index `i` represents pixels of the footprint,
+        :math:`r_i` is the distance between the cluster center and the pixel center,
         :math:`R` is the aperture radius to be considered
         and :math:`w_{nfw}` is the NFW 2D flatcore window function.
 
