@@ -238,12 +238,20 @@ Configuration for mass scaling relation, main parameters are:
 * `log_mass` - mass in log scale.
 * `ax_rotation` - for density plots. angle (in degrees) for rotation of axis of binning. overwrites use of mass_bins in catalogs.
 * `rotation_resolution` - for density plots. number of bins to be used when ax_rotation!=0.
+* `add_bindata` - Plot binned data to be used for fit.
+* `add_fit` - Fit and plot binned dat.
+* `add_fit_err` - Use error of component y in fit.
+* `fit_statistics` - Statistics to be used in fit. Options are: `individual`, `mode`, `mean`.
 
 There are also configurations relative to each catalog that must be inside the corresponding section (`catalog1` or `catalog2`):
 
 * `redshift_bins` - Redshift bins for panels. Can be number of bins, or `xmin, xmax, dx`.
 * `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
 * `mass_bins` - Mass bins for density colors. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
+* `mass_bins_dist` - Mass bins for distribution histograms. Can be number of bins, or `(xmin, xmax, dx)`. If log_mass provide log of values.
+* `mass_num_fmt` - Format the values of mass binedges (ex: `.2f`) in label (`10^mass_num_fmt` is used if log_mass).
+* `fit_mass_bins` - Bins to compute statistics for fit.
+* `fit_mass_bins_dist` - Bins to compute distribution of catalog2 mass.
 
 #### redshift - # Scaling relation <a name="config_metics_redshift"></a>
 
@@ -258,9 +266,17 @@ Configuration for mass scaling relation, main parameters are:
 * `log_mass` - mass in log scale.
 * `ax_rotation` - for density plots. angle (in degrees) for rotation of axis of binning. overwrites use of mass_bins in catalogs.
 * `rotation_resolution` - for density plots. number of bins to be used when ax_rotation!=0.
+* `add_bindata` - Plot binned data to be used for fit.
+* `add_fit` - Fit and plot binned dat.
+* `add_fit_err` - Use error of component y in fit.
+* `fit_statistics` - Statistics to be used in fit. Options are: `individual`, `mode`, `mean`.
 
 There are also configurations relative to each catalog that must be inside the corresponding section (`catalog1` or `catalog2`):
 
 * `redshift_bins` - Redshift bins for panels. Can be number of bins, or `xmin, xmax, dx`.
 * `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
 * `mass_bins` - Mass bins for density colors. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
+* `redshift_bins_dist` - Redshift bins for distribution histograms. Can be number of bins, or `(xmin, xmax, dx)`.
+* `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
+* `fit_redshift_bins` - Bins to compute statistics for fit.
+* `fit_redshift_bins_dist` - Bins to compute distribution of catalog2 redshift.
