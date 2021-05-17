@@ -20,9 +20,9 @@ def get_recovery_rate(values1, values2, bins1, bins2, is_matched):
         Component 1
     values2: array
         Component 2
-    bins1: array
+    bins1: array, int
         Bins for component 1
-    bins2: array
+    bins2: array, int
         Bins for component 2
     is_matched: array (boolean)
         Boolean array indicating matching status
@@ -59,9 +59,9 @@ class ArrayFuncs():
             Component 1
         values2: array
             Component 2
-        bins1: array
+        bins1: array, int
             Bins for component 1
-        bins2: array
+        bins2: array, int
             Bins for component 2
         is_matched: array (boolean)
             Boolean array indicating matching status
@@ -112,9 +112,9 @@ class ArrayFuncs():
             Component 1
         values2: array
             Component 2
-        bins1: array
+        bins1: array, int
             Bins for component 1
-        bins2: array
+        bins2: array, int
             Bins for component 2
         is_matched: array (boolean)
             Boolean array indicating matching status
@@ -173,9 +173,9 @@ class ArrayFuncs():
             Component 1
         values2: array
             Component 2
-        bins1: array
+        bins1: array, int
             Bins for component 1
-        bins2: array
+        bins2: array, int
             Bins for component 2
         is_matched: array (boolean)
             Boolean array indicating matching status
@@ -237,9 +237,9 @@ class ClCatalogFuncs():
             Name of column 1
         col2: str
             Name of column 2
-        bins1: array
+        bins1: array, int
             Bins for component 1
-        bins2: array
+        bins2: array, int
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
@@ -273,9 +273,9 @@ class ClCatalogFuncs():
             Name of column 1
         col2: str
             Name of column 2
-        bins1: array
+        bins1: array, int
             Bins for component 1
-        bins2: array
+        bins2: array, int
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
@@ -335,9 +335,9 @@ class ClCatalogFuncs():
             Name of column 1
         col2: str
             Name of column 2
-        bins1: array
+        bins1: array, int
             Bins for component 1
-        bins2: array
+        bins2: array, int
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
@@ -399,9 +399,9 @@ class ClCatalogFuncs():
             Name of column 1
         col2: str
             Name of column 2
-        bins1: array
+        bins1: array, int
             Bins for component 1
-        bins2: array
+        bins2: array, int
             Bins for component 2
         matching_type: str
             Type of matching to be considered. Must be in:
@@ -462,9 +462,9 @@ def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins,
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for redshift
-    mass_bins: array
+    mass_bins: array, int
         Bins for mass
     transpose: bool
         Transpose mass and redshift in plots
@@ -486,9 +486,9 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for redshift
-    mass_bins: array
+    mass_bins: array, int
         Bins for mass
     transpose: bool
         Transpose mass and redshift in plots
@@ -549,9 +549,9 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for redshift
-    mass_bins: array
+    mass_bins: array, int
         Bins for mass
     transpose: bool
         Transpose mass and redshift in plots
@@ -616,9 +616,9 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for redshift
-    mass_bins: array
+    mass_bins: array, int
         Bins for mass
     transpose: bool
         Transpose mass and redshift in plots

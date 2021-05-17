@@ -33,7 +33,7 @@ def plot_hist_line(hist_values, bins, ax, shape='steps', rotate=False, **kwargs)
     ----------
     hist_values: array
         Values of each bin in the histogram
-    bins: array
+    bins: array, int
         Bins of histogram
     ax: matplotlib.axes
         Ax to add plot
@@ -155,9 +155,9 @@ def nice_panel(axes, xlabel=None, ylabel=None, xscale='linear', yscale='linear')
     ----------
     axes: array
         Axes with the panels
-    bins1: array
+    bins1: array, int
         Bins for component 1
-    bins2: array
+    bins2: array, int
         Bins for component 2
 
     Other parameters

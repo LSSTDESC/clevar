@@ -23,11 +23,11 @@ class ClCatalogFuncs():
         ----------
         distances: array
             Distances to be bined
-        distance_bins: array
+        distance_bins: array, int
             Bins for distance
         quantity2: str
             Name of quantity 2 to bin
-        bins2: array
+        bins2: array, int
             Bins for quantity 2
         log2: bool
             Log scale for quantity 2
@@ -86,7 +86,7 @@ class ClCatalogFuncs():
             ClCatalog matched to
         matching_type: str
             Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-        radial_bins: array
+        radial_bins: array, int
             Bins for radial distances
         radial_bin_units: str
             Units of radial bins
@@ -94,7 +94,7 @@ class ClCatalogFuncs():
             Cosmology (used if physical units required)
         col2: str
             Name of quantity 2 (of cat1) to bin
-        bins2: array
+        bins2: array, int
             Bins for quantity 2
         log2: bool
             Log scale for quantity 2
@@ -150,11 +150,11 @@ class ClCatalogFuncs():
             ClCatalog matched to
         matching_type: str
             Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-        redshift_bins: array
+        redshift_bins: array, int
             Bins for redshift distances
         col2: str
             Name of quantity 2 to bin
-        bins2: array
+        bins2: array, int
             Bins for quantity 2
         normalize: str, None
             Normalize difference by (1+z). Can be 'cat1' for (1+z1), 'cat2' for (1+z2)
@@ -216,7 +216,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    radial_bins: array
+    radial_bins: array, int
         Bins for radial distances
     radial_bin_units: str
         Units of radial bins
@@ -224,7 +224,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Cosmology (used if physical units required)
     quantity_bins: str
         Column to bin the data
-    bins: array
+    bins: array, int
         Bins for quantity
     log_quantity: bool
         Display label in log fmt
@@ -280,14 +280,14 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for redshift distances
     normalize: str, None
         Normalize difference by (1+z). Can be 'cat1' for (1+z1), 'cat2' for (1+z2)
         or 'mean' for (1+(z1+z2)/2).
     quantity_bins: str
         Column to bin the data
-    bins: array
+    bins: array, int
         Bins for quantity
     log_quantity: bool
         Display label in log fmt

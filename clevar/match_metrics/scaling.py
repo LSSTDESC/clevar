@@ -400,7 +400,7 @@ class ArrayFuncs():
             Plot function
         values_panel: array
             Values to bin data in panels
-        bins_panel: array
+        bins_panel: array, int
             Bins defining panels
         panel_kwargs_list: list, None
             List of additional arguments for plotting each panel (using pylab.plot).
@@ -491,7 +491,7 @@ class ArrayFuncs():
             Component 2
         values_panel: array
             Values to bin data in panels
-        bins_panel: array
+        bins_panel: array, int
             Bins defining panels
         err1: array
             Error of component 1
@@ -576,7 +576,7 @@ class ArrayFuncs():
             Values for color (cmap scale)
         values_panel: array
             Values to bin data in panels
-        bins_panel: array
+        bins_panel: array, int
             Bins defining panels
         err1: array
             Error of component 1
@@ -663,7 +663,7 @@ class ArrayFuncs():
             Component 2
         values_panel: array
             Values to bin data in panels
-        bins_panel: array
+        bins_panel: array, int
             Bins defining panels
         bins1: array, int
             Bins for component 1 (for density colors).
@@ -1014,13 +1014,13 @@ class ArrayFuncs():
             Component 1
         values2: array
             Component 2 (to bin data in panels)
-        bins1_dist: array
+        bins1_dist: array, int
             Bins for component 1
-        bins2: array
+        bins2: array, int
             Bins for component 2
         values_aux: array
             Auxiliary component (to bin data in lines)
-        bins_aux: array
+        bins_aux: array, int
             Bins for component aux
         log_vals: bool
             Log scale for values (and int bins)
@@ -1584,7 +1584,7 @@ class ClCatalogFuncs():
             Name of column to be plotted
         col_panel: str
             Name of column to make panels
-        bins_panel: array
+        bins_panel: array, int
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
@@ -1627,7 +1627,7 @@ class ClCatalogFuncs():
             Name of column to be plotted
         col_panel: str
             Name of column to make panels
-        bins_panel: array
+        bins_panel: array, int
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
@@ -1724,7 +1724,7 @@ class ClCatalogFuncs():
             Name of column for color
         col_panel: str
             Name of column to make panels
-        bins_panel: array
+        bins_panel: array, int
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
@@ -1824,7 +1824,7 @@ class ClCatalogFuncs():
             Name of column to be plotted
         col_panel: str
             Name of column to make panels
-        bins_panel: array
+        bins_panel: array, int
             Bins to make panels
         panel_cat1: bool
             Used catalog 1 for col_panel. If false uses catalog 2
@@ -2096,13 +2096,13 @@ class ClCatalogFuncs():
             Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
         col: str
             Name of column to be plotted
-        bins1: array
+        bins1: array, int
             Bins for distribution of the cat1 column
-        bins2: array
+        bins2: array, int
             Bins for cat2 column
         col_aux: array
             Auxiliary colum of cat2 (to bin data in lines)
-        bins_aux: array
+        bins_aux: array, int
             Bins for component aux
         log_vals: bool
             Log scale for values (and int bins)
@@ -2172,13 +2172,13 @@ class ClCatalogFuncs():
             Input catalog
         col: str
             Name of column to be plotted
-        bins1: array
+        bins1: array, int
             Bins for distribution of the column
-        bins2: array
+        bins2: array, int
             Bins for panels
         col_aux: array
             Auxiliary colum (to bin data in lines)
-        bins_aux: array
+        bins_aux: array, int
             Bins for component aux
         log_vals: bool
             Log scale for values (and int bins)
@@ -2496,7 +2496,7 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    mass_bins: int, array
+    mass_bins: int, array, int
         Mass bins to make panels
     log_mass: bool
         Log scale for mass
@@ -2557,7 +2557,7 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    mass_bins: int, array
+    mass_bins: int, array, int
         Mass bins to make panels
     log_mass: bool
         Log scale for mass
@@ -2759,11 +2759,11 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    redshift_bins_dist: array
+    redshift_bins_dist: array, int
         Bins for distribution of the cat1 redshift
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for cat2 redshift
-    mass_bins: array
+    mass_bins: array, int
         Bins for cat2 mass
     log_mass: bool
         Log scale for mass
@@ -2823,11 +2823,11 @@ def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, ma
     ----------
     cat: clevar.ClCatalog
         Input Catalog
-    redshift_bins_dist: array
+    redshift_bins_dist: array, int
         Bins for distribution of redshift
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for redshift panels
-    mass_bins: array
+    mass_bins: array, int
         Bins for mass
     log_mass: bool
         Log scale for mass
@@ -3133,7 +3133,7 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    redshift_bins: int, array
+    redshift_bins: int, array, int
         Redshift bins to make panels
     log_mass: bool
         Log scale for mass
@@ -3197,7 +3197,7 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    redshift_bins: int, array
+    redshift_bins: int, array, int
         Redshift bins to make panels
     log_mass: bool
         Log scale for mass
@@ -3402,11 +3402,11 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    mass_bins_dist: array
+    mass_bins_dist: array, int
         Bins for distribution of the cat1 mass
-    mass_bins: array
+    mass_bins: array, int
         Bins for cat2 mass
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for cat2 redshift
     log_mass: bool
         Log scale for mass
@@ -3466,11 +3466,11 @@ def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=
     ----------
     cat: clevar.ClCatalog
         Input Catalog
-    mass_bins_dist: array
+    mass_bins_dist: array, int
         Bins for distribution of mass
-    mass_bins: array
+    mass_bins: array, int
         Bins for mass panels
-    redshift_bins: array
+    redshift_bins: array, int
         Bins for redshift
     log_mass: bool
         Log scale for mass
