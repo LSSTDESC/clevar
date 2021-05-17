@@ -25,7 +25,7 @@ def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     ax.yaxis.grid(True, which='major', lw=major_lw)
     ax.xaxis.grid(True, which='minor', lw=minor_lw)
     ax.yaxis.grid(True, which='minor', lw=minor_lw)
-def plot_hist_line(hist_values, bins, ax, shape='steps', **kwargs):
+def plot_hist_line(hist_values, bins, ax, shape='steps', rotate=False, **kwargs):
     """
     Plot recovey rate as lines. Can be in steps or continuous
 
@@ -33,12 +33,16 @@ def plot_hist_line(hist_values, bins, ax, shape='steps', **kwargs):
     ----------
     hist_values: array
         Values of each bin in the histogram
-    bins: array
+    bins: array, int
         Bins of histogram
     ax: matplotlib.axes
         Ax to add plot
     shape: str
         Shape of the line. Can be steps or line.
+    rotate: bool
+        Invert x-y axes in plot
+    kwargs: parameters
+        Additional parameters for plt.plot
     """
     if shape=='steps':
         data = (np.transpose([bins[:-1], bins[1:]]).flatten(),
@@ -47,9 +51,12 @@ def plot_hist_line(hist_values, bins, ax, shape='steps', **kwargs):
         data = (0.5*(bins[:-1]+bins[1:]), hist_values)
     else:
         raise ValueError(f"shape ({shape}) must be 'steps' or 'line'")
+    if rotate:
+        data = data[::-1]
     ax.plot(*data, **kwargs)
 def get_bin_label(edge_lower, edge_higher,
-                  format_func=lambda v:v):
+                  format_func=lambda v:v,
+                  prefix=''):
     """
     Get label with bin range
 
@@ -61,15 +68,17 @@ def get_bin_label(edge_lower, edge_higher,
         Higher values of bin
     format_func: function
         Function to format the values of the bins
+    prefix: str
+        Prefix to add to labels
 
     Returns
     -------
     srt
         Label of bin
     """
-    return f'[${format_func(edge_lower)}$ : ${format_func(edge_higher)}$]'
+    return f'${prefix}[{format_func(edge_lower)}$ : ${format_func(edge_higher)}]$'
 def add_panel_bin_label(axes, edges_lower, edges_higher,
-                        format_func=lambda v:v):
+                        format_func=lambda v:v, prefix=''):
     """
     Adds label with bin range on the top of panel
 
@@ -83,11 +92,13 @@ def add_panel_bin_label(axes, edges_lower, edges_higher,
         Higher values of bins
     format_func: function
         Function to format the values of the bins
+    prefix: str
+        Prefix to add to labels
     """
     for ax, vb, vt in zip(axes.flatten(), edges_lower, edges_higher):
         topax = ax.twiny()
         topax.set_xticks([])
-        topax.set_xlabel(get_bin_label(vb, vt, format_func))
+        topax.set_xlabel(get_bin_label(vb, vt, format_func, prefix))
 def get_density_colors(x, y, xbins, ybins, ax_rotation=0,
                 rotation_resolution=30, xscale='linear', yscale='linear'):
     """
@@ -144,9 +155,9 @@ def nice_panel(axes, xlabel=None, ylabel=None, xscale='linear', yscale='linear')
     ----------
     axes: array
         Axes with the panels
-    bins1: array
+    bins1: array, int
         Bins for component 1
-    bins2: array
+    bins2: array, int
         Bins for component 2
 
     Other parameters
@@ -194,3 +205,32 @@ def nice_panel(axes, xlabel=None, ylabel=None, xscale='linear', yscale='linear')
             ax.set_yticklabels([f'${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$'
                                 for t in yticks], rotation=-45)
     return
+def _set_label_format(kwargs, label_format_key, label_fmt_key, log,
+                      default_fmt='.2f'):
+    """
+    Set function for label formatting from dictionary and removes label_fmt_key.
+
+    Parameters
+    ----------
+    kwargs: dict
+        Dictionary with the input values
+    label_format_key: str
+        Name of the format function entry
+    label_fmt_key: str
+        Name of entry with format of values (ex: '.2f').
+        It is only used if label_format_key not in kwargs.
+    log: bool
+        Format labels with 10^log10(val) format.
+        It is only used if label_format_key not in kwargs.
+    default_fmt: str
+        Format of linear values (ex: '.2f') when (label_format_key, label_fmt_key) not in kwargs.
+
+
+    Returns
+    -------
+    function
+        Label format function
+    """
+    label_fmt = kwargs.pop(label_fmt_key, default_fmt)
+    kwargs[label_format_key] = kwargs.get(label_format_key,
+        lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) if log else f'%{label_fmt}'%v)

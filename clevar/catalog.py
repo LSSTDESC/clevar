@@ -273,6 +273,12 @@ class ClCatalog():
                 else:
                     self[col][i] = []
         self.cross_match()
+        print(f' * Total objects:    {self.size:,}')
+        print(f' * multiple (self):  {len(self[veclen(self["mt_multi_self"])>0]):,}')
+        print(f' * multiple (other): {len(self[veclen(self["mt_multi_other"])>0]):,}')
+        print(f' * unique (self):    {len(self[self["mt_self"]!=None]):,}')
+        print(f' * unique (other):   {len(self[self["mt_other"]!=None]):,}')
+        print(f' * cross:            {len(self[self["mt_cross"]!=None]):,}')
     def save_footprint_quantities(self, filename, overwrite=False):
         """
         Saves the matching results of one catalog

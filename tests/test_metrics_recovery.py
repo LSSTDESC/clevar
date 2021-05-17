@@ -6,7 +6,10 @@ from clevar.match import ProximityMatch
 from clevar.match_metrics import recovery as rc
 from numpy.testing import assert_raises
 
-def get_test_data():
+##############################
+#### Input data ##############
+##############################
+class _test_data():
     input1 = {
         'id': [f'CL{i}' for i in range(5)],
         'ra': [0., .0001, 0.00011, 25, 20],
@@ -32,9 +35,12 @@ def get_test_data():
     mt.multiple(c2, c1)
     mt.unique(c1, c2, 'angular_proximity')
     mt.unique(c2, c1, 'angular_proximity')
-    return c1, c2
+
+##############################
+### Test #####################
+##############################
 def test_plot():
-    cat = get_test_data()[0]
+    cat = _test_data.c1
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e16]
@@ -45,7 +51,7 @@ def test_plot():
     assert_raises(ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins, shape='unknown')
 
 def test_plot_panel():
-    cat = get_test_data()[0]
+    cat = _test_data.c1
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
@@ -54,7 +60,7 @@ def test_plot_panel():
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, add_label=True, label_fmt='.2f')
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=True)
 def test_plot2D():
-    cat = get_test_data()[0]
+    cat = _test_data.c1
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
