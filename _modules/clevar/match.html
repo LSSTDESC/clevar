@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>clevar.match &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -207,9 +207,10 @@
             
   <h1>Source code for clevar.match</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">.proximity</span> <span class="kn">import</span> <span class="n">ProximityMatch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <div class="viewcode-block" id="MatchedPairs"><a class="viewcode-back" href="../../api/clevar.match.html#clevar.match.MatchedPairs">[docs]</a><span class="k">class</span> <span class="nc">MatchedPairs</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">mask1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -220,10 +221,16 @@
 <span class="sd">        matching_type: str</span>
 <span class="sd">            Type of matching to be considered. Must be in:</span>
 <span class="sd">            &#39;cross&#39;, &#39;self&#39;, &#39;other&#39;</span>
+<span class="sd">        mask1: array, None</span>
+<span class="sd">            Mask for clusters 1 properties, must have size=cat1.size</span>
+<span class="sd">        mask2: array, None</span>
+<span class="sd">            Mask for clusters 2 properties, must have size=cat2.size</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mask1</span><span class="p">,</span> <span class="n">mask2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matching_masks</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data1</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="n">mask1</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data2</span> <span class="o">=</span> <span class="n">cat2</span><span class="p">[</span><span class="n">mask2</span><span class="p">]</span>
+        <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matching_masks</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mt2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span> <span class="k">if</span> <span class="n">mask1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mask1</span><span class="p">[</span><span class="n">mt1</span><span class="p">]</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="k">if</span> <span class="n">mask2</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mask</span><span class="o">*</span><span class="n">mask2</span><span class="p">[</span><span class="n">mt2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data1</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="n">mt1</span><span class="p">][</span><span class="n">mask</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data2</span> <span class="o">=</span> <span class="n">cat2</span><span class="p">[</span><span class="n">mt2</span><span class="p">][</span><span class="n">mask</span><span class="p">]</span>
 <div class="viewcode-block" id="MatchedPairs.matching_masks"><a class="viewcode-back" href="../../api/clevar.match.html#clevar.match.MatchedPairs.matching_masks">[docs]</a>    <span class="k">def</span> <span class="nf">matching_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>

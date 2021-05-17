@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.plot_helper &mdash; ClEvaR 0.1.0 documentation</title>
+  <title>clevar.match_metrics.plot_helper &mdash; ClEvaR 0.2.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.2.0
               </div>
             
           
@@ -233,7 +233,7 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">major_lw</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">minor_lw</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;minor&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="n">minor_lw</span><span class="p">)</span></div>
-<div class="viewcode-block" id="plot_hist_line"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.plot_hist_line">[docs]</a><span class="k">def</span> <span class="nf">plot_hist_line</span><span class="p">(</span><span class="n">hist_values</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;steps&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_hist_line"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.plot_hist_line">[docs]</a><span class="k">def</span> <span class="nf">plot_hist_line</span><span class="p">(</span><span class="n">hist_values</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;steps&#39;</span><span class="p">,</span> <span class="n">rotate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot recovey rate as lines. Can be in steps or continuous</span>
 
@@ -241,12 +241,16 @@
 <span class="sd">    ----------</span>
 <span class="sd">    hist_values: array</span>
 <span class="sd">        Values of each bin in the histogram</span>
-<span class="sd">    bins: array</span>
+<span class="sd">    bins: array, int</span>
 <span class="sd">        Bins of histogram</span>
 <span class="sd">    ax: matplotlib.axes</span>
 <span class="sd">        Ax to add plot</span>
 <span class="sd">    shape: str</span>
 <span class="sd">        Shape of the line. Can be steps or line.</span>
+<span class="sd">    rotate: bool</span>
+<span class="sd">        Invert x-y axes in plot</span>
+<span class="sd">    kwargs: parameters</span>
+<span class="sd">        Additional parameters for plt.plot</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">shape</span><span class="o">==</span><span class="s1">&#39;steps&#39;</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
@@ -255,9 +259,12 @@
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">hist_values</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;shape (</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">) must be &#39;steps&#39; or &#39;line&#39;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rotate</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 <div class="viewcode-block" id="get_bin_label"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.get_bin_label">[docs]</a><span class="k">def</span> <span class="nf">get_bin_label</span><span class="p">(</span><span class="n">edge_lower</span><span class="p">,</span> <span class="n">edge_higher</span><span class="p">,</span>
-                  <span class="n">format_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span><span class="n">v</span><span class="p">):</span>
+                  <span class="n">format_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span><span class="n">v</span><span class="p">,</span>
+                  <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get label with bin range</span>
 
@@ -269,15 +276,17 @@
 <span class="sd">        Higher values of bin</span>
 <span class="sd">    format_func: function</span>
 <span class="sd">        Function to format the values of the bins</span>
+<span class="sd">    prefix: str</span>
+<span class="sd">        Prefix to add to labels</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    srt</span>
 <span class="sd">        Label of bin</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;[$</span><span class="si">{</span><span class="n">format_func</span><span class="p">(</span><span class="n">edge_lower</span><span class="p">)</span><span class="si">}</span><span class="s1">$ : $</span><span class="si">{</span><span class="n">format_func</span><span class="p">(</span><span class="n">edge_higher</span><span class="p">)</span><span class="si">}</span><span class="s1">$]&#39;</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">format_func</span><span class="p">(</span><span class="n">edge_lower</span><span class="p">)</span><span class="si">}</span><span class="s1">$ : $</span><span class="si">{</span><span class="n">format_func</span><span class="p">(</span><span class="n">edge_higher</span><span class="p">)</span><span class="si">}</span><span class="s1">]$&#39;</span></div>
 <div class="viewcode-block" id="add_panel_bin_label"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_panel_bin_label">[docs]</a><span class="k">def</span> <span class="nf">add_panel_bin_label</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">edges_lower</span><span class="p">,</span> <span class="n">edges_higher</span><span class="p">,</span>
-                        <span class="n">format_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span><span class="n">v</span><span class="p">):</span>
+                        <span class="n">format_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span><span class="n">v</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adds label with bin range on the top of panel</span>
 
@@ -291,11 +300,13 @@
 <span class="sd">        Higher values of bins</span>
 <span class="sd">    format_func: function</span>
 <span class="sd">        Function to format the values of the bins</span>
+<span class="sd">    prefix: str</span>
+<span class="sd">        Prefix to add to labels</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">vb</span><span class="p">,</span> <span class="n">vt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">edges_lower</span><span class="p">,</span> <span class="n">edges_higher</span><span class="p">):</span>
         <span class="n">topax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twiny</span><span class="p">()</span>
         <span class="n">topax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
-        <span class="n">topax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">get_bin_label</span><span class="p">(</span><span class="n">vb</span><span class="p">,</span> <span class="n">vt</span><span class="p">,</span> <span class="n">format_func</span><span class="p">))</span></div>
+        <span class="n">topax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">get_bin_label</span><span class="p">(</span><span class="n">vb</span><span class="p">,</span> <span class="n">vt</span><span class="p">,</span> <span class="n">format_func</span><span class="p">,</span> <span class="n">prefix</span><span class="p">))</span></div>
 <div class="viewcode-block" id="get_density_colors"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.get_density_colors">[docs]</a><span class="k">def</span> <span class="nf">get_density_colors</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xbins</span><span class="p">,</span> <span class="n">ybins</span><span class="p">,</span> <span class="n">ax_rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                 <span class="n">rotation_resolution</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -352,9 +363,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    axes: array</span>
 <span class="sd">        Axes with the panels</span>
-<span class="sd">    bins1: array</span>
+<span class="sd">    bins1: array, int</span>
 <span class="sd">        Bins for component 1</span>
-<span class="sd">    bins2: array</span>
+<span class="sd">    bins2: array, int</span>
 <span class="sd">        Bins for component 2</span>
 
 <span class="sd">    Other parameters</span>
@@ -402,6 +413,35 @@
             <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="si">{</span><span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">t</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="se">\\</span><span class="s1">times 10^</span><span class="se">{{</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">:</span><span class="s1">.0f</span><span class="se">}}</span><span class="si">}</span><span class="s1">$&#39;</span>
                                 <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">yticks</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=-</span><span class="mi">45</span><span class="p">)</span>
     <span class="k">return</span></div>
+<span class="k">def</span> <span class="nf">_set_label_format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">label_format_key</span><span class="p">,</span> <span class="n">label_fmt_key</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span>
+                      <span class="n">default_fmt</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set function for label formatting from dictionary and removes label_fmt_key.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kwargs: dict</span>
+<span class="sd">        Dictionary with the input values</span>
+<span class="sd">    label_format_key: str</span>
+<span class="sd">        Name of the format function entry</span>
+<span class="sd">    label_fmt_key: str</span>
+<span class="sd">        Name of entry with format of values (ex: &#39;.2f&#39;).</span>
+<span class="sd">        It is only used if label_format_key not in kwargs.</span>
+<span class="sd">    log: bool</span>
+<span class="sd">        Format labels with 10^log10(val) format.</span>
+<span class="sd">        It is only used if label_format_key not in kwargs.</span>
+<span class="sd">    default_fmt: str</span>
+<span class="sd">        Format of linear values (ex: &#39;.2f&#39;) when (label_format_key, label_fmt_key) not in kwargs.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    function</span>
+<span class="sd">        Label format function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">label_fmt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">label_fmt_key</span><span class="p">,</span> <span class="n">default_fmt</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="n">label_format_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">label_format_key</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;10^</span><span class="se">{{</span><span class="s1">%</span><span class="si">{</span><span class="n">label_fmt</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">log</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;%</span><span class="si">{</span><span class="n">label_fmt</span><span class="si">}</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">v</span><span class="p">)</span>
 </pre></div>
 
            </div>
