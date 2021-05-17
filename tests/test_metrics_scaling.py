@@ -6,6 +6,9 @@ from clevar.match import ProximityMatch
 from clevar.match_metrics import scaling
 from numpy.testing import assert_raises
 
+##############################
+#### Input data ##############
+##############################
 class _test_data():
     input1 = {
         'ra': np.arange(30),
@@ -29,6 +32,10 @@ class _test_data():
     mt.multiple(c2, c1)
     mt.unique(c1, c2, 'angular_proximity')
     mt.unique(c2, c1, 'angular_proximity')
+
+##############################
+### Test #####################
+##############################
 def test_z_simple():
     c1, c2 = _test_data.c1, _test_data.c2
     ax = scaling.redshift(c1, c2, 'cat1')
