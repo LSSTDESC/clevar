@@ -50,6 +50,9 @@ class Match():
             set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'angular_proximity')
         elif preference=='redshift_proximity':
             set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'redshift_proximity')
+        elif preference=='shared_member_fraction':
+            set_unique = lambda cat1, i, cat2: self._match_sharepref(cat1, i, cat2)
+            i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1['mass'])][::-1]
         else:
             raise ValueError("preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'")
         print(f'Unique Matches ({cat1.name})')
@@ -58,6 +61,12 @@ class Match():
                 self.cat1_mt[i] = set_unique(cat1, i, cat2)
         self.cat1_mt *= (cat1['mt_self']!=None) # In case ang pref removes match
         print(f'* {len(cat1[cat1["mt_self"]!=None]):,}/{cat1.size:,} objects matched.')
+        if preference=='shared_member_fraction':
+            cat1['mt_frac_self'] = [cmem.get(id2, 0)/nmem for cmem, nmem, id2 in
+                zip(cat1.mt_input['share_mems'], cat1.mt_input['nmem'], cat1['mt_self'])]
+            cat2['mt_frac_other'] = [cmem[id1]/cat1.mt_input['nmem'][cat1.id_dict[id1]]
+                if id1 is not None else 0
+                for cmem, id1 in zip(cat2.mt_input['share_mems'], cat2['mt_other'])]
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
@@ -138,6 +147,50 @@ class Match():
                 cat1['mt_self'][i] = cat2['id'][i2]
                 cat2['mt_other'][i2] = cat1['id'][i]
                 self._match_apref(cat1, i1_replace, cat2, MATCH_PREF)
+                return True
+        return False
+    def _match_sharepref(self, cat1, i, cat2):
+        """
+        Make the unique match by shared membership fraction preference
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        i: int
+            Index of the cluster from cat1 to be matched
+        cat2: clevar.ClCatalog
+            Target catalog
+
+        Returns
+        -------
+        bool
+            Tells if the cluster was matched
+        """
+        ids2 = cat1['mt_multi_self'][i]
+        '''
+        if len(ids2)>0:
+            frac2 = [cat1.mt_input['share_mems'][i][id2] for id2 in ids2]
+            i2 = cat2.id_dict[ids2[np.argmax(frac2)]]
+            cat1['mt_self'][i] = cat2['id'][i2]
+            cat2['mt_other'][i2] = cat1['id'][i]
+            return True
+        '''
+        frac2 = [cat1.mt_input['share_mems'][i][id2] for id2 in ids2]
+        for s2 in np.argsort(frac2)[::-1]:
+            i2 = cat2.id_dict[ids2[s2]]
+            id1_replace = cat2['mt_other'][i2]
+            if id1_replace is None:
+                cat1['mt_self'][i] = cat2['id'][i2]
+                cat2['mt_other'][i2] = cat1['id'][i]
+                return True
+            #elif cat1.mt_input['share_mems'][i][cat2['id'][i2]]> \
+            #     cat1.mt_input['share_mems'][i1_replace][cat2['id'][i2]]:
+            elif cat2.mt_input['share_mems'][i2][cat1['id'][i]]> \
+                 cat2.mt_input['share_mems'][i2][id1_replace]:
+                cat1['mt_self'][i] = cat2['id'][i2]
+                cat2['mt_other'][i2] = cat1['id'][i]
+                self._match_sharepref(cat1, cat1.id_dict[id1_replace], cat2)
                 return True
         return False
     def _get_dist_mt(self, dat1, dat2, MATCH_PREF):
