@@ -252,6 +252,9 @@ class ClCatalog():
             out[col] = [c if c else '' for c in self[col]]
         for col in ('mt_multi_self', 'mt_multi_other'):
             out[col] = [','.join(c) if c else '' for c in self[col]]
+        for col in self.data.colnames:
+            if (col[:3]=='mt_' and col not in out.colnames+['mt_cross']):
+                out[col] = self[col]
         out.write(filename, overwrite=overwrite)
     def load_match(self, filename):
         """
