@@ -39,7 +39,8 @@ class Match():
         cat2: clevar.ClCatalog
             Target catalog
         preference: str
-            Preference to set best match
+            Preference to set best match. Options are: `'more_massive'`, `'angular_proximity'`,
+            `'redshift_proximity'`, `'shared_member_fraction'`.
         """
         self.cat1_mt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         i_vals = range(cat1.size)
@@ -168,14 +169,6 @@ class Match():
             Tells if the cluster was matched
         """
         ids2 = cat1['mt_multi_self'][i]
-        '''
-        if len(ids2)>0:
-            frac2 = [cat1.mt_input['share_mems'][i][id2] for id2 in ids2]
-            i2 = cat2.id_dict[ids2[np.argmax(frac2)]]
-            cat1['mt_self'][i] = cat2['id'][i2]
-            cat2['mt_other'][i2] = cat1['id'][i]
-            return True
-        '''
         frac2 = [cat1.mt_input['share_mems'][i][id2] for id2 in ids2]
         for s2 in np.argsort(frac2)[::-1]:
             i2 = cat2.id_dict[ids2[s2]]
@@ -184,8 +177,6 @@ class Match():
                 cat1['mt_self'][i] = cat2['id'][i2]
                 cat2['mt_other'][i2] = cat1['id'][i]
                 return True
-            #elif cat1.mt_input['share_mems'][i][cat2['id'][i2]]> \
-            #     cat1.mt_input['share_mems'][i1_replace][cat2['id'][i2]]:
             elif cat2.mt_input['share_mems'][i2][cat1['id'][i]]> \
                  cat2.mt_input['share_mems'][i2][id1_replace]:
                 cat1['mt_self'][i] = cat2['id'][i2]
