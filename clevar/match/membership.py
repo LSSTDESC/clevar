@@ -23,8 +23,8 @@ class MembershipMatch(Match):
             Base catalog
         cat2: clevar.ClCatalog
             Target catalog
-        radius_selection: str (optional)
-            Case of radius to be used, can be: max, min, self, other.
+        minimum_share_fraction: float
+            Minimum share fraction to consider in matches
         """
         self.cat1_mmt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         print(f'Finding candidates ({cat1.name})')
@@ -39,7 +39,21 @@ class MembershipMatch(Match):
         print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
-    def fill_shared_members(self, cat1, cat2, mem1, mem2, radius_selection='max'):
+    def fill_shared_members(self, cat1, cat2, mem1, mem2):
+        """
+        Adds shared members dicts and nmem to mt_input in catalogs.
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        cat2: clevar.ClCatalog
+            Target catalog
+        mem1: clevar.ClCatalog
+            Members of base catalog
+        mem2: clevar.ClCatalog
+            Members of target catalog
+        """
         if self.matched_mems is None:
             raise ValueError('Members not matched, run match_members before.')
         mem1['pmem'] = mem1['pmem'] if 'pmem' in mem1.colnames else np.ones(mem1.size)
@@ -53,23 +67,36 @@ class MembershipMatch(Match):
                            mem2_['id_cluster'], mem1_['pmem'])
             self._add_pmem(cat2.mt_input['share_mems'], cat2.id_dict[mem2_['id_cluster']], 
                            mem1_['id_cluster'], mem2_['pmem'])
-        '''
-        pmem1 = mem1['pmem'] if 'pmem' in mem1.colnames else np.ones(mem1.size)
-        pmem2 = mem2['pmem'] if 'pmem' in mem2.colnames else np.ones(mem2.size)
-        for mem_ind1, mem_ind2 in self.matched_mems:
-            cl_id1, cl_id2 = mem1[mem_ind1]['id_cluster'], mem2[mem_ind2]['id_cluster']
-            ind1, ind2 = cat1.id_dict[cl_id1], cat2.id_dict[cl_id2]
-            cat1.mt_input['share_mem'][ind1][cl_id2] = \
-                cat1.mt_input['share_mem'][ind1].get(cl_id2, 0)+pmem2[mem_ind2]
-            cat2.mt_input['share_mem'][ind2][cl_id1] = \
-                cat2.mt_input['share_mem'][ind2].get(cl_id1, 0)+pmem1[mem_ind1]
-        '''
     def _comp_nmem(self, cat, mem):
+        """
+        Computes number of members for clusters (sum of pmem)
+
+        Parameters
+        ----------
+        cat: clevar.ClCatalog
+            Cluster catalog
+        mem: clevar.ClCatalog
+            Members of cluster catalog
+        """
         out = np.zeros(cat.size)
         for ID, pmem in zip(mem['id_cluster'], mem['pmem']):
             out[cat.id_dict[ID]] += pmem
         return out
     def _add_pmem(self, cat1_share_mems, ind1, cat2_id, pmem1):
+        """
+        Adds pmem of specific cluster to mt_input['shared_mem'] of another cluster.
+
+        Parameters
+        ----------
+        cat1_share_mems: list
+            List with dictionaries of shared members (cat1.mt_input['share_mems']).
+        ind1: int
+            Index of cat1 to add pmem to
+        cat2_id: str
+            Id of catalog2 cluster to add pmem of
+        pmem1: float
+            Pmem of catalog1 galaxy
+        """
         cat1_share_mems[ind1][cat2_id] = cat1_share_mems[ind1].get(cat2_id, 0)+pmem1
     def save_shared_members(self, fileprefix, overwrite=False):
         """
@@ -96,14 +123,61 @@ class MembershipMatch(Match):
         self.mt1 = pickle.load(open(f'{fileprefix}.1.p', 'rb'))
         self.mt2 = pickle.load(open(f'{fileprefix}.2.p', 'rb'))
     def match_members(self, mem1, mem2, method='id', radius=None, cosmo=None):
+        """
+        Match member catalogs.
+        Adds array with indices of matched members `(ind1, ind2)` to self.matched_mems.
+
+        Parameters
+        ----------
+        mem1: clevar.ClCatalog
+            Members of base catalog
+        mem2: clevar.ClCatalog
+            Members of target catalog
+        method: str
+            Method for matching. Options are `id` or `angular_distance`.
+        radius: str, None
+            For `method='angular_distance'`. Radius for matching,
+            with format `'value unit'` - used fixed value (ex: `1 arcsec`, `1 Mpc`).
+        cosmo: clevar.Cosmology, None
+            For `method='angular_distance'`. Cosmology object for when radius has physical units.
+        """
         if method=='id':
             self._match_members_by_id(mem1, mem2)
         elif method=='angular_distance':
             self._match_members_by_ang(mem1, mem2, radius, cosmo)
     def _match_members_by_id(self, mem1, mem2):
+        """
+        Match member catalogs by id.
+        Adds array with indices of matched members `(ind1, ind2)` to self.matched_mems.
+
+        Parameters
+        ----------
+        mem1: clevar.ClCatalog
+            Members of base catalog
+        mem2: clevar.ClCatalog
+            Members of target catalog
+        """
         self.matched_mems = np.array([[mem1.id_dict[i], ind] for ind, i in enumerate(mem2['id'])
                                                                             if i in mem1.id_dict])
     def _match_members_by_ang(self, mem1, mem2, radius, cosmo):
+        """
+        Match member catalogs.
+        Adds array with indices of matched members `(ind1, ind2)` to self.matched_mems.
+
+        Parameters
+        ----------
+        mem1: clevar.ClCatalog
+            Members of base catalog
+        mem2: clevar.ClCatalog
+            Members of target catalog
+        method: str
+            Method for matching. Options are `id` or `angular_distance`.
+        radius: str, None
+            For `method='angular_distance'`. Radius for matching,
+            with format `'value unit'` - used fixed value (ex: `1 arcsec`, `1 Mpc`).
+        cosmo: clevar.Cosmology, None
+            For `method='angular_distance'`. Cosmology object for when radius has physical units.
+        """
         match_config = {
             'type': 'cross', # options are cross, cat1, cat2
             'which_radius': 'max', # Case of radius to be used, can be: cat1, cat2, min, max
