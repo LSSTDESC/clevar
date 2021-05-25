@@ -56,8 +56,8 @@ class MembershipMatch(Match):
         """
         if self.matched_mems is None:
             raise ValueError('Members not matched, run match_members before.')
-        mem1['pmem'] = mem1['pmem'] if 'pmem' in mem1.colnames else np.ones(mem1.size)
-        mem2['pmem'] = mem2['pmem'] if 'pmem' in mem2.colnames else np.ones(mem2.size)
+        mem1['pmem'] = mem1['pmem'] if 'pmem' in mem1.data.colnames else np.ones(mem1.size)
+        mem2['pmem'] = mem2['pmem'] if 'pmem' in mem2.data.colnames else np.ones(mem2.size)
         cat1.mt_input = {'share_mems': [{} for i in range(cat1.size)],
                          'nmem': self._comp_nmem(cat1, mem1)}
         cat2.mt_input = {'share_mems': [{} for i in range(cat2.size)],
@@ -186,6 +186,8 @@ class MembershipMatch(Match):
             'catalog2': {'delta_z':None, 'match_radius': radius},
             }
         mt = ProximityMatch()
+        mem1._init_match_vals()
+        mem2._init_match_vals()
         mt.match_from_config(mem1, mem2, match_config, cosmo=cosmo)
         mask1 = cat1.get_matching_mask(match_config['type'])
         mask2 = cat2.ids2inds(cat1[mask1][f"mt_{match_config['type']}"])
