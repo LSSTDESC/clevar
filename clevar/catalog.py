@@ -349,7 +349,9 @@ class MemCatalog(Catalog):
     size: int
         Number of objects in the catalog
     id_dict: dict
-        Dictionary of indicies given the cluster id
+        Dictionary of indicies given the member id
+    id_dict_list: dict
+        Dictionary of indicies given the member id, returns list allowing for repeated ids.
     labels: dict
         Labels of data columns for plots
     """
@@ -363,3 +365,6 @@ class MemCatalog(Catalog):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
         self['id_cluster'] = np.array(columns['id_cluster'], dtype=str)
+        self.id_dict_list = {}
+        for ind, i in enumerate(self['id']):
+            self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]

@@ -67,6 +67,20 @@ class MembershipMatch(Match):
                            mem2_['id_cluster'], mem1_['pmem'])
             self._add_pmem(cat2.mt_input['share_mems'], cat2.id_dict[mem2_['id_cluster']], 
                            mem1_['id_cluster'], mem2_['pmem'])
+        # sort order in dicts by mass
+        cat1.mt_input['share_mems'] = [self._sort_share_mem_mass(share_mem1, cat2)
+                                        for share_mem1 in cat1.mt_input['share_mems']]
+        cat2.mt_input['share_mems'] = [self._sort_share_mem_mass(share_mem2, cat1)
+                                        for share_mem2 in cat2.mt_input['share_mems']]
+    def _sort_share_mem_mass(self, share_mem1, cat2):
+        """
+        Sorts members in dict by mass (decreasing).
+        """
+        if len(share_mem1)==0:
+            return {}
+        ids2 = np.array(list(share_mem1.keys()))
+        mass2 = np.array(cat2['mass'][cat2.ids2inds(ids2)])
+        return {id2:share_mem1[id2] for id2 in ids2[mass2.argsort()[::-1]]}
     def _comp_nmem(self, cat, mem):
         """
         Computes number of members for clusters (sum of pmem)
@@ -157,8 +171,10 @@ class MembershipMatch(Match):
         mem2: clevar.ClCatalog
             Members of target catalog
         """
-        self.matched_mems = np.array([[mem1.id_dict[i], ind] for ind, i in enumerate(mem2['id'])
-                                                                            if i in mem1.id_dict])
+        self.matched_mems = np.array([[ind1, ind2]
+            for ind2, i in enumerate(mem2['id'])
+                for ind1 in mem1.id_dict_list.get(i, [])
+                ])
     def _match_members_by_ang(self, mem1, mem2, radius, cosmo):
         """
         Match member catalogs.
