@@ -168,22 +168,17 @@ class Match():
         bool
             Tells if the cluster was matched
         """
-        ids2 = cat1['mt_multi_self'][i]
-        frac2 = [cat1.mt_input['share_mems'][i][id2] for id2 in ids2]
-        for s2 in np.argsort(frac2)[::-1]:
-            i2 = cat2.id_dict[ids2[s2]]
-            id1_replace = cat2['mt_other'][i2]
-            if id1_replace is None:
-                cat1['mt_self'][i] = cat2['id'][i2]
-                cat2['mt_other'][i2] = cat1['id'][i]
-                return True
-            elif cat2.mt_input['share_mems'][i2][cat1['id'][i]]> \
-                 cat2.mt_input['share_mems'][i2][id1_replace]:
-                cat1['mt_self'][i] = cat2['id'][i2]
-                cat2['mt_other'][i2] = cat1['id'][i]
-                self._match_sharepref(cat1, cat1.id_dict[id1_replace], cat2)
-                return True
-        return False
+        if len(cat1['mt_multi_self'][i])==0:
+            return False
+        id2 = max(cat1.mt_input['share_mems'][i], key=cat1.mt_input['share_mems'][i].get)
+        cat1['mt_self'][i] = id2
+        # fills cat2 mt_other if empty or shared_frac is greater
+        i2 = cat2.id_dict[id2]
+        id1, id1_replace = cat1['id'][i], cat2['mt_other'][i2]
+        share_mems2 = cat2.mt_input['share_mems'][i2]
+        if share_mems2[id1]>share_mems2.get(id1_replace, 0):
+            cat2['mt_other'][i2] = id1
+        return True
     def _get_dist_mt(self, dat1, dat2, MATCH_PREF):
         """
         Get distance for matching preference
@@ -215,7 +210,9 @@ class Match():
         cat1: clevar.ClCatalog
             Base catalog
         """
+        print(f'Cross Matches ({cat1.name})')
         cat1.cross_match()
+        print(f'* {len(cat1[cat1["mt_cross"]!=None]):,}/{cat1.size:,} objects matched.')
     def save_matches(self, cat1, cat2, out_dir, overwrite=False):
         """
         Saves the matching results
