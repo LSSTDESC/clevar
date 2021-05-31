@@ -122,7 +122,8 @@ class ArrayFuncs():
                           'ms': 10, 'ls': '', 'color': 'm'}
             eb_kwargs_.update(bindata_kwargs)
             ax.errorbar(ifunc(vbin_1), ifunc(vbin_2),
-                        yerr=vbin_err2*ifunc(vbin_2) if log else vbin_err2,
+                        yerr=(ifunc(vbin_2)*np.array([1-1/np.exp(vbin_err2), np.exp(vbin_err2)-1])
+                            if log else vbin_err2),
                         **eb_kwargs_)
         # fit
         if add_fit:
