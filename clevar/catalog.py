@@ -260,15 +260,18 @@ class Catalog():
             Name of file with matching results
         """
         mt = ClData.read(filename)
-        for col in ('mt_self', 'mt_other'):
-            self[col] = np.array([c if c!='' else None for c in mt[col]], dtype=np.ndarray)
-        for col in ('mt_multi_self', 'mt_multi_other'):
-            self[col] = np.array([None for c in mt[col]], dtype=np.ndarray)
-            for i, c in enumerate(mt[col]):
-                if len(c)>0:
-                    self[col][i] = c.split(',')
-                else:
-                    self[col][i] = []
+        for col in mt.colnames:
+            if col in ('mt_self', 'mt_other'):
+                self[col] = np.array([c if c!='' else None for c in mt[col]], dtype=np.ndarray)
+            elif col in ('mt_multi_self', 'mt_multi_other'):
+                self[col] = np.array([None for c in mt[col]], dtype=np.ndarray)
+                for i, c in enumerate(mt[col]):
+                    if len(c)>0:
+                        self[col][i] = c.split(',')
+                    else:
+                        self[col][i] = []
+            elif col!='id':
+                self[col] = mt[col]
         self.cross_match()
         print(f' * Total objects:    {self.size:,}')
         print(f' * multiple (self):  {len(self[veclen(self["mt_multi_self"])>0]):,}')
