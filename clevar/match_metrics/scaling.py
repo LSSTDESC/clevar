@@ -74,9 +74,9 @@ class ArrayFuncs():
         err2: array
             Error of component 2
         log: bool
-            Bin and fit in log values
+            Bin and fit in log values (default=False).
         statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires bins2.
@@ -85,9 +85,9 @@ class ArrayFuncs():
         bins2: array, None
             Bins for component 2 (default=30).
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         bindata_kwargs: dict
             Additional arguments for pylab.errorbar.
         plt_kwargs: dict
@@ -167,13 +167,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -242,13 +244,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -261,7 +265,7 @@ class ArrayFuncs():
         fit_bindata_kwargs: dict
             Additional arguments for pylab.errorbar.
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
 
@@ -352,13 +356,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -371,7 +377,7 @@ class ArrayFuncs():
         fit_bindata_kwargs: dict
             Additional arguments for pylab.errorbar.
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
 
@@ -421,13 +427,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -440,7 +448,7 @@ class ArrayFuncs():
         fit_bindata_kwargs: dict
             Additional arguments for pylab.errorbar.
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
 
@@ -520,13 +528,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -605,13 +615,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -708,13 +720,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -919,13 +933,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -1155,13 +1171,15 @@ class ArrayFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         fit_err2: array, None
             Error of component 2 (set to err2 if not provided).
+        fit_log: bool
+            Bin and fit in log values (default=False).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -1342,13 +1360,13 @@ class ClCatalogFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         add_fit_err: bool
-            Use error of component 2 in fit.
+            Use error of component 2 in fit (default=True).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -1420,13 +1438,13 @@ class ClCatalogFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         add_fit_err: bool
-            Use error of component 2 in fit.
+            Use error of component 2 in fit (default=True).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -1505,13 +1523,13 @@ class ClCatalogFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         add_fit_err: bool
-            Use error of component 2 in fit.
+            Use error of component 2 in fit (default=True).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -1644,13 +1662,13 @@ class ClCatalogFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         add_fit_err: bool
-            Use error of component 2 in fit.
+            Use error of component 2 in fit (default=True).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -1743,13 +1761,13 @@ class ClCatalogFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         add_fit_err: bool
-            Use error of component 2 in fit.
+            Use error of component 2 in fit (default=True).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -1845,13 +1863,13 @@ class ClCatalogFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         add_fit_err: bool
-            Use error of component 2 in fit.
+            Use error of component 2 in fit (default=True).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -2016,13 +2034,13 @@ class ClCatalogFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         add_fit_err: bool
-            Use error of component 2 in fit.
+            Use error of component 2 in fit (default=True).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -2267,13 +2285,13 @@ class ClCatalogFuncs():
         Fit Parameters
         --------------
         add_bindata: bool
-            Plot binned data used for fit.
+            Plot binned data used for fit (default=False).
         add_fit: bool
-            Fit and plot binned dat.
+            Fit and plot binned dat (default=False).
         add_fit_err: bool
-            Use error of component 2 in fit.
+            Use error of component 2 in fit (default=True).
         fit_statistics: str
-            Statistics to be used in fit. Options are:
+            Statistics to be used in fit (default=mean). Options are:
                 `individual` - Use each point
                 `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
                 `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -2359,6 +2377,30 @@ def redshift(cat1, cat2, matching_type, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use redshift errors of catalog 2 in fit (default=True).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for redshift of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for redshift of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+
     Other parameters
     ----------------
     ax: matplotlib.axes
@@ -2402,6 +2444,30 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
         Mask for clusters 1 properties, must have size=cat1.size
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use redshift errors of catalog 2 in fit (default=True).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for redshift of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for redshift of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
 
     Other parameters
     ----------------
@@ -2459,6 +2525,30 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use redshift errors of catalog 2 in fit (default=True).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for redshift of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for redshift of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+
     Other parameters
     ----------------
     ax: matplotlib.axes
@@ -2509,6 +2599,30 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         Mask for clusters 1 properties, must have size=cat1.size
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use redshift errors of catalog 2 in fit (default=True).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for redshift of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for redshift of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
 
     Other parameters
     ----------------
@@ -2574,6 +2688,30 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Mask for clusters 1 properties, must have size=cat1.size
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use redshift errors of catalog 2 in fit (default=True).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for redshift of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for redshift of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
 
     Other parameters
     ----------------
@@ -2705,6 +2843,30 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
         Mask for clusters 1 properties, must have size=cat1.size
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use redshift errors of catalog 2 in fit (default=True).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for redshift of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for redshift of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
 
     Other parameters
     ----------------
@@ -2906,13 +3068,37 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
     Fit Parameters
     --------------
     add_bindata: bool
-        Plot binned data used for fit.
+        Plot binned data used for fit (default=False).
     add_fit: bool
-        Fit and plot binned dat.
+        Fit and plot binned dat (default=False).
     add_fit_err: bool
-        Use error of component 2 in fit.
+        Use redshift errors of catalog 2 in fit (default=True).
     fit_statistics: str
-        Statistics to be used in fit. Options are:
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for redshift of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for redshift of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use error of component 2 in fit (default=True).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
             `individual` - Use each point
             `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
             `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
@@ -2992,6 +3178,32 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use mass errors of catalog 2 in fit (default=True).
+    fit_log: bool
+        Bin and fit in log values (default=log_mass).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for mass of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for mass of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+
     Other parameters
     ----------------
     ax: matplotlib.axes
@@ -3010,6 +3222,7 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     ax: matplotlib.axes
         Axis of the plot
     """
+    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return ClCatalogFuncs.plot(cat1, cat2, matching_type, col='mass',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
@@ -3037,6 +3250,32 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use mass errors of catalog 2 in fit (default=True).
+    fit_log: bool
+        Bin and fit in log values (default=log_mass).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for mass of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for mass of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+
     Other parameters
     ----------------
     ax: matplotlib.axes
@@ -3061,6 +3300,7 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
+    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return ClCatalogFuncs.plot_color(cat1, cat2, matching_type, col='mass', col_color='z',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
@@ -3090,6 +3330,32 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use mass errors of catalog 2 in fit (default=True).
+    fit_log: bool
+        Bin and fit in log values (default=log_mass).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for mass of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for mass of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+
     Other parameters
     ----------------
     ax: matplotlib.axes
@@ -3118,6 +3384,7 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
+    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return ClCatalogFuncs.plot_density(cat1, cat2, matching_type, col='mass',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
@@ -3146,6 +3413,32 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         Mask for clusters 1 properties, must have size=cat1.size
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use mass errors of catalog 2 in fit (default=True).
+    fit_log: bool
+        Bin and fit in log values (default=log_mass).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for mass of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for mass of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
 
     Other parameters
     ----------------
@@ -3181,6 +3474,7 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
     """
     kwargs['label_format'] = kwargs.get('label_format',
         lambda v: f'%{kwargs.pop("label_fmt", ".2f")}'%v)
+    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return ClCatalogFuncs.plot_panel(cat1, cat2, matching_type, col='mass',
             col_panel='z', bins_panel=redshift_bins,
             xscale='log' if log_mass else 'linear',
@@ -3214,6 +3508,32 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Mask for clusters 1 properties, must have size=cat1.size
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
+
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use mass errors of catalog 2 in fit (default=True).
+    fit_log: bool
+        Bin and fit in log values (default=log_mass).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for mass of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for mass of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
 
     Other parameters
     ----------------
@@ -3257,6 +3577,7 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
+    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return ClCatalogFuncs.plot_density_panel(cat1, cat2, matching_type, col='mass',
             col_panel='z', bins_panel=redshift_bins,
             xscale='log' if log_mass else 'linear',
@@ -3351,6 +3672,32 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
+    Fit Parameters
+    --------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    add_fit_err: bool
+        Use mass errors of catalog 2 in fit (default=True).
+    fit_log: bool
+        Bin and fit in log values (default=log_mass).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+            `individual` - Use each point
+            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+    fit_bins1: array, None
+        Bins for mass of catalog 1 (default=10).
+    fit_bins2: array, None
+        Bins for mass of catalog 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+
     Other parameters
     ----------------
     fig_kwargs: dict
@@ -3385,6 +3732,7 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Axes with the panels (main, right, top, label)
     """
     metrics_mode = kwargs.pop('metrics_mode', 'log')
+    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='mass',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
@@ -3552,28 +3900,28 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
     Fit Parameters
     --------------
     add_bindata: bool
-        Plot binned data used for fit.
+        Plot binned data used for fit (default=False).
     add_fit: bool
-        Fit and plot binned dat.
+        Fit and plot binned dat (default=False).
     add_fit_err: bool
-        Use error of component 2 in fit.
+        Use mass errors of catalog 2 in fit (default=True).
+    fit_log: bool
+        Bin and fit in log values (default=log_mass).
     fit_statistics: str
-        Statistics to be used in fit. Options are:
+        Statistics to be used in fit (default=mean). Options are:
             `individual` - Use each point
             `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
             `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
     fit_bins1: array, None
-        Bins for component 1 (default=10).
+        Bins for mass of catalog 1 (default=10).
     fit_bins2: array, None
-        Bins for component 2 (default=30).
+        Bins for mass of catalog 2 (default=30).
     fit_legend_kwargs: dict
         Additional arguments for plt.legend.
     fit_bindata_kwargs: dict
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
-    vline_kwargs: dict
-        Arguments for vlines marking bins in main plot, used in plt.axvline.
 
     Other parameters
     ----------------
@@ -3611,4 +3959,5 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
     kwargs['fit_log'] = kwargs.get('fit_log', True)
     kwargs['xscale'] = 'log' if log_mass else 'linear'
     kwargs['yscale'] = 'log' if log_mass else 'linear'
+    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return ClCatalogFuncs.plot_density_dist(cat1, cat2, matching_type, col='mass', **kwargs)
