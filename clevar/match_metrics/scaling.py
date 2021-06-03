@@ -94,6 +94,8 @@ class ArrayFuncs():
             Additional arguments for plot of fit pylab.scatter.
         legend_kwargs: dict
             Additional arguments for plt.legend.
+        label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
         """
         # Default parameters
         mode = kwargs.get('statistics', 'mode')
@@ -104,6 +106,9 @@ class ArrayFuncs():
         bindata_kwargs = kwargs.get('bindata_kwargs', {})
         add_fit = kwargs.get('add_fit', False)
         plot_kwargs = kwargs.get('plot_kwargs', {})
+        xl, yl = kwargs.get('label_components', ('x', 'y'))
+        xl = xl.replace('$', '')  if '$' in xl else '$%s$'%xl.replace('_', '\_')
+        yl = yl.replace('$', '')  if '$' in yl else '$%s$'%yl.replace('_', '\_')
         if ((not add_bindata) and (not add_fit)) or len(values1)<=1:
             return
         # set log/lin funcs
@@ -131,8 +136,9 @@ class ArrayFuncs():
             fit, cov = curve_fit(pw_func, vbin_1, vbin_2, sigma=vbin_err2)
             fit1_lab = f'{ifunc(fit[1]):.2f}' if ifunc(fit[1])<100\
                   else f'10^{{{np.log10(ifunc(fit[1])):.2f}}}'
-            fit_label = f'$f(x)={fit1_lab}\;x^{{{fit[0]:.2f}}}$' if log\
-                else f'$f(x)={fit[0]:.2f}\;x%s$'%(fit1_lab if fit[1]<0 else '+'+fit1_lab)
+            avg_label = f'\left<{yl}\\right|\left.{xl}\\right>'
+            fit_label = f'${avg_label}={fit1_lab}\;({xl})^{{{fit[0]:.2f}}}$' if log\
+                else f'${avg_label}={fit[0]:.2f}\;{xl}%s$'%(fit1_lab if fit[1]<0 else '+'+fit1_lab)
             plot_kwargs_ = {'color': 'r', 'label': fit_label}
             plot_kwargs_.update(plot_kwargs)
             sort = np.argsort(values1)
@@ -189,6 +195,8 @@ class ArrayFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
 
         Returns
         -------
@@ -268,6 +276,8 @@ class ArrayFuncs():
             Fit and plot binned dat (default=False).
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
 
         Returns
         -------
@@ -380,6 +390,8 @@ class ArrayFuncs():
             Fit and plot binned dat (default=False).
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
 
         Returns
         -------
@@ -451,6 +463,8 @@ class ArrayFuncs():
             Fit and plot binned dat (default=False).
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
 
         Returns
         -------
@@ -550,6 +564,8 @@ class ArrayFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
 
         Returns
         -------
@@ -637,6 +653,8 @@ class ArrayFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
 
         Returns
         -------
@@ -742,6 +760,8 @@ class ArrayFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
 
         Returns
         -------
@@ -955,6 +975,8 @@ class ArrayFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
 
         Returns
         -------
@@ -1193,6 +1215,8 @@ class ArrayFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=('x', 'y').
         vline_kwargs: dict
             Arguments for vlines marking bins in main plot, used in plt.axvline.
 
@@ -1380,6 +1404,8 @@ class ClCatalogFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=(xlabel, ylabel).
 
         Other parameters
         ----------------
@@ -1390,9 +1416,9 @@ class ClCatalogFuncs():
         err_kwargs: dict
             Additional arguments for pylab.errorbar
         xlabel: str
-            Label of x axis.
+            Label of x axis (default=cat1.labels[col]).
         ylabel: str
-            Label of y axis.
+            Label of y axis (default=cat2.labels[col]).
         xscale: str
             Scale xaxis.
         yscale: str
@@ -1458,6 +1484,8 @@ class ClCatalogFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=(xlabel, ylabel).
 
         Other parameters
         ----------------
@@ -1472,9 +1500,9 @@ class ClCatalogFuncs():
         err_kwargs: dict
             Additional arguments for pylab.errorbar
         xlabel: str
-            Label of x axis.
+            Label of x axis (default=cat1.labels[col]).
         ylabel: str
-            Label of y axis.
+            Label of y axis (default=cat2.labels[col]).
         xscale: str
             Scale xaxis.
         yscale: str
@@ -1543,6 +1571,8 @@ class ClCatalogFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=(xlabel, ylabel).
 
         Other parameters
         ----------------
@@ -1561,9 +1591,9 @@ class ClCatalogFuncs():
         rotation_resolution: int
             Number of bins to be used when ax_rotation!=0.
         xlabel: str
-            Label of x axis.
+            Label of x axis (default=cat1.labels[col]).
         ylabel: str
-            Label of y axis.
+            Label of y axis (default=cat2.labels[col]).
         xscale: str
             Scale xaxis.
         yscale: str
@@ -1682,6 +1712,8 @@ class ClCatalogFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=(xlabel, ylabel).
 
         Other parameters
         ----------------
@@ -1702,9 +1734,9 @@ class ClCatalogFuncs():
         label_format: function
             Function to format the values of the bins
         xlabel: str
-            Label of x axis.
+            Label of x axis (default=cat1.labels[col]).
         ylabel: str
-            Label of y axis.
+            Label of y axis (default=cat2.labels[col]).
         xscale: str
             Scale xaxis.
         yscale: str
@@ -1781,6 +1813,8 @@ class ClCatalogFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=(xlabel, ylabel).
 
         Other parameters
         ----------------
@@ -1805,9 +1839,9 @@ class ClCatalogFuncs():
         label_format: function
             Function
         xlabel: str
-            Label of x axis.
+            Label of x axis (default=cat1.labels[col]).
         ylabel: str
-            Label of y axis.
+            Label of y axis (default=cat2.labels[col]).
         xscale: str
             Scale xaxis.
         yscale: str
@@ -1883,6 +1917,8 @@ class ClCatalogFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=(xlabel, ylabel).
 
         Other parameters
         ----------------
@@ -1913,9 +1949,9 @@ class ClCatalogFuncs():
         label_format: function
             Function to format the values of the bins
         xlabel: str
-            Label of x axis.
+            Label of x axis (default=cat1.labels[col]).
         ylabel: str
-            Label of y axis.
+            Label of y axis (default=cat2.labels[col]).
         xscale: str
             Scale xaxis.
         yscale: str
@@ -2054,6 +2090,8 @@ class ClCatalogFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=(xlabel, ylabel).
 
         Other parameters
         ----------------
@@ -2095,9 +2133,12 @@ class ClCatalogFuncs():
         cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
         f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
+        xlabel = kwargs.get('label1', cl_kwargs['xlabel'])
+        ylabel = kwargs.get('label2', cl_kwargs['ylabel'])
+        f_kwargs['fit_label_components'] = kwargs.get('fit_label_components', (xlabel, ylabel))
         fig, axes = ArrayFuncs.plot_density_metrics(**f_kwargs)
-        axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
-        axes[0].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
+        axes[0].set_xlabel(xlabel)
+        axes[0].set_ylabel(ylabel)
         return fig, axes
     def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
                   log_vals=False, log_aux=False, transpose=False, **kwargs):
@@ -2305,6 +2346,8 @@ class ClCatalogFuncs():
             Additional arguments for pylab.errorbar.
         fit_plt_kwargs: dict
             Additional arguments for plot of fit pylab.scatter.
+        fit_label_components: tuple (of strings)
+            Names of fitted components in fit line label, default=(xlabel, ylabel).
         vline_kwargs: dict
             Arguments for vlines marking bins in main plot, used in plt.axvline.
 
@@ -2400,6 +2443,8 @@ def redshift(cat1, cat2, matching_type, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -2410,9 +2455,9 @@ def redshift(cat1, cat2, matching_type, **kwargs):
     err_kwargs: dict
         Additional arguments for pylab.errorbar
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['z']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['z']).
 
     Returns
     -------
@@ -2468,6 +2513,8 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -2486,9 +2533,9 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['z']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['z']).
     xscale: str
         Scale xaxis.
     yscale: str
@@ -2548,6 +2595,8 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -2562,9 +2611,9 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
     err_kwargs: dict
         Additional arguments for pylab.errorbar
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['z']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['z']).
 
     Returns
     -------
@@ -2623,6 +2672,8 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -2645,9 +2696,9 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
     label_fmt: str
         Format the values of binedges (ex: '.2f')
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['z']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['z']).
 
     Returns
     -------
@@ -2712,6 +2763,8 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -2744,9 +2797,9 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
     label_fmt: str
         Format the values of binedges (ex: '.2f')
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['z']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['z']).
 
     Returns
     -------
@@ -2867,6 +2920,8 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -3088,6 +3143,8 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Fit Parameters
     --------------
@@ -3112,6 +3169,8 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
     vline_kwargs: dict
         Arguments for vlines marking bins in main plot, used in plt.axvline.
 
@@ -3203,6 +3262,8 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -3213,9 +3274,9 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     err_kwargs: dict
         Additional arguments for pylab.errorbar
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['mass']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['mass']).
 
     Returns
     -------
@@ -3275,6 +3336,8 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -3289,9 +3352,9 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
     err_kwargs: dict
         Additional arguments for pylab.errorbar
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['mass']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['mass']).
 
     Returns
     -------
@@ -3355,6 +3418,8 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -3373,9 +3438,9 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['mass']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['mass']).
 
     Returns
     -------
@@ -3439,6 +3504,8 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -3461,9 +3528,9 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
     label_fmt: str
         Format the values of binedges (ex: '.2f')
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['mass']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['mass']).
 
     Returns
     -------
@@ -3534,6 +3601,8 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -3566,9 +3635,9 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     label_fmt: str
         Format the values of binedges (ex: '.2f')
     xlabel: str
-        Label of x axis.
+        Label of x axis (default=cat1.labels['mass']).
     ylabel: str
-        Label of y axis.
+        Label of y axis (default=cat2.labels['mass']).
 
     Returns
     -------
@@ -3697,6 +3766,8 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
@@ -3922,6 +3993,8 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Additional arguments for pylab.errorbar.
     fit_plt_kwargs: dict
         Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Other parameters
     ----------------
