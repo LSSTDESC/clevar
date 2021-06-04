@@ -112,30 +112,38 @@ class MembershipMatch(Match):
             Pmem of catalog1 galaxy
         """
         cat1_share_mems[ind1][cat2_id] = cat1_share_mems[ind1].get(cat2_id, 0)+pmem1
-    def save_shared_members(self, fileprefix, overwrite=False):
+    def save_shared_members(self, cat1, cat2, fileprefix, overwrite=False):
         """
         Saves dictionaries of shared members
 
         Parameters
         ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        cat2: clevar.ClCatalog
+            Target catalog
         fileprefix: str
             Prefix for name of files
         overwrite: bool
             Overwrite saved files
         """
-        pickle.dump(self.mt1, open(f'{fileprefix}.1.p', 'wb'))
-        pickle.dump(self.mt2, open(f'{fileprefix}.2.p', 'wb'))
-    def load_shared_members(self, fileprefix):
+        pickle.dump(cat1.mt_input, open(f'{fileprefix}.1.p', 'wb'))
+        pickle.dump(cat2.mt_input, open(f'{fileprefix}.2.p', 'wb'))
+    def load_shared_members(self, cat1, cat2, fileprefix):
         """
         Load dictionaries of shared members
 
         Parameters
         ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        cat2: clevar.ClCatalog
+            Target catalog
         filename: str
             Prefix of files name
         """
-        self.mt1 = pickle.load(open(f'{fileprefix}.1.p', 'rb'))
-        self.mt2 = pickle.load(open(f'{fileprefix}.2.p', 'rb'))
+        cat1.mt_input = pickle.load(open(f'{fileprefix}.1.p', 'rb'))
+        cat2.mt_input = pickle.load(open(f'{fileprefix}.2.p', 'rb'))
     def match_members(self, mem1, mem2, method='id', radius=None, cosmo=None):
         """
         Match member catalogs.
