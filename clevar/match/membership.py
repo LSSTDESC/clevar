@@ -13,7 +13,7 @@ class MembershipMatch(Match):
     def __init__(self, ):
         self.type = 'Membership'
         self.matched_mems = None
-    def multiple(self, cat1, cat2, minimum_share_fraction=0):
+    def multiple(self, cat1, cat2):
         """
         Make the one way multiple matching
 
@@ -23,18 +23,15 @@ class MembershipMatch(Match):
             Base catalog
         cat2: clevar.ClCatalog
             Target catalog
-        minimum_share_fraction: float
-            Minimum share fraction to consider in matches
         """
         self.cat1_mmt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         print(f'Finding candidates ({cat1.name})')
         for i, (share_mems1, nmem1) in enumerate(zip(cat1.mt_input['share_mems'], cat1.mt_input['nmem'])):
             for id2, share_mem in share_mems1.items():
-                if share_mem/nmem1 >= minimum_share_fraction:
-                    cat1['mt_multi_self'][i].append(id2)
-                    i2 = int(cat2.id_dict[id2])
-                    cat2['mt_multi_other'][i2].append(cat1['id'][i])
-                    self.cat1_mmt[i] = True
+                cat1['mt_multi_self'][i].append(id2)
+                i2 = int(cat2.id_dict[id2])
+                cat2['mt_multi_other'][i2].append(cat1['id'][i])
+                self.cat1_mmt[i] = True
             print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
         print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
