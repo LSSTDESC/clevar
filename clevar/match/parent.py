@@ -52,6 +52,8 @@ class Match():
         elif preference=='redshift_proximity':
             set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'redshift_proximity')
         elif preference=='shared_member_fraction':
+            cat1['mt_frac_self'] = np.zeros(cat1.size)
+            cat2['mt_frac_other'] = np.zeros(cat2.size)
             set_unique = lambda cat1, i, cat2: self._match_sharepref(cat1, i, cat2)
             i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1['mass'])][::-1]
         else:
@@ -62,12 +64,6 @@ class Match():
                 self.cat1_mt[i] = set_unique(cat1, i, cat2)
         self.cat1_mt *= (cat1['mt_self']!=None) # In case ang pref removes match
         print(f'* {len(cat1[cat1["mt_self"]!=None]):,}/{cat1.size:,} objects matched.')
-        if preference=='shared_member_fraction':
-            cat1['mt_frac_self'] = [cmem.get(id2, 0)/nmem for cmem, nmem, id2 in
-                zip(cat1.mt_input['share_mems'], cat1.mt_input['nmem'], cat1['mt_self'])]
-            cat2['mt_frac_other'] = [cmem[id1]/cat1.mt_input['nmem'][cat1.id_dict[id1]]
-                if id1 is not None else 0
-                for cmem, id1 in zip(cat2.mt_input['share_mems'], cat2['mt_other'])]
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
@@ -172,12 +168,14 @@ class Match():
             return False
         id2 = max(cat1.mt_input['share_mems'][i], key=cat1.mt_input['share_mems'][i].get)
         cat1['mt_self'][i] = id2
+        cat1['mt_frac_self'][i] = cat1.mt_input['share_mems'][i][id2]/cat1.mt_input['nmem'][i]
         # fills cat2 mt_other if empty or shared_frac is greater
         i2 = cat2.id_dict[id2]
         id1, id1_replace = cat1['id'][i], cat2['mt_other'][i2]
         share_mems2 = cat2.mt_input['share_mems'][i2]
         if share_mems2[id1]>share_mems2.get(id1_replace, 0):
             cat2['mt_other'][i2] = id1
+            cat2['mt_frac_other'][i2] = cat1['mt_frac_self'][i]
         return True
     def _get_dist_mt(self, dat1, dat2, MATCH_PREF):
         """
