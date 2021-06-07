@@ -213,8 +213,8 @@ class MembershipMatch(Match):
         mem1._init_match_vals()
         mem2._init_match_vals()
         mt.match_from_config(mem1, mem2, match_config, cosmo=cosmo)
-        mask1 = cat1.get_matching_mask(match_config['type'])
-        mask2 = cat2.ids2inds(cat1[mask1][f"mt_{match_config['type']}"])
+        mask1 = mem1.get_matching_mask(match_config['type'])
+        mask2 = mem2.ids2inds(mem1[mask1][f"mt_{match_config['type']}"])
         self.matched_mems = np.transpose([np.arange(mem1.size, dtype=int)[mask1],
                                           np.arange(mem2.size, dtype=int)[mask2]])
     def save_matched_members(self, filename, overwrite=False):
