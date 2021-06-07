@@ -359,7 +359,7 @@ class MemCatalog(Catalog):
         Labels of data columns for plots
     """
     def __init__(self, name, **kwargs):
-        if all('id_cluster'==n.lower() for n in kwargs):
+        if all('id_cluster'!=n.lower() for n in kwargs):
             raise ValueError("Members catalog must have a 'id_cluster' column!")
         Catalog.__init__(self, name, **kwargs)
     def _repr_html_(self):
