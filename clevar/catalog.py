@@ -134,15 +134,17 @@ class Catalog():
         for i in range(self.size):
             self['mt_multi_self'][i] = []
             self['mt_multi_other'][i] = []
-    def ids2inds(self, ids):
+    def ids2inds(self, ids, missing=None):
         """Returns the indicies of objects given an id list.
 
         Parameters
         ----------
         ids: list
             List of object ids
+        missing: None
+            Value added to position of missing id.
         """
-        return np.array([self.id_dict[i] for i in ids])
+        return np.array([self.id_dict.get(i, missing) for i in ids])
     def remove_multiple_duplicates(self):
         """Removes duplicates in multiple match columns"""
         for i in range(self.size):
