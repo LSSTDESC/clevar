@@ -194,11 +194,11 @@ class ProximityMatch(Match):
             ClCatalog 2
         match_config: dict
             Dictionary with the matching configuration. Keys must be:
-                `type`: type of matching (can be: `cat1`, `cat2`, `cross`).
+                `type`: type of matching, can be: `cat1`, `cat2`, `cross`.
                 `catalog1`: `kwargs` used in `prep_cat_for_match(cat1, **kwargs)` (minus `cosmo`).
                 `catalog2`: `kwargs` used in `prep_cat_for_match(cat2, **kwargs)` (minus `cosmo`).
-                `which_radius`: Case of radius to be used (can be: `cat1`, `cat2`, `min`, `max`).
-                `preference`: Preference to set best match (can be: `more_massive`, `angular_proximity`, `redshift_proximity`, `shared_member_fraction`).
+                `which_radius`: Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
+                `preference`: Preference to set best match, can be: `more_massive`, `angular_proximity`, `redshift_proximity`, `shared_member_fraction`.
         cosmo: clevar.Cosmology object
             Cosmology object for when radius has physical units
         """
