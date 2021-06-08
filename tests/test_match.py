@@ -158,6 +158,7 @@ def test_proximity(CosmoClass):
     mt.multiple(c1, c2, radius_selection='self')
     mt.multiple(c1, c2, radius_selection='other')
     mt.multiple(c1, c2, radius_selection='min')
+
 def test_proximity_cfg(CosmoClass):
     input1, input2 = get_test_data_prox()
     c1 = ClCatalog('Cat1', **input1)
@@ -211,6 +212,7 @@ def test_proximity_cfg(CosmoClass):
     mt.match_from_config(c1, c2, mt_config, cosmo=cosmo)
     _test_mt_results(c1, multi_self=mmt, self=smt, cross=smt)
     _test_mt_results(c2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
+
 def get_test_data_mem():
     ncl = 5
     input1 = {
@@ -324,3 +326,69 @@ def test_membership():
             assert_equal(c1[col], c1_test[col])
             assert_equal(c2[col], c2_test[col])
     os.system('rm -rf temp')
+def test_membership_cfg(CosmoClass):
+    c1, c2, mem1, mem2 = get_test_data_mem()
+    print(c1.data)
+    print(c2.data)
+    # init match
+    cosmo =  CosmoClass()
+    mt = MembershipMatch()
+    # test wrong matching config
+    assert_raises(ValueError, mt.match_from_config, c1, c2, mem1, mem2, {'type':'unknown'})
+    ### test 0 ###
+    match_config = {
+    'type': 'cross',
+    'preference': 'shared_member_fraction',
+    'minimum_share_fraction': 0,
+    'match_members_kwargs': {'method':'id'},
+    'match_members_save': True,
+    'shared_members_save': True,
+    'match_members_file': 'temp_mem.txt',
+    'shared_members_file': 'temp',
+    }
+    mt.match_from_config(c1, c2, mem1, mem2, match_config)
+    # Test with loaded match members file
+    c1_test, c2_test = get_test_data_mem()[:2]
+    match_config_test = {}
+    match_config_test.update(match_config)
+    match_config_test['match_members_load'] = True
+    mt.match_from_config(c1_test, c2_test, mem1, mem2, match_config_test)
+    for col in c1.data.colnames:
+        if col[:3]=='mt_':
+            assert_equal(c1[col], c1_test[col])
+            assert_equal(c2[col], c2_test[col])
+    # Test with loaded shared members files
+    c1_test, c2_test = get_test_data_mem()[:2]
+    match_config_test = {}
+    match_config_test.update(match_config)
+    match_config_test['shared_members_load'] = True
+    mt.match_from_config(c1_test, c2_test, mem1, mem2, match_config_test)
+    for col in c1.data.colnames:
+        if col[:3]=='mt_':
+            assert_equal(c1[col], c1_test[col])
+            assert_equal(c2[col], c2_test[col])
+    # Test with ang mem match
+    mmt1 = [['CL0', 'CL3'], ['CL1'], ['CL2'], ['CL3'], []]
+    mmt2 = [['CL0'], ['CL1'], ['CL2'], ['CL0', 'CL3'], ]
+    smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
+    _test_mt_results(c1, multi_self=mmt1, self=smt, cross=smt)
+    _test_mt_results(c2, multi_self=mmt2, self=smt[:-1], cross=smt[:-1])
+    # Check with minimum_share_fraction
+    c1._init_match_vals()
+    c2._init_match_vals()
+    match_config_test['minimum_share_fraction'] = .7
+    mt.match_from_config(c1, c2, mem1, mem2, match_config_test)
+    smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
+    cmt = ['CL0', 'CL1', 'CL2', None, None]
+    _test_mt_results(c1, multi_self=mmt1, self=smt, cross=cmt, other=cmt)
+    _test_mt_results(c2, multi_self=mmt2, self=cmt[:-1], cross=cmt[:-1], other=smt[:-1])
+    # Check with minimum_share_fraction
+    c1._init_match_vals()
+    c2._init_match_vals()
+    match_config_test['minimum_share_fraction'] = .9
+    mt.match_from_config(c1, c2, mem1, mem2, match_config_test)
+    smt = [None, 'CL1', 'CL2', 'CL3', None]
+    omt = ['CL0', 'CL1', 'CL2', None, None]
+    cmt = [None, 'CL1', 'CL2', None, None]
+    _test_mt_results(c1, multi_self=mmt1, self=smt, cross=cmt, other=omt)
+    _test_mt_results(c2, multi_self=mmt2, self=omt[:-1], cross=cmt[:-1], other=smt[:-1])

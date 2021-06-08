@@ -60,9 +60,9 @@ class MembershipMatch(Match):
         cat2.mt_input = {'share_mems': [{} for i in range(cat2.size)],
                          'nmem': self._comp_nmem(cat2, mem2)}
         for mem1_, mem2_ in zip(mem1[self.matched_mems[:,0]], mem2[self.matched_mems[:,1]]):
-            self._add_pmem(cat1.mt_input['share_mems'], cat1.id_dict[mem1_['id_cluster']], 
+            self._add_pmem(cat1.mt_input['share_mems'], cat1.id_dict[mem1_['id_cluster']],
                            mem2_['id_cluster'], mem1_['pmem'])
-            self._add_pmem(cat2.mt_input['share_mems'], cat2.id_dict[mem2_['id_cluster']], 
+            self._add_pmem(cat2.mt_input['share_mems'], cat2.id_dict[mem2_['id_cluster']],
                            mem1_['id_cluster'], mem2_['pmem'])
         # sort order in dicts by mass
         cat1.mt_input['share_mems'] = [self._sort_share_mem_mass(share_mem1, cat2)
@@ -235,4 +235,71 @@ class MembershipMatch(Match):
         filename: str
             Name of file with matching results
         """
-        self.matched_mems = np.loadtxt(filename)
+        self.matched_mems = np.loadtxt(filename, dtype=int)
+    def match_from_config(self, cat1, cat2, mem1, mem2, match_config, cosmo=None):
+        """
+        Make matching of catalogs based on a configuration dictionary
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
+        mem1: clevar.ClCatalog
+            Members of base catalog
+        mem2: clevar.ClCatalog
+            Members of target catalog
+        match_config: dict
+            Dictionary with the matching configuration. Keys must be:
+                `type`: type of matching, can be: `cat1`, `cat2`, `cross`.
+                `preference`: Preference to set best match, can be: `more_massive`, `angular_proximity`, `redshift_proximity`, `shared_member_fraction` (default).
+                `minimum_share_fraction`: Minimum share fraction to consider in matches (default=0).
+                `match_members`: Match the members catalogs (default=`True`).
+                `match_members_kwargs`: `kwargs` used in `match_members(mem1, mem2, **kwargs)`, needed if `match_members=True`.
+                `match_members_save`: saves file with matched members (default=`False`).
+                `match_members_load`: load matched members (default=`False`), if `True` skips matching (and save) of members.
+                `match_members_file`: file to save matching of members, needed if `match_members_save` or `match_members_load` is `True`.
+                `shared_members_fill`: Adds shared members dicts and nmem to mt_input in catalogs (default=`True`).
+                `shared_members_save`: saves files with shared members (default=`False`).
+                `shared_members_load`: load files with shared members (default=`False`), if `True` skips matching (and save) of members and fill (and save) of shared members.
+                `shared_members_file`: Prefix of file names to save shared members, needed if `shared_members_save` or `shared_members_load` is `True`.
+        """
+        if match_config['type'] not in ('cat1', 'cat2', 'cross'):
+            raise ValueError("config type must be cat1, cat2 or cross")
+
+        load_mt_member = match_config.get('match_members_load', False)
+        if match_config.get('match_members', True) and not load_mt_member:
+            self.match_members(mem1, mem2, **match_config['match_members_kwargs'])
+        if match_config.get('match_members_save', False) and not load_mt_member:
+            self.save_matched_members(match_config['match_members_file'], overwrite=True)
+        if load_mt_member:
+            self.load_matched_members(match_config['match_members_file'])
+
+        load_shared_member = match_config.get('shared_members_load', False)
+        if match_config.get('shared_members_fill', True) and not load_shared_member:
+            self.fill_shared_members(cat1, cat2, mem1, mem2)
+        if match_config.get('shared_members_save', False) and not load_shared_member:
+            self.save_shared_members(cat1, cat2, match_config['shared_members_file'], overwrite=True)
+        if load_shared_member:
+            self.load_shared_members(cat1, cat2, match_config['shared_members_file'])
+
+        if match_config['type'] in ('cat1', 'cross'):
+            print("\n## Multiple match (catalog 1)")
+            self.multiple(cat1, cat2)
+        if match_config['type'] in ('cat2', 'cross'):
+            print("\n## Multiple match (catalog 2)")
+            self.multiple(cat2, cat1)
+
+        preference = match_config.get('preference', 'shared_member_fraction')
+        minimum_share_fraction = match_config.get('minimum_share_fraction', 0)
+        if match_config['type'] in ('cat1', 'cross'):
+            print("\n## Finding unique matches of catalog 1")
+            self.unique(cat1, cat2, preference, minimum_share_fraction)
+        if match_config['type'] in ('cat2', 'cross'):
+            print("\n## Finding unique matches of catalog 2")
+            self.unique(cat2, cat1, preference, minimum_share_fraction)
+
+        if match_config['type'] == 'cross':
+            self.cross_match(cat1)
+            self.cross_match(cat2)
