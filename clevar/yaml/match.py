@@ -7,9 +7,10 @@ import os
 import warnings
 
 import clevar
-from .helper_funcs import loadconf, make_catalog, make_cosmology, get_input_loop
+from .helper_funcs import loadconf, make_catalog, make_cosmology, get_input_loop, make_mem_catalog
+
 def proximity(config_file, overwrite_config, overwrite_files):
-    """Main plot function
+    """Proximity matching.
 
     Parameters
     ----------
@@ -49,6 +50,50 @@ def proximity(config_file, overwrite_config, overwrite_files):
                     '\n    '.join([f'{k}: {v}' for k, v in match_conf['cosmology'].items()]))
             warnings.warn(warn_msg)
         mt.match_from_config(c1, c2, match_conf, cosmo=cosmo_)
+    out1, out2 = f'{config["outpath"]}/match1.fits', f'{config["outpath"]}/match2.fits'
+    check_actions = {'o': (lambda : True, [], {}), 'q': (lambda :False, [], {}),}
+    save = True
+    if (os.path.isfile(out1) or os.path.isfile(out2)) and not overwrite_files:
+        print(f"\n*** File '{out1}' or '{out2}' already exist! ***")
+        save = get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
+    if save:
+        mt.save_matches(c1, c2, out_dir=config['outpath'], overwrite=True)
+
+def membership(config_file, overwrite_config, overwrite_files):
+    """Membership matching.
+
+    Parameters
+    ----------
+    config_file: str
+        Yaml file with configuration to run
+    overwrite_config: bool
+        Forces overwrite of config.log.yml file
+    overwrite_files: bool
+        Forces overwrite of matching output files
+    """
+    # Create clevar objects from yml config
+    config = loadconf(config_file,
+        load_configs=['catalog1', 'catalog2', 'cosmology', 'membership_match'],
+        fail_action='orverwrite' if overwrite_config else 'ask'
+        )
+    if config is None:
+        return
+    match_config = config['membership_match']
+    print("\n# Reading Cluster Catalog 1")
+    c1 = make_catalog(config['catalog1'])
+    print("\n# Reading Cluster Catalog 2")
+    c2 = make_catalog(config['catalog2'])
+    print("\n# Reading Members Catalog 1")
+    mem1 = make_mem_catalog(config['catalog1']['members'])
+    print("\n# Reading Members Catalog 2")
+    mem2 = make_mem_catalog(config['catalog2']['members'])
+    mem_mt_radius = match_config['match_members_kwargs'].get('radius', '').lower()
+    if any(unit in mem_mt_radius for unit in clevar.geometry.physical_bank):
+        print("\n# Creating Cosmology")
+        match_config['match_members_kwargs']['cosmo'] = make_cosmology(config['cosmology'])
+    # Run matching
+    mt = clevar.match.MembershipMatch()
+    mt.match_from_config(c1, c2, mem1, mem2,  match_config)
     out1, out2 = f'{config["outpath"]}/match1.fits', f'{config["outpath"]}/match2.fits'
     check_actions = {'o': (lambda : True, [], {}), 'q': (lambda :False, [], {}),}
     save = True

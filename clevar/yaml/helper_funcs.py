@@ -6,7 +6,7 @@ import yaml
 import argparse
 import numpy as np
 
-from clevar.catalog import ClData, ClCatalog
+from clevar.catalog import ClData, ClCatalog, MemCatalog
 from clevar import cosmology
 from clevar.utils import none_val, veclen
 ######################################################################
@@ -218,6 +218,25 @@ def make_catalog(cat_config):
     cat = ClCatalog(cat_config['name'],
         **{k:c0[v] for k, v in cat_config['columns'].items()})
     cat.radius_unit = cat_config.get('radius_unit', None)
+    cat.labels.update(cat_config.get('labels', {}))
+    return cat
+def make_mem_catalog(cat_config):
+    """
+    Make a clevar.MemCatalog object based on config
+
+    Parameters
+    ----------
+    cat_config: dict
+        MemCatalog configuration
+
+    Returns
+    -------
+    clevar.MemCatalog
+        MemCatalog based on input config
+    """
+    c0 = ClData.read(cat_config['file'])
+    cat = MemCatalog(cat_config['name'],
+        **{k:c0[v] for k, v in cat_config['columns'].items()})
     cat.labels.update(cat_config.get('labels', {}))
     return cat
 def make_cosmology(cosmo_config):
