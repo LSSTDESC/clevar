@@ -79,6 +79,11 @@ def base_matched_files_cleanup(config_file, matching_mode):
         f'temp_{matching_mode}',
         f'{outpath}/ftpt_quantities1.fits',
         f'{outpath}/ftpt_quantities2.fits',
+        'temp_mems_mt.txt',
+        'temp_shared.2.p',
+        'temp_shared.1.p',
+        'ftpt1.fits',
+        'ftpt2.fits',
         ])
     os.system(f'rm -rf {cleanup_files}')
     return
