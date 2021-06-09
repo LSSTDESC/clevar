@@ -154,7 +154,8 @@ def get_input_loop(options_msg, actions):
         prt = print(f'Option {action} not valid. Please choose:') if loop else None
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
-def loadconf(config_file, load_configs=[], add_new_configs=[], fail_action='ask'):
+def loadconf(config_file, load_configs=[], add_new_configs=[],
+             fail_action='ask', check_matching=False):
     """
     Load configuration from yaml file, creates output directory and config.log.yml
 
@@ -169,7 +170,8 @@ def loadconf(config_file, load_configs=[], add_new_configs=[], fail_action='ask'
     fail_action: str
         Action to do when there is inconsistency in configs.
         Options are 'ask', 'overwrite' and 'quit'
-
+    check_matching: bool
+        Check matching config
     Returns
     -------
     dict
@@ -180,7 +182,10 @@ def loadconf(config_file, load_configs=[], add_new_configs=[], fail_action='ask'
         raise ValueError(f'Config file "{config_file}" not found')
     base_cfg_file = f'{os.path.dirname(__file__)}/base_config.yml'
     config = deep_update(yaml.read(base_cfg_file), yaml.read(config_file))
-    config = {k:config[k] for k in ["outpath", "matching_mode"]+load_configs}
+    main_load_configs = ["outpath", "matching_mode"]
+    if check_matching:
+        main_load_configs += [f"{config['matching_mode']}_match"]
+    config = {k:config[k] for k in main_load_configs+load_configs}
     # Add outpath suffix to differentiate proximity from memebership
     config['outpath'] += '_'+config['matching_mode']
     # Checks if config is consistent with log file

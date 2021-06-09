@@ -10,8 +10,4 @@ if __name__=="__main__":
     parser.add_argument('-om','--overwrite-files', dest='overwrite_files', default=False, action='store_true', help='Overwrites matching output files')
     args = parser.parse_args()
     # Run function
-    match_functions = {'proximity':yaml.match_proximity, 'membership':yaml.match_membership,}
-    matching_mode = yaml.read(args.config_file)['matching_mode']
-    if matching_mode not in match_functions:
-        raise ValueError(f'matching_mode (={matching_mode}) must be in {list(match_functions.keys())}')
-    match_functions[matching_mode](args.config_file, args.overwrite_config, args.overwrite_files)
+    yaml.match(args.config_file, args.overwrite_config, args.overwrite_files)

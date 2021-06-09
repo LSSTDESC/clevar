@@ -17,9 +17,8 @@ def run(config_file):
     """
     # Create clevar objects from yml config
     config = loadconf(config_file,
-        load_configs=['catalog1', 'catalog2', 'cosmology', 'proximity_match',
-                      'masks', 'mt_metrics_recovery'],
-        add_new_configs=['mt_metrics_recovery'],
+        load_configs=['catalog1', 'catalog2', 'cosmology', 'masks', 'mt_metrics_recovery'],
+        add_new_configs=['mt_metrics_recovery'], check_matching=True,
         )
     if config is None:
         return

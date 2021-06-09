@@ -37,6 +37,7 @@ catalog1:
             id_cluster: ID_CLUSTER
             ra: RA # Required if matching the members by angular proximity
             dec: DEC # Required if matching the members by angular proximity
+            z: Z # Required if matching the members by angular proximity with physical distance parameter
         labels: # Labels for plots. If not availble, column_{name} used.
             id: members id
 
@@ -68,6 +69,7 @@ catalog2:
             id_cluster: ID_CLUSTER
             ra: RA # Required if matching the members by angular proximity
             dec: DEC # Required if matching the members by angular proximity
+            z: Z # Required if matching the members by angular proximity with physical distance parameter
         labels: # Labels for plots. If not availble, column_{name} used.
             id: members id
 
