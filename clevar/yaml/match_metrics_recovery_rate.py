@@ -19,6 +19,7 @@ def run(config_file):
     config = loadconf(config_file,
         load_configs=['catalog1', 'catalog2', 'cosmology', 'proximity_match',
                       'masks', 'mt_metrics_recovery'],
+        add_new_configs=['mt_metrics_recovery'],
         )
     if config is None:
         return

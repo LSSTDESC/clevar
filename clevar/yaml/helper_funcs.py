@@ -62,7 +62,10 @@ def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
     diff_lines: list
         List where differences will be appended to
     """
-    for k in dict1:
+    for k in set(k for d in (dict1, dict2) for k in d):
+        if k not in dict1:
+            diff_lines.append((f'{pref}[{k}]', 'missing', 'present'))
+            return
         if k not in dict2:
             diff_lines.append((f'{pref}[{k}]', 'present', 'missing'))
             return
@@ -151,16 +154,18 @@ def get_input_loop(options_msg, actions):
         prt = print(f'Option {action} not valid. Please choose:') if loop else None
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
-def loadconf(config_file, load_configs=[], fail_action='ask'):
+def loadconf(config_file, load_configs=[], add_new_configs=[], fail_action='ask'):
     """
     Load configuration from yaml file, creates output directory and config.log.yml
 
     Parameters
     ----------
     config_file: str
-        Yaml configuration file
+        Yaml configuration file.
     load_configs: list
-        List of configurations loaded (will be checked with config.log.yml)
+        List of configurations loaded (will be checked with config.log.yml).
+    add_new_configs: list
+        List of configurations that will be automatically added if not in config.log.yml.
     fail_action: str
         Action to do when there is inconsistency in configs.
         Options are 'ask', 'overwrite' and 'quit'
@@ -185,8 +190,10 @@ def loadconf(config_file, load_configs=[], fail_action='ask'):
         log_config = config
     else:
         log_config = yaml.read(log_file)
+        for k in add_new_configs:
+            log_config[k] = log_config.get(k, config[k])
         diff_configs = get_dicts_diff(log_config, config, keys=load_configs,
-                                        header=['Name', 'New', 'Saved'],
+                                        header=['Name', 'Saved', 'New'],
                                         msg='\nConfigurations differs from saved config:\n')
         if len(diff_configs)>0:
             actions_loop = {

@@ -18,7 +18,9 @@ def run(config_file):
     config = loadconf(config_file,
         load_configs=['catalog1', 'catalog2', 'cosmology', 'proximity_match',
                       'mt_metrics_distances'],
+        add_new_configs=['mt_metrics_distances'],
         )
+
     if config is None:
         return
     print("\n# Reading Catalog 1")
