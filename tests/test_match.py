@@ -261,8 +261,9 @@ def test_membership():
     mt.save_shared_members(c1, c2, 'temp')
     c1_test, c2_test = ClCatalog('test1'), ClCatalog('test2')
     mt.load_shared_members(c1_test, c2_test, 'temp')
-    assert_equal(c1.mt_input, c1_test.mt_input)
-    assert_equal(c2.mt_input, c2_test.mt_input)
+    for c in ('nmem', 'share_mems'):
+        assert_equal(c1.mt_input[c], c1_test.mt_input[c])
+        assert_equal(c2.mt_input[c], c2_test.mt_input[c])
     os.system('rm temp.1.p temp.2.p')
     # Check multiple match
     mt.multiple(c1, c2)

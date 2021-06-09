@@ -55,10 +55,10 @@ class MembershipMatch(Match):
             raise ValueError('Members not matched, run match_members before.')
         mem1['pmem'] = mem1['pmem'] if 'pmem' in mem1.data.colnames else np.ones(mem1.size)
         mem2['pmem'] = mem2['pmem'] if 'pmem' in mem2.data.colnames else np.ones(mem2.size)
-        cat1.mt_input = {'share_mems': [{} for i in range(cat1.size)],
-                         'nmem': self._comp_nmem(cat1, mem1)}
-        cat2.mt_input = {'share_mems': [{} for i in range(cat2.size)],
-                         'nmem': self._comp_nmem(cat2, mem2)}
+        cat1.mt_input = ClData({'share_mems': [{} for i in range(cat1.size)],
+                         'nmem': self._comp_nmem(cat1, mem1)})
+        cat2.mt_input = ClData({'share_mems': [{} for i in range(cat2.size)],
+                         'nmem': self._comp_nmem(cat2, mem2)})
         for mem1_, mem2_ in zip(mem1[self.matched_mems[:,0]], mem2[self.matched_mems[:,1]]):
             self._add_pmem(cat1.mt_input['share_mems'], cat1.id_dict[mem1_['id_cluster']],
                            mem2_['id_cluster'], mem1_['pmem'])
@@ -124,8 +124,10 @@ class MembershipMatch(Match):
         overwrite: bool
             Overwrite saved files
         """
-        pickle.dump(cat1.mt_input, open(f'{fileprefix}.1.p', 'wb'))
-        pickle.dump(cat2.mt_input, open(f'{fileprefix}.2.p', 'wb'))
+        pickle.dump({c:cat1.mt_input[c] for c in cat1.mt_input.colnames},
+                    open(f'{fileprefix}.1.p', 'wb'))
+        pickle.dump({c:cat2.mt_input[c] for c in cat2.mt_input.colnames},
+                    open(f'{fileprefix}.2.p', 'wb'))
     def load_shared_members(self, cat1, cat2, fileprefix):
         """
         Load dictionaries of shared members
@@ -139,8 +141,8 @@ class MembershipMatch(Match):
         filename: str
             Prefix of files name
         """
-        cat1.mt_input = pickle.load(open(f'{fileprefix}.1.p', 'rb'))
-        cat2.mt_input = pickle.load(open(f'{fileprefix}.2.p', 'rb'))
+        cat1.mt_input = ClData(pickle.load(open(f'{fileprefix}.1.p', 'rb')))
+        cat2.mt_input = ClData(pickle.load(open(f'{fileprefix}.2.p', 'rb')))
     def match_members(self, mem1, mem2, method='id', radius=None, cosmo=None):
         """
         Match member catalogs.
