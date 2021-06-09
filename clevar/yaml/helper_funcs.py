@@ -175,7 +175,10 @@ def loadconf(config_file, load_configs=[], fail_action='ask'):
         raise ValueError(f'Config file "{config_file}" not found')
     base_cfg_file = f'{os.path.dirname(__file__)}/base_config.yml'
     config = deep_update(yaml.read(base_cfg_file), yaml.read(config_file))
-    config = {k:config[k] for k in ["outpath"]+load_configs}
+    config = {k:config[k] for k in ["outpath", "matching_mode"]+load_configs}
+    # Add outpath suffix to differentiate proximity from memebership
+    config['outpath'] += '_'+config['matching_mode']
+    # Checks if config is consistent with log file
     log_file = f'{config["outpath"]}/config.log.yml'
     if not os.path.isdir(config['outpath']):
         os.mkdir(config['outpath'])

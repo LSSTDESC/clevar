@@ -1,4 +1,5 @@
 outpath: temp
+matching_mode: membership # Options: proximity, membership
 
 cosmology:
     backend: Astropy # Options are Astropy, CCL.
