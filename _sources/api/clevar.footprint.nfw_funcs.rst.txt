@@ -1,7 +1,0 @@
-clevar.footprint.nfw\_funcs module
-==================================
-
-.. automodule:: clevar.footprint.nfw_funcs
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -1,7 +1,0 @@
-clevar.footprint.artificial module
-==================================
-
-.. automodule:: clevar.footprint.artificial
-   :members:
-   :undoc-members:
-   :show-inheritance:

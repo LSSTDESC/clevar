@@ -1,7 +1,0 @@
-clevar.yaml.match module
-========================
-
-.. automodule:: clevar.yaml.match
-   :members:
-   :undoc-members:
-   :show-inheritance:

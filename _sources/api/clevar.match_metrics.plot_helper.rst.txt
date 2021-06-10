@@ -1,7 +1,0 @@
-clevar.match\_metrics.plot\_helper module
-=========================================
-
-.. automodule:: clevar.match_metrics.plot_helper
-   :members:
-   :undoc-members:
-   :show-inheritance:

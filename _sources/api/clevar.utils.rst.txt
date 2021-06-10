@@ -1,7 +1,0 @@
-clevar.utils module
-===================
-
-.. automodule:: clevar.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
