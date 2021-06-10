@@ -6,7 +6,7 @@ import yaml
 import argparse
 import numpy as np
 
-from clevar.catalog import ClData, ClCatalog
+from clevar.catalog import ClData, ClCatalog, MemCatalog
 from clevar import cosmology
 from clevar.utils import none_val, veclen
 ######################################################################
@@ -62,7 +62,10 @@ def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
     diff_lines: list
         List where differences will be appended to
     """
-    for k in dict1:
+    for k in set(k for d in (dict1, dict2) for k in d):
+        if k not in dict1:
+            diff_lines.append((f'{pref}[{k}]', 'missing', 'present'))
+            return
         if k not in dict2:
             diff_lines.append((f'{pref}[{k}]', 'present', 'missing'))
             return
@@ -151,20 +154,24 @@ def get_input_loop(options_msg, actions):
         prt = print(f'Option {action} not valid. Please choose:') if loop else None
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
-def loadconf(config_file, load_configs=[], fail_action='ask'):
+def loadconf(config_file, load_configs=[], add_new_configs=[],
+             fail_action='ask', check_matching=False):
     """
     Load configuration from yaml file, creates output directory and config.log.yml
 
     Parameters
     ----------
     config_file: str
-        Yaml configuration file
+        Yaml configuration file.
     load_configs: list
-        List of configurations loaded (will be checked with config.log.yml)
+        List of configurations loaded (will be checked with config.log.yml).
+    add_new_configs: list
+        List of configurations that will be automatically added if not in config.log.yml.
     fail_action: str
         Action to do when there is inconsistency in configs.
         Options are 'ask', 'overwrite' and 'quit'
-
+    check_matching: bool
+        Check matching config
     Returns
     -------
     dict
@@ -175,15 +182,23 @@ def loadconf(config_file, load_configs=[], fail_action='ask'):
         raise ValueError(f'Config file "{config_file}" not found')
     base_cfg_file = f'{os.path.dirname(__file__)}/base_config.yml'
     config = deep_update(yaml.read(base_cfg_file), yaml.read(config_file))
-    config = {k:config[k] for k in ["outpath"]+load_configs}
+    main_load_configs = ["outpath", "matching_mode"]
+    if check_matching:
+        main_load_configs += [f"{config['matching_mode']}_match"]
+    config = {k:config[k] for k in main_load_configs+load_configs}
+    # Add outpath suffix to differentiate proximity from memebership
+    config['outpath'] += '_'+config['matching_mode']
+    # Checks if config is consistent with log file
     log_file = f'{config["outpath"]}/config.log.yml'
     if not os.path.isdir(config['outpath']):
         os.mkdir(config['outpath'])
         log_config = config
     else:
         log_config = yaml.read(log_file)
+        for k in add_new_configs:
+            log_config[k] = log_config.get(k, config[k])
         diff_configs = get_dicts_diff(log_config, config, keys=load_configs,
-                                        header=['Name', 'New', 'Saved'],
+                                        header=['Name', 'Saved', 'New'],
                                         msg='\nConfigurations differs from saved config:\n')
         if len(diff_configs)>0:
             actions_loop = {
@@ -218,6 +233,25 @@ def make_catalog(cat_config):
     cat = ClCatalog(cat_config['name'],
         **{k:c0[v] for k, v in cat_config['columns'].items()})
     cat.radius_unit = cat_config.get('radius_unit', None)
+    cat.labels.update(cat_config.get('labels', {}))
+    return cat
+def make_mem_catalog(cat_config):
+    """
+    Make a clevar.MemCatalog object based on config
+
+    Parameters
+    ----------
+    cat_config: dict
+        MemCatalog configuration
+
+    Returns
+    -------
+    clevar.MemCatalog
+        MemCatalog based on input config
+    """
+    c0 = ClData.read(cat_config['file'])
+    cat = MemCatalog(cat_config['name'],
+        **{k:c0[v] for k, v in cat_config['columns'].items()})
     cat.labels.update(cat_config.get('labels', {}))
     return cat
 def make_cosmology(cosmo_config):

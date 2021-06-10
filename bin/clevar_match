@@ -10,4 +10,4 @@ if __name__=="__main__":
     parser.add_argument('-om','--overwrite-files', dest='overwrite_files', default=False, action='store_true', help='Overwrites matching output files')
     args = parser.parse_args()
     # Run function
-    yaml.match_proximity(args.config_file, args.overwrite_config, args.overwrite_files)
+    yaml.match(args.config_file, args.overwrite_config, args.overwrite_files)

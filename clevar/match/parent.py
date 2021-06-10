@@ -29,7 +29,7 @@ class Match():
             Not implemented in parent class
         """
         raise NotImplementedError
-    def unique(self, cat1, cat2, preference):
+    def unique(self, cat1, cat2, preference,  minimum_share_fraction=0):
         """Makes unique matchig, requires multiple matching to be made first
 
         Parameters
@@ -39,7 +39,11 @@ class Match():
         cat2: clevar.ClCatalog
             Target catalog
         preference: str
-            Preference to set best match
+            Preference to set best match. Options are: `'more_massive'`, `'angular_proximity'`,
+            `'redshift_proximity'`, `'shared_member_fraction'`.
+        minimum_share_fraction: float
+            Parameter for `preference='shared_member_fraction'`.
+            Minimum share fraction to consider in matches (default=0).
         """
         self.cat1_mt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         i_vals = range(cat1.size)
@@ -50,13 +54,18 @@ class Match():
             set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'angular_proximity')
         elif preference=='redshift_proximity':
             set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'redshift_proximity')
+        elif preference=='shared_member_fraction':
+            cat1['mt_frac_self'] = np.zeros(cat1.size)
+            cat2['mt_frac_other'] = np.zeros(cat2.size)
+            set_unique = lambda cat1, i, cat2: self._match_sharepref(cat1, i, cat2, minimum_share_fraction)
+            i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1['mass'])][::-1]
         else:
             raise ValueError("preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'")
         print(f'Unique Matches ({cat1.name})')
         for i in i_vals:
             if cat1['mt_self'][i] is None:
                 self.cat1_mt[i] = set_unique(cat1, i, cat2)
-        self.cat1_mt *= (cat1['mt_self']!=None) # In case ang pref removes match
+        self.cat1_mt *= (cat1['mt_self']!=None) # In case ang pref removes a match
         print(f'* {len(cat1[cat1["mt_self"]!=None]):,}/{cat1.size:,} objects matched.')
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
@@ -140,6 +149,43 @@ class Match():
                 self._match_apref(cat1, i1_replace, cat2, MATCH_PREF)
                 return True
         return False
+    def _match_sharepref(self, cat1, i, cat2, minimum_share_fraction=0):
+        """
+        Make the unique match by shared membership fraction preference
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        i: int
+            Index of the cluster from cat1 to be matched
+        cat2: clevar.ClCatalog
+            Target catalog
+        minimum_share_fraction: float
+            Parameter for `preference='shared_member_fraction'`.
+            Minimum share fraction to consider in matches (default=0).
+
+        Returns
+        -------
+        bool
+            Tells if the cluster was matched
+        """
+        if len(cat1['mt_multi_self'][i])==0:
+            return False
+        id2 = max(cat1.mt_input['share_mems'][i], key=cat1.mt_input['share_mems'][i].get)
+        shared_frac = cat1.mt_input['share_mems'][i][id2]/cat1.mt_input['nmem'][i]
+        if shared_frac<minimum_share_fraction:
+            return False
+        cat1['mt_self'][i] = id2
+        cat1['mt_frac_self'][i] = shared_frac
+        # fills cat2 mt_other if empty or shared_frac is greater
+        i2 = cat2.id_dict[id2]
+        id1, id1_replace = cat1['id'][i], cat2['mt_other'][i2]
+        share_mems2 = cat2.mt_input['share_mems'][i2]
+        if share_mems2[id1]>share_mems2.get(id1_replace, 0):
+            cat2['mt_other'][i2] = id1
+            cat2['mt_frac_other'][i2] = shared_frac
+        return True
     def _get_dist_mt(self, dat1, dat2, MATCH_PREF):
         """
         Get distance for matching preference
@@ -171,7 +217,9 @@ class Match():
         cat1: clevar.ClCatalog
             Base catalog
         """
+        print(f'Cross Matches ({cat1.name})')
         cat1.cross_match()
+        print(f'* {len(cat1[cat1["mt_cross"]!=None]):,}/{cat1.size:,} objects matched.')
     def save_matches(self, cat1, cat2, out_dir, overwrite=False):
         """
         Saves the matching results
