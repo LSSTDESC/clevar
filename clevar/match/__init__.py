@@ -1,4 +1,5 @@
 from .proximity import ProximityMatch
+from .membership import MembershipMatch
 import numpy as np
 
 class MatchedPairs():

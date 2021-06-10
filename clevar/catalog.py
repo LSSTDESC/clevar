@@ -61,9 +61,9 @@ _matching_mask_funcs = {
     'multi_other': lambda match: veclen(match['mt_multi_other'])>0,
     'multi_join': lambda match: (veclen(match['mt_multi_self'])>0)+(veclen(match['mt_multi_other'])>0),
 }
-class ClCatalog():
+class Catalog():
     """
-    Object to handle catalogs
+    Parent object to handle catalogs.
 
     Attributes
     ----------
@@ -77,9 +77,7 @@ class ClCatalog():
     size: int
         Number of objects in the catalog
     id_dict: dict
-        Dictionary of indicies given the cluster id
-    radius_unit: str, None
-        Unit of the radius column
+        Dictionary of indicies given the object id
     labels: dict
         Labels of data columns for plots
     """
@@ -89,7 +87,6 @@ class ClCatalog():
         self.mt_input = None
         self.size = None
         self.id_dict = {}
-        self.radius_unit = None
         self.labels = {}
         if len(kwargs)>0:
             self._add_values(**kwargs)
@@ -103,8 +100,6 @@ class ClCatalog():
         del self.data[item]
     def __str__(self):
         return f'{self.name}:\n{self.data.__str__()}'
-    def _repr_html_(self):
-        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         self.radius_unit = columns.pop('radius_unit', None)
@@ -117,7 +112,7 @@ class ClCatalog():
         tab = " "*12
         if any(self.size!=s for s in sizes):
             raise ValueError(f"Column sizes inconsistent:\n"+
-                f"{tab}{'ClCatalog':10}: {self.size:,}\n"+
+                f"{tab}{'Catalog':10}: {self.size:,}\n"+
                 "\n".join([f"{tab}{k:10}: {l:,}" for k, l in zip(names, sizes)])
                 )
         if 'id' not in columns:
@@ -130,7 +125,6 @@ class ClCatalog():
         if 'ra' in self.data.colnames and 'dec' in self.data.colnames:
             self['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
         self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
-        self._init_match_vals()
     def _init_match_vals(self):
         """Fills self.match with default values"""
         self['mt_self'] = None
@@ -140,15 +134,17 @@ class ClCatalog():
         for i in range(self.size):
             self['mt_multi_self'][i] = []
             self['mt_multi_other'][i] = []
-    def ids2inds(self, ids):
+    def ids2inds(self, ids, missing=None):
         """Returns the indicies of objects given an id list.
 
         Parameters
         ----------
         ids: list
             List of object ids
+        missing: None
+            Value added to position of missing id.
         """
-        return np.array([self.id_dict[i] for i in ids])
+        return np.array([self.id_dict.get(i, missing) for i in ids])
     def remove_multiple_duplicates(self):
         """Removes duplicates in multiple match columns"""
         for i in range(self.size):
@@ -252,6 +248,9 @@ class ClCatalog():
             out[col] = [c if c else '' for c in self[col]]
         for col in ('mt_multi_self', 'mt_multi_other'):
             out[col] = [','.join(c) if c else '' for c in self[col]]
+        for col in self.data.colnames:
+            if (col[:3]=='mt_' and col not in out.colnames+['mt_cross']):
+                out[col] = self[col]
         out.write(filename, overwrite=overwrite)
     def load_match(self, filename):
         """
@@ -263,15 +262,18 @@ class ClCatalog():
             Name of file with matching results
         """
         mt = ClData.read(filename)
-        for col in ('mt_self', 'mt_other'):
-            self[col] = np.array([c if c!='' else None for c in mt[col]], dtype=np.ndarray)
-        for col in ('mt_multi_self', 'mt_multi_other'):
-            self[col] = np.array([None for c in mt[col]], dtype=np.ndarray)
-            for i, c in enumerate(mt[col]):
-                if len(c)>0:
-                    self[col][i] = c.split(',')
-                else:
-                    self[col][i] = []
+        for col in mt.colnames:
+            if col in ('mt_self', 'mt_other'):
+                self[col] = np.array([c if c!='' else None for c in mt[col]], dtype=np.ndarray)
+            elif col in ('mt_multi_self', 'mt_multi_other'):
+                self[col] = np.array([None for c in mt[col]], dtype=np.ndarray)
+                for i, c in enumerate(mt[col]):
+                    if len(c)>0:
+                        self[col][i] = c.split(',')
+                    else:
+                        self[col][i] = []
+            elif col!='id':
+                self[col] = mt[col]
         self.cross_match()
         print(f' * Total objects:    {self.size:,}')
         print(f' * multiple (self):  {len(self[veclen(self["mt_multi_self"])>0]):,}')
@@ -305,3 +307,69 @@ class ClCatalog():
         for col in ftq.colnames:
             if col!='id':
                 self[col] = ftq[col]
+class ClCatalog(Catalog):
+    """
+    Object to handle cluster catalogs.
+
+    Attributes
+    ----------
+    name: str
+        ClCatalog name
+    data: ClData
+        Main catalog data (ex: id, ra, dec, z). Fixed values.
+        Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
+    mt_input: object
+        Constains the necessary inputs for the match (added by Match objects)
+    size: int
+        Number of objects in the catalog
+    id_dict: dict
+        Dictionary of indicies given the cluster id
+    radius_unit: str, None
+        Unit of the radius column
+    labels: dict
+        Labels of data columns for plots
+    """
+    def __init__(self, name, **kwargs):
+        self.radius_unit = None
+        Catalog.__init__(self, name, **kwargs)
+    def _repr_html_(self):
+        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{self.data._repr_html_()}'
+    def _add_values(self, **columns):
+        """Add values for all attributes. If id is not provided, one is created"""
+        Catalog._add_values(self, **columns)
+        self.radius_unit = columns.pop('radius_unit', None)
+        self._init_match_vals()
+class MemCatalog(Catalog):
+    """
+    Object to handle member catalogs.
+
+    Attributes
+    ----------
+    name: str
+        ClCatalog name
+    data: ClData
+        Main catalog data (ex: id, id_cluster, pmem). Fixed values.
+    mt_input: object
+        Constains the necessary inputs for the match (added by Match objects)
+    size: int
+        Number of objects in the catalog
+    id_dict: dict
+        Dictionary of indicies given the member id
+    id_dict_list: dict
+        Dictionary of indicies given the member id, returns list allowing for repeated ids.
+    labels: dict
+        Labels of data columns for plots
+    """
+    def __init__(self, name, **kwargs):
+        if all('id_cluster'!=n.lower() for n in kwargs):
+            raise ValueError("Members catalog must have a 'id_cluster' column!")
+        Catalog.__init__(self, name, **kwargs)
+    def _repr_html_(self):
+        return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
+    def _add_values(self, **columns):
+        """Add values for all attributes. If id is not provided, one is created"""
+        Catalog._add_values(self, **columns)
+        self['id_cluster'] = np.array(columns['id_cluster'], dtype=str)
+        self.id_dict_list = {}
+        for ind, i in enumerate(self['id']):
+            self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]

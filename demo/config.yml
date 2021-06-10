@@ -1,4 +1,5 @@
 outpath: temp
+matching_mode: membership # Options: proximity, membership
 
 cosmology:
     backend: Astropy # Options are Astropy, CCL.
@@ -12,6 +13,7 @@ catalog1:
     file: cat1.fits
     name: catalog 1
     columns:
+        id: ID # Required if matching by members
         ra: RA
         dec: DEC
         z: Z
@@ -27,11 +29,23 @@ catalog1:
         pixel_name: pixel # Name of pixel column of footprint.
         detfrac_name: None # Name of detfrac column of footprint. Use 'None' if not existing.
         zmax_name: None # Name of zmax column of footprint. Use 'None' if not existing.
+    members: # Members of catalog, only required for membership matching
+        file: cat1_mem.fits
+        name: members 1
+        columns: # MUST include at least id_cluster
+            id: ID # Required if matching the members by id
+            id_cluster: ID_CLUSTER
+            ra: RA # Required if matching the members by angular proximity
+            dec: DEC # Required if matching the members by angular proximity
+            z: Z # Required if matching the members by angular proximity with physical distance parameter
+        labels: # Labels for plots. If not availble, column_{name} used.
+            id: members id
 
 catalog2:
     file: cat2.fits
     name: catalog 2
     columns:
+        id: ID # Required if matching by members
         ra: RA
         dec: DEC
         z: Z
@@ -47,6 +61,17 @@ catalog2:
         pixel_name: pixel # Name of pixel column of footprint.
         detfrac_name: None # Name of detfrac column of footprint. Use 'None' if not existing.
         zmax_name: None # Name of zmax column of footprint. Use 'None' if not existing.
+    members: # Members of catalog, only required for membership matching
+        file: cat2_mem.fits
+        name: members 2
+        columns: # MUST include at least id_cluster
+            id: ID # Required if matching the members by id
+            id_cluster: ID_CLUSTER
+            ra: RA # Required if matching the members by angular proximity
+            dec: DEC # Required if matching the members by angular proximity
+            z: Z # Required if matching the members by angular proximity with physical distance parameter
+        labels: # Labels for plots. If not availble, column_{name} used.
+            id: members id
 
 proximity_match:
     type: cross # options are cross, cat1, cat2.
@@ -67,6 +92,22 @@ proximity_match:
                         #  float: uses delta_z*(1+z).
                         #  None: does not use z.
             match_radius: 1 mpc # Radius for matching. If 'cat' uses the radius in the catalog, else must be in format 'value unit'.
+
+membership_match:
+    type: cross # options are cross, cat1, cat2.
+    preference: shared_member_fraction # Options: more_massive, angular_proximity, redshift_proximity, shared_member_fraction.
+    minimum_share_fraction: 0 # Minimum share fraction to consider in matches.
+    match_members: True # Match the members catalogs.
+    match_members_kwargs: # Arguments to match members, needed if match_members=True.
+        method: id # Method for matching. Options are id or angular_distance.
+        radius: None # For method=angular_distance. Radius for matching, with format 'value unit' - used fixed value (ex: 1 arcsec, 1 Mpc).
+    match_members_save: True # saves file with matched members.
+    match_members_load: False # load matched members, if True skips matching (and save) of members.
+    match_members_file: temp_mems_mt.txt # file to save matching of members, needed if match_members_save or match_members_load is True.
+    shared_members_fill: True # Adds shared members information to catalogs.
+    shared_members_save: True # saves files with shared members.
+    shared_members_load: False # load files with shared members, if True skips matching (and save) of members and fill (and save) of shared members.
+    shared_members_file: temp_shared # Prefix of file names to save shared members, needed if shared_members_save or shared_members_load is True.
 
 masks: # Config to be used by make_masks and recovery rate.
     catalog1:
