@@ -1,7 +1,0 @@
-clevar.match.parent module
-==========================
-
-.. automodule:: clevar.match.parent
-   :members:
-   :undoc-members:
-   :show-inheritance:

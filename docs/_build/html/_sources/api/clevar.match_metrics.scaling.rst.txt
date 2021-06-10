@@ -1,7 +1,0 @@
-clevar.match\_metrics.scaling module
-====================================
-
-.. automodule:: clevar.match_metrics.scaling
-   :members:
-   :undoc-members:
-   :show-inheritance:

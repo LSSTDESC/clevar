@@ -1,7 +1,0 @@
-clevar.cosmology.parent\_class module
-=====================================
-
-.. automodule:: clevar.cosmology.parent_class
-   :members:
-   :undoc-members:
-   :show-inheritance:
