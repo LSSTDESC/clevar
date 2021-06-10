@@ -98,13 +98,13 @@ membership_match:
     preference: shared_member_fraction # Options: more_massive, angular_proximity, redshift_proximity, shared_member_fraction.
     minimum_share_fraction: 0 # Minimum share fraction to consider in matches.
     match_members: True # Match the members catalogs.
-    match_members_kwargs: # kwargs used in match_members(mem1, mem2, **kwargs), needed if match_members=True.
+    match_members_kwargs: # Arguments to match members, needed if match_members=True.
         method: id # Method for matching. Options are id or angular_distance.
         radius: None # For method=angular_distance. Radius for matching, with format 'value unit' - used fixed value (ex: 1 arcsec, 1 Mpc).
     match_members_save: True # saves file with matched members.
     match_members_load: False # load matched members, if True skips matching (and save) of members.
     match_members_file: temp_mems_mt.txt # file to save matching of members, needed if match_members_save or match_members_load is True.
-    shared_members_fill: True # Adds shared members dicts and nmem to mt_input in catalogs.
+    shared_members_fill: True # Adds shared members information to catalogs.
     shared_members_save: True # saves files with shared members.
     shared_members_load: False # load files with shared members, if True skips matching (and save) of members and fill (and save) of shared members.
     shared_members_file: temp_shared # Prefix of file names to save shared members, needed if shared_members_save or shared_members_load is True.

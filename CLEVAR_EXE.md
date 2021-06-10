@@ -15,8 +15,9 @@ Some examples of config files can be found in the [demo](demo/) directory.
     1. [cosmology](#config_cosmology)
     2. [catalog1 (and catalog2)](#config_cat)
     3. [proximity_match](#config_proximity_match)
-    4. [masks](#config_mask)
-    5. [match_metrics](#config_match_metrics)
+    4. [membership_match](#config_membership_match)
+    5. [masks](#config_mask)
+    6. [match_metrics](#config_match_metrics)
         1. [recovery](#config_metics_recovery)
         2. [distances](#config_metics_distances)
         3. [Mass](#config_metics_mass)
@@ -41,10 +42,10 @@ The examples below will assume you are using a confiration file named `config.ym
 
 ### Matching catalogs <a name="matching"></a>
 
-Currently, only proximity matching is implemented in `ClEvaR`. To run this operation:
+Currently, is possible to match cluster based on proximity or on membership. Both operations are run with the same command:
 
 ```
-  clevar_match_proximity config.yml
+  clevar_match config.yml
 ```
 
 ### Footprint application <a name="footprint"></a>
@@ -81,10 +82,12 @@ Each different section of this file is described here.
 The main sections of this file are:
 
 * `outpath` - Path to save output.
+* `matching_mode` - Method for matching, options are `proximity` or `membership`.
 * `cosmology` - Configuration for cosmology.
 * `catalog1` - Configuration for catalog 1.
 * `catalog2` - Configuration for catalog 2.
 * `proximity_match` -Configuration for proximity matching.
+* `membership_match` -Configuration for membership matching.
 * `masks` - Configuration to be used for mask creation and in recovery rate.
 * `match_metrics` - Configuration for metrics of matching.
 
@@ -140,6 +143,24 @@ There is a example of a configuration file with multi-steps in [demo/config_2ste
 * `catalog2` - Options for catalog 2
   * `delta_z` - Defines the zmin, zmax for matching. If `cat` uses redshift properties of the catalog, if `spline.filename` interpolates data in `filename` (z, zmin, zmax) fmt, if `float` uses `delta_z*(1+z)`, if `None` does not use z.
   * `match_radius` - Radius to be used in the matching. If `cat` uses the radius in the catalog, else must be in format `value unit` (ex: `1 arcsec`, `1 Mpc`).
+
+### membership_match <a name="config_membership_match"></a>
+
+Configuration for membership matching:
+* `type` - Selects if a one way or two way matching is done (options are cross, cat1, cat2).
+* `preference` - Preference for multiple candidadtes. Options are `more_massive`, `angular_proximity`, `redshift_proximity` or `shared_member_fraction`(default).
+* `minimum_share_fraction: 0 # Minimum share fraction to consider in matches.
+* `match_members` - Match the members catalogs.
+* `match_members_kwargs` - Arguments to match members, needed if `match_members=True`.
+  * `method` - Method for matching. Options are `id` or `angular_distance`.
+  * `radius` - Radius for matching, with format 'value unit' (ex: `1 arcsec`, `1 Mpc`). Used in `method=angular_distance`.
+* `match_members_save` - Save file with matched members.
+* `match_members_load` - Load matched members, if True skips matching (and save) of members.
+* `match_members_file` - File to save matching of members, needed if `match_members_save` or `match_members_load` is True.
+* `shared_members_fill` - Adds shared members information to catalogs.
+* `shared_members_save` - Saves files with shared members.
+* `shared_members_load` - Load files with shared members, if `True` skips matching (and save) of members and fill (and save) of shared members.
+* `shared_members_file` - Prefix of file names to save shared members, needed if `shared_members_save` or `shared_members_load` is `True`.
 
 ### masks <a name="config_mask"></a>
 
