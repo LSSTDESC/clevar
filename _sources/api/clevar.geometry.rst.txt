@@ -1,0 +1,7 @@
+clevar.geometry module
+======================
+
+.. automodule:: clevar.geometry
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+clevar.constants module
+=======================
+
+.. automodule:: clevar.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:

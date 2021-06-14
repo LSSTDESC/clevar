@@ -1,0 +1,7 @@
+clevar.match.membership module
+==============================
+
+.. automodule:: clevar.match.membership
+   :members:
+   :undoc-members:
+   :show-inheritance:

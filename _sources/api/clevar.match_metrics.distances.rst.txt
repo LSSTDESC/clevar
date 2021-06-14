@@ -1,0 +1,7 @@
+clevar.match\_metrics.distances module
+======================================
+
+.. automodule:: clevar.match_metrics.distances
+   :members:
+   :undoc-members:
+   :show-inheritance:

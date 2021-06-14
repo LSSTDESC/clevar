@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Matching catalogs based on proximity (simple) &mdash; ClEvaR 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Matching catalogs based on proximity (detailed)" href="proximity_matching_detailed.html" />
+    <link rel="prev" title="Citing ClEvaR" href="../source/citing.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="membership_matching.html">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="footprint.html">Footprint functionality</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Matching catalogs based on proximity (simple)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/compiled-examples/proximity_matching.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="matching-catalogs-based-on-proximity-simple">
+<h1>Matching catalogs based on proximity (simple)<a class="headerlink" href="#matching-catalogs-based-on-proximity-simple" title="Permalink to this headline">¶</a></h1>
+<p>Matching two catalogs based on proximity based on a configuration
+dictionary</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+<div class="section" id="clcatalogs">
+<h2>ClCatalogs<a class="headerlink" href="#clcatalogs" title="Permalink to this headline">¶</a></h2>
+<p>Given some input data</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="n">input1</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span>
+    <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;CL</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span>
+    <span class="s1">&#39;RA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.00011</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+    <span class="s1">&#39;DEC&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">],</span>
+    <span class="s1">&#39;MASS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mf">13.5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.4</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.3</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.8</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mi">14</span><span class="p">],</span>
+    <span class="s1">&#39;RADIUS_ARCMIN&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+<span class="p">})</span>
+<span class="n">input2</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span>
+    <span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CL0&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1&#39;</span><span class="p">,</span> <span class="s1">&#39;CL2&#39;</span><span class="p">,</span> <span class="s1">&#39;CL3&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;RA&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.00011</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span>
+    <span class="s1">&#39;DEC&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span>
+    <span class="s1">&#39;MASS&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mf">13.3</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.4</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.5</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="mf">13.8</span><span class="p">],</span>
+    <span class="s1">&#39;RADIUS_ARCMIN&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+<span class="p">})</span>
+<span class="n">display</span><span class="p">(</span><span class="n">input1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">input2</span><span class="p">)</span>
+</pre></div>
+</div>
+<i>Table length=5</i>
+<table id="table140463205637520" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ID</th><th>RA</th><th>DEC</th><th>Z</th><th>MASS</th><th>RADIUS_ARCMIN</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.2</td><td>31622776601683.793</td><td>1.0</td></tr>
+<tr><td>CL1</td><td>0.0001</td><td>0.0</td><td>0.3</td><td>25118864315095.82</td><td>1.0</td></tr>
+<tr><td>CL2</td><td>0.00011</td><td>0.0</td><td>0.25</td><td>19952623149688.83</td><td>1.0</td></tr>
+<tr><td>CL3</td><td>25.0</td><td>0.0</td><td>0.4</td><td>63095734448019.43</td><td>1.0</td></tr>
+<tr><td>CL4</td><td>20.0</td><td>0.0</td><td>0.35</td><td>100000000000000.0</td><td>1.0</td></tr>
+</table><i>Table length=4</i>
+<table id="table140465161064608" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ID</th><th>RA</th><th>DEC</th><th>Z</th><th>MASS</th><th>RADIUS_ARCMIN</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.3</td><td>19952623149688.83</td><td>1.0</td></tr>
+<tr><td>CL1</td><td>0.0001</td><td>0.0</td><td>0.2</td><td>25118864315095.82</td><td>1.0</td></tr>
+<tr><td>CL2</td><td>0.00011</td><td>0.0</td><td>0.25</td><td>31622776601683.793</td><td>1.0</td></tr>
+<tr><td>CL3</td><td>25.0</td><td>0.0</td><td>0.4</td><td>63095734448019.43</td><td>1.0</td></tr>
+</table><p>Create two <code class="docutils literal notranslate"><span class="pre">ClCatalog</span></code> objects. For the proximity matching it is
+necessary to have at least (<code class="docutils literal notranslate"><span class="pre">ra,</span> <span class="pre">dec</span></code>). If the redshift is used in the
+matching, it also must be included. The same goes for the mass:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.catalog</span> <span class="kn">import</span> <span class="n">ClCatalog</span>
+<span class="n">c1</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat1&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">ra</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">])</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat2&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">ra</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">])</span>
+<span class="c1"># Format for nice display</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">):</span>
+    <span class="n">c1</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2f&#39;</span>
+    <span class="n">c2</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2f&#39;</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mass&#39;</span><span class="p">,):</span>
+    <span class="n">c1</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2e&#39;</span>
+    <span class="n">c2</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2e&#39;</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+<b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+<table id="table140463191130064" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+</table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+<table id="table140462340446048" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+</table></div>
+<div class="section" id="matching">
+<h2>Matching<a class="headerlink" href="#matching" title="Permalink to this headline">¶</a></h2>
+<p>Import the <code class="docutils literal notranslate"><span class="pre">ProximityMatch</span></code> and create a object for matching</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.match</span> <span class="kn">import</span> <span class="n">ProximityMatch</span>
+<span class="n">mt</span> <span class="o">=</span> <span class="n">ProximityMatch</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Prepare the configuration. The main values are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code>: Type of matching to be considered. Can be a simple match of
+ClCatalog1-&gt;ClCatalog2 (<code class="docutils literal notranslate"><span class="pre">cat1</span></code>), ClCatalog2-&gt;ClCatalog1 (<code class="docutils literal notranslate"><span class="pre">cat2</span></code>)
+or cross matching.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">which_radius</span></code>: Given a pair of clusters, which radius will be used
+for the matching.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">preference</span></code>: In cases where there are multiple matched, how the
+best candidate will be chosen.</p></li>
+</ul>
+<p>We also need to provide some specific configuration for each catalog
+with:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">delta_z</span></code>: Defines redshift window for matching. The possible
+values are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'cat'</span></code>: uses redshift properties of the catalog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'spline.filename'</span></code>: interpolates data in <code class="docutils literal notranslate"><span class="pre">'filename'</span></code>
+assuming (z, zmin, zmax) format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">float</span></code>: uses <code class="docutils literal notranslate"><span class="pre">delta_z*(1+z)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: does not use z</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">match_radius</span></code>: Radius of the catalog to be used in the matching.
+If <code class="docutils literal notranslate"><span class="pre">'cat'</span></code> uses the radius in the catalog, else must be in format
+<code class="docutils literal notranslate"><span class="pre">'value</span> <span class="pre">unit'</span></code>. (ex: <code class="docutils literal notranslate"><span class="pre">'1</span> <span class="pre">arcsec'</span></code>, <code class="docutils literal notranslate"><span class="pre">'1</span> <span class="pre">Mpc'</span></code>)</p></li>
+</ul>
+<p>In this case, because one of the configuraion radius has physical units,
+we need a cosmology object to convert it to angular size (this is done
+internally).</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">match_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="c1"># options are cross, cat1, cat2</span>
+    <span class="s1">&#39;which_radius&#39;</span><span class="p">:</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="c1"># Case of radius to be used, can be: cat1, cat2, min, max</span>
+    <span class="s1">&#39;preference&#39;</span><span class="p">:</span> <span class="s1">&#39;angular_proximity&#39;</span><span class="p">,</span> <span class="c1"># options are more_massive, angular_proximity or redshift_proximity</span>
+    <span class="s1">&#39;catalog1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;delta_z&#39;</span><span class="p">:</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span>
+                <span class="s1">&#39;match_radius&#39;</span><span class="p">:</span> <span class="s1">&#39;1 mpc&#39;</span>
+                <span class="p">},</span>
+    <span class="s1">&#39;catalog2&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;delta_z&#39;</span><span class="p">:</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span>
+                <span class="s1">&#39;match_radius&#39;</span><span class="p">:</span> <span class="s1">&#39;10 arcsec&#39;</span>
+                <span class="p">}</span>
+<span class="p">}</span>
+<span class="kn">from</span> <span class="nn">clevar.cosmology</span> <span class="kn">import</span> <span class="n">AstroPyCosmology</span>
+<span class="n">cosmo</span> <span class="o">=</span> <span class="n">AstroPyCosmology</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Once the configuration is prepared, the whole process can be done with
+one call:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">mt</span><span class="o">.</span><span class="n">match_from_config</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">match_config</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## ClCatalog 1</span>
+<span class="c1">## Prep mt_cols</span>
+<span class="o">*</span> <span class="n">zmin</span><span class="o">|</span><span class="n">zmax</span> <span class="kn">from</span> <span class="nn">config</span> <span class="n">value</span>
+<span class="o">*</span> <span class="n">ang</span> <span class="n">radius</span> <span class="kn">from</span> <span class="nn">set</span> <span class="n">scale</span>
+
+<span class="c1">## ClCatalog 2</span>
+<span class="c1">## Prep mt_cols</span>
+<span class="o">*</span> <span class="n">zmin</span><span class="o">|</span><span class="n">zmax</span> <span class="kn">from</span> <span class="nn">config</span> <span class="n">value</span>
+<span class="o">*</span> <span class="n">ang</span> <span class="n">radius</span> <span class="kn">from</span> <span class="nn">set</span> <span class="n">scale</span>
+
+<span class="c1">## Multiple match (catalog 1)</span>
+<span class="n">Finding</span> <span class="n">candidates</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+
+<span class="c1">## Multiple match (catalog 2)</span>
+<span class="n">Finding</span> <span class="n">candidates</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+
+<span class="c1">## Finding unique matches of catalog 1</span>
+<span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+
+<span class="c1">## Finding unique matches of catalog 2</span>
+<span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">36</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">197</span> <span class="n">µs</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">36.2</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">35.6</span> <span class="n">ms</span>
+</pre></div>
+</div>
+<p>This will fill the matching columns in the catalogs: -
+<code class="docutils literal notranslate"><span class="pre">mt_multi_self</span></code>: Multiple matches found - <code class="docutils literal notranslate"><span class="pre">mt_multi_other</span></code>: Multiple
+matches found by the other catalog - <code class="docutils literal notranslate"><span class="pre">mt_self</span></code>: Best candidate found -
+<code class="docutils literal notranslate"><span class="pre">mt_other</span></code>: Best candidate found by the other catalog - <code class="docutils literal notranslate"><span class="pre">mt_cross</span></code>:
+Best candidate found in both directions</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+<b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+<table id="table140462340095088" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
+<tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
+<tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
+<tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
+<tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>None</td></tr>
+</table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+<table id="table140462340054944" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
+<tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
+<tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
+<tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
+</table></div>
+<div class="section" id="save-and-load">
+<h2>Save and Load<a class="headerlink" href="#save-and-load" title="Permalink to this headline">¶</a></h2>
+<p>The results of the matching can easily be saved and load using
+<code class="docutils literal notranslate"><span class="pre">ClEvaR</span></code> tools:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">save_matches</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;temp&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">load_matches</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cat1</span>
+ <span class="o">*</span> <span class="n">Total</span> <span class="n">objects</span><span class="p">:</span>    <span class="mi">5</span>
+ <span class="o">*</span> <span class="n">multiple</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">multiple</span> <span class="p">(</span><span class="n">other</span><span class="p">):</span> <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">unique</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>    <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">unique</span> <span class="p">(</span><span class="n">other</span><span class="p">):</span>   <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">cross</span><span class="p">:</span>            <span class="mi">4</span>
+
+<span class="n">Cat2</span>
+ <span class="o">*</span> <span class="n">Total</span> <span class="n">objects</span><span class="p">:</span>    <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">multiple</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">multiple</span> <span class="p">(</span><span class="n">other</span><span class="p">):</span> <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">unique</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>    <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">unique</span> <span class="p">(</span><span class="n">other</span><span class="p">):</span>   <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">cross</span><span class="p">:</span>            <span class="mi">4</span>
+</pre></div>
+</div>
+<b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+<table id="table140462340055680" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
+<tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
+<tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
+<tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
+<tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>None</td></tr>
+</table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+<table id="table140462369525280" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
+<tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
+<tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
+<tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
+</table></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

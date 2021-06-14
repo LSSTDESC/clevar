@@ -1,0 +1,616 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Matching catalogs based on membership (simple) &mdash; ClEvaR 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Matching catalogs based on membership (detailed)" href="membership_matching_detailed.html" />
+    <link rel="prev" title="Matching catalogs based on proximity (detailed)" href="proximity_matching_detailed.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="footprint.html">Footprint functionality</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Matching catalogs based on membership (simple)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/compiled-examples/membership_matching.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="matching-catalogs-based-on-membership-simple">
+<h1>Matching catalogs based on membership (simple)<a class="headerlink" href="#matching-catalogs-based-on-membership-simple" title="Permalink to this headline">¶</a></h1>
+<p>Matching two catalogs based on membseship using a configuration
+dictionary</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+<div class="section" id="clcatalogs">
+<h2>ClCatalogs<a class="headerlink" href="#clcatalogs" title="Permalink to this headline">¶</a></h2>
+<p>Given some input data</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="n">input1</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CL0a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL2a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL3a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL4a&#39;</span><span class="p">]})</span>
+<span class="n">input1</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e14</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span>
+<span class="n">input2</span> <span class="o">=</span> <span class="n">Table</span><span class="p">({</span><span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CL0b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL2b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL3b&#39;</span><span class="p">]})</span>
+<span class="n">input2</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e14</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span>
+<span class="n">display</span><span class="p">(</span><span class="n">input1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">input2</span><span class="p">)</span>
+<span class="n">input1_mem</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ID&#39;</span><span class="p">:[</span>
+        <span class="s1">&#39;MEM0&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM1&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM2&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM3&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM4&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MEM5&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM6&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM7&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM8&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM9&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MEM10&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM11&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM12&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM13&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM14&#39;</span><span class="p">],</span>
+     <span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="s1">&#39;CL0a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL0a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL0a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL0a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL0a&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;CL1a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL2a&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;CL2a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL2a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL3a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL3a&#39;</span><span class="p">,</span> <span class="s1">&#39;CL4a&#39;</span><span class="p">],</span>
+    <span class="p">})</span>
+<span class="n">input2_mem</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;ID&#39;</span><span class="p">:[</span>
+        <span class="s1">&#39;MEM0&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM1&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM2&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM3&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM4&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MEM5&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM6&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM7&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM8&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM9&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;MEM10&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM11&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM12&#39;</span><span class="p">,</span> <span class="s1">&#39;MEM13&#39;</span><span class="p">],</span>
+     <span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">:</span> <span class="p">[</span>
+         <span class="s1">&#39;CL3b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL0b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL0b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL0b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL0b&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;CL1b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL1b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL2b&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;CL2b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL2b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL3b&#39;</span><span class="p">,</span> <span class="s1">&#39;CL3b&#39;</span><span class="p">],</span>
+    <span class="p">})</span>
+<span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">input1_mem</span><span class="p">))</span><span class="o">*</span><span class="mf">10.0</span>
+<span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">input2_mem</span><span class="p">))</span><span class="o">*</span><span class="mf">10.0</span>
+<span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;PMEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;PMEM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">display</span><span class="p">(</span><span class="n">input1_mem</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">input2_mem</span><span class="p">)</span>
+</pre></div>
+</div>
+<i>Table length=5</i>
+<table id="table139805905577680" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ID</th><th>MASS</th></tr></thead>
+<thead><tr><th>str4</th><th>float64</th></tr></thead>
+<tr><td>CL0a</td><td>1000000000000000.0</td></tr>
+<tr><td>CL1a</td><td>2000000000000000.0</td></tr>
+<tr><td>CL2a</td><td>3000000000000000.0</td></tr>
+<tr><td>CL3a</td><td>4000000000000000.0</td></tr>
+<tr><td>CL4a</td><td>5000000000000000.0</td></tr>
+</table><i>Table length=4</i>
+<table id="table139805905577728" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ID</th><th>MASS</th></tr></thead>
+<thead><tr><th>str4</th><th>float64</th></tr></thead>
+<tr><td>CL0b</td><td>1000000000000000.0</td></tr>
+<tr><td>CL1b</td><td>2000000000000000.0</td></tr>
+<tr><td>CL2b</td><td>3000000000000000.0</td></tr>
+<tr><td>CL3b</td><td>4000000000000000.0</td></tr>
+</table><i>Table length=15</i>
+<table id="table139805905577920" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
+<thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM1</td><td>CL0a</td><td>10.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM2</td><td>CL0a</td><td>20.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM3</td><td>CL0a</td><td>30.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM4</td><td>CL0a</td><td>40.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM5</td><td>CL1a</td><td>50.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM6</td><td>CL1a</td><td>60.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM7</td><td>CL1a</td><td>70.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM8</td><td>CL1a</td><td>80.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM9</td><td>CL2a</td><td>90.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM10</td><td>CL2a</td><td>100.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM11</td><td>CL2a</td><td>110.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM12</td><td>CL3a</td><td>120.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM13</td><td>CL3a</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM14</td><td>CL4a</td><td>140.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+</table><i>Table length=14</i>
+<table id="table139803930840272" class="table-striped table-bordered table-condensed">
+<thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
+<thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM1</td><td>CL0b</td><td>10.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM2</td><td>CL0b</td><td>20.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM3</td><td>CL0b</td><td>30.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM4</td><td>CL0b</td><td>40.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM5</td><td>CL1b</td><td>50.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM6</td><td>CL1b</td><td>60.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM7</td><td>CL1b</td><td>70.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM8</td><td>CL1b</td><td>80.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM9</td><td>CL2b</td><td>90.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM10</td><td>CL2b</td><td>100.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM11</td><td>CL2b</td><td>110.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM12</td><td>CL3b</td><td>120.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+<tr><td>MEM13</td><td>CL3b</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+</table><p>Create two <code class="docutils literal notranslate"><span class="pre">ClCatalog</span></code> objects. For membership matching it is
+necessary to have at least <code class="docutils literal notranslate"><span class="pre">id_cluster</span></code> in the member catalogs that
+corresponds to <code class="docutils literal notranslate"><span class="pre">id</span></code> in the cluster catalogs. If the matching of the
+members is done by anngular distance, <code class="docutils literal notranslate"><span class="pre">ra</span></code> and <code class="docutils literal notranslate"><span class="pre">dec</span></code> of the members
+also must be included. It is also possible to add the probability of
+each member belong to the host cluster with a <code class="docutils literal notranslate"><span class="pre">pmem</span></code> argument:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.catalog</span> <span class="kn">import</span> <span class="n">ClCatalog</span><span class="p">,</span> <span class="n">MemCatalog</span>
+<span class="n">c1</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat1&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">])</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat2&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">])</span>
+
+<span class="n">m1</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="p">(</span><span class="s1">&#39;Mem1&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">id_cluster</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">],</span>
+                <span class="n">ra</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">pmem</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;PMEM&#39;</span><span class="p">])</span>
+<span class="n">m2</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="p">(</span><span class="s1">&#39;Mem2&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">id_cluster</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">],</span>
+                <span class="n">ra</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">pmem</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;PMEM&#39;</span><span class="p">])</span>
+
+<span class="c1"># Format for nice display</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mass&#39;</span><span class="p">,):</span>
+    <span class="n">c1</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2e&#39;</span>
+    <span class="n">c2</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2e&#39;</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">m1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">m2</span><span class="p">)</span>
+</pre></div>
+</div>
+<b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+<table id="table139805905598208" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+<thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0a</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL1a</td><td>2.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL2a</td><td>3.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL3a</td><td>4.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+</table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+<table id="table139803071181296" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+<thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0b</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL1b</td><td>2.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL2b</td><td>3.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL3b</td><td>4.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+</table><b>Mem1</b><br><i>ClData length=15</i>
+<table id="table139803071182064" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
+<thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM1</td><td>CL0a</td><td>10.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM2</td><td>CL0a</td><td>20.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM3</td><td>CL0a</td><td>30.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM4</td><td>CL0a</td><td>40.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM5</td><td>CL1a</td><td>50.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM6</td><td>CL1a</td><td>60.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM7</td><td>CL1a</td><td>70.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM8</td><td>CL1a</td><td>80.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM9</td><td>CL2a</td><td>90.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM10</td><td>CL2a</td><td>100.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM11</td><td>CL2a</td><td>110.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM12</td><td>CL3a</td><td>120.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM13</td><td>CL3a</td><td>130.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM14</td><td>CL4a</td><td>140.0</td><td>0.0</td><td>1.0</td></tr>
+</table><b>Mem2</b><br><i>ClData length=14</i>
+<table id="table139803071182400" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
+<thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM1</td><td>CL0b</td><td>10.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM2</td><td>CL0b</td><td>20.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM3</td><td>CL0b</td><td>30.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM4</td><td>CL0b</td><td>40.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM5</td><td>CL1b</td><td>50.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM6</td><td>CL1b</td><td>60.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM7</td><td>CL1b</td><td>70.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM8</td><td>CL1b</td><td>80.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM9</td><td>CL2b</td><td>90.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM10</td><td>CL2b</td><td>100.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM11</td><td>CL2b</td><td>110.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM12</td><td>CL3b</td><td>120.0</td><td>0.0</td><td>1.0</td></tr>
+<tr><td>MEM13</td><td>CL3b</td><td>130.0</td><td>0.0</td><td>1.0</td></tr>
+</table></div>
+<div class="section" id="matching">
+<h2>Matching<a class="headerlink" href="#matching" title="Permalink to this headline">¶</a></h2>
+<p>Import the <code class="docutils literal notranslate"><span class="pre">MembershipMatch</span></code> and create a object for matching</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.match</span> <span class="kn">import</span> <span class="n">MembershipMatch</span>
+<span class="n">mt</span> <span class="o">=</span> <span class="n">MembershipMatch</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Prepare the configuration. The main values are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type</span></code>: Type of matching to be considered. Can be a simple match of
+ClCatalog1-&gt;ClCatalog2 (<code class="docutils literal notranslate"><span class="pre">cat1</span></code>), ClCatalog2-&gt;ClCatalog1 (<code class="docutils literal notranslate"><span class="pre">cat2</span></code>)
+or cross matching.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">preference</span></code>: In cases where there are multiple matched, how the
+best candidate will be chosen.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">minimum_share_fraction</span></code>: Minimum share fraction to consider in
+matches (default=<code class="docutils literal notranslate"><span class="pre">0</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">match_members</span></code>: Match the members catalogs (default=<code class="docutils literal notranslate"><span class="pre">True</span></code>),
+necessary if not already made.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">match_members_kwargs</span></code>: dictionary of arguments to match members,
+needed if <code class="docutils literal notranslate"><span class="pre">match_members=True</span></code>. Keys are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code>(str): Method for matching. Options are <code class="docutils literal notranslate"><span class="pre">id</span></code> or
+<code class="docutils literal notranslate"><span class="pre">angular_distance</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">radius</span></code>(str, None): For <code class="docutils literal notranslate"><span class="pre">method='angular_distance'</span></code>. Radius
+for matching, with format <code class="docutils literal notranslate"><span class="pre">'value</span> <span class="pre">unit'</span></code> (ex: <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">arcsec</span></code>,
+<code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Mpc</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cosmo</span></code>(clevar.Cosmology, None): For
+<code class="docutils literal notranslate"><span class="pre">method='angular_distance'</span></code>. Cosmology object for when radius
+has physical units.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">match_members_save</span></code>: saves file with matched members
+(default=<code class="docutils literal notranslate"><span class="pre">False</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">match_members_load</span></code>: load matched members (default=<code class="docutils literal notranslate"><span class="pre">False</span></code>),
+if <code class="docutils literal notranslate"><span class="pre">True</span></code> skips matching (and save) of members.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">match_members_file</span></code>: file to save matching of members, needed if
+<code class="docutils literal notranslate"><span class="pre">match_members_save</span></code> or <code class="docutils literal notranslate"><span class="pre">match_members_load</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shared_members_fill</span></code>: Adds shared members dicts and nmem to
+mt_input in catalogs (default=<code class="docutils literal notranslate"><span class="pre">True</span></code>), necessary if not already
+made.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shared_members_save</span></code>: saves files with shared members
+(default=<code class="docutils literal notranslate"><span class="pre">False</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shared_members_load</span></code>: load files with shared members
+(default=<code class="docutils literal notranslate"><span class="pre">False</span></code>), if <code class="docutils literal notranslate"><span class="pre">True</span></code> skips matching (and save) of
+members and fill (and save) of shared members.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shared_members_file</span></code>: Prefix of file names to save shared members,
+needed if <code class="docutils literal notranslate"><span class="pre">shared_members_save</span></code> or <code class="docutils literal notranslate"><span class="pre">shared_members_load</span></code> is
+<code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">match_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="c1"># options are cross, cat1, cat2</span>
+    <span class="s1">&#39;preference&#39;</span><span class="p">:</span> <span class="s1">&#39;shared_member_fraction&#39;</span><span class="p">,</span> <span class="c1"># other options are more_massive, angular_proximity or redshift_proximity</span>
+    <span class="s1">&#39;minimum_share_fraction&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;match_members_kwargs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span><span class="s1">&#39;id&#39;</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Once the configuration is prepared, the whole process can be done with
+one call:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">mt</span><span class="o">.</span><span class="n">match_from_config</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">,</span> <span class="n">match_config</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Multiple match (catalog 1)</span>
+<span class="n">Finding</span> <span class="n">candidates</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+
+<span class="c1">## Multiple match (catalog 2)</span>
+<span class="n">Finding</span> <span class="n">candidates</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+
+<span class="c1">## Finding unique matches of catalog 1</span>
+<span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+
+<span class="c1">## Finding unique matches of catalog 2</span>
+<span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
+<span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">6.43</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">0</span> <span class="n">ns</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">6.43</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">6.04</span> <span class="n">ms</span>
+</pre></div>
+</div>
+<p>This will fill the matching columns in the catalogs: -
+<code class="docutils literal notranslate"><span class="pre">mt_multi_self</span></code>: Multiple matches found - <code class="docutils literal notranslate"><span class="pre">mt_multi_other</span></code>: Multiple
+matches found by the other catalog - <code class="docutils literal notranslate"><span class="pre">mt_self</span></code>: Best candidate found -
+<code class="docutils literal notranslate"><span class="pre">mt_other</span></code>: Best candidate found by the other catalog -
+<code class="docutils literal notranslate"><span class="pre">mt_frac_self</span></code>: Fraction of shared members with the best candidate
+found - <code class="docutils literal notranslate"><span class="pre">mt_frac_other</span></code>: Fraction of shared members by the best
+candidate found by the other catalog, relative to the other catalog -
+<code class="docutils literal notranslate"><span class="pre">mt_cross</span></code>: Best candidate found in both directions</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">pmem</span></code> is present in the members catalogs, the shared fractions are
+computed by:</p>
+<h1><center><p><span class="math notranslate nohighlight">\(\frac{\sum_{shared\;members}Pmem_i}{\sum_{cluster\;members}Pmem_i}\)</span></p>
+</center></h1><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+<b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+<table id="table139803922226816" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
+<thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
+<tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
+<tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td><td>CL1b</td></tr>
+<tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td><td>CL2b</td></tr>
+<tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
+<tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td><td>None</td></tr>
+</table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+<table id="table139803922226576" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
+<thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
+<tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
+<tr><td>CL1b</td><td>2.00e+15</td><td>CL1a</td><td>CL1a</td><td>[&apos;CL1a&apos;]</td><td>[&apos;CL1a&apos;]</td><td>1.0</td><td>1.0</td><td>CL1a</td></tr>
+<tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
+<tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
+</table></div>
+<div class="section" id="save-and-load">
+<h2>Save and Load<a class="headerlink" href="#save-and-load" title="Permalink to this headline">¶</a></h2>
+<p>The results of the matching can easily be saved and load using
+<code class="docutils literal notranslate"><span class="pre">ClEvaR</span></code> tools:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">save_matches</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;temp&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mt</span><span class="o">.</span><span class="n">load_matches</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">out_dir</span><span class="o">=</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cat1</span>
+ <span class="o">*</span> <span class="n">Total</span> <span class="n">objects</span><span class="p">:</span>    <span class="mi">5</span>
+ <span class="o">*</span> <span class="n">multiple</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">multiple</span> <span class="p">(</span><span class="n">other</span><span class="p">):</span> <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">unique</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>    <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">unique</span> <span class="p">(</span><span class="n">other</span><span class="p">):</span>   <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">cross</span><span class="p">:</span>            <span class="mi">4</span>
+
+<span class="n">Cat2</span>
+ <span class="o">*</span> <span class="n">Total</span> <span class="n">objects</span><span class="p">:</span>    <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">multiple</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">multiple</span> <span class="p">(</span><span class="n">other</span><span class="p">):</span> <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">unique</span> <span class="p">(</span><span class="bp">self</span><span class="p">):</span>    <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">unique</span> <span class="p">(</span><span class="n">other</span><span class="p">):</span>   <span class="mi">4</span>
+ <span class="o">*</span> <span class="n">cross</span><span class="p">:</span>            <span class="mi">4</span>
+</pre></div>
+</div>
+<b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+<table id="table139803922223408" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
+<thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
+<tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
+<tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td><td>CL1b</td></tr>
+<tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td><td>CL2b</td></tr>
+<tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
+<tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td><td>None</td></tr>
+</table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+<table id="table139805914229440" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
+<thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
+<tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
+<tr><td>CL1b</td><td>2.00e+15</td><td>CL1a</td><td>CL1a</td><td>[&apos;CL1a&apos;]</td><td>[&apos;CL1a&apos;]</td><td>1.0</td><td>1.0</td><td>CL1a</td></tr>
+<tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
+<tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
+</table></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

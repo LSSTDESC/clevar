@@ -1,0 +1,17 @@
+clevar.match package
+====================
+
+.. automodule:: clevar.match
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   clevar.match.membership
+   clevar.match.parent
+   clevar.match.proximity
