@@ -1,0 +1,635 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.catalog &mdash; ClEvaR 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/footprint.html">Footprint functionality</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>clevar.catalog</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clevar.catalog</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;@file catalog.py</span>
+<span class="sd">The ClCatalog and improved Astropy table classes</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span> <span class="k">as</span> <span class="n">APtable</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">veclen</span><span class="p">,</span> <span class="n">none_val</span>
+
+<div class="viewcode-block" id="ClData"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClData">[docs]</a><span class="k">class</span> <span class="nc">ClData</span><span class="p">(</span><span class="n">APtable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ClData: A data object. It behaves as an astropy table but case independent.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    meta: dict</span>
+<span class="sd">        Dictionary with metadata for this object</span>
+
+<span class="sd">    Same as astropy tables</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *args, **kwargs: Same used for astropy tables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">APtable</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes sure GCData keeps its properties after [] operations are used.</span>
+<span class="sd">        It also makes all letter casings accepted</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        GCData</span>
+<span class="sd">            Data with [] operations applied</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">name_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">colnames</span><span class="p">}</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">missing_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name_dict</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_cols</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">missing_cols</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_cols</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Columns &#39;</span><span class="si">{</span><span class="n">missing_cols</span><span class="si">}</span><span class="s2">&#39; not found in </span><span class="si">{</span><span class="n">name_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)])</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">APtable</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
+<div class="viewcode-block" id="ClData.get"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClData.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the column for key if key is in the dictionary, else default</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">colnames</span> <span class="k">else</span> <span class="n">default</span></div>
+    <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">APtable</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">colnames</span> <span class="k">if</span> <span class="n">c</span><span class="o">!=</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">]])</span></div>
+<span class="n">_matching_mask_funcs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;cross&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_cross&#39;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;self&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;other&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;multi_self&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">veclen</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;multi_other&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">veclen</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_multi_other&#39;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;multi_join&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="p">(</span><span class="n">veclen</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">veclen</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_multi_other&#39;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">),</span>
+<span class="p">}</span>
+<div class="viewcode-block" id="Catalog"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog">[docs]</a><span class="k">class</span> <span class="nc">Catalog</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parent object to handle catalogs.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: str</span>
+<span class="sd">        ClCatalog name</span>
+<span class="sd">    data: ClData</span>
+<span class="sd">        Main catalog data (ex: id, ra, dec, z). Fixed values.</span>
+<span class="sd">        Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)</span>
+<span class="sd">    mt_input: object</span>
+<span class="sd">        Constains the necessary inputs for the match (added by Match objects)</span>
+<span class="sd">    size: int</span>
+<span class="sd">        Number of objects in the catalog</span>
+<span class="sd">    id_dict: dict</span>
+<span class="sd">        Dictionary of indicies given the object id</span>
+<span class="sd">    labels: dict</span>
+<span class="sd">        Labels of data columns for plots</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mt_input</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_values</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s1">_</span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">:</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">def</span> <span class="nf">_add_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">columns</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add values for all attributes. If id is not provided, one is created&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+        <span class="c1"># Check all columns have same size</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">]</span>
+        <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">tab</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">*</span><span class="mi">12</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">!=</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sizes</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Column sizes inconsistent:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tab</span><span class="si">}{</span><span class="s1">&#39;Catalog&#39;</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span>
+                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tab</span><span class="si">}{</span><span class="n">k</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">l</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">sizes</span><span class="p">)])</span>
+                <span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">columns</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span><span class="o">!=</span><span class="s1">&#39;id&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="s1">&#39;ra&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span> <span class="ow">and</span> <span class="s1">&#39;dec&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s1">&#39;icrs&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span><span class="n">ind</span> <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])}</span>
+    <span class="k">def</span> <span class="nf">_init_match_vals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fills self.match with default values&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_multi_other&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_multi_other&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="viewcode-block" id="Catalog.ids2inds"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.ids2inds">[docs]</a>    <span class="k">def</span> <span class="nf">ids2inds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the indicies of objects given an id list.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ids: list</span>
+<span class="sd">            List of object ids</span>
+<span class="sd">        missing: None</span>
+<span class="sd">            Value added to position of missing id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">id_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">missing</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">])</span></div>
+<div class="viewcode-block" id="Catalog.remove_multiple_duplicates"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.remove_multiple_duplicates">[docs]</a>    <span class="k">def</span> <span class="nf">remove_multiple_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes duplicates in multiple match columns&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]))</span></div>
+<div class="viewcode-block" id="Catalog.cross_match"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.cross_match">[docs]</a>    <span class="k">def</span> <span class="nf">cross_match</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Makes cross matches, requires unique matches to be done first.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_cross&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">cross_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">]</span><span class="o">==</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_other&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_cross&#39;</span><span class="p">][</span><span class="n">cross_mask</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">][</span><span class="n">cross_mask</span><span class="p">]</span></div>
+<div class="viewcode-block" id="Catalog.get_matching_mask"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.get_matching_mask">[docs]</a>    <span class="k">def</span> <span class="nf">get_matching_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">matching_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_matching_mask_funcs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;matching_type (</span><span class="si">{</span><span class="n">matching_type</span><span class="si">}</span><span class="s1">) must be in </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">_matching_mask_funcs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_matching_mask_funcs</span><span class="p">[</span><span class="n">matching_type</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">_add_ftpt_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftpt</span><span class="p">,</span> <span class="n">maskname</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a mask based on the cluster position relative to a footprint.</span>
+<span class="sd">        It also considers zmax values on the footprint if available.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ftpt: clevar.mask.Footprint object</span>
+<span class="sd">            Footprint</span>
+<span class="sd">        maskname: str</span>
+<span class="sd">            Name of mask to be added</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;ft_</span><span class="si">{</span><span class="n">maskname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ftpt</span><span class="o">.</span><span class="n">zmax_masks_from_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;z&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span> <span class="k">else</span> <span class="mf">1e-10</span><span class="p">)</span>
+<div class="viewcode-block" id="Catalog.add_ftpt_masks"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.add_ftpt_masks">[docs]</a>    <span class="k">def</span> <span class="nf">add_ftpt_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftpt_self</span><span class="p">,</span> <span class="n">ftpt_other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add masks based on the cluster position relative to both footprints.</span>
+<span class="sd">        It also considers zmax values on the footprint if available.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ftpt_self: clevar.mask.Footprint object</span>
+<span class="sd">            Footprint of this catalog</span>
+<span class="sd">        ftpt_other: clevar.mask.Footprint object</span>
+<span class="sd">            Footprint of the other catalog</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_ftpt_mask</span><span class="p">(</span><span class="n">ftpt_self</span><span class="p">,</span> <span class="s1">&#39;self&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_ftpt_mask</span><span class="p">(</span><span class="n">ftpt_other</span><span class="p">,</span> <span class="s1">&#39;other&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Catalog.add_ftpt_coverfrac"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.add_ftpt_coverfrac">[docs]</a>    <span class="k">def</span> <span class="nf">add_ftpt_coverfrac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ftpt</span><span class="p">,</span> <span class="n">aperture</span><span class="p">,</span> <span class="n">aperture_unit</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span>
+        <span class="n">cosmo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes and adds a cover fraction value. It considers zmax and detection fraction</span>
+<span class="sd">        when available in the footprint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ftpt: clevar.mask.Footprint object</span>
+<span class="sd">            Footprint used to compute the coverfration</span>
+<span class="sd">        ftpt_other: clevar.mask.Footprint object</span>
+<span class="sd">            Footprint of the other catalog</span>
+<span class="sd">        raduis: float</span>
+<span class="sd">            Radial aperture to compute the coverfraction</span>
+<span class="sd">        aperture_unit: float</span>
+<span class="sd">            Unit of radial aperture</span>
+<span class="sd">        window: str</span>
+<span class="sd">            Window to weight corverfrac. Options are: flat, nfw2D (with flat core)</span>
+<span class="sd">        cosmo: clevar.Cosmology object</span>
+<span class="sd">            Cosmology object for when aperture has physical units. Required if nfw2D window used.</span>
+<span class="sd">        colname: str, None</span>
+<span class="sd">            Name of coverfrac column.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">aperture</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">aperture</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">6</span> <span class="k">else</span> <span class="n">num</span>
+        <span class="n">window_cfg</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;flat&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;func&#39;</span><span class="p">:</span> <span class="n">ftpt</span><span class="o">.</span><span class="n">_get_coverfrac</span><span class="p">,</span>
+                <span class="s1">&#39;get_args&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">aperture</span><span class="p">,</span> <span class="n">aperture_unit</span><span class="p">],</span>
+                <span class="s1">&#39;colname&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">aperture_unit</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;nfw2D&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;func&#39;</span><span class="p">:</span> <span class="n">ftpt</span><span class="o">.</span><span class="n">_get_coverfrac_nfw2D</span><span class="p">,</span>
+                <span class="s1">&#39;get_args&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s1">&#39;radius&#39;</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span><span class="p">,</span> <span class="n">aperture</span><span class="p">,</span> <span class="n">aperture_unit</span><span class="p">],</span>
+                <span class="s1">&#39;colname&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;nfw_</span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">aperture_unit</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">window_cfg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;window (</span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">) must be either &#39;flat&#39; of &#39;nfw2D&#39;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;cf_</span><span class="si">{</span><span class="n">none_val</span><span class="p">(</span><span class="n">colname</span><span class="p">,</span> <span class="n">window_cfg</span><span class="p">[</span><span class="s1">&#39;colname&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">window_cfg</span><span class="p">[</span><span class="s1">&#39;func&#39;</span><span class="p">](</span><span class="o">*</span><span class="n">window_cfg</span><span class="p">[</span><span class="s1">&#39;get_args&#39;</span><span class="p">](</span><span class="n">c</span><span class="p">),</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span></div>
+<div class="viewcode-block" id="Catalog.save_match"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.save_match">[docs]</a>    <span class="k">def</span> <span class="nf">save_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the matching results of one catalog</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Name of file</span>
+<span class="sd">        overwrite: bool</span>
+<span class="sd">            Overwrite saved files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">()</span>
+        <span class="n">out</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">):</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">):</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;mt_&#39;</span> <span class="ow">and</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">colnames</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;mt_cross&#39;</span><span class="p">]):</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Catalog.load_match"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.load_match">[docs]</a>    <span class="k">def</span> <span class="nf">load_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load matching results to catalogs</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Name of file with matching results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mt</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">mt</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span> <span class="k">if</span> <span class="n">c</span><span class="o">!=</span><span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mt</span><span class="p">[</span><span class="n">col</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">None</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mt</span><span class="p">[</span><span class="n">col</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mt</span><span class="p">[</span><span class="n">col</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">elif</span> <span class="n">col</span><span class="o">!=</span><span class="s1">&#39;id&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">mt</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cross_match</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * Total objects:    </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * multiple (self):  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">veclen</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_multi_self&quot;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * multiple (other): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">veclen</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_multi_other&quot;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * unique (self):    </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_self&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * unique (other):   </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_other&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * cross:            </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="p">[</span><span class="s2">&quot;mt_cross&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Catalog.save_footprint_quantities"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.save_footprint_quantities">[docs]</a>    <span class="k">def</span> <span class="nf">save_footprint_quantities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the matching results of one catalog</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Name of file</span>
+<span class="sd">        overwrite: bool</span>
+<span class="sd">            Overwrite saved files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span> <span class="k">if</span> <span class="n">c</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;ft&#39;</span><span class="p">,</span> <span class="s1">&#39;cf&#39;</span><span class="p">)]]</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Catalog.load_footprint_quantities"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.load_footprint_quantities">[docs]</a>    <span class="k">def</span> <span class="nf">load_footprint_quantities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load matching results to catalogs</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Name of file with matching results</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ftq</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ftq</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span><span class="o">!=</span><span class="s1">&#39;id&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">ftq</span><span class="p">[</span><span class="n">col</span><span class="p">]</span></div></div>
+<div class="viewcode-block" id="ClCatalog"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog">[docs]</a><span class="k">class</span> <span class="nc">ClCatalog</span><span class="p">(</span><span class="n">Catalog</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object to handle cluster catalogs.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: str</span>
+<span class="sd">        ClCatalog name</span>
+<span class="sd">    data: ClData</span>
+<span class="sd">        Main catalog data (ex: id, ra, dec, z). Fixed values.</span>
+<span class="sd">        Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)</span>
+<span class="sd">    mt_input: object</span>
+<span class="sd">        Constains the necessary inputs for the match (added by Match objects)</span>
+<span class="sd">    size: int</span>
+<span class="sd">        Number of objects in the catalog</span>
+<span class="sd">    id_dict: dict</span>
+<span class="sd">        Dictionary of indicies given the cluster id</span>
+<span class="sd">    radius_unit: str, None</span>
+<span class="sd">        Unit of the radius column</span>
+<span class="sd">    labels: dict</span>
+<span class="sd">        Labels of data columns for plots</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">Catalog</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;b&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&lt;/b&gt;&lt;br&gt;Radius unit: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span><span class="si">}</span><span class="s1">&lt;br&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">def</span> <span class="nf">_add_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">columns</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add values for all attributes. If id is not provided, one is created&quot;&quot;&quot;</span>
+        <span class="n">Catalog</span><span class="o">.</span><span class="n">_add_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_match_vals</span><span class="p">()</span></div>
+<div class="viewcode-block" id="MemCatalog"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.MemCatalog">[docs]</a><span class="k">class</span> <span class="nc">MemCatalog</span><span class="p">(</span><span class="n">Catalog</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object to handle member catalogs.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: str</span>
+<span class="sd">        ClCatalog name</span>
+<span class="sd">    data: ClData</span>
+<span class="sd">        Main catalog data (ex: id, id_cluster, pmem). Fixed values.</span>
+<span class="sd">    mt_input: object</span>
+<span class="sd">        Constains the necessary inputs for the match (added by Match objects)</span>
+<span class="sd">    size: int</span>
+<span class="sd">        Number of objects in the catalog</span>
+<span class="sd">    id_dict: dict</span>
+<span class="sd">        Dictionary of indicies given the member id</span>
+<span class="sd">    id_dict_list: dict</span>
+<span class="sd">        Dictionary of indicies given the member id, returns list allowing for repeated ids.</span>
+<span class="sd">    labels: dict</span>
+<span class="sd">        Labels of data columns for plots</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="s1">&#39;id_cluster&#39;</span><span class="o">!=</span><span class="n">n</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Members catalog must have a &#39;id_cluster&#39; column!&quot;</span><span class="p">)</span>
+        <span class="n">Catalog</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;b&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&lt;/b&gt;&lt;br&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">def</span> <span class="nf">_add_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">columns</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add values for all attributes. If id is not provided, one is created&quot;&quot;&quot;</span>
+        <span class="n">Catalog</span><span class="o">.</span><span class="n">_add_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_dict_list</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id_dict_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_dict_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">[])</span><span class="o">+</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

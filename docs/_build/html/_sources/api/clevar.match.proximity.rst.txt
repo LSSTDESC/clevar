@@ -1,0 +1,7 @@
+clevar.match.proximity module
+=============================
+
+.. automodule:: clevar.match.proximity
+   :members:
+   :undoc-members:
+   :show-inheritance:

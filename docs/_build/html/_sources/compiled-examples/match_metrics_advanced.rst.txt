@@ -1,0 +1,2309 @@
+Metrics of matching (advanced)
+==============================
+
+Example of the more functions to plot metrics of matching, using
+non-standard quantities of the catalogs
+
+.. code:: ipython3
+
+    %load_ext autoreload
+    %autoreload 2
+
+.. code:: ipython3
+
+    import numpy as np
+    import pylab as plt
+
+Generate random data and add to catalog
+---------------------------------------
+
+.. code:: ipython3
+
+    # For reproducibility
+    np.random.seed(1)
+
+.. code:: ipython3
+
+    from support import gen_cluster
+    input1, input2 = gen_cluster()
+
+.. code:: ipython3
+
+    from clevar import ClCatalog
+    c1 = ClCatalog('Cat1', ra=input1['RA'], dec=input1['DEC'], z=input1['Z'], mass=input1['MASS'],
+                mass_err=input1['MASS_ERR'], z_err=input1['Z_ERR'])
+    c2 = ClCatalog('Cat2', ra=input2['RA'], dec=input2['DEC'], z=input2['Z'], mass=input2['MASS'],
+                mass_err=input2['MASS_ERR'], z_err=input2['Z_ERR'])
+    # Format for nice display
+    for c in ('ra', 'dec', 'z', 'z_err'):
+        c1[c].info.format = '.2f'
+        c2[c].info.format = '.2f'
+    for c in ('mass', 'mass_err'):
+        c1[c].info.format = '.2e'
+        c2[c].info.format = '.2e'
+
+Match catalogs
+--------------
+
+.. code:: ipython3
+
+    from clevar.match import ProximityMatch
+    from clevar.cosmology import AstroPyCosmology
+    
+    match_config = {
+        'type': 'cross', # options are cross, cat1, cat2
+        'which_radius': 'max', # Case of radius to be used, can be: cat1, cat2, min, max
+        'preference': 'angular_proximity', # options are more_massive, angular_proximity or redshift_proximity
+        'catalog1': {'delta_z':.2,
+                    'match_radius': '1 mpc'
+                    },
+        'catalog2': {'delta_z':.2,
+                    'match_radius': '10 arcsec'
+                    }
+    }
+    
+    cosmo = AstroPyCosmology()
+    mt = ProximityMatch()
+    mt.match_from_config(c1, c2, match_config, cosmo=cosmo)
+
+
+.. parsed-literal::
+
+    
+    ## ClCatalog 1
+    ## Prep mt_cols
+    * zmin|zmax from config value
+    * ang radius from set scale
+    
+    ## ClCatalog 2
+    ## Prep mt_cols
+    * zmin|zmax from config value
+    * ang radius from set scale
+    
+    ## Multiple match (catalog 1)
+    Finding candidates (Cat1)
+    * 400/700 objects matched.
+    
+    ## Multiple match (catalog 2)
+    Finding candidates (Cat2)
+    * 400/700 objects matched.
+    
+    ## Finding unique matches of catalog 1
+    Unique Matches (Cat1)
+    * 400/700 objects matched.
+    
+    ## Finding unique matches of catalog 2
+    Unique Matches (Cat2)
+    * 400/700 objects matched.
+    Cross Matches (Cat1)
+    * 400/700 objects matched.
+    Cross Matches (Cat2)
+    * 400/700 objects matched.
+
+
+Recovery rate
+-------------
+
+Compute recovery rates, in the main functions they are computed in mass
+and redshift bins. Here a more advanced use where different quantities
+can be used. There are several ways they can be displayed: - Single
+panel with multiple lines - Multiple panels - 2D color map
+
+To use this, import the ``ClCatalogFuncs`` package from ``recovery``. It
+contains the functions: - ``plot`` - ``plot_panel`` - ``plot2D``
+
+There functions have the names of the columns as arguments, so you can
+use different columns available in the catalogs.
+
+.. code:: ipython3
+
+    from clevar.match_metrics.recovery import ClCatalogFuncs as r_cf
+
+.. code:: ipython3
+
+    zbins = np.linspace(0, 2, 11)
+    mbins = np.logspace(13, 14, 5)
+
+Simple plot
+~~~~~~~~~~~
+
+The recovery rates are shown as a function of redshift in mass bins.
+They can be displayed as a continuous line or with steps:
+
+.. code:: ipython3
+
+    ax = r_cf.plot(c1, col1='z', col2='mass', bins1=zbins, bins2=mbins,
+            matching_type='cross', legend_format=lambda x: f'10^{{{np.log10(x)}}}')
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_13_0.png
+
+
+They can also be transposed to be shown as a function of mass in
+redshift bins.
+
+.. code:: ipython3
+
+    f, axes = r_cf.plot_panel(c1, col1='z', col2='mass', bins1=zbins, bins2=mbins,
+            matching_type='cross', label_format=lambda x: f'10^{{{np.log10(x)}}}')
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_15_0.png
+
+
+.. code:: ipython3
+
+    f, axes = r_cf.plot2D(c1, col1='z', col2='mass', bins1=zbins, bins2=mbins,
+            matching_type='cross', scale2='log')
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_16_0.png
+
+
+Distances of matching
+---------------------
+
+The main functions in ``distances`` can already be binned along other
+quantities of the catalog and do not require a more advanced use.
+
+Nonetheless it also has a ``ClCatalogFuncs`` package and can be used
+with the same formalism:
+
+.. code:: ipython3
+
+    from clevar.match_metrics.distances import ClCatalogFuncs as d_cf
+
+.. code:: ipython3
+
+    ax = d_cf.central_position(c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees',
+                               col2='z', bins2=zbins[::4])
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_19_0.png
+
+
+.. code:: ipython3
+
+    ax = d_cf.redshift(c1, c2, 'cross', redshift_bins=20,
+                       col2='z', bins2=zbins[::4], normalize='cat1')
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_20_0.png
+
+
+Scaling Relations
+-----------------
+
+Here you will be able to evaluate the scaling relations of any two
+quantities of the matched catalogs. Import the ``ClCatalogFuncs``
+package from ``scaling``, the functions of this package are: - ``plot``:
+Scaling relation of a quantity - ``plot_color``: Scaling relation of a
+quantity with the colors based on a 2nd quantity - ``plot_density``:
+Scaling relation of a quantity with the colors based on density of
+points - ``plot_panel``: Scaling relation of a quantity divided in
+panels based on a 2nd quantity - ``plot_color_panel``: Scaling relation
+of a quantity with the colors based on a 2nd quantity in panels based on
+a 3rd quantity - ``plot_density_panel``: Scaling relation of a quantity
+with the colors based on density of points in panels based on a 2rd
+quantity - ``plot_metrics``: Metrics of quantity scaling relation. -
+``plot_density_metrics``: Scaling relation of a quantity with the colors
+based on density of points with scatter and bias panels - ``plot_dist``:
+Distribution of a quantity, binned by other component in panels, and an
+optional secondary component in lines. - ``plot_dist_self``:
+Distribution of a quantity, binned by the same quantity in panels, with
+option for a second quantity in lines. Is is useful to compare with
+plot_dist results.
+
+take the name of the quantity to be binned:
+
+.. code:: ipython3
+
+    from clevar.match_metrics.scaling import ClCatalogFuncs as s_cf
+
+.. code:: ipython3
+
+    ax = s_cf.plot(c1, c2, 'cross', col='mass', xscale='log', yscale='log', add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    IndexError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in _parseNoCache(self, instring, loc, doActions, callPreParse)
+       1682                 try:
+    -> 1683                     loc, tokens = self.parseImpl(instring, preloc, doActions)
+       1684                 except IndexError:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       2890     def parseImpl(self, instring, loc, doActions=True):
+    -> 2891         if instring[loc] == self.firstMatchChar and instring.startswith(self.match, loc):
+       2892             return loc + self.matchLen, self.match
+
+
+    IndexError: string index out of range
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseException                            Traceback (most recent call last)
+
+    ParseException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseSyntaxException                      Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2608         try:
+    -> 2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseString(self, instring, parseAll)
+       1954                     exc.__traceback__ = self._trim_traceback(exc.__traceback__)
+    -> 1955                 raise exc
+       1956         else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       4064                     pe.__traceback__ = None
+    -> 4065                     raise ParseSyntaxException._from_exception(pe)
+       4066                 except IndexError:
+
+
+    ParseSyntaxException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    The above exception was the direct cause of the following exception:
+
+
+    ValueError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/formatters.py in __call__(self, obj)
+        339                 pass
+        340             else:
+    --> 341                 return printer(obj)
+        342             # Finally look for special method names
+        343             method = get_real_method(obj, self.print_method)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in <lambda>(fig)
+        246 
+        247     if 'png' in formats:
+    --> 248         png_formatter.for_type(Figure, lambda fig: print_figure(fig, 'png', **kwargs))
+        249     if 'retina' in formats or 'png2x' in formats:
+        250         png_formatter.for_type(Figure, lambda fig: retina_figure(fig, **kwargs))
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in print_figure(fig, fmt, bbox_inches, **kwargs)
+        130         FigureCanvasBase(fig)
+        131 
+    --> 132     fig.canvas.print_figure(bytes_io, **kw)
+        133     data = bytes_io.getvalue()
+        134     if fmt == 'svg':
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backend_bases.py in print_figure(self, filename, dpi, facecolor, edgecolor, orientation, format, bbox_inches, pad_inches, bbox_extra_artists, backend, **kwargs)
+       2191                            else suppress())
+       2192                     with ctx:
+    -> 2193                         self.figure.draw(renderer)
+       2194 
+       2195                     bbox_inches = self.figure.get_tightbbox(
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/figure.py in draw(self, renderer)
+       1861 
+       1862             self.patch.draw(renderer)
+    -> 1863             mimage._draw_list_compositing_images(
+       1864                 renderer, self, artists, self.suppressComposite)
+       1865 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/cbook/deprecation.py in wrapper(*inner_args, **inner_kwargs)
+        409                          else deprecation_addendum,
+        410                 **kwargs)
+    --> 411         return func(*inner_args, **inner_kwargs)
+        412 
+        413     return wrapper
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/axes/_base.py in draw(self, renderer, inframe)
+       2745             renderer.stop_rasterizing()
+       2746 
+    -> 2747         mimage._draw_list_compositing_images(renderer, self, artists)
+       2748 
+       2749         renderer.close_group('axes')
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/legend.py in draw(self, renderer)
+        604         # update the location and size of the legend. This needs to
+        605         # be done in any case to clip the figure right.
+    --> 606         bbox = self._legend_box.get_window_extent(renderer)
+        607         self.legendPatch.set_bounds(bbox.x0, bbox.y0, bbox.width, bbox.height)
+        608         self.legendPatch.set_mutation_scale(fontsize)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_window_extent(self, renderer)
+        344     def get_window_extent(self, renderer):
+        345         """Return the bounding box (`.Bbox`) in display space."""
+    --> 346         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        347         px, py = self.get_offset(w, h, xd, yd, renderer)
+        348         return mtransforms.Bbox.from_bounds(px - xd, py - yd, w, h)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        884             "lp", self._text._fontproperties, ismath=False)
+        885 
+    --> 886         bbox, info, d = self._text._get_layout(renderer)
+        887         w, h = bbox.width, bbox.height
+        888 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/text.py in _get_layout(self, renderer)
+        293             clean_line, ismath = self._preprocess_math(line)
+        294             if clean_line:
+    --> 295                 w, h, d = renderer.get_text_width_height_descent(
+        296                     clean_line, self._fontproperties, ismath=ismath)
+        297             else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backends/backend_agg.py in get_text_width_height_descent(self, s, prop, ismath)
+        231         if ismath:
+        232             ox, oy, width, height, descent, fonts, used_characters = \
+    --> 233                 self.mathtext_parser.parse(s, self.dpi, prop)
+        234             return width, height, descent
+        235 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, dpi, prop)
+       3330         # mathtext.fontset rcParams also affect the parse (e.g. by affecting
+       3331         # the glyph metrics).
+    -> 3332         return self._parse_cached(
+       3333             s, dpi, prop, rcParams['ps.useafm'], rcParams['mathtext.fontset'])
+       3334 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in _parse_cached(self, s, dpi, prop, ps_useafm, fontset)
+       3354             self.__class__._parser = Parser()
+       3355 
+    -> 3356         box = self._parser.parse(s, font_output, fontsize, dpi)
+       3357         font_output.set_canvas_size(box.width, box.height, box.depth)
+       3358         return font_output.get_results(box)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+    -> 2611             raise ValueError("\n".join(["",
+       2612                                         err.line,
+       2613                                         " " * (err.column - 1) + "^",
+
+
+    ValueError: 
+    \left<
+          ^
+    Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+
+
+.. parsed-literal::
+
+    <Figure size 432x288 with 1 Axes>
+
+
+.. code:: ipython3
+
+    ax = s_cf.plot_color(c1, c2, 'cross', col='mass', xscale='log', yscale='log',
+                         col_color='mass', color_log=True, add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    IndexError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in _parseNoCache(self, instring, loc, doActions, callPreParse)
+       1682                 try:
+    -> 1683                     loc, tokens = self.parseImpl(instring, preloc, doActions)
+       1684                 except IndexError:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       2890     def parseImpl(self, instring, loc, doActions=True):
+    -> 2891         if instring[loc] == self.firstMatchChar and instring.startswith(self.match, loc):
+       2892             return loc + self.matchLen, self.match
+
+
+    IndexError: string index out of range
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseException                            Traceback (most recent call last)
+
+    ParseException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseSyntaxException                      Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2608         try:
+    -> 2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseString(self, instring, parseAll)
+       1954                     exc.__traceback__ = self._trim_traceback(exc.__traceback__)
+    -> 1955                 raise exc
+       1956         else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       4064                     pe.__traceback__ = None
+    -> 4065                     raise ParseSyntaxException._from_exception(pe)
+       4066                 except IndexError:
+
+
+    ParseSyntaxException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    The above exception was the direct cause of the following exception:
+
+
+    ValueError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/formatters.py in __call__(self, obj)
+        339                 pass
+        340             else:
+    --> 341                 return printer(obj)
+        342             # Finally look for special method names
+        343             method = get_real_method(obj, self.print_method)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in <lambda>(fig)
+        246 
+        247     if 'png' in formats:
+    --> 248         png_formatter.for_type(Figure, lambda fig: print_figure(fig, 'png', **kwargs))
+        249     if 'retina' in formats or 'png2x' in formats:
+        250         png_formatter.for_type(Figure, lambda fig: retina_figure(fig, **kwargs))
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in print_figure(fig, fmt, bbox_inches, **kwargs)
+        130         FigureCanvasBase(fig)
+        131 
+    --> 132     fig.canvas.print_figure(bytes_io, **kw)
+        133     data = bytes_io.getvalue()
+        134     if fmt == 'svg':
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backend_bases.py in print_figure(self, filename, dpi, facecolor, edgecolor, orientation, format, bbox_inches, pad_inches, bbox_extra_artists, backend, **kwargs)
+       2191                            else suppress())
+       2192                     with ctx:
+    -> 2193                         self.figure.draw(renderer)
+       2194 
+       2195                     bbox_inches = self.figure.get_tightbbox(
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/figure.py in draw(self, renderer)
+       1861 
+       1862             self.patch.draw(renderer)
+    -> 1863             mimage._draw_list_compositing_images(
+       1864                 renderer, self, artists, self.suppressComposite)
+       1865 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/cbook/deprecation.py in wrapper(*inner_args, **inner_kwargs)
+        409                          else deprecation_addendum,
+        410                 **kwargs)
+    --> 411         return func(*inner_args, **inner_kwargs)
+        412 
+        413     return wrapper
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/axes/_base.py in draw(self, renderer, inframe)
+       2745             renderer.stop_rasterizing()
+       2746 
+    -> 2747         mimage._draw_list_compositing_images(renderer, self, artists)
+       2748 
+       2749         renderer.close_group('axes')
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/legend.py in draw(self, renderer)
+        604         # update the location and size of the legend. This needs to
+        605         # be done in any case to clip the figure right.
+    --> 606         bbox = self._legend_box.get_window_extent(renderer)
+        607         self.legendPatch.set_bounds(bbox.x0, bbox.y0, bbox.width, bbox.height)
+        608         self.legendPatch.set_mutation_scale(fontsize)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_window_extent(self, renderer)
+        344     def get_window_extent(self, renderer):
+        345         """Return the bounding box (`.Bbox`) in display space."""
+    --> 346         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        347         px, py = self.get_offset(w, h, xd, yd, renderer)
+        348         return mtransforms.Bbox.from_bounds(px - xd, py - yd, w, h)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        884             "lp", self._text._fontproperties, ismath=False)
+        885 
+    --> 886         bbox, info, d = self._text._get_layout(renderer)
+        887         w, h = bbox.width, bbox.height
+        888 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/text.py in _get_layout(self, renderer)
+        293             clean_line, ismath = self._preprocess_math(line)
+        294             if clean_line:
+    --> 295                 w, h, d = renderer.get_text_width_height_descent(
+        296                     clean_line, self._fontproperties, ismath=ismath)
+        297             else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backends/backend_agg.py in get_text_width_height_descent(self, s, prop, ismath)
+        231         if ismath:
+        232             ox, oy, width, height, descent, fonts, used_characters = \
+    --> 233                 self.mathtext_parser.parse(s, self.dpi, prop)
+        234             return width, height, descent
+        235 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, dpi, prop)
+       3330         # mathtext.fontset rcParams also affect the parse (e.g. by affecting
+       3331         # the glyph metrics).
+    -> 3332         return self._parse_cached(
+       3333             s, dpi, prop, rcParams['ps.useafm'], rcParams['mathtext.fontset'])
+       3334 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in _parse_cached(self, s, dpi, prop, ps_useafm, fontset)
+       3354             self.__class__._parser = Parser()
+       3355 
+    -> 3356         box = self._parser.parse(s, font_output, fontsize, dpi)
+       3357         font_output.set_canvas_size(box.width, box.height, box.depth)
+       3358         return font_output.get_results(box)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+    -> 2611             raise ValueError("\n".join(["",
+       2612                                         err.line,
+       2613                                         " " * (err.column - 1) + "^",
+
+
+    ValueError: 
+    \left<
+          ^
+    Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+
+
+.. parsed-literal::
+
+    <Figure size 432x288 with 2 Axes>
+
+
+.. code:: ipython3
+
+    ax = s_cf.plot_density(c1, c2, 'cross', col='mass', xscale='log', yscale='log', add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    IndexError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in _parseNoCache(self, instring, loc, doActions, callPreParse)
+       1682                 try:
+    -> 1683                     loc, tokens = self.parseImpl(instring, preloc, doActions)
+       1684                 except IndexError:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       2890     def parseImpl(self, instring, loc, doActions=True):
+    -> 2891         if instring[loc] == self.firstMatchChar and instring.startswith(self.match, loc):
+       2892             return loc + self.matchLen, self.match
+
+
+    IndexError: string index out of range
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseException                            Traceback (most recent call last)
+
+    ParseException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseSyntaxException                      Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2608         try:
+    -> 2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseString(self, instring, parseAll)
+       1954                     exc.__traceback__ = self._trim_traceback(exc.__traceback__)
+    -> 1955                 raise exc
+       1956         else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       4064                     pe.__traceback__ = None
+    -> 4065                     raise ParseSyntaxException._from_exception(pe)
+       4066                 except IndexError:
+
+
+    ParseSyntaxException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    The above exception was the direct cause of the following exception:
+
+
+    ValueError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/formatters.py in __call__(self, obj)
+        339                 pass
+        340             else:
+    --> 341                 return printer(obj)
+        342             # Finally look for special method names
+        343             method = get_real_method(obj, self.print_method)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in <lambda>(fig)
+        246 
+        247     if 'png' in formats:
+    --> 248         png_formatter.for_type(Figure, lambda fig: print_figure(fig, 'png', **kwargs))
+        249     if 'retina' in formats or 'png2x' in formats:
+        250         png_formatter.for_type(Figure, lambda fig: retina_figure(fig, **kwargs))
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in print_figure(fig, fmt, bbox_inches, **kwargs)
+        130         FigureCanvasBase(fig)
+        131 
+    --> 132     fig.canvas.print_figure(bytes_io, **kw)
+        133     data = bytes_io.getvalue()
+        134     if fmt == 'svg':
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backend_bases.py in print_figure(self, filename, dpi, facecolor, edgecolor, orientation, format, bbox_inches, pad_inches, bbox_extra_artists, backend, **kwargs)
+       2191                            else suppress())
+       2192                     with ctx:
+    -> 2193                         self.figure.draw(renderer)
+       2194 
+       2195                     bbox_inches = self.figure.get_tightbbox(
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/figure.py in draw(self, renderer)
+       1861 
+       1862             self.patch.draw(renderer)
+    -> 1863             mimage._draw_list_compositing_images(
+       1864                 renderer, self, artists, self.suppressComposite)
+       1865 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/cbook/deprecation.py in wrapper(*inner_args, **inner_kwargs)
+        409                          else deprecation_addendum,
+        410                 **kwargs)
+    --> 411         return func(*inner_args, **inner_kwargs)
+        412 
+        413     return wrapper
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/axes/_base.py in draw(self, renderer, inframe)
+       2745             renderer.stop_rasterizing()
+       2746 
+    -> 2747         mimage._draw_list_compositing_images(renderer, self, artists)
+       2748 
+       2749         renderer.close_group('axes')
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/legend.py in draw(self, renderer)
+        604         # update the location and size of the legend. This needs to
+        605         # be done in any case to clip the figure right.
+    --> 606         bbox = self._legend_box.get_window_extent(renderer)
+        607         self.legendPatch.set_bounds(bbox.x0, bbox.y0, bbox.width, bbox.height)
+        608         self.legendPatch.set_mutation_scale(fontsize)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_window_extent(self, renderer)
+        344     def get_window_extent(self, renderer):
+        345         """Return the bounding box (`.Bbox`) in display space."""
+    --> 346         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        347         px, py = self.get_offset(w, h, xd, yd, renderer)
+        348         return mtransforms.Bbox.from_bounds(px - xd, py - yd, w, h)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        884             "lp", self._text._fontproperties, ismath=False)
+        885 
+    --> 886         bbox, info, d = self._text._get_layout(renderer)
+        887         w, h = bbox.width, bbox.height
+        888 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/text.py in _get_layout(self, renderer)
+        293             clean_line, ismath = self._preprocess_math(line)
+        294             if clean_line:
+    --> 295                 w, h, d = renderer.get_text_width_height_descent(
+        296                     clean_line, self._fontproperties, ismath=ismath)
+        297             else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backends/backend_agg.py in get_text_width_height_descent(self, s, prop, ismath)
+        231         if ismath:
+        232             ox, oy, width, height, descent, fonts, used_characters = \
+    --> 233                 self.mathtext_parser.parse(s, self.dpi, prop)
+        234             return width, height, descent
+        235 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, dpi, prop)
+       3330         # mathtext.fontset rcParams also affect the parse (e.g. by affecting
+       3331         # the glyph metrics).
+    -> 3332         return self._parse_cached(
+       3333             s, dpi, prop, rcParams['ps.useafm'], rcParams['mathtext.fontset'])
+       3334 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in _parse_cached(self, s, dpi, prop, ps_useafm, fontset)
+       3354             self.__class__._parser = Parser()
+       3355 
+    -> 3356         box = self._parser.parse(s, font_output, fontsize, dpi)
+       3357         font_output.set_canvas_size(box.width, box.height, box.depth)
+       3358         return font_output.get_results(box)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+    -> 2611             raise ValueError("\n".join(["",
+       2612                                         err.line,
+       2613                                         " " * (err.column - 1) + "^",
+
+
+    ValueError: 
+    \left<
+          ^
+    Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+
+
+.. parsed-literal::
+
+    <Figure size 432x288 with 2 Axes>
+
+
+.. code:: ipython3
+
+    f, axes = s_cf.plot_panel(c1, c2, 'cross', col='mass', xscale='log', yscale='log',
+                             col_panel='z', bins_panel=zbins[::2], add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    IndexError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in _parseNoCache(self, instring, loc, doActions, callPreParse)
+       1682                 try:
+    -> 1683                     loc, tokens = self.parseImpl(instring, preloc, doActions)
+       1684                 except IndexError:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       2890     def parseImpl(self, instring, loc, doActions=True):
+    -> 2891         if instring[loc] == self.firstMatchChar and instring.startswith(self.match, loc):
+       2892             return loc + self.matchLen, self.match
+
+
+    IndexError: string index out of range
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseException                            Traceback (most recent call last)
+
+    ParseException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseSyntaxException                      Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2608         try:
+    -> 2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseString(self, instring, parseAll)
+       1954                     exc.__traceback__ = self._trim_traceback(exc.__traceback__)
+    -> 1955                 raise exc
+       1956         else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       4064                     pe.__traceback__ = None
+    -> 4065                     raise ParseSyntaxException._from_exception(pe)
+       4066                 except IndexError:
+
+
+    ParseSyntaxException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    The above exception was the direct cause of the following exception:
+
+
+    ValueError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/formatters.py in __call__(self, obj)
+        339                 pass
+        340             else:
+    --> 341                 return printer(obj)
+        342             # Finally look for special method names
+        343             method = get_real_method(obj, self.print_method)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in <lambda>(fig)
+        246 
+        247     if 'png' in formats:
+    --> 248         png_formatter.for_type(Figure, lambda fig: print_figure(fig, 'png', **kwargs))
+        249     if 'retina' in formats or 'png2x' in formats:
+        250         png_formatter.for_type(Figure, lambda fig: retina_figure(fig, **kwargs))
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in print_figure(fig, fmt, bbox_inches, **kwargs)
+        130         FigureCanvasBase(fig)
+        131 
+    --> 132     fig.canvas.print_figure(bytes_io, **kw)
+        133     data = bytes_io.getvalue()
+        134     if fmt == 'svg':
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backend_bases.py in print_figure(self, filename, dpi, facecolor, edgecolor, orientation, format, bbox_inches, pad_inches, bbox_extra_artists, backend, **kwargs)
+       2191                            else suppress())
+       2192                     with ctx:
+    -> 2193                         self.figure.draw(renderer)
+       2194 
+       2195                     bbox_inches = self.figure.get_tightbbox(
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/figure.py in draw(self, renderer)
+       1861 
+       1862             self.patch.draw(renderer)
+    -> 1863             mimage._draw_list_compositing_images(
+       1864                 renderer, self, artists, self.suppressComposite)
+       1865 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/cbook/deprecation.py in wrapper(*inner_args, **inner_kwargs)
+        409                          else deprecation_addendum,
+        410                 **kwargs)
+    --> 411         return func(*inner_args, **inner_kwargs)
+        412 
+        413     return wrapper
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/axes/_base.py in draw(self, renderer, inframe)
+       2745             renderer.stop_rasterizing()
+       2746 
+    -> 2747         mimage._draw_list_compositing_images(renderer, self, artists)
+       2748 
+       2749         renderer.close_group('axes')
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/legend.py in draw(self, renderer)
+        604         # update the location and size of the legend. This needs to
+        605         # be done in any case to clip the figure right.
+    --> 606         bbox = self._legend_box.get_window_extent(renderer)
+        607         self.legendPatch.set_bounds(bbox.x0, bbox.y0, bbox.width, bbox.height)
+        608         self.legendPatch.set_mutation_scale(fontsize)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_window_extent(self, renderer)
+        344     def get_window_extent(self, renderer):
+        345         """Return the bounding box (`.Bbox`) in display space."""
+    --> 346         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        347         px, py = self.get_offset(w, h, xd, yd, renderer)
+        348         return mtransforms.Bbox.from_bounds(px - xd, py - yd, w, h)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        884             "lp", self._text._fontproperties, ismath=False)
+        885 
+    --> 886         bbox, info, d = self._text._get_layout(renderer)
+        887         w, h = bbox.width, bbox.height
+        888 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/text.py in _get_layout(self, renderer)
+        293             clean_line, ismath = self._preprocess_math(line)
+        294             if clean_line:
+    --> 295                 w, h, d = renderer.get_text_width_height_descent(
+        296                     clean_line, self._fontproperties, ismath=ismath)
+        297             else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backends/backend_agg.py in get_text_width_height_descent(self, s, prop, ismath)
+        231         if ismath:
+        232             ox, oy, width, height, descent, fonts, used_characters = \
+    --> 233                 self.mathtext_parser.parse(s, self.dpi, prop)
+        234             return width, height, descent
+        235 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, dpi, prop)
+       3330         # mathtext.fontset rcParams also affect the parse (e.g. by affecting
+       3331         # the glyph metrics).
+    -> 3332         return self._parse_cached(
+       3333             s, dpi, prop, rcParams['ps.useafm'], rcParams['mathtext.fontset'])
+       3334 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in _parse_cached(self, s, dpi, prop, ps_useafm, fontset)
+       3354             self.__class__._parser = Parser()
+       3355 
+    -> 3356         box = self._parser.parse(s, font_output, fontsize, dpi)
+       3357         font_output.set_canvas_size(box.width, box.height, box.depth)
+       3358         return font_output.get_results(box)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+    -> 2611             raise ValueError("\n".join(["",
+       2612                                         err.line,
+       2613                                         " " * (err.column - 1) + "^",
+
+
+    ValueError: 
+    \left<
+          ^
+    Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+
+
+.. parsed-literal::
+
+    <Figure size 576x432 with 11 Axes>
+
+
+.. code:: ipython3
+
+    f, axes = s_cf.plot_color_panel(c1, c2, 'cross', col='mass', xscale='log', yscale='log',
+                             col_panel='z', bins_panel=zbins[::2],
+                             col_color='z', add_fit=True, fit_bins1=20)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    IndexError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in _parseNoCache(self, instring, loc, doActions, callPreParse)
+       1682                 try:
+    -> 1683                     loc, tokens = self.parseImpl(instring, preloc, doActions)
+       1684                 except IndexError:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       2890     def parseImpl(self, instring, loc, doActions=True):
+    -> 2891         if instring[loc] == self.firstMatchChar and instring.startswith(self.match, loc):
+       2892             return loc + self.matchLen, self.match
+
+
+    IndexError: string index out of range
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseException                            Traceback (most recent call last)
+
+    ParseException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseSyntaxException                      Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2608         try:
+    -> 2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseString(self, instring, parseAll)
+       1954                     exc.__traceback__ = self._trim_traceback(exc.__traceback__)
+    -> 1955                 raise exc
+       1956         else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       4064                     pe.__traceback__ = None
+    -> 4065                     raise ParseSyntaxException._from_exception(pe)
+       4066                 except IndexError:
+
+
+    ParseSyntaxException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    The above exception was the direct cause of the following exception:
+
+
+    ValueError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/formatters.py in __call__(self, obj)
+        339                 pass
+        340             else:
+    --> 341                 return printer(obj)
+        342             # Finally look for special method names
+        343             method = get_real_method(obj, self.print_method)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in <lambda>(fig)
+        246 
+        247     if 'png' in formats:
+    --> 248         png_formatter.for_type(Figure, lambda fig: print_figure(fig, 'png', **kwargs))
+        249     if 'retina' in formats or 'png2x' in formats:
+        250         png_formatter.for_type(Figure, lambda fig: retina_figure(fig, **kwargs))
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in print_figure(fig, fmt, bbox_inches, **kwargs)
+        130         FigureCanvasBase(fig)
+        131 
+    --> 132     fig.canvas.print_figure(bytes_io, **kw)
+        133     data = bytes_io.getvalue()
+        134     if fmt == 'svg':
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backend_bases.py in print_figure(self, filename, dpi, facecolor, edgecolor, orientation, format, bbox_inches, pad_inches, bbox_extra_artists, backend, **kwargs)
+       2191                            else suppress())
+       2192                     with ctx:
+    -> 2193                         self.figure.draw(renderer)
+       2194 
+       2195                     bbox_inches = self.figure.get_tightbbox(
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/figure.py in draw(self, renderer)
+       1861 
+       1862             self.patch.draw(renderer)
+    -> 1863             mimage._draw_list_compositing_images(
+       1864                 renderer, self, artists, self.suppressComposite)
+       1865 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/cbook/deprecation.py in wrapper(*inner_args, **inner_kwargs)
+        409                          else deprecation_addendum,
+        410                 **kwargs)
+    --> 411         return func(*inner_args, **inner_kwargs)
+        412 
+        413     return wrapper
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/axes/_base.py in draw(self, renderer, inframe)
+       2745             renderer.stop_rasterizing()
+       2746 
+    -> 2747         mimage._draw_list_compositing_images(renderer, self, artists)
+       2748 
+       2749         renderer.close_group('axes')
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/legend.py in draw(self, renderer)
+        604         # update the location and size of the legend. This needs to
+        605         # be done in any case to clip the figure right.
+    --> 606         bbox = self._legend_box.get_window_extent(renderer)
+        607         self.legendPatch.set_bounds(bbox.x0, bbox.y0, bbox.width, bbox.height)
+        608         self.legendPatch.set_mutation_scale(fontsize)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_window_extent(self, renderer)
+        344     def get_window_extent(self, renderer):
+        345         """Return the bounding box (`.Bbox`) in display space."""
+    --> 346         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        347         px, py = self.get_offset(w, h, xd, yd, renderer)
+        348         return mtransforms.Bbox.from_bounds(px - xd, py - yd, w, h)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        884             "lp", self._text._fontproperties, ismath=False)
+        885 
+    --> 886         bbox, info, d = self._text._get_layout(renderer)
+        887         w, h = bbox.width, bbox.height
+        888 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/text.py in _get_layout(self, renderer)
+        293             clean_line, ismath = self._preprocess_math(line)
+        294             if clean_line:
+    --> 295                 w, h, d = renderer.get_text_width_height_descent(
+        296                     clean_line, self._fontproperties, ismath=ismath)
+        297             else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backends/backend_agg.py in get_text_width_height_descent(self, s, prop, ismath)
+        231         if ismath:
+        232             ox, oy, width, height, descent, fonts, used_characters = \
+    --> 233                 self.mathtext_parser.parse(s, self.dpi, prop)
+        234             return width, height, descent
+        235 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, dpi, prop)
+       3330         # mathtext.fontset rcParams also affect the parse (e.g. by affecting
+       3331         # the glyph metrics).
+    -> 3332         return self._parse_cached(
+       3333             s, dpi, prop, rcParams['ps.useafm'], rcParams['mathtext.fontset'])
+       3334 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in _parse_cached(self, s, dpi, prop, ps_useafm, fontset)
+       3354             self.__class__._parser = Parser()
+       3355 
+    -> 3356         box = self._parser.parse(s, font_output, fontsize, dpi)
+       3357         font_output.set_canvas_size(box.width, box.height, box.depth)
+       3358         return font_output.get_results(box)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+    -> 2611             raise ValueError("\n".join(["",
+       2612                                         err.line,
+       2613                                         " " * (err.column - 1) + "^",
+
+
+    ValueError: 
+    \left<
+          ^
+    Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+
+
+.. parsed-literal::
+
+    <Figure size 576x432 with 16 Axes>
+
+
+.. code:: ipython3
+
+    f, axes = s_cf.plot_density_panel(c1, c2, 'cross', col='mass', xscale='log', yscale='log',
+                             col_panel='z', bins_panel=zbins[::2], add_fit=True, fit_bins1=20,
+                                     add_err=False)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/scipy/optimize/minpack.py:828: OptimizeWarning: Covariance of the parameters could not be estimated
+      warnings.warn('Covariance of the parameters could not be estimated',
+
+
+::
+
+
+    ---------------------------------------------------------------------------
+
+    IndexError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in _parseNoCache(self, instring, loc, doActions, callPreParse)
+       1682                 try:
+    -> 1683                     loc, tokens = self.parseImpl(instring, preloc, doActions)
+       1684                 except IndexError:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       2890     def parseImpl(self, instring, loc, doActions=True):
+    -> 2891         if instring[loc] == self.firstMatchChar and instring.startswith(self.match, loc):
+       2892             return loc + self.matchLen, self.match
+
+
+    IndexError: string index out of range
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseException                            Traceback (most recent call last)
+
+    ParseException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    During handling of the above exception, another exception occurred:
+
+
+    ParseSyntaxException                      Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2608         try:
+    -> 2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseString(self, instring, parseAll)
+       1954                     exc.__traceback__ = self._trim_traceback(exc.__traceback__)
+    -> 1955                 raise exc
+       1956         else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/pyparsing.py in parseImpl(self, instring, loc, doActions)
+       4064                     pe.__traceback__ = None
+    -> 4065                     raise ParseSyntaxException._from_exception(pe)
+       4066                 except IndexError:
+
+
+    ParseSyntaxException: Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+    
+    The above exception was the direct cause of the following exception:
+
+
+    ValueError                                Traceback (most recent call last)
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/formatters.py in __call__(self, obj)
+        339                 pass
+        340             else:
+    --> 341                 return printer(obj)
+        342             # Finally look for special method names
+        343             method = get_real_method(obj, self.print_method)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in <lambda>(fig)
+        246 
+        247     if 'png' in formats:
+    --> 248         png_formatter.for_type(Figure, lambda fig: print_figure(fig, 'png', **kwargs))
+        249     if 'retina' in formats or 'png2x' in formats:
+        250         png_formatter.for_type(Figure, lambda fig: retina_figure(fig, **kwargs))
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/IPython/core/pylabtools.py in print_figure(fig, fmt, bbox_inches, **kwargs)
+        130         FigureCanvasBase(fig)
+        131 
+    --> 132     fig.canvas.print_figure(bytes_io, **kw)
+        133     data = bytes_io.getvalue()
+        134     if fmt == 'svg':
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backend_bases.py in print_figure(self, filename, dpi, facecolor, edgecolor, orientation, format, bbox_inches, pad_inches, bbox_extra_artists, backend, **kwargs)
+       2191                            else suppress())
+       2192                     with ctx:
+    -> 2193                         self.figure.draw(renderer)
+       2194 
+       2195                     bbox_inches = self.figure.get_tightbbox(
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/figure.py in draw(self, renderer)
+       1861 
+       1862             self.patch.draw(renderer)
+    -> 1863             mimage._draw_list_compositing_images(
+       1864                 renderer, self, artists, self.suppressComposite)
+       1865 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/cbook/deprecation.py in wrapper(*inner_args, **inner_kwargs)
+        409                          else deprecation_addendum,
+        410                 **kwargs)
+    --> 411         return func(*inner_args, **inner_kwargs)
+        412 
+        413     return wrapper
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/axes/_base.py in draw(self, renderer, inframe)
+       2745             renderer.stop_rasterizing()
+       2746 
+    -> 2747         mimage._draw_list_compositing_images(renderer, self, artists)
+       2748 
+       2749         renderer.close_group('axes')
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/image.py in _draw_list_compositing_images(renderer, parent, artists, suppress_composite)
+        129     if not_composite or not has_images:
+        130         for a in artists:
+    --> 131             a.draw(renderer)
+        132     else:
+        133         # Composite any adjacent images together
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/artist.py in draw_wrapper(artist, renderer, *args, **kwargs)
+         39                 renderer.start_filter()
+         40 
+    ---> 41             return draw(artist, renderer, *args, **kwargs)
+         42         finally:
+         43             if artist.get_agg_filter() is not None:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/legend.py in draw(self, renderer)
+        604         # update the location and size of the legend. This needs to
+        605         # be done in any case to clip the figure right.
+    --> 606         bbox = self._legend_box.get_window_extent(renderer)
+        607         self.legendPatch.set_bounds(bbox.x0, bbox.y0, bbox.width, bbox.height)
+        608         self.legendPatch.set_mutation_scale(fontsize)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_window_extent(self, renderer)
+        344     def get_window_extent(self, renderer):
+        345         """Return the bounding box (`.Bbox`) in display space."""
+    --> 346         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        347         px, py = self.get_offset(w, h, xd, yd, renderer)
+        348         return mtransforms.Bbox.from_bounds(px - xd, py - yd, w, h)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        469                     c.set_width(self.width)
+        470 
+    --> 471         whd_list = [c.get_extent(renderer)
+        472                     for c in self.get_visible_children()]
+        473         whd_list = [(w, h, xd, (h - yd)) for w, h, xd, yd in whd_list]
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        339     def get_extent(self, renderer):
+        340         """Return a tuple ``width, height, xdescent, ydescent`` of the box."""
+    --> 341         w, h, xd, yd, offsets = self.get_extent_offsets(renderer)
+        342         return w, h, xd, yd
+        343 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent_offsets(self, renderer)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in <listcomp>(.0)
+        542         sep = self.sep * dpicor
+        543 
+    --> 544         whd_list = [c.get_extent(renderer)
+        545                     for c in self.get_visible_children()]
+        546 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/offsetbox.py in get_extent(self, renderer)
+        884             "lp", self._text._fontproperties, ismath=False)
+        885 
+    --> 886         bbox, info, d = self._text._get_layout(renderer)
+        887         w, h = bbox.width, bbox.height
+        888 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/text.py in _get_layout(self, renderer)
+        293             clean_line, ismath = self._preprocess_math(line)
+        294             if clean_line:
+    --> 295                 w, h, d = renderer.get_text_width_height_descent(
+        296                     clean_line, self._fontproperties, ismath=ismath)
+        297             else:
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/backends/backend_agg.py in get_text_width_height_descent(self, s, prop, ismath)
+        231         if ismath:
+        232             ox, oy, width, height, descent, fonts, used_characters = \
+    --> 233                 self.mathtext_parser.parse(s, self.dpi, prop)
+        234             return width, height, descent
+        235 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, dpi, prop)
+       3330         # mathtext.fontset rcParams also affect the parse (e.g. by affecting
+       3331         # the glyph metrics).
+    -> 3332         return self._parse_cached(
+       3333             s, dpi, prop, rcParams['ps.useafm'], rcParams['mathtext.fontset'])
+       3334 
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in _parse_cached(self, s, dpi, prop, ps_useafm, fontset)
+       3354             self.__class__._parser = Parser()
+       3355 
+    -> 3356         box = self._parser.parse(s, font_output, fontsize, dpi)
+       3357         font_output.set_canvas_size(box.width, box.height, box.depth)
+       3358         return font_output.get_results(box)
+
+
+    ~/miniconda3/envs/clmmenv/lib/python3.9/site-packages/matplotlib/mathtext.py in parse(self, s, fonts_object, fontsize, dpi)
+       2609             result = self._expression.parseString(s)
+       2610         except ParseBaseException as err:
+    -> 2611             raise ValueError("\n".join(["",
+       2612                                         err.line,
+       2613                                         " " * (err.column - 1) + "^",
+
+
+    ValueError: 
+    \left<
+          ^
+    Expected "\right", found end of text  (at char 6), (line:1, col:7)
+
+
+
+.. parsed-literal::
+
+    <Figure size 576x432 with 16 Axes>
+
+
+.. code:: ipython3
+
+    f, axes = s_cf.plot_metrics(c1, c2, 'cross', col='z', label1='z1')
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_29_0.png
+
+
+.. code:: ipython3
+
+    f, axes = s_cf.plot_density_metrics(c1, c2, 'cross', col='z')
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_30_0.png
+
+
+.. code:: ipython3
+
+    f, axes = s_cf.plot_density_metrics(c1, c2, 'cross', col='mass', metrics_mode='log', 
+                                       scale1='log', scale2='log')
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_31_0.png
+
+
+.. code:: ipython3
+
+    %%time
+    zbins2 = np.linspace(0, 1.2, 7)[1:]
+    rbins2 = [1, 5.5, 25, 50, c2['mass'].max()]
+    bins1 = 10**np.histogram(np.log10(c1['mass']), 20)[1]
+    s_cf.plot_dist(c1, c2, 'cross', 'mass', 
+                  bins1=21, bins2=[10**13.0, 10**13.2, 10**13.5, 1e14, 1e15],
+                  col_aux='z', bins_aux=4, shape='line',
+                  log_vals=True, fig_kwargs={'figsize':(15, 6)})
+
+
+.. parsed-literal::
+
+    CPU times: user 160 ms, sys: 163 ms, total: 323 ms
+    Wall time: 134 ms
+
+
+
+
+.. parsed-literal::
+
+    (<Figure size 1080x432 with 8 Axes>,
+     array([[<AxesSubplot:>, <AxesSubplot:>],
+            [<AxesSubplot:xlabel='$mass_{Cat1}$'>,
+             <AxesSubplot:xlabel='$mass_{Cat1}$'>]], dtype=object))
+
+
+
+
+.. image:: match_metrics_advanced_files/match_metrics_advanced_32_2.png
+

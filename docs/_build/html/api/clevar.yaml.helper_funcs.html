@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.yaml.helper_funcs module &mdash; ClEvaR 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="clevar.yaml.match module" href="clevar.yaml.match.html" />
+    <link rel="prev" title="clevar.yaml.footprint module" href="clevar.yaml.footprint.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/footprint.html">Footprint functionality</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="clevar.yaml.html">clevar.yaml package</a> &raquo;</li>
+        
+      <li>clevar.yaml.helper_funcs module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/clevar.yaml.helper_funcs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-clevar.yaml.helper_funcs">
+<span id="clevar-yaml-helper-funcs-module"></span><h1>clevar.yaml.helper_funcs module<a class="headerlink" href="#module-clevar.yaml.helper_funcs" title="Permalink to this headline">¶</a></h1>
+<p>&#64;file yaml/helper_funcs.py
+Helper functions for command line execution</p>
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.add_dicts_diff">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">add_dicts_diff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict1</span></em>, <em class="sig-param"><span class="n">dict2</span></em>, <em class="sig-param"><span class="n">pref</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">diff_lines</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#add_dicts_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.add_dicts_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the differences between dictionaries to a list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dict1</strong> (<em>dict</em>) – Dictionaies to be compared</p></li>
+<li><p><strong>dict2</strong> (<em>dict</em>) – Dictionaies to be compared</p></li>
+<li><p><strong>pref</strong> (<em>str</em>) – Prefix to be added in output</p></li>
+<li><p><strong>diff_lines</strong> (<em>list</em>) – List where differences will be appended to</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.deep_update">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">deep_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_base</span></em>, <em class="sig-param"><span class="n">dict_update</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#deep_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.deep_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update a multi-layer dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dict_base</strong> (<em>dict</em>) – Dictionary to be updated</p></li>
+<li><p><strong>dict_update</strong> (<em>dict</em>) – Dictionary with the updates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>dict_base</strong> – Updated dictionary (the input dict is also updated)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.get_dicts_diff">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">get_dicts_diff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict1</span></em>, <em class="sig-param"><span class="n">dict2</span></em>, <em class="sig-param"><span class="n">keys</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">header</span><span class="o">=</span><span class="default_value">['Name', 'dict1', 'dict2']</span></em>, <em class="sig-param"><span class="n">msg</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#get_dicts_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.get_dicts_diff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the differences between dictionaries, accounting for nested dictionaries.
+If there are differences, a table with the information is printed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dict1</strong> (<em>dict</em>) – Dictionaries to be compared</p></li>
+<li><p><strong>dict2</strong> (<em>dict</em>) – Dictionaries to be compared</p></li>
+<li><p><strong>keys</strong> (<em>list</em><em>, </em><em>None</em>) – List of keys to be compared. If None, all keys are compared</p></li>
+<li><p><strong>header</strong> (<em>str</em>) – Header for differences table</p></li>
+<li><p><strong>msg</strong> (<em>str</em>) – Message printed before the differences</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of dictionaries differences</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>diff_lines</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.get_input_loop">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">get_input_loop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">options_msg</span></em>, <em class="sig-param"><span class="n">actions</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#get_input_loop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.get_input_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get input from fixed values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>options_msg</strong> (<em>str</em>) – Description of the possible input options</p></li>
+<li><p><strong>actions</strong> (<em>dict</em>) – Dictionary with the actions to be made. Values must be (function, args, kwargs)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.loadconf">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">loadconf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em>, <em class="sig-param"><span class="n">load_configs</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">add_new_configs</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">fail_action</span><span class="o">=</span><span class="default_value">'ask'</span></em>, <em class="sig-param"><span class="n">check_matching</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#loadconf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.loadconf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load configuration from yaml file, creates output directory and config.log.yml</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file</strong> (<em>str</em>) – Yaml configuration file.</p></li>
+<li><p><strong>load_configs</strong> (<em>list</em>) – List of configurations loaded (will be checked with config.log.yml).</p></li>
+<li><p><strong>add_new_configs</strong> (<em>list</em>) – List of configurations that will be automatically added if not in config.log.yml.</p></li>
+<li><p><strong>fail_action</strong> (<em>str</em>) – Action to do when there is inconsistency in configs.
+Options are ‘ask’, ‘overwrite’ and ‘quit’</p></li>
+<li><p><strong>check_matching</strong> (<em>bool</em>) – Check matching config</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Configuration for clevar</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.make_bins">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">make_bins</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_val</span></em>, <em class="sig-param"><span class="n">log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#make_bins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.make_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make array for bins string input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_val</strong> (<em>any</em>) – Value given by yaml config</p></li>
+<li><p><strong>log</strong> (<em>bool</em>) – Use log scale</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Bins to be used</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int, array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.make_catalog">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">make_catalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat_config</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#make_catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.make_catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a clevar.ClCatalog object based on config</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cat_config</strong> (<em>dict</em>) – ClCatalog configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ClCatalog based on input config</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>clevar.ClCatalog</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.make_cosmology">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">make_cosmology</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cosmo_config</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#make_cosmology"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.make_cosmology" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a cosmology object based on config</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cosmo_config</strong> (<em>dict</em>) – Cosmology configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cosmology based on the input config</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>clevar.Cosmology</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.make_mem_catalog">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">make_mem_catalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat_config</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#make_mem_catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.make_mem_catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a clevar.MemCatalog object based on config</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cat_config</strong> (<em>dict</em>) – MemCatalog configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>MemCatalog based on input config</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>clevar.MemCatalog</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.read_yaml">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">read_yaml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#read_yaml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.read_yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read yaml file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Name of yaml file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>config</strong> – Dictionary with yaml file info</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.yaml.helper_funcs.write_yaml">
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">write_yaml</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#write_yaml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.write_yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write yaml file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>dict</em>) – Dictionary to write</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – Name of yaml file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

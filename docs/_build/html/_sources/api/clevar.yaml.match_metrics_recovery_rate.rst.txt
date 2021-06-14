@@ -1,0 +1,7 @@
+clevar.yaml.match\_metrics\_recovery\_rate module
+=================================================
+
+.. automodule:: clevar.yaml.match_metrics_recovery_rate
+   :members:
+   :undoc-members:
+   :show-inheritance:

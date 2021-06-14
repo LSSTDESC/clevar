@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.yaml.match_metrics_redshift &mdash; ClEvaR 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/footprint.html">Footprint functionality</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>clevar.yaml.match_metrics_redshift</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clevar.yaml.match_metrics_redshift</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;@file match_metrics_redshift.py</span>
+<span class="sd">Matching metrics - redshift rate functions for command line execution</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">clevar</span>
+<span class="kn">from</span> <span class="nn">.helper_funcs</span> <span class="kn">import</span> <span class="n">loadconf</span><span class="p">,</span> <span class="n">make_catalog</span><span class="p">,</span> <span class="n">make_bins</span>
+<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../api/clevar.yaml.match_metrics_redshift.html#clevar.yaml.match_metrics_redshift.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main plot function</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_file: str</span>
+<span class="sd">        Yaml file with configuration to run</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create clevar objects from yml config</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">loadconf</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span>
+        <span class="n">load_configs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">,</span> <span class="s1">&#39;catalog2&#39;</span><span class="p">,</span> <span class="s1">&#39;cosmology&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_metrics_redshift&#39;</span><span class="p">],</span>
+        <span class="n">add_new_configs</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mt_metrics_redshift&#39;</span><span class="p">],</span> <span class="n">check_matching</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Reading Catalog 1&quot;</span><span class="p">)</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">make_catalog</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">])</span>
+    <span class="n">c1</span><span class="o">.</span><span class="n">load_match</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outpath&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/match1.fits&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Reading Catalog 2&quot;</span><span class="p">)</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">make_catalog</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">])</span>
+    <span class="n">c2</span><span class="o">.</span><span class="n">load_match</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outpath&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/match2.fits&quot;</span><span class="p">)</span>
+    <span class="c1"># Scaling Relations</span>
+    <span class="kn">from</span> <span class="nn">clevar.match_metrics</span> <span class="kn">import</span> <span class="n">scaling</span>
+    <span class="c1"># prep configurations</span>
+    <span class="n">z_conf</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">z_conf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;mt_metrics_redshift&#39;</span><span class="p">])</span>
+    <span class="c1"># Format values</span>
+    <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">/</span><span class="mf">2.54</span>
+    <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+    <span class="n">str_none</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">==</span><span class="s1">&#39;None&#39;</span> <span class="k">else</span> <span class="n">x</span>
+    <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;catalog1&#39;</span><span class="p">,</span> <span class="s1">&#39;catalog2&#39;</span><span class="p">):</span>
+        <span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_bins</span><span class="p">(</span><span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">])</span>
+        <span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;mass_bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_bins</span><span class="p">(</span><span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;mass_bins&#39;</span><span class="p">],</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;log_mass&#39;</span><span class="p">])</span>
+        <span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;fit_redshift_bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_bins</span><span class="p">(</span><span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;fit_redshift_bins&#39;</span><span class="p">])</span>
+        <span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;fit_redshift_bins_dist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_bins</span><span class="p">(</span><span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">][</span><span class="s1">&#39;fit_redshift_bins_dist&#39;</span><span class="p">])</span>
+        <span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">str_none</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="n">cat</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="c1">### Plots</span>
+    <span class="c1"># config</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">z_conf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;matching_type&#39;</span><span class="p">,</span> <span class="s1">&#39;add_err&#39;</span><span class="p">,</span> <span class="s1">&#39;add_cb&#39;</span><span class="p">)}</span>
+    <span class="n">fit_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">z_conf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;add_bindata&#39;</span><span class="p">,</span> <span class="s1">&#39;add_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;add_fit_err&#39;</span><span class="p">,</span> <span class="s1">&#39;fit_statistics&#39;</span><span class="p">)}</span>
+    <span class="n">fit_kwargs_cat</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:{</span>
+        <span class="s1">&#39;fit_bins1&#39;</span><span class="p">:</span> <span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;fit_redshift_bins&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;fit_bins2&#39;</span><span class="p">:</span> <span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;fit_redshift_bins_dist&#39;</span><span class="p">],</span>
+    <span class="p">}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="s1">&#39;12&#39;</span><span class="p">}</span>
+    <span class="n">z_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;outpath&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">/redshift&#39;</span>
+    <span class="c1"># Density Plot</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">case</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;plot_case&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Redshift density colors&quot;</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">])</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">()</span>
+        <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_density</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+            <span class="n">bins1</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+            <span class="n">bins2</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+            <span class="n">ax_rotation</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;ax_rotation&#39;</span><span class="p">],</span>
+            <span class="n">rotation_resolution</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;rotation_resolution&#39;</span><span class="p">],</span>
+            <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs_cat</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s1">_density.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">case</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;plot_case&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;scaling_metrics&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Redshift metrics&quot;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_metrics</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span>
+            <span class="n">bins1</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+            <span class="n">bins2</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+            <span class="n">matching_type</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;matching_type&#39;</span><span class="p">],</span>
+            <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]},</span>
+            <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s1">_metrics.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">case</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;plot_case&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;density_metrics&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Redshift density metrics&quot;</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_density_metrics</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="n">bins1</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+            <span class="n">bins2</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+            <span class="n">ax_rotation</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;ax_rotation&#39;</span><span class="p">],</span>
+            <span class="n">rotation_resolution</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;rotation_resolution&#39;</span><span class="p">],</span>
+            <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]},</span>
+            <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs_cat</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s1">_density_metrics.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="n">cats</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span><span class="n">c2</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;12&#39;</span><span class="p">,</span> <span class="s1">&#39;21&#39;</span><span class="p">):</span>
+        <span class="n">z_conf_cat</span> <span class="o">=</span> <span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="c1"># z Color Plot</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">case</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;plot_case&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;masscolor&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Redshift (catalog </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> z colors)&quot;</span><span class="p">)</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">])</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">()</span>
+            <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_masscolor</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color1</span><span class="o">=</span><span class="n">i</span><span class="o">==</span><span class="s1">&#39;1&#39;</span><span class="p">,</span>
+                                       <span class="n">log_mass</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;log_mass&#39;</span><span class="p">],</span>
+                                       <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs_cat</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                                            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s1">_cat</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">zcolor.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="c1"># Panel density Plot</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">case</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;plot_case&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;density_panel&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Redshift density (catalog </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> z panel)&quot;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_density_masspanel</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">panel_cat1</span><span class="o">=</span><span class="n">i</span><span class="o">==</span><span class="s1">&#39;1&#39;</span><span class="p">,</span>
+                <span class="n">bins1</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+                <span class="n">bins2</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+                <span class="n">ax_rotation</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;ax_rotation&#39;</span><span class="p">],</span>
+                <span class="n">rotation_resolution</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;rotation_resolution&#39;</span><span class="p">],</span>
+                <span class="n">mass_bins</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;mass_bins&#39;</span><span class="p">],</span>
+                <span class="n">label_fmt</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;mass_num_fmt&#39;</span><span class="p">],</span>
+                <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]},</span>
+                <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs_cat</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s1">_density_cat</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">masspanel.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="c1"># distribution</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">case</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;plot_case&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;self_distribution&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Redshift density (catalog </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> m self dist)&quot;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_dist_self</span><span class="p">(</span><span class="n">cats</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span>
+                    <span class="p">(</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">,</span> <span class="s1">&#39;mass_bins&#39;</span><span class="p">,</span> <span class="s1">&#39;redshift_bins_dist&#39;</span><span class="p">)},</span>
+                <span class="n">log_mass</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;log_mass&#39;</span><span class="p">],</span>
+                <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]},</span>
+                <span class="n">panel_label_fmt</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_num_fmt&#39;</span><span class="p">],</span>
+                <span class="n">line_label_fmt</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;mass_num_fmt&#39;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s1">_dist_self_cat</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">case</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;plot_case&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;distribution&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Redshift density (catalog </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> m dist)&quot;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_dist</span><span class="p">(</span><span class="n">cats</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cats</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">z_conf</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;matching_type&#39;</span><span class="p">,</span> <span class="s1">&#39;log_mass&#39;</span><span class="p">)},</span>
+                <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">,</span> <span class="s1">&#39;mass_bins&#39;</span><span class="p">)},</span>
+                <span class="n">redshift_bins_dist</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins_dist&#39;</span><span class="p">],</span>
+                <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]},</span>
+                <span class="n">panel_label_fmt</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_num_fmt&#39;</span><span class="p">],</span>
+                <span class="n">line_label_fmt</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;mass_num_fmt&#39;</span><span class="p">],</span>
+                <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s1">_dist_cat</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="c1"># Panel density distribution</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">case</span> <span class="ow">in</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;plot_case&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;density_dist&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Redshift density (catalog </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> z panel)&quot;</span><span class="p">)</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">scaling</span><span class="o">.</span><span class="n">redshift_density_dist</span><span class="p">(</span><span class="n">cats</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cats</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs_cat</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">bins1</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+                <span class="n">bins2</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;catalog</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="s1">&#39;redshift_bins&#39;</span><span class="p">],</span>
+                <span class="n">ax_rotation</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;ax_rotation&#39;</span><span class="p">],</span>
+                <span class="n">rotation_resolution</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;rotation_resolution&#39;</span><span class="p">],</span>
+                <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;figsize&#39;</span><span class="p">]},</span>
+                <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s1">_density_cat</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">_dist.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">z_conf</span><span class="p">[</span><span class="s1">&#39;dpi&#39;</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

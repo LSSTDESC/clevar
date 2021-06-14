@@ -1,0 +1,567 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.yaml.helper_funcs &mdash; ClEvaR 0.3.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/footprint.html">Footprint functionality</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>clevar.yaml.helper_funcs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clevar.yaml.helper_funcs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;@file yaml/helper_funcs.py</span>
+<span class="sd">Helper functions for command line execution</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">clevar.catalog</span> <span class="kn">import</span> <span class="n">ClData</span><span class="p">,</span> <span class="n">ClCatalog</span><span class="p">,</span> <span class="n">MemCatalog</span>
+<span class="kn">from</span> <span class="nn">clevar</span> <span class="kn">import</span> <span class="n">cosmology</span>
+<span class="kn">from</span> <span class="nn">clevar.utils</span> <span class="kn">import</span> <span class="n">none_val</span><span class="p">,</span> <span class="n">veclen</span>
+<span class="c1">######################################################################</span>
+<span class="c1">########## Monkeypatching yaml #######################################</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="read_yaml"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.read_yaml">[docs]</a><span class="k">def</span> <span class="nf">read_yaml</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read yaml file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        Name of yaml file</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    config: dict</span>
+<span class="sd">        Dictionary with yaml file info</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+<div class="viewcode-block" id="write_yaml"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.write_yaml">[docs]</a><span class="k">def</span> <span class="nf">write_yaml</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Write yaml file</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config: dict</span>
+<span class="sd">        Dictionary to write</span>
+<span class="sd">    filename: str</span>
+<span class="sd">        Name of yaml file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+<span class="n">yaml</span><span class="o">.</span><span class="n">write</span> <span class="o">=</span> <span class="n">write_yaml</span>
+<span class="n">yaml</span><span class="o">.</span><span class="n">read</span> <span class="o">=</span> <span class="n">read_yaml</span>
+<span class="c1">########################################################################</span>
+<span class="c1">### dict functions #####################################################</span>
+<span class="c1">########################################################################</span>
+<div class="viewcode-block" id="add_dicts_diff"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.add_dicts_diff">[docs]</a><span class="k">def</span> <span class="nf">add_dicts_diff</span><span class="p">(</span><span class="n">dict1</span><span class="p">,</span> <span class="n">dict2</span><span class="p">,</span> <span class="n">pref</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">diff_lines</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds the differences between dictionaries to a list</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dict1, dict2: dict</span>
+<span class="sd">        Dictionaies to be compared</span>
+<span class="sd">    pref: str</span>
+<span class="sd">        Prefix to be added in output</span>
+<span class="sd">    diff_lines: list</span>
+<span class="sd">        List where differences will be appended to</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">(</span><span class="n">dict1</span><span class="p">,</span> <span class="n">dict2</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dict1</span><span class="p">:</span>
+            <span class="n">diff_lines</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pref</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="s1">&#39;missing&#39;</span><span class="p">,</span> <span class="s1">&#39;present&#39;</span><span class="p">))</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dict2</span><span class="p">:</span>
+            <span class="n">diff_lines</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pref</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="s1">&#39;present&#39;</span><span class="p">,</span> <span class="s1">&#39;missing&#39;</span><span class="p">))</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="n">dict1</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">!=</span><span class="n">dict2</span><span class="p">[</span><span class="n">k</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dict1</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">add_dicts_diff</span><span class="p">(</span><span class="n">dict1</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">dict2</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">pref</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pref</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span>
+                                <span class="n">diff_lines</span><span class="o">=</span><span class="n">diff_lines</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">diff_lines</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pref</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dict1</span><span class="p">[</span><span class="n">k</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="n">dict2</span><span class="p">[</span><span class="n">k</span><span class="p">])))</span></div>
+<div class="viewcode-block" id="get_dicts_diff"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.get_dicts_diff">[docs]</a><span class="k">def</span> <span class="nf">get_dicts_diff</span><span class="p">(</span><span class="n">dict1</span><span class="p">,</span> <span class="n">dict2</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;dict1&#39;</span><span class="p">,</span> <span class="s1">&#39;dict2&#39;</span><span class="p">],</span>
+        <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all the differences between dictionaries, accounting for nested dictionaries.</span>
+<span class="sd">    If there are differences, a table with the information is printed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dict1, dict2: dict</span>
+<span class="sd">        Dictionaries to be compared</span>
+<span class="sd">    keys: list, None</span>
+<span class="sd">        List of keys to be compared. If None, all keys are compared</span>
+<span class="sd">    header: str</span>
+<span class="sd">        Header for differences table</span>
+<span class="sd">    msg: str</span>
+<span class="sd">        Message printed before the differences</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    diff_lines:</span>
+<span class="sd">        List of dictionaries differences</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">diff_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">header</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dict1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">dict2</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">add_dicts_diff</span><span class="p">(</span><span class="n">dict1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">dict2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">pref</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">diff_lines</span><span class="o">=</span><span class="n">diff_lines</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff_lines</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">diff_lines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">diff_lines</span><span class="p">)</span>
+        <span class="n">max_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">veclen</span><span class="p">(</span><span class="n">l</span><span class="p">))</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">diff_lines</span><span class="o">.</span><span class="n">T</span><span class="p">]</span>
+        <span class="n">fmts</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;  %-</span><span class="si">{</span><span class="n">max_sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">s | %</span><span class="si">{</span><span class="n">max_sizes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">s | %</span><span class="si">{</span><span class="n">max_sizes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">s&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">fmts</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">diff_lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="n">max_sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">-|-</span><span class="si">{</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="n">max_sizes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">-|-</span><span class="si">{</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="n">max_sizes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">diff_lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">fmts</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">diff_lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span></div>
+<div class="viewcode-block" id="deep_update"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.deep_update">[docs]</a><span class="k">def</span> <span class="nf">deep_update</span><span class="p">(</span><span class="n">dict_base</span><span class="p">,</span> <span class="n">dict_update</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update a multi-layer dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dict_base: dict</span>
+<span class="sd">        Dictionary to be updated</span>
+<span class="sd">    dict_update: dict</span>
+<span class="sd">        Dictionary with the updates</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict_base: dict</span>
+<span class="sd">        Updated dictionary (the input dict is also updated)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dict_update</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dict_base</span><span class="p">:</span>
+            <span class="n">deep_update</span><span class="p">(</span><span class="n">dict_base</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dict_base</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_update</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">dict_base</span></div>
+<span class="c1">########################################################################</span>
+<div class="viewcode-block" id="get_input_loop"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.get_input_loop">[docs]</a><span class="k">def</span> <span class="nf">get_input_loop</span><span class="p">(</span><span class="n">options_msg</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get input from fixed values</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    options_msg: str</span>
+<span class="sd">        Description of the possible input options</span>
+<span class="sd">    actions: dict</span>
+<span class="sd">        Dictionary with the actions to be made. Values must be (function, args, kwargs)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">while</span> <span class="n">loop</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">options_msg</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">action</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">actions</span>
+        <span class="n">prt</span> <span class="o">=</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Option </span><span class="si">{</span><span class="n">action</span><span class="si">}</span><span class="s1"> not valid. Please choose:&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">loop</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">actions</span><span class="p">[</span><span class="n">action</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<div class="viewcode-block" id="loadconf"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.loadconf">[docs]</a><span class="k">def</span> <span class="nf">loadconf</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">load_configs</span><span class="o">=</span><span class="p">[],</span> <span class="n">add_new_configs</span><span class="o">=</span><span class="p">[],</span>
+             <span class="n">fail_action</span><span class="o">=</span><span class="s1">&#39;ask&#39;</span><span class="p">,</span> <span class="n">check_matching</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load configuration from yaml file, creates output directory and config.log.yml</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config_file: str</span>
+<span class="sd">        Yaml configuration file.</span>
+<span class="sd">    load_configs: list</span>
+<span class="sd">        List of configurations loaded (will be checked with config.log.yml).</span>
+<span class="sd">    add_new_configs: list</span>
+<span class="sd">        List of configurations that will be automatically added if not in config.log.yml.</span>
+<span class="sd">    fail_action: str</span>
+<span class="sd">        Action to do when there is inconsistency in configs.</span>
+<span class="sd">        Options are &#39;ask&#39;, &#39;overwrite&#39; and &#39;quit&#39;</span>
+<span class="sd">    check_matching: bool</span>
+<span class="sd">        Check matching config</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Configuration for clevar</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## Loading config&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Config file &quot;</span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s1">&quot; not found&#39;</span><span class="p">)</span>
+    <span class="n">base_cfg_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="si">}</span><span class="s1">/base_config.yml&#39;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">deep_update</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">base_cfg_file</span><span class="p">),</span> <span class="n">yaml</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
+    <span class="n">main_load_configs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;outpath&quot;</span><span class="p">,</span> <span class="s2">&quot;matching_mode&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">check_matching</span><span class="p">:</span>
+        <span class="n">main_load_configs</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;matching_mode&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_match&quot;</span><span class="p">]</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">config</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">main_load_configs</span><span class="o">+</span><span class="n">load_configs</span><span class="p">}</span>
+    <span class="c1"># Add outpath suffix to differentiate proximity from memebership</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;outpath&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;matching_mode&#39;</span><span class="p">]</span>
+    <span class="c1"># Checks if config is consistent with log file</span>
+    <span class="n">log_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;outpath&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">/config.log.yml&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outpath&#39;</span><span class="p">]):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outpath&#39;</span><span class="p">])</span>
+        <span class="n">log_config</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">log_config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">add_new_configs</span><span class="p">:</span>
+            <span class="n">log_config</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">log_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="n">diff_configs</span> <span class="o">=</span> <span class="n">get_dicts_diff</span><span class="p">(</span><span class="n">log_config</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">load_configs</span><span class="p">,</span>
+                                        <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Saved&#39;</span><span class="p">,</span> <span class="s1">&#39;New&#39;</span><span class="p">],</span>
+                                        <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Configurations differs from saved config:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">diff_configs</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">actions_loop</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;o&#39;</span><span class="p">:</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="p">[],</span> <span class="p">{}),</span>
+                <span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[],</span> <span class="p">{}),</span>
+                <span class="p">}</span>
+            <span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;ask&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">get_input_loop</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Overwrite(o) and proceed or Quit(q)?&#39;</span><span class="p">,</span> <span class="n">actions_loop</span><span class="p">],</span> <span class="p">{}),</span>
+                <span class="s1">&#39;orverwrite&#39;</span><span class="p">:</span> <span class="n">actions_loop</span><span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;quit&#39;</span><span class="p">:</span> <span class="n">actions_loop</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">],</span>
+            <span class="p">}[</span><span class="n">fail_action</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span>
+    <span class="n">deep_update</span><span class="p">(</span><span class="n">log_config</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">log_config</span><span class="p">,</span> <span class="n">log_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config</span></div>
+<div class="viewcode-block" id="make_catalog"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.make_catalog">[docs]</a><span class="k">def</span> <span class="nf">make_catalog</span><span class="p">(</span><span class="n">cat_config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a clevar.ClCatalog object based on config</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cat_config: dict</span>
+<span class="sd">        ClCatalog configuration</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    clevar.ClCatalog</span>
+<span class="sd">        ClCatalog based on input config</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">])</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+        <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">c0</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+    <span class="n">cat</span><span class="o">.</span><span class="n">radius_unit</span> <span class="o">=</span> <span class="n">cat_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">cat</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cat_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="k">return</span> <span class="n">cat</span></div>
+<div class="viewcode-block" id="make_mem_catalog"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.make_mem_catalog">[docs]</a><span class="k">def</span> <span class="nf">make_mem_catalog</span><span class="p">(</span><span class="n">cat_config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a clevar.MemCatalog object based on config</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cat_config: dict</span>
+<span class="sd">        MemCatalog configuration</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    clevar.MemCatalog</span>
+<span class="sd">        MemCatalog based on input config</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">])</span>
+    <span class="n">cat</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="p">(</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
+        <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">c0</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+    <span class="n">cat</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cat_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="k">return</span> <span class="n">cat</span></div>
+<div class="viewcode-block" id="make_cosmology"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.make_cosmology">[docs]</a><span class="k">def</span> <span class="nf">make_cosmology</span><span class="p">(</span><span class="n">cosmo_config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make a cosmology object based on config</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cosmo_config: dict</span>
+<span class="sd">        Cosmology configuration</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    clevar.Cosmology</span>
+<span class="sd">        Cosmology based on the input config</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">cosmo_config</span><span class="p">[</span><span class="s1">&#39;backend&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;astropy&#39;</span><span class="p">:</span>
+        <span class="n">CosmoClass</span> <span class="o">=</span> <span class="n">cosmology</span><span class="o">.</span><span class="n">AstroPyCosmology</span>
+    <span class="k">elif</span> <span class="n">cosmo_config</span><span class="p">[</span><span class="s1">&#39;backend&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">==</span><span class="s1">&#39;ccl&#39;</span><span class="p">:</span>
+        <span class="n">CosmoClass</span> <span class="o">=</span> <span class="n">cosmology</span><span class="o">.</span><span class="n">CCLCosmology</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cosmology backend &quot;</span><span class="si">{</span><span class="n">cosmo_config</span><span class="p">[</span><span class="s2">&quot;backend&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">&quot; not accepted&#39;</span><span class="p">)</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;H0&#39;</span><span class="p">:</span> <span class="mf">70.0</span><span class="p">,</span>
+        <span class="s1">&#39;Omega_b0&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>
+        <span class="s1">&#39;Omega_dm0&#39;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>
+        <span class="s1">&#39;Omega_k0&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">parameters</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cosmo_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+    <span class="k">return</span> <span class="n">CosmoClass</span><span class="p">(</span><span class="o">**</span><span class="n">parameters</span><span class="p">)</span></div>
+<div class="viewcode-block" id="make_bins"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.make_bins">[docs]</a><span class="k">def</span> <span class="nf">make_bins</span><span class="p">(</span><span class="n">input_val</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make array for bins string input</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_val: any</span>
+<span class="sd">        Value given by yaml config</span>
+<span class="sd">    log: bool</span>
+<span class="sd">        Use log scale</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    int, array</span>
+<span class="sd">        Bins to be used</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_val</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">input_val</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">input_val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span><span class="o">!=</span><span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Values (</span><span class="si">{</span><span class="n">input_val</span><span class="si">}</span><span class="s2">) must be 1 intergers or 3 numbers (xmin, xmax, dx)&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="k">return</span> <span class="mi">10</span><span class="o">**</span><span class="n">out</span> <span class="k">if</span> <span class="n">log</span> <span class="k">else</span> <span class="n">out</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

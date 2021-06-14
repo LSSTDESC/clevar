@@ -1,0 +1,7 @@
+clevar.footprint.footprint module
+=================================
+
+.. automodule:: clevar.footprint.footprint
+   :members:
+   :undoc-members:
+   :show-inheritance:

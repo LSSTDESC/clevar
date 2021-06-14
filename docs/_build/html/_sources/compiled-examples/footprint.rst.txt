@@ -1,0 +1,464 @@
+Footprint functionality
+=======================
+
+Here we show how to use the footprint functionality. It is not used
+directly in the matching, but can be applied on the recovery rates
+computation
+
+.. code:: ipython3
+
+    %load_ext autoreload
+    %autoreload 2
+
+.. code:: ipython3
+
+    import numpy as np
+    import pylab as plt
+    import healpy as hp
+
+Generate random data and add to catalog
+---------------------------------------
+
+.. code:: ipython3
+
+    # For reproducibility
+    np.random.seed(1)
+
+.. code:: ipython3
+
+    from support import gen_cluster
+    input1, input2 = gen_cluster(ra_max=30, dec_max=30)
+
+.. code:: ipython3
+
+    from clevar import ClCatalog
+    c1 = ClCatalog('Cat1', ra=input1['RA'], dec=input1['DEC'], z=input1['Z'], mass=input1['MASS'],
+                mass_err=input1['MASS_ERR'], z_err=input1['Z_ERR'], radius=input1['RADIUS_ARCMIN'],
+                radius_unit='arcmin')
+    c2 = ClCatalog('Cat2', ra=input2['RA'], dec=input2['DEC'], z=input2['Z'], mass=input2['MASS'],
+                mass_err=input2['MASS_ERR'], z_err=input2['Z_ERR'], radius=input2['RADIUS_ARCMIN'],
+                radius_unit='arcmin')
+    # Format for nice display
+    for c in ('ra', 'dec', 'z', 'z_err', 'radius'):
+        c1[c].info.format = '.2f'
+        c2[c].info.format = '.2f'
+    for c in ('mass', 'mass_err'):
+        c1[c].info.format = '.2e'
+        c2[c].info.format = '.2e'
+
+Add an external footprint
+-------------------------
+
+Here we will get heapy pixels based on the positions of the clusters
+
+.. code:: ipython3
+
+    nside = 64
+    pixels1 = hp.ang2pix(nside, c1['ra'], c1['dec'], lonlat=True)
+    pixels2 = hp.ang2pix(nside, c2['ra'], c2['dec'], lonlat=True)
+
+Check to see if selected pixels are correct
+
+.. code:: ipython3
+
+    from matplotlib import cm
+    import copy
+    cmap = copy.copy(cm.jet)
+    cmap.set_under('.1')
+    gcol = lambda cmap, level: '#{:02x}{:02x}{:02x}{:02x}'.format(*cmap(level,bytes=True))
+    
+    # Map with pixels of each catalog
+    map_ = np.zeros(hp.nside2npix(nside))
+    map_[pixels1] += 1
+    map_[pixels2] += 2
+    map_[map_==0] = np.nan
+    
+    f = plt.figure(figsize=(10, 10))
+    hp.cartview(map_, hold=True, latra=[-10, 35], lonra=[-10, 40], cmap=cmap, cbar=False)
+    ax = f.axes[0]
+    ax.set_xticklabels(-ax.get_xticks())
+    ax.axis('on')
+    ax.scatter(-c1['ra'], c1['dec'], s=5, label='Cat 1 clusters')
+    ax.scatter(-c2['ra'], c2['dec'], s=5, label='Cat 2 clusters')
+    
+    ax.plot(0, 0, zorder=0, color=gcol(cmap, 0.0), label='Footptint - Cat1 only')
+    ax.plot(0, 0, zorder=0, color=gcol(cmap, 0.5), label='Footptint - Cat2 only')
+    ax.plot(0, 0, zorder=0, color=gcol(cmap, 1.0), label='Footptint - BOTH')
+    ax.legend(loc=3)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:202: MatplotlibDeprecationWarning: Passing parameters norm and vmin/vmax simultaneously is deprecated since 3.3 and will become an error two minor releases later. Please pass vmin/vmax directly to the norm when creating it.
+      aximg = self.imshow(
+    <ipython-input-1-3e98202e63e5>:16: UserWarning: FixedFormatter should only be used together with FixedLocator
+      ax.set_xticklabels(-ax.get_xticks())
+
+
+
+
+.. parsed-literal::
+
+    <matplotlib.legend.Legend at 0x7f8b436a83d0>
+
+
+
+
+.. image:: footprint_files/footprint_10_2.png
+
+
+Add them to the ``Footprint`` object. It also has an option of detection
+fraction and :math:`z_{max}` information.
+
+.. code:: ipython3
+
+    from clevar.footprint import Footprint
+    ftpt1 = Footprint(nside=nside, pixels=list(set(pixels1)))
+    ftpt2 = Footprint(nside=nside, pixels=list(set(pixels2)))
+
+Use ClEvaR functions to create a footprint
+------------------------------------------
+
+Import ``create_footprint`` functions to create a footprint based on a
+cluster catalog. It can create a footprint based on cluster positions
+with a given ``NSIDE``, or compute the best ``NSIDE`` based on a cluster
+density per pixel. It also can fill holes in the footprint.
+
+.. code:: ipython3
+
+    from clevar.footprint import create_artificial_footprint
+
+Fixed ``NSIDE``:
+
+.. code:: ipython3
+
+    ftpt1 = create_artificial_footprint(c1['ra'], c1['dec'], nside=64)
+
+
+.. parsed-literal::
+
+    Footprint NSIDE: 64
+    Pixels in footprint: 599
+    Pixels in footprint: 599
+
+
+``NSIDE`` from density:
+
+.. code:: ipython3
+
+    ftpt1 = create_artificial_footprint(c1['ra'], c1['dec'], nside=None, min_density=4)
+
+
+.. parsed-literal::
+
+    NSIDE(2) -> 87.5 clusters per pixel
+    NSIDE(4) -> 36.8421052631579 clusters per pixel
+    NSIDE(8) -> 11.475409836065573 clusters per pixel
+    NSIDE(16) -> 3.5353535353535355 clusters per pixel
+    Footprint NSIDE: 16
+    Pixels in footprint: 198
+    Pixels in footprint: 198
+
+
+fill holes
+
+.. code:: ipython3
+
+    ftpt1 = create_artificial_footprint(c1['ra'], c1['dec'], nside=64, neighbor_fill=5)
+
+
+.. parsed-literal::
+
+    Footprint NSIDE: 64
+    Pixels in footprint: 599
+    ### filling holes ###
+     - filling
+       size: 599 -> 636 (+37)
+     - filling
+       size: 636 -> 661 (+25)
+     - filling
+       size: 661 -> 681 (+20)
+     - filling
+       size: 681 -> 694 (+13)
+     - filling
+       size: 694 -> 705 (+11)
+     - filling
+       size: 705 -> 712 (+7)
+     - filling
+       size: 712 -> 719 (+7)
+     - filling
+       size: 719 -> 721 (+2)
+     - filling
+       size: 721 -> 724 (+3)
+     - filling
+       size: 724 -> 727 (+3)
+     - filling
+       size: 727 -> 729 (+2)
+     - filling
+       size: 729 -> 732 (+3)
+     - filling
+       size: 732 -> 737 (+5)
+     - filling
+       size: 737 -> 739 (+2)
+     - filling
+       size: 739 -> 741 (+2)
+     - filling
+       size: 741 -> 743 (+2)
+     - filling
+       size: 743 -> 743 (+0)
+     Total Change:
+       size: 599 -> 743 (+144)
+    ### filled! ###
+    Pixels in footprint: 743
+
+
+Footprint masks
+---------------
+
+Add masks to clusters regarding the footprint. The ``ClCatalog`` object
+has has 3 functions related to the footprint: - ``add_ftpt_masks``: info
+for cluster in footprint - ``add_ftpt_coverfrac``: computes cover
+fraction - ``add_ftpt_coverfrac_nfw2D``: computes cover fraction
+weighted by a project NFW profile
+
+.. code:: ipython3
+
+    %%time
+    c1.add_ftpt_masks(ftpt1, ftpt2)
+    c2.add_ftpt_masks(ftpt2, ftpt1)
+
+
+.. parsed-literal::
+
+    ## creating visibility mask ##
+    ## creating visibility mask ##
+    ## creating visibility mask ##
+    ## creating visibility mask ##
+    CPU times: user 9.39 ms, sys: 1.11 ms, total: 10.5 ms
+    Wall time: 10.2 ms
+
+
+.. code:: ipython3
+
+    display(c1[:4])
+    display(c2[:4])
+
+
+
+.. raw:: html
+
+    <i>ClData length=4</i>
+    <table id="table140236107721168" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
+    <tr><td>0</td><td>1.68</td><td>-6.91</td><td>1.00</td><td>1.22e+13</td><td>2.68e+12</td><td>0.06</td><td>0.37</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+    <tr><td>1</td><td>0.56</td><td>8.49</td><td>0.43</td><td>1.66e+13</td><td>2.43e+12</td><td>0.05</td><td>0.01</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+    <tr><td>2</td><td>6.75</td><td>-12.59</td><td>1.50</td><td>1.10e+13</td><td>2.84e+12</td><td>0.06</td><td>0.72</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+    <tr><td>3</td><td>2.13</td><td>9.21</td><td>0.26</td><td>4.66e+13</td><td>6.69e+12</td><td>0.04</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <i>ClData length=4</i>
+    <table id="table140236141507728" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
+    <tr><td>0</td><td>25.50</td><td>-71.28</td><td>1.03</td><td>8.95e+12</td><td>2.06e+12</td><td>0.06</td><td>0.10</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>1</td><td>3.41</td><td>-58.63</td><td>1.36</td><td>1.51e+13</td><td>2.59e+12</td><td>0.07</td><td>0.47</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+    <tr><td>2</td><td>13.47</td><td>-88.39</td><td>1.86</td><td>4.32e+13</td><td>4.22e+12</td><td>0.09</td><td>0.02</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>3</td><td>9.66</td><td>-1.85</td><td>1.40</td><td>1.22e+13</td><td>1.97e+12</td><td>0.07</td><td>0.87</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    </table>
+
+
+Add coverfraction values based on the footprint. It needs a cosmology
+object.
+
+.. code:: ipython3
+
+    from clevar.cosmology import AstroPyCosmology
+    cosmo = AstroPyCosmology()
+
+.. code:: ipython3
+
+    %%time
+    c1.add_ftpt_coverfrac(ftpt2, 1, 'mpc', cosmo=cosmo, window='flat')
+    c1.add_ftpt_coverfrac(ftpt2, 1, 'mpc', cosmo=cosmo, window='nfw2D')
+    c2.add_ftpt_coverfrac(ftpt1, 1, 'mpc', cosmo=cosmo, window='nfw2D')
+
+
+.. parsed-literal::
+
+    CPU times: user 3.62 s, sys: 0 ns, total: 3.62 s
+    Wall time: 3.62 s
+
+
+.. code:: ipython3
+
+    display(c1[:4])
+    display(c2[:4])
+
+
+
+.. raw:: html
+
+    <i>ClData length=4</i>
+    <table id="table140236109324736" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>0</td><td>1.68</td><td>-6.91</td><td>1.00</td><td>1.22e+13</td><td>2.68e+12</td><td>0.06</td><td>0.37</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
+    <tr><td>1</td><td>0.56</td><td>8.49</td><td>0.43</td><td>1.66e+13</td><td>2.43e+12</td><td>0.05</td><td>0.01</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
+    <tr><td>2</td><td>6.75</td><td>-12.59</td><td>1.50</td><td>1.10e+13</td><td>2.84e+12</td><td>0.06</td><td>0.72</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
+    <tr><td>3</td><td>2.13</td><td>9.21</td><td>0.26</td><td>4.66e+13</td><td>6.69e+12</td><td>0.04</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.3333333333333333</td><td>0.0013108102960734413</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <i>ClData length=4</i>
+    <table id="table140236107744784" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
+    <tr><td>0</td><td>25.50</td><td>-71.28</td><td>1.03</td><td>8.95e+12</td><td>2.06e+12</td><td>0.06</td><td>0.10</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>1</td><td>3.41</td><td>-58.63</td><td>1.36</td><td>1.51e+13</td><td>2.59e+12</td><td>0.07</td><td>0.47</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td></tr>
+    <tr><td>2</td><td>13.47</td><td>-88.39</td><td>1.86</td><td>4.32e+13</td><td>4.22e+12</td><td>0.09</td><td>0.02</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>3</td><td>9.66</td><td>-1.85</td><td>1.40</td><td>1.22e+13</td><td>1.97e+12</td><td>0.07</td><td>0.87</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    </table>
+
+
+Saving and loading footprint quantities
+---------------------------------------
+
+``ClEvaR`` has internal functions to save and load these quantities into
+the catalog so you don’t have to compute them again:
+
+.. code:: ipython3
+
+    c1.save_footprint_quantities('cat1_ft_quantities.fits', overwrite=True)
+    c1.load_footprint_quantities('cat1_ft_quantities.fits')
+
+Match catalogs
+--------------
+
+.. code:: ipython3
+
+    from clevar.match import ProximityMatch
+
+.. code:: ipython3
+
+    match_config = {
+        'type': 'cross', # options are cross, cat1, cat2
+        'which_radius': 'max', # Case of radius to be used, can be: cat1, cat2, min, max
+        'preference': 'angular_proximity', # options are more_massive, angular_proximity or redshift_proximity
+        'catalog1': {'delta_z':.2,
+                    'match_radius': '1 mpc'},
+        'catalog2': {'delta_z':.2,
+                    'match_radius': '10 arcsec'}
+    }
+
+.. code:: ipython3
+
+    %%time
+    mt = ProximityMatch()
+    mt.match_from_config(c1, c2, match_config, cosmo=cosmo)
+
+
+.. parsed-literal::
+
+    
+    ## ClCatalog 1
+    ## Prep mt_cols
+    * zmin|zmax from config value
+    * ang radius from set scale
+    
+    ## ClCatalog 2
+    ## Prep mt_cols
+    * zmin|zmax from config value
+    * ang radius from set scale
+    
+    ## Multiple match (catalog 1)
+    Finding candidates (Cat1)
+    * 401/700 objects matched.
+    
+    ## Multiple match (catalog 2)
+    Finding candidates (Cat2)
+    * 401/700 objects matched.
+    
+    ## Finding unique matches of catalog 1
+    Unique Matches (Cat1)
+    * 400/700 objects matched.
+    
+    ## Finding unique matches of catalog 2
+    Unique Matches (Cat2)
+    * 401/700 objects matched.
+    Cross Matches (Cat1)
+    * 400/700 objects matched.
+    Cross Matches (Cat2)
+    * 400/700 objects matched.
+    CPU times: user 4.9 s, sys: 84.8 ms, total: 4.98 s
+    Wall time: 4.88 s
+
+
+Recovery rate
+-------------
+
+Use pass the parameters ``mask`` (masks all clusters) or
+``mask_unmatched`` (masks only unmatched clusters) to consider only
+specific clusters on the recovery rate.
+
+.. code:: ipython3
+
+    from clevar.match_metrics import recovery
+
+.. code:: ipython3
+
+    zbins = np.linspace(0, 2, 11)
+    mbins = np.logspace(13, 14, 5)
+
+.. code:: ipython3
+
+    f, axes = plt.subplots(1, 3, figsize=(15, 5))
+    recovery.plot(c1, 'cross', zbins, mbins, ax=axes[0], add_legend=False)
+    recovery.plot(c1, 'cross', zbins, mbins, ax=axes[1], add_legend=False,
+                  mask=c1.data['cf_nfw_1_mpc']<1)
+    recovery.plot(c1, 'cross', zbins, mbins, ax=axes[2],
+                  mask_unmatched=c1.data['cf_nfw_1_mpc']<1)
+    for ax in axes:
+        ax.set_ylim(-.01, 1.05)
+    axes[0].text(1, 1.1, 'no mask')
+    axes[1].text(1, 1.1, 'mask all')
+    axes[2].text(1, 1.1, 'mask unmatched')
+    plt.show()
+
+
+
+.. image:: footprint_files/footprint_37_0.png
+
+
+You can check the exact numbers used on the 2D plots
+
+.. code:: ipython3
+
+    f, axes = plt.subplots(1, 3, figsize=(20, 5))
+    
+    recovery.plot2D(c1, 'cross', zbins, mbins, ax=axes[0],
+                    add_num=True, num_kwargs={'fontsize':12
+                                             })
+    recovery.plot2D(c1, 'cross', zbins, mbins, ax=axes[1],
+                    add_num=True, num_kwargs={'fontsize':12},
+                   mask=c1.data['cf_nfw_1_mpc']<1)
+    recovery.plot2D(c1, 'cross', zbins, mbins, ax=axes[2],
+                    add_num=True, num_kwargs={'fontsize':12},
+                   mask_unmatched=c1.data['cf_nfw_1_mpc']<1)
+    axes[0].text(1, mbins[-1]*1.1,'no mask')
+    axes[1].text(1, mbins[-1]*1.1,'mask all')
+    axes[2].text(1, mbins[-1]*1.1,'mask unmatched')
+        
+    plt.show()
+
+
+
+.. image:: footprint_files/footprint_39_0.png
+

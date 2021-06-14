@@ -1,0 +1,467 @@
+Matching catalogs based on membership (simple)
+==============================================
+
+Matching two catalogs based on membseship using a configuration
+dictionary
+
+.. code:: ipython3
+
+    %load_ext autoreload
+    %autoreload 2
+
+ClCatalogs
+----------
+
+Given some input data
+
+.. code:: ipython3
+
+    import numpy as np
+    from astropy.table import Table
+    input1 = Table({'ID': ['CL0a', 'CL1a', 'CL2a', 'CL3a', 'CL4a']})
+    input1['MASS'] = 1e14*np.arange(1, 6)*10
+    input2 = Table({'ID': ['CL0b', 'CL1b', 'CL2b', 'CL3b']})
+    input2['MASS'] = 1e14*np.arange(1, 5)*10
+    display(input1)
+    display(input2)
+    input1_mem = Table(
+        {'ID':[
+            'MEM0', 'MEM1', 'MEM2', 'MEM3', 'MEM4',
+            'MEM5', 'MEM6', 'MEM7', 'MEM8', 'MEM9',
+            'MEM10', 'MEM11', 'MEM12', 'MEM13', 'MEM14'],
+         'ID_CLUSTER': [
+             'CL0a', 'CL0a', 'CL0a', 'CL0a', 'CL0a',
+             'CL1a', 'CL1a', 'CL1a', 'CL1a', 'CL2a',
+             'CL2a', 'CL2a', 'CL3a', 'CL3a', 'CL4a'],
+        })
+    input2_mem = Table(
+        {'ID':[
+            'MEM0', 'MEM1', 'MEM2', 'MEM3', 'MEM4',
+            'MEM5', 'MEM6', 'MEM7', 'MEM8', 'MEM9',
+            'MEM10', 'MEM11', 'MEM12', 'MEM13'],
+         'ID_CLUSTER': [
+             'CL3b', 'CL0b', 'CL0b', 'CL0b', 'CL0b',
+             'CL1b', 'CL1b', 'CL1b', 'CL1b', 'CL2b',
+             'CL2b', 'CL2b', 'CL3b', 'CL3b'],
+        })
+    input1_mem['RA'] = np.arange(len(input1_mem))*10.0
+    input2_mem['RA'] = np.arange(len(input2_mem))*10.0
+    input1_mem['DEC'] = 0.0
+    input2_mem['DEC'] = 0.0
+    input1_mem['Z'] = 0.1
+    input2_mem['Z'] = 0.1
+    input1_mem['PMEM'] = 1.0
+    input2_mem['PMEM'] = 1.0
+    display(input1_mem)
+    display(input2_mem)
+
+
+
+.. raw:: html
+
+    <i>Table length=5</i>
+    <table id="table139805905577680" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>ID</th><th>MASS</th></tr></thead>
+    <thead><tr><th>str4</th><th>float64</th></tr></thead>
+    <tr><td>CL0a</td><td>1000000000000000.0</td></tr>
+    <tr><td>CL1a</td><td>2000000000000000.0</td></tr>
+    <tr><td>CL2a</td><td>3000000000000000.0</td></tr>
+    <tr><td>CL3a</td><td>4000000000000000.0</td></tr>
+    <tr><td>CL4a</td><td>5000000000000000.0</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <i>Table length=4</i>
+    <table id="table139805905577728" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>ID</th><th>MASS</th></tr></thead>
+    <thead><tr><th>str4</th><th>float64</th></tr></thead>
+    <tr><td>CL0b</td><td>1000000000000000.0</td></tr>
+    <tr><td>CL1b</td><td>2000000000000000.0</td></tr>
+    <tr><td>CL2b</td><td>3000000000000000.0</td></tr>
+    <tr><td>CL3b</td><td>4000000000000000.0</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <i>Table length=15</i>
+    <table id="table139805905577920" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
+    <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM1</td><td>CL0a</td><td>10.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM2</td><td>CL0a</td><td>20.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM3</td><td>CL0a</td><td>30.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM4</td><td>CL0a</td><td>40.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM5</td><td>CL1a</td><td>50.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM6</td><td>CL1a</td><td>60.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM7</td><td>CL1a</td><td>70.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM8</td><td>CL1a</td><td>80.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM9</td><td>CL2a</td><td>90.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM10</td><td>CL2a</td><td>100.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM11</td><td>CL2a</td><td>110.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM12</td><td>CL3a</td><td>120.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM13</td><td>CL3a</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM14</td><td>CL4a</td><td>140.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <i>Table length=14</i>
+    <table id="table139803930840272" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
+    <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM1</td><td>CL0b</td><td>10.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM2</td><td>CL0b</td><td>20.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM3</td><td>CL0b</td><td>30.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM4</td><td>CL0b</td><td>40.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM5</td><td>CL1b</td><td>50.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM6</td><td>CL1b</td><td>60.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM7</td><td>CL1b</td><td>70.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM8</td><td>CL1b</td><td>80.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM9</td><td>CL2b</td><td>90.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM10</td><td>CL2b</td><td>100.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM11</td><td>CL2b</td><td>110.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM12</td><td>CL3b</td><td>120.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    <tr><td>MEM13</td><td>CL3b</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
+    </table>
+
+
+Create two ``ClCatalog`` objects. For membership matching it is
+necessary to have at least ``id_cluster`` in the member catalogs that
+corresponds to ``id`` in the cluster catalogs. If the matching of the
+members is done by anngular distance, ``ra`` and ``dec`` of the members
+also must be included. It is also possible to add the probability of
+each member belong to the host cluster with a ``pmem`` argument:
+
+.. code:: ipython3
+
+    from clevar.catalog import ClCatalog, MemCatalog
+    c1 = ClCatalog('Cat1', id=input1['ID'], mass=input1['MASS'])
+    c2 = ClCatalog('Cat2', id=input2['ID'], mass=input2['MASS'])
+    
+    m1 = MemCatalog('Mem1', id=input1_mem['ID'], id_cluster=input1_mem['ID_CLUSTER'],
+                    ra=input1_mem['RA'], dec=input1_mem['DEC'], pmem=input1_mem['PMEM'])
+    m2 = MemCatalog('Mem2', id=input2_mem['ID'], id_cluster=input2_mem['ID_CLUSTER'],
+                    ra=input2_mem['RA'], dec=input2_mem['DEC'], pmem=input2_mem['PMEM'])
+    
+    # Format for nice display
+    for c in ('mass',):
+        c1[c].info.format = '.2e'
+        c2[c].info.format = '.2e'
+    
+    display(c1)
+    display(c2)
+    display(m1)
+    display(m2)
+
+
+
+.. raw:: html
+
+    <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table139805905598208" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0a</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL1a</td><td>2.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL2a</td><td>3.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL3a</td><td>4.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+    <table id="table139803071181296" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0b</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL1b</td><td>2.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL2b</td><td>3.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL3b</td><td>4.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Mem1</b><br><i>ClData length=15</i>
+    <table id="table139803071182064" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
+    <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM1</td><td>CL0a</td><td>10.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM2</td><td>CL0a</td><td>20.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM3</td><td>CL0a</td><td>30.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM4</td><td>CL0a</td><td>40.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM5</td><td>CL1a</td><td>50.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM6</td><td>CL1a</td><td>60.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM7</td><td>CL1a</td><td>70.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM8</td><td>CL1a</td><td>80.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM9</td><td>CL2a</td><td>90.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM10</td><td>CL2a</td><td>100.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM11</td><td>CL2a</td><td>110.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM12</td><td>CL3a</td><td>120.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM13</td><td>CL3a</td><td>130.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM14</td><td>CL4a</td><td>140.0</td><td>0.0</td><td>1.0</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Mem2</b><br><i>ClData length=14</i>
+    <table id="table139803071182400" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
+    <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM1</td><td>CL0b</td><td>10.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM2</td><td>CL0b</td><td>20.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM3</td><td>CL0b</td><td>30.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM4</td><td>CL0b</td><td>40.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM5</td><td>CL1b</td><td>50.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM6</td><td>CL1b</td><td>60.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM7</td><td>CL1b</td><td>70.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM8</td><td>CL1b</td><td>80.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM9</td><td>CL2b</td><td>90.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM10</td><td>CL2b</td><td>100.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM11</td><td>CL2b</td><td>110.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM12</td><td>CL3b</td><td>120.0</td><td>0.0</td><td>1.0</td></tr>
+    <tr><td>MEM13</td><td>CL3b</td><td>130.0</td><td>0.0</td><td>1.0</td></tr>
+    </table>
+
+
+Matching
+--------
+
+Import the ``MembershipMatch`` and create a object for matching
+
+.. code:: ipython3
+
+    from clevar.match import MembershipMatch
+    mt = MembershipMatch()
+
+Prepare the configuration. The main values are:
+
+-  ``type``: Type of matching to be considered. Can be a simple match of
+   ClCatalog1->ClCatalog2 (``cat1``), ClCatalog2->ClCatalog1 (``cat2``)
+   or cross matching.
+-  ``preference``: In cases where there are multiple matched, how the
+   best candidate will be chosen.
+-  ``minimum_share_fraction``: Minimum share fraction to consider in
+   matches (default=\ ``0``).
+-  ``match_members``: Match the members catalogs (default=\ ``True``),
+   necessary if not already made.
+-  ``match_members_kwargs``: dictionary of arguments to match members,
+   needed if ``match_members=True``. Keys are:
+
+   -  ``method``\ (str): Method for matching. Options are ``id`` or
+      ``angular_distance``.
+   -  ``radius``\ (str, None): For ``method='angular_distance'``. Radius
+      for matching, with format ``'value unit'`` (ex: ``1 arcsec``,
+      ``1 Mpc``).
+   -  ``cosmo``\ (clevar.Cosmology, None): For
+      ``method='angular_distance'``. Cosmology object for when radius
+      has physical units.
+
+-  ``match_members_save``: saves file with matched members
+   (default=\ ``False``).
+-  ``match_members_load``: load matched members (default=\ ``False``),
+   if ``True`` skips matching (and save) of members.
+-  ``match_members_file``: file to save matching of members, needed if
+   ``match_members_save`` or ``match_members_load`` is ``True``.
+-  ``shared_members_fill``: Adds shared members dicts and nmem to
+   mt_input in catalogs (default=\ ``True``), necessary if not already
+   made.
+-  ``shared_members_save``: saves files with shared members
+   (default=\ ``False``).
+-  ``shared_members_load``: load files with shared members
+   (default=\ ``False``), if ``True`` skips matching (and save) of
+   members and fill (and save) of shared members.
+-  ``shared_members_file``: Prefix of file names to save shared members,
+   needed if ``shared_members_save`` or ``shared_members_load`` is
+   ``True``.
+
+.. code:: ipython3
+
+    match_config = {
+        'type': 'cross', # options are cross, cat1, cat2
+        'preference': 'shared_member_fraction', # other options are more_massive, angular_proximity or redshift_proximity
+        'minimum_share_fraction': 0,
+        'match_members_kwargs': {'method':'id'},
+    }
+
+Once the configuration is prepared, the whole process can be done with
+one call:
+
+.. code:: ipython3
+
+    %%time
+    mt.match_from_config(c1, c2, m1, m2, match_config)
+
+
+.. parsed-literal::
+
+    
+    ## Multiple match (catalog 1)
+    Finding candidates (Cat1)
+    * 4/5 objects matched.
+    
+    ## Multiple match (catalog 2)
+    Finding candidates (Cat2)
+    * 4/4 objects matched.
+    
+    ## Finding unique matches of catalog 1
+    Unique Matches (Cat1)
+    * 4/5 objects matched.
+    
+    ## Finding unique matches of catalog 2
+    Unique Matches (Cat2)
+    * 4/4 objects matched.
+    Cross Matches (Cat1)
+    * 4/5 objects matched.
+    Cross Matches (Cat2)
+    * 4/4 objects matched.
+    CPU times: user 6.43 ms, sys: 0 ns, total: 6.43 ms
+    Wall time: 6.04 ms
+
+
+This will fill the matching columns in the catalogs: -
+``mt_multi_self``: Multiple matches found - ``mt_multi_other``: Multiple
+matches found by the other catalog - ``mt_self``: Best candidate found -
+``mt_other``: Best candidate found by the other catalog -
+``mt_frac_self``: Fraction of shared members with the best candidate
+found - ``mt_frac_other``: Fraction of shared members by the best
+candidate found by the other catalog, relative to the other catalog -
+``mt_cross``: Best candidate found in both directions
+
+If ``pmem`` is present in the members catalogs, the shared fractions are
+computed by:
+
+.. raw:: html
+
+   <h1>
+
+.. raw:: html
+
+   <center>
+
+:math:`\frac{\sum_{shared\;members}Pmem_i}{\sum_{cluster\;members}Pmem_i}`
+
+.. raw:: html
+
+   </center>
+
+.. raw:: html
+
+   </h1>
+
+.. code:: ipython3
+
+    display(c1)
+    display(c2)
+
+
+
+.. raw:: html
+
+    <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table139803922226816" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
+    <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
+    <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
+    <tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td><td>CL1b</td></tr>
+    <tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td><td>CL2b</td></tr>
+    <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
+    <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td><td>None</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+    <table id="table139803922226576" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
+    <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
+    <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
+    <tr><td>CL1b</td><td>2.00e+15</td><td>CL1a</td><td>CL1a</td><td>[&apos;CL1a&apos;]</td><td>[&apos;CL1a&apos;]</td><td>1.0</td><td>1.0</td><td>CL1a</td></tr>
+    <tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
+    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
+    </table>
+
+
+Save and Load
+-------------
+
+The results of the matching can easily be saved and load using
+``ClEvaR`` tools:
+
+.. code:: ipython3
+
+    mt.save_matches(c1, c2, out_dir='temp', overwrite=True)
+
+.. code:: ipython3
+
+    mt.load_matches(c1, c2, out_dir='temp')
+    display(c1)
+    display(c2)
+
+
+.. parsed-literal::
+
+    Cat1
+     * Total objects:    5
+     * multiple (self):  4
+     * multiple (other): 4
+     * unique (self):    4
+     * unique (other):   4
+     * cross:            4
+    
+    Cat2
+     * Total objects:    4
+     * multiple (self):  4
+     * multiple (other): 4
+     * unique (self):    4
+     * unique (other):   4
+     * cross:            4
+
+
+
+.. raw:: html
+
+    <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table139803922223408" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
+    <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
+    <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
+    <tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td><td>CL1b</td></tr>
+    <tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td><td>CL2b</td></tr>
+    <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
+    <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td><td>None</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
+    <table id="table139805914229440" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
+    <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
+    <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
+    <tr><td>CL1b</td><td>2.00e+15</td><td>CL1a</td><td>CL1a</td><td>[&apos;CL1a&apos;]</td><td>[&apos;CL1a&apos;]</td><td>1.0</td><td>1.0</td><td>CL1a</td></tr>
+    <tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
+    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
+    </table>
+
