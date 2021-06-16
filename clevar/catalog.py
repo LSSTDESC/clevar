@@ -98,8 +98,6 @@ class Catalog():
         if isinstance(item, (str, int, np.int64)):
             return data
         else:
-            print(item, type(item), len(data))
-            print(data)
             return Catalog(name=self.name, labels=self.labels,
                 **{c:data[c] for c in data.colnames})
     def __len__(self):
