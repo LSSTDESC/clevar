@@ -88,12 +88,22 @@ class Catalog():
         self.labels = {}
         if len(kwargs)>0:
             self._add_values(**kwargs)
+        self.colnames = self.data.colnames
     def __setitem__(self, item, value):
         if isinstance(item, str):
             self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
         self.data[item] = value
     def __getitem__(self, item):
-        return self.data[item]
+        data = self.data[item]
+        if isinstance(item, (str, int, np.int64)):
+            return data
+        else:
+            print(item, type(item), len(data))
+            print(data)
+            return Catalog(name=self.name, labels=self.labels,
+                **{c:data[c] for c in data.colnames})
+    def __len__(self):
+        return self.size
     def __delitem__(self, item):
         del self.data[item]
     def __str__(self):
@@ -229,6 +239,11 @@ class Catalog():
         self[f"cf_{none_val(colname, window_cfg['colname'])}"] = [
             window_cfg['func'](*window_cfg['get_args'](c), cosmo=cosmo)
             for c in self]
+    def get(self, key, default=None):
+        """
+        Return the column for key if key is in the dictionary, else default
+        """
+        return ClData.get(self.data, key, default)
     def save_match(self, filename, overwrite=False):
         """
         Saves the matching results of one catalog
@@ -290,7 +305,7 @@ class Catalog():
         overwrite: bool
             Overwrite saved files
         """
-        out = self[['id']+[c for c in self.data.colnames if c[:2] in ('ft', 'cf')]]
+        out = self.data[['id']+[c for c in self.data.colnames if c[:2] in ('ft', 'cf')]]
         out.write(filename, overwrite=overwrite)
     def load_footprint_quantities(self, filename):
         """
