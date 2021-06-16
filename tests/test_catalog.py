@@ -12,7 +12,7 @@ def test_clcatalog():
     assert_equal(c.size, len(quantities['ra']))
     c.__str__()
     c._repr_html_()
-    assert_raises(ValueError, c.__getitem__, 'unknown')
+    assert_raises(KeyError, c.__getitem__, 'unknown')
     # Check init match values
     empty_list = np.array([None for i in range(c.size)], dtype=np.ndarray)
     for i in range(c.size):
@@ -52,7 +52,7 @@ def test_memcatalog():
     assert_equal(c.size, len(quantities['ra']))
     c.__str__()
     c._repr_html_()
-    assert_raises(ValueError, c.__getitem__, 'unknown')
+    assert_raises(KeyError, c.__getitem__, 'unknown')
     # Check ind2inds
     assert_equal(c.ids2inds(['b', 'a']), [1, 0])
     # Check init match values

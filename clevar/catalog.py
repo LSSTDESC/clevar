@@ -16,6 +16,8 @@ class ClData(APtable):
     ----------
     meta: dict
         Dictionary with metadata for this object
+    namedict: dict
+        Dictionary for making ClData case insensitive
 
     Same as astropy tables
     """
@@ -25,27 +27,23 @@ class ClData(APtable):
         ----------
         *args, **kwargs: Same used for astropy tables
         """
+        self.namedict = {}
         APtable.__init__(self, *args, **kwargs)
     def __getitem__(self, item):
         """
-        Makes sure GCData keeps its properties after [] operations are used.
-        It also makes all letter casings accepted
-
-        Returns
-        -------
-        GCData
-            Data with [] operations applied
+        To make case insensitive
         """
         if isinstance(item, str):
-            name_dict = {n.lower():n for n in self.colnames}
-            item = item.lower()
-            missing_cols = [i for i in item.split(',') if i not in name_dict]
-            if len(missing_cols)>0:
-                missing_cols = ', '.join(missing_cols)
-                raise ValueError(f"Columns '{missing_cols}' not found in {name_dict.keys()}")
-            item = ','.join([name_dict[i] for i in item.split(',')])
-        out = APtable.__getitem__(self, item)
-        return out
+            item = self.namedict.get(item.lower(), item)
+        return APtable.__getitem__(self, item)
+    def __setitem__(self, item, value):
+        """
+        To make case insensitive
+        """
+        if isinstance(item, str):
+            item = self.namedict.get(item.lower(), item)
+            self.namedict[item.lower()] = item
+        APtable.__setitem__(self, item, value)
     def get(self, key, default=None):
         """
         Return the column for key if key is in the dictionary, else default
