@@ -69,9 +69,9 @@ class Catalog():
         ClCatalog name
     data: ClData
         Main catalog data (ex: id, ra, dec, z). Fixed values.
-        Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
+        Matching data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
     mt_input: object
-        Constains the necessary inputs for the match (added by Match objects)
+        Contains the necessary inputs for the match (added by Match objects)
     size: int
         Number of objects in the catalog
     id_dict: dict
@@ -330,7 +330,7 @@ class ClCatalog(Catalog):
         Main catalog data (ex: id, ra, dec, z). Fixed values.
         Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
     mt_input: object
-        Constains the necessary inputs for the match (added by Match objects)
+        Contains the necessary inputs for the match (added by Match objects)
     size: int
         Number of objects in the catalog
     id_dict: dict
@@ -361,7 +361,7 @@ class MemCatalog(Catalog):
     data: ClData
         Main catalog data (ex: id, id_cluster, pmem). Fixed values.
     mt_input: object
-        Constains the necessary inputs for the match (added by Match objects)
+        Contains the necessary inputs for the match (added by Match objects)
     size: int
         Number of objects in the catalog
     id_dict: dict
