@@ -107,6 +107,8 @@ class Catalog():
         del self.data[item]
     def __str__(self):
         return f'{self.name}:\n{self.data.__str__()}'
+    def _repr_html_(self):
+        return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         self.radius_unit = columns.pop('radius_unit', None)
@@ -376,8 +378,6 @@ class MemCatalog(Catalog):
         if all('id_cluster'!=n.lower() for n in kwargs):
             raise ValueError("Members catalog must have a 'id_cluster' column!")
         Catalog.__init__(self, name, **kwargs)
-    def _repr_html_(self):
-        return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
