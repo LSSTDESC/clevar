@@ -65,7 +65,7 @@ def binmasks(values, bins):
 def str2dataunit(input_str, units_bank, err_msg=''):
     """
     Convert a string to a float with unit.
-    ex: '1mcp' -> (1, 'mpc')
+    ex: '1mpc' -> (1, 'mpc')
 
     Parameters
     ----------
