@@ -48,7 +48,7 @@ class ClData(APtable):
         """
         Return the column for key if key is in the dictionary, else default
         """
-        return self[key] if key in self.colnames else default
+        return self[key] if key.lower() in self.namedict else default
     def _repr_html_(self):
         return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
 _matching_mask_funcs = {
