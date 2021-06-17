@@ -186,7 +186,7 @@ def write_output(config_file, overwrite_config, overwrite_files,
         else:
             c2_full[col] = c2[col]
     print(f"\n# Prep Matched catalog")
-    m1, m2 = clevar.match.MatchedPairs.matching_masks(None, c1, c2, config['proximity_match']['type'])
+    m1, m2 = clevar.match.get_matched_masks(c1, c2, config['proximity_match']['type'])
     c_matched = clevar.ClData()
     for col in c1_full.colnames:
         c_matched[f'c1_{col}'] = c1_full[col][m1]

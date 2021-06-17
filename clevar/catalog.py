@@ -91,7 +91,8 @@ class Catalog():
         self.colnames = self.data.colnames
     def __setitem__(self, item, value):
         if isinstance(item, str):
-            self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
+            if item[:3]!='mt_':
+                self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
         self.data[item] = value
     def __getitem__(self, item):
         data = self.data[item]
