@@ -14,7 +14,7 @@ def get_matched_pairs(cat1, cat2, matching_type, mask1=None, mask2=None):
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other'
+        'cross', 'cat1', 'cat2'
     mask1: array, None
         Mask for clusters 1 properties, must have size=cat1.size
     mask2: array, None
@@ -35,7 +35,7 @@ def get_matched_masks(cat1, cat2, matching_type):
         ClCatalog matched to
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other'
+        'cross', 'cat1', 'cat2'
 
     Returns
     -------
@@ -95,7 +95,7 @@ def output_matched_catalog(file_in1, file_in2, file_out, cat1, cat2,
         ClCatalog with matching information corresponding to file_in2
     matching_type: str
         Type of matching to be considered. Must be in:
-        'cross', 'self', 'other'
+        'cross', 'cat1', 'cat2'
     overwrite: bool
         Overwrite output file
     """
