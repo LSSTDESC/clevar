@@ -135,8 +135,7 @@ def save_matching_files(config, mt, c1, c2, overwrite_files):
     if save:
         mt.save_matches(c1, c2, out_dir=config['outpath'], overwrite=True)
 
-def write_output(config_file, overwrite_config, overwrite_files,
-                 matching_method='proximity_match'):
+def write_output(config_file, overwrite_config, overwrite_files):
     """Main plot function
 
     Parameters
