@@ -86,13 +86,15 @@ class Catalog():
         self.size = None
         self.id_dict = {}
         self.labels = {}
+        self.colnames = []
         if len(kwargs)>0:
             self._add_values(**kwargs)
-        self.colnames = self.data.colnames
     def __setitem__(self, item, value):
         if isinstance(item, str):
             if item[:3]!='mt_':
                 self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
+            if item not in self.colnames:
+                self.colnames.append(item)
         self.data[item] = value
     def __getitem__(self, item):
         data = self.data[item]
