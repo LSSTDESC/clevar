@@ -6,7 +6,8 @@ from numpy.testing import assert_raises, assert_allclose, assert_equal
 
 from clevar.catalog import ClCatalog, MemCatalog
 from clevar.match.parent import Match
-from clevar.match import ProximityMatch, MembershipMatch
+from clevar.match import ProximityMatch, MembershipMatch, \
+    output_catalog_with_matching, output_matched_catalog
 
 def test_parent():
     mt = Match()
@@ -327,6 +328,7 @@ def test_membership():
             assert_equal(c1[col], c1_test[col])
             assert_equal(c2[col], c2_test[col])
     os.system('rm -rf temp')
+
 def test_membership_cfg(CosmoClass):
     c1, c2, mem1, mem2 = get_test_data_mem()
     print(c1.data)
@@ -338,14 +340,14 @@ def test_membership_cfg(CosmoClass):
     assert_raises(ValueError, mt.match_from_config, c1, c2, mem1, mem2, {'type':'unknown'})
     ### test 0 ###
     match_config = {
-    'type': 'cross',
-    'preference': 'shared_member_fraction',
-    'minimum_share_fraction': 0,
-    'match_members_kwargs': {'method':'id'},
-    'match_members_save': True,
-    'shared_members_save': True,
-    'match_members_file': 'temp_mem.txt',
-    'shared_members_file': 'temp',
+        'type': 'cross',
+        'preference': 'shared_member_fraction',
+        'minimum_share_fraction': 0,
+        'match_members_kwargs': {'method':'id'},
+        'match_members_save': True,
+        'shared_members_save': True,
+        'match_members_file': 'temp_mem.txt',
+        'shared_members_file': 'temp',
     }
     mt.match_from_config(c1, c2, mem1, mem2, match_config)
     # Test with loaded match members file
@@ -393,3 +395,50 @@ def test_membership_cfg(CosmoClass):
     cmt = [None, 'CL1', 'CL2', None, None]
     _test_mt_results(c1, multi_self=mmt1, self=smt, cross=cmt, other=omt)
     _test_mt_results(c2, multi_self=mmt2, self=omt[:-1], cross=cmt[:-1], other=smt[:-1])
+def test_output_catalog_with_matching():
+    # input data
+    c1, c2, mem1, mem2 = get_test_data_mem()
+    mt = MembershipMatch()
+    match_config = {
+        'type': 'cross',
+        'preference': 'shared_member_fraction',
+        'minimum_share_fraction': 0,
+        'match_members_kwargs': {'method':'id'},
+        'match_members_save': False,
+        'shared_members_save': False,
+    }
+    mt.match_from_config(c1, c2, mem1, mem2, match_config)
+    # test
+    file_in, file_out = "temp_init_cat.fits", "temp_out_cat.fits"
+    c1.data['id', 'mass'].write(file_in)
+    # diff size files
+    assert_raises(ValueError, output_catalog_with_matching, file_in, file_out, c1[:-1])
+    # normal functioning
+    output_catalog_with_matching(file_in, file_out, c1)
+    os.system(f'rm -f {file_in} {file_out}')
+def test_output_matched_catalog():
+    # input data
+    c1, c2, mem1, mem2 = get_test_data_mem()
+    mt = MembershipMatch()
+    match_config = {
+        'type': 'cross',
+        'preference': 'shared_member_fraction',
+        'minimum_share_fraction': 0,
+        'match_members_kwargs': {'method':'id'},
+        'match_members_save': False,
+        'shared_members_save': False,
+    }
+    mt.match_from_config(c1, c2, mem1, mem2, match_config)
+    # test
+    file_in1, file_in2 = "temp_init1_cat.fits", "temp_init2_cat.fits"
+    file_out = "temp_out_cat.fits"
+    c1.data['id', 'mass'].write(file_in1)
+    c2.data['id', 'mass'].write(file_in2)
+    # diff size files
+    assert_raises(ValueError, output_matched_catalog, file_in1, file_in2,
+        file_out, c1[:-1], c2, 'cross')
+    assert_raises(ValueError, output_matched_catalog, file_in1, file_in2,
+        file_out, c1, c2[:-1], 'cross')
+    # normal functioning
+    output_matched_catalog(file_in1, file_in2, file_out, c1, c2, 'cross')
+    os.system(f'rm -f {file_in1} {file_in2} {file_out}')
