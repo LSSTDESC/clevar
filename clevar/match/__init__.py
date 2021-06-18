@@ -1,3 +1,4 @@
+from ..catalog import ClData
 from .parent import Match
 from .proximity import ProximityMatch
 from .membership import MembershipMatch
@@ -23,6 +24,7 @@ def get_matched_pairs(cat1, cat2, matching_type, mask1=None, mask2=None):
     mask = np.ones(len(mt_mask2), dtype=bool) if mask1 is None else mask1[mt_mask1]
     mask = mask if mask2 is None else mask*mask2[mt_mask2]
     return cat1[mt_mask1][mask], cat2[mt_mask2][mask]
+
 def get_matched_masks(cat1, cat2, matching_type):
     """
     Parameters
@@ -47,3 +49,78 @@ def get_matched_masks(cat1, cat2, matching_type):
     mask1 = cat1.get_matching_mask(matching_type_conv)
     mask2 = cat2.ids2inds(cat1[mask1][f'mt_{matching_type_conv}'])
     return mask1, mask2
+
+def output_catalog_with_matching(file_in, file_out, catalog, overwrite=False):
+    """Add matching information to original catalog.
+
+    Parameters
+    ----------
+    file_in: str
+        Name of input catalog file
+    file_out: str
+        Name of output catalog file
+    catalog: clevar.ClCatalog
+        ClCatalog with matching information
+    overwrite: bool
+        Overwrite output file
+    """
+    out = ClData.read(file_in)
+    if len(out)!=len(catalog):
+        ValueError(f'Input file ({file_in}) size (={len(out)})'
+            +f' differs from catalog size (={len(catalog)}).')
+    for col in [c_ for c_ in catalog.colnames if c_[:3] in ('mt_', 'ft_', 'cf_')]:
+        if col in ('mt_self', 'mt_other', 'mt_cross'):
+            out[col] = [c if c else '' for c in catalog[col]]
+        elif col in ('mt_multi_self', 'mt_multi_other'):
+            out[col] = [','.join(c) if c else '' for c in catalog[col]]
+        else:
+            out[col] = catalog[col]
+    out.write(file_out, overwrite=overwrite)
+
+def output_matched_catalog(file_in1, file_in2, file_out, cat1, cat2,
+        matching_type='cross', overwrite=False):
+    """Output matched catalog with information of both inputs.
+
+    Parameters
+    ----------
+    file_in1: str
+        Name of input catalog file
+    file_in2: str
+        Name of input catalog file
+    file_out: str
+        Name of output catalog file
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information corresponding to file_in1
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information corresponding to file_in2
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'self', 'other'
+    overwrite: bool
+        Overwrite output file
+    """
+    c_matched = ClData()
+    # match masks
+    m1, m2 = get_matched_masks(cat1, cat2, matching_type)
+    # add cat 1 info
+    cat1_full = ClData.read(file_in1)
+    if len(cat1_full)!=len(cat1):
+        raise ValueError(f'Input file ({file_in1}) size (={len(cat1_full)})'
+            +f' differs from cat1 size (={len(cat1)}).')
+    for col in cat1_full.colnames:
+        c_matched[f'cat1_{col}'] = cat1_full[col][m1]
+    del cat1_full
+    if 'mt_frac_self' in cat1.colnames:
+        c_matched['cat1_mt_frac'] = cat1['mt_frac_self'][m1]
+    # add cat 2 info
+    cat2_full = ClData.read(file_in2)
+    if len(cat2_full)!=len(cat2):
+        raise ValueError(f'Input file ({file_in2}) size (={len(cat2_full)})'
+            +f' differs from cat2 size (={len(cat2)}).')
+    for col in cat2_full.colnames:
+        c_matched[f'cat2_{col}'] = cat2_full[col][m2]
+    del cat2_full
+    if 'mt_frac_self' in cat2.colnames:
+        c_matched['cat2_mt_frac'] = cat2['mt_frac_self'][m2]
+    # Save
+    c_matched.write(file_out, overwrite=overwrite)

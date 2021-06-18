@@ -148,6 +148,12 @@ def write_output(config_file, overwrite_config, overwrite_files,
     overwrite_files: bool
         Forces overwrite of matching output files
     """
+    # read matching method
+    matching_modes = ('proximity', 'membership')
+    matching_mode = yaml.read(config_file)['matching_mode']
+    if matching_mode not in matching_modes:
+        raise ValueError(f'matching_mode (={matching_mode}) must be in {matching_modes}')
+    matching_method = f'{matching_mode}_match'
     # Create clevar objects from yml config
     config = loadconf(config_file,
         load_configs=['catalog1', 'catalog2', matching_method],
@@ -166,32 +172,6 @@ def write_output(config_file, overwrite_config, overwrite_files,
     print("\n# Adding Matching Info")
     mt = clevar.match.parent.Match()
     mt.load_matches(c1, c2, out_dir=config['outpath'])
-    # Print outputs
-    print(f"\n# Prep full {c1.name}")
-    c1_full = clevar.ClData.read(config['catalog1']['file'])
-    for col in [c_ for c_ in c1.data.colnames if c_[:3] in ('mt_', 'ft_', 'cf_')]:
-        if col in ('mt_self', 'mt_other', 'mt_cross'):
-            c1_full[col] = [c if c else '' for c in c1[col]]
-        elif col in ('mt_multi_self', 'mt_multi_other'):
-            c1_full[col] = [','.join(c) if c else '' for c in c1[col]]
-        else:
-            c1_full[col] = c1[col]
-    print(f"\n# Prep full {c2.name}")
-    c2_full = clevar.ClData.read(config['catalog2']['file'])
-    for col in [c_ for c_ in c2.data.colnames if c_[:3] in ('mt_', 'ft_', 'cf_')]:
-        if col in ('mt_self', 'mt_other', 'mt_cross'):
-            c2_full[col] = [c if c else '' for c in c2[col]]
-        elif col in ('mt_multi_self', 'mt_multi_other'):
-            c2_full[col] = [','.join(c) if c else '' for c in c2[col]]
-        else:
-            c2_full[col] = c2[col]
-    print(f"\n# Prep Matched catalog")
-    m1, m2 = clevar.match.get_matched_masks(c1, c2, config['proximity_match']['type'])
-    c_matched = clevar.ClData()
-    for col in c1_full.colnames:
-        c_matched[f'c1_{col}'] = c1_full[col][m1]
-    for col in c2_full.colnames:
-        c_matched[f'c2_{col}'] = c2_full[col][m2]
     # Save files
     out1, out2 = f'{config["outpath"]}/catalog1.fits', f'{config["outpath"]}/catalog2.fits'
     out_matched = f'{config["outpath"]}/catalog_matched.fits'
@@ -201,6 +181,14 @@ def write_output(config_file, overwrite_config, overwrite_files,
         print(f"\n*** File '{out1}' or '{out2}' or '{out_matched}' already exist! ***")
         save = get_input_loop('Overwrite(o) and proceed or Quit(q)?', check_actions)
     if save:
-        c1_full.write(out1, overwrite=True)
-        c2_full.write(out2, overwrite=True)
-        c_matched.write(out_matched, overwrite=True)
+        print(f"\n# Saving full {c1.name}")
+        clevar.match.output_catalog_with_matching(
+            config['catalog1']['file'], out1, c1, overwrite=True)
+        print(f"\n# Saving full {c2.name}")
+        clevar.match.output_catalog_with_matching(
+            config['catalog2']['file'], out2, c2, overwrite=True)
+        print(f"\n# Saving Matched catalog")
+        clevar.match.output_matched_catalog(
+            config['catalog1']['file'], config['catalog2']['file'],
+            out_matched, c1, c2, config[matching_method]['type'],
+            overwrite=True)
