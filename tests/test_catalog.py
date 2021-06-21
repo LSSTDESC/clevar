@@ -40,6 +40,10 @@ def test_clcatalog():
     assert_equal(c['id'], ['0', '1', '2'])
     # Check inexistent mask
     assert_raises(ValueError, c.get_matching_mask, 'made up mask')
+    # Reading function
+    assert_raises(ValueError, ClCatalog.read, 'demo/cat1.fits', 'test')
+    assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test', id='ID2')
+    c = ClCatalog.read('demo/cat1.fits', 'test', id='ID')
 
 def test_memcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30],
@@ -82,3 +86,8 @@ def test_memcatalog():
     assert_equal(c['id'], ['0', '1', '2'])
     # Check inexistent mask
     assert_raises(ValueError, c.get_matching_mask, 'made up mask')
+    # Reading function
+    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test')
+    assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', id='ID2')
+    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', id='ID')
+    c = MemCatalog.read('demo/cat1_mem.fits', 'test', id='ID', id_cluster='ID_CLUSTER')

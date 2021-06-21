@@ -51,6 +51,12 @@ class ClData(APtable):
         return self[key] if key.lower() in self.namedict else default
     def _repr_html_(self):
         return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
+    @classmethod
+    def read(self, filename, **kwargs):
+        out = APtable.read(filename, **kwargs)
+        out.namedict = {c.lower():c for c in out.colnames}
+        return out
+
 _matching_mask_funcs = {
     'cross': lambda match: match['mt_cross']!=None,
     'self': lambda match: match['mt_self']!=None,
@@ -322,6 +328,32 @@ class Catalog():
         for col in ftq.colnames:
             if col!='id':
                 self[col] = ftq[col]
+def _read_catalog(filename, name, dataclass, **kwargs):
+    """Read catalog from fits file
+
+    Parameters
+    ----------
+    filename: str
+        Input file.
+    name: str
+        Catalog name.
+    labels: dict
+        Labels of data columns for plots (default={}).
+    **kwargs: keyword argumens
+        All columns to be added must be passes with named argument,
+        the name is used in the Catalog data and the value must
+        be the column name in your input file (ex: z='REDSHIFT').
+    """
+    if len(kwargs)==0:
+        raise ValueError('At least one column must be provided.')
+    data = ClData.read(filename)
+    labels = kwargs.pop('labels', {})
+    missing = [f"'{k}'" for k in kwargs.values() if k.lower() not in data.namedict]
+    if len(missing)>0:
+        missing = ", ".join(missing)
+        raise KeyError(f"Column(s) '{missing}' not found in catalog {data.colnames}")
+    return dataclass(name, labels=labels, **{k:data[v] for k, v in kwargs.items()})
+
 class ClCatalog(Catalog):
     """
     Object to handle cluster catalogs.
@@ -355,6 +387,30 @@ class ClCatalog(Catalog):
         Catalog._add_values(self, **columns)
         self.radius_unit = columns.pop('radius_unit', None)
         self._init_match_vals()
+    @classmethod
+    def read(self, filename, name, **kwargs):
+        """Read catalog from fits file
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        name: str
+            ClCatalog name.
+        labels: dict
+            Labels of data columns for plots (default={}).
+        radius_unit: str, None
+            Unit of the radius column (default=None).
+        **kwargs: keyword argumens
+            All columns to be added must be passes with named argument,
+            the name is used in the ClCatalog data and the value must
+            be the column name in your input file (ex: z='REDSHIFT').
+        """
+        radius_unit = kwargs.pop('radius_unit', None)
+        out = _read_catalog(filename, name, ClCatalog, **kwargs)
+        out.radius_unit = radius_unit
+        return out
+
 class MemCatalog(Catalog):
     """
     Object to handle member catalogs.
@@ -387,3 +443,21 @@ class MemCatalog(Catalog):
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
             self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]
+    @classmethod
+    def read(self, filename, name, **kwargs):
+        """Read catalog from fits file
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        name: str
+            ClCatalog name.
+        labels: dict
+            Labels of data columns for plots (default={}).
+        **kwargs: keyword argumens
+            All columns to be added must be passes with named argument,
+            the name is used in the MemCatalog data and the value must
+            be the column name in your input file (ex: z='REDSHIFT').
+        """
+        return _read_catalog(filename, name, MemCatalog, **kwargs)
