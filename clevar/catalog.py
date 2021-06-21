@@ -113,7 +113,6 @@ class Catalog():
         return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
-        self.radius_unit = columns.pop('radius_unit', None)
         self.labels.update(columns.pop('labels', {}))
         # Check all columns have same size
         names = [n for n in columns]
@@ -346,8 +345,9 @@ class ClCatalog(Catalog):
         Labels of data columns for plots
     """
     def __init__(self, name, **kwargs):
-        self.radius_unit = None
+        radius_unit = kwargs.pop('radius_unit', None)
         Catalog.__init__(self, name, **kwargs)
+        self.radius_unit = radius_unit
     def _repr_html_(self):
         return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
