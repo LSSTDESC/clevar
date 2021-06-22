@@ -27,6 +27,7 @@ The source code is publically available at https://github.com/LSSTDESC/ClEvaR
    :maxdepth: 1
    :caption: Usage Demos
 
+   compiled-examples/catalogs.rst
    compiled-examples/proximity_matching.rst
    compiled-examples/proximity_matching_detailed.rst
    compiled-examples/membership_matching.rst
