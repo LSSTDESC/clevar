@@ -60,7 +60,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=5</i>
-    <table id="table139805905577680" class="table-striped table-bordered table-condensed">
+    <table id="table139630597352992" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>MASS</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th></tr></thead>
     <tr><td>CL0a</td><td>1000000000000000.0</td></tr>
@@ -75,7 +75,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=4</i>
-    <table id="table139805905577728" class="table-striped table-bordered table-condensed">
+    <table id="table139630597352944" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>MASS</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th></tr></thead>
     <tr><td>CL0b</td><td>1000000000000000.0</td></tr>
@@ -89,7 +89,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=15</i>
-    <table id="table139805905577920" class="table-striped table-bordered table-condensed">
+    <table id="table139630597352752" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
     <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -114,7 +114,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=14</i>
-    <table id="table139803930840272" class="table-striped table-bordered table-condensed">
+    <table id="table139628592301008" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
     <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -134,23 +134,33 @@ Given some input data
     </table>
 
 
-Create two ``ClCatalog`` objects. For membership matching it is
-necessary to have at least ``id_cluster`` in the member catalogs that
-corresponds to ``id`` in the cluster catalogs. If the matching of the
-members is done by anngular distance, ``ra`` and ``dec`` of the members
-also must be included. It is also possible to add the probability of
-each member belong to the host cluster with a ``pmem`` argument:
+Create two ``ClCatalog`` objects, they have the same properties of
+``astropy`` tables with additional functionality. For the membership
+matching, the main columns to be included are: - ``id`` - must
+correspond to ``id_cluster`` in the cluster member catalog. - ``mass``
+(or mass proxy) - necessary for proxity matching if
+``shared_member_fraction`` used as preference criteria for unique
+matches, default use.
+
+All of the columns can be added when creating the ``ClCatalog`` object
+passing them as keys:
+
+::
+
+   cat = ClCatalog('Cat', ra=[0, 1])
+
+or can also be added afterwards:
+
+::
+
+   cat = ClCatalog('Cat')
+   cat['ra'] = [0, 1]
 
 .. code:: ipython3
 
-    from clevar.catalog import ClCatalog, MemCatalog
+    from clevar.catalog import ClCatalog
     c1 = ClCatalog('Cat1', id=input1['ID'], mass=input1['MASS'])
     c2 = ClCatalog('Cat2', id=input2['ID'], mass=input2['MASS'])
-    
-    m1 = MemCatalog('Mem1', id=input1_mem['ID'], id_cluster=input1_mem['ID_CLUSTER'],
-                    ra=input1_mem['RA'], dec=input1_mem['DEC'], pmem=input1_mem['PMEM'])
-    m2 = MemCatalog('Mem2', id=input2_mem['ID'], id_cluster=input2_mem['ID_CLUSTER'],
-                    ra=input2_mem['RA'], dec=input2_mem['DEC'], pmem=input2_mem['PMEM'])
     
     # Format for nice display
     for c in ('mass',):
@@ -159,15 +169,13 @@ each member belong to the host cluster with a ``pmem`` argument:
     
     display(c1)
     display(c2)
-    display(m1)
-    display(m2)
 
 
 
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table139805905598208" class="table-striped table-bordered table-condensed">
+    <table id="table139630597342784" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0a</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -182,7 +190,7 @@ each member belong to the host cluster with a ``pmem`` argument:
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table139803071181296" class="table-striped table-bordered table-condensed">
+    <table id="table139627729855008" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0b</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -192,11 +200,33 @@ each member belong to the host cluster with a ``pmem`` argument:
     </table>
 
 
+Also create the corresponding ``MemCatalog`` objects, they have the same
+properties of ``astropy`` tables with additional functionality. The main
+columns to be included are: - ``id`` - necessary in membership matching
+of members. - ``id_cluster`` - always necessary and must correspond to
+``id`` in the main cluster catalog. - ``ra`` (in degrees) - necessary
+for proxity matching of members. - ``dec`` (in degrees) - necessary for
+proxity matching of members. - ``pmem`` - Probability of the galaxy
+being a member, must be [0, 1]. If not provided, it will assing 1 for
+all members.
+
+.. code:: ipython3
+
+    from clevar.catalog import MemCatalog
+    m1 = MemCatalog('Mem1', id=input1_mem['ID'], id_cluster=input1_mem['ID_CLUSTER'],
+                    ra=input1_mem['RA'], dec=input1_mem['DEC'], pmem=input1_mem['PMEM'])
+    m2 = MemCatalog('Mem2', id=input2_mem['ID'], id_cluster=input2_mem['ID_CLUSTER'],
+                    ra=input2_mem['RA'], dec=input2_mem['DEC'], pmem=input2_mem['PMEM'])
+    
+    display(m1)
+    display(m2)
+
+
 
 .. raw:: html
 
     <b>Mem1</b><br><i>ClData length=15</i>
-    <table id="table139803071182064" class="table-striped table-bordered table-condensed">
+    <table id="table139630597586272" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
     <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
@@ -221,7 +251,7 @@ each member belong to the host cluster with a ``pmem`` argument:
 .. raw:: html
 
     <b>Mem2</b><br><i>ClData length=14</i>
-    <table id="table139803071182400" class="table-striped table-bordered table-condensed">
+    <table id="table139630597329968" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
     <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
@@ -240,6 +270,9 @@ each member belong to the host cluster with a ``pmem`` argument:
     <tr><td>MEM13</td><td>CL3b</td><td>130.0</td><td>0.0</td><td>1.0</td></tr>
     </table>
 
+
+The catalogs can also be read directly from files, for more details see
+catalogs.ipynb.
 
 Matching
 --------
@@ -332,8 +365,8 @@ one call:
     * 4/5 objects matched.
     Cross Matches (Cat2)
     * 4/4 objects matched.
-    CPU times: user 6.43 ms, sys: 0 ns, total: 6.43 ms
-    Wall time: 6.04 ms
+    CPU times: user 12.4 ms, sys: 498 µs, total: 12.9 ms
+    Wall time: 11.9 ms
 
 
 This will fill the matching columns in the catalogs: -
@@ -376,7 +409,7 @@ computed by:
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table139803922226816" class="table-striped table-bordered table-condensed">
+    <table id="table139627729855488" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
     <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
@@ -391,13 +424,13 @@ computed by:
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table139803922226576" class="table-striped table-bordered table-condensed">
+    <table id="table139627729857984" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
     <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
     <tr><td>CL1b</td><td>2.00e+15</td><td>CL1a</td><td>CL1a</td><td>[&apos;CL1a&apos;]</td><td>[&apos;CL1a&apos;]</td><td>1.0</td><td>1.0</td><td>CL1a</td></tr>
     <tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
-    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
+    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
     </table>
 
 
@@ -441,7 +474,7 @@ The results of the matching can easily be saved and load using
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table139803922223408" class="table-striped table-bordered table-condensed">
+    <table id="table139627729856784" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
     <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
@@ -456,12 +489,80 @@ The results of the matching can easily be saved and load using
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table139805914229440" class="table-striped table-bordered table-condensed">
+    <table id="table139627729464768" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
     <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
     <tr><td>CL1b</td><td>2.00e+15</td><td>CL1a</td><td>CL1a</td><td>[&apos;CL1a&apos;]</td><td>[&apos;CL1a&apos;]</td><td>1.0</td><td>1.0</td><td>CL1a</td></tr>
     <tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
-    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
+    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
     </table>
 
+
+Getting Matched Pairs
+---------------------
+
+There is functionality inbuilt in ``clevar`` to plot some results of the
+matching, such as: - Recovery rates - Distances (anguar and redshift) of
+cluster centers - Scaling relations (mass, redshift, …) for those cases,
+check the match_metrics.ipynb and match_metrics_advanced.ipynb
+notebooks.
+
+If those do not provide your needs, you can get directly the matched
+pairs of clusters:
+
+.. code:: ipython3
+
+    from clevar.match import get_matched_pairs
+    mt1, mt2 = get_matched_pairs(c1, c2, 'cross')
+
+These will be catalogs with the corresponding matched pairs:
+
+.. code:: ipython3
+
+    import pylab as plt
+    plt.scatter(mt1['mass'], mt2['mass'])
+
+
+
+
+.. parsed-literal::
+
+    <matplotlib.collections.PathCollection at 0x7efd9d164ee0>
+
+
+
+
+.. image:: membership_matching_files/membership_matching_23_1.png
+
+
+Outputing matched catalogs
+--------------------------
+
+Assuming your input data came from initial files, ``clevar`` also
+provides functions create output files that combine all the information
+on them with the matching results.
+
+To add the matching information to an input catalog, use:
+
+::
+
+   from clevar.match import output_catalog_with_matching
+   output_catalog_with_matching('input_catalog.fits', 'output_catalog.fits', c1)
+
+-  note: ``input_catalog.fits`` must have the same number of rows that
+   ``c1``.
+
+To create a matched catalog containig all columns of both input
+catalogs, use:
+
+::
+
+   from clevar.match import output_matched_catalog
+   output_matched_catalog('input_catalog1.fits', 'input_catalog2.fits',
+       'output_catalog.fits', c1, c2, matching_type='cross')
+
+where ``matching_type`` must be ``cross``, ``cat1`` or ``cat2``.
+
+-  note: ``input_catalog1.fits`` must have the same number of rows that
+   ``c1`` (and the same for ``c2``).

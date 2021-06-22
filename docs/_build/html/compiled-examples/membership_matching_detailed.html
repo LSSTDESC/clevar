@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Matching catalogs based on membership (detailed) &mdash; ClEvaR 0.3.1 documentation</title>
+  <title>Matching catalogs based on membership (detailed) &mdash; ClEvaR 0.4.1 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.3.1
+                0.4.1
               </div>
             
           
@@ -95,6 +95,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Catalog Objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -264,7 +265,7 @@ proximity</p>
 </pre></div>
 </div>
 <i>Table length=5</i>
-<table id="table140169956306416" class="table-striped table-bordered table-condensed">
+<table id="table139856691678704" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ID</th><th>MASS</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th></tr></thead>
 <tr><td>CL0a</td><td>1000000000000000.0</td></tr>
@@ -273,7 +274,7 @@ proximity</p>
 <tr><td>CL3a</td><td>4000000000000000.0</td></tr>
 <tr><td>CL4a</td><td>5000000000000000.0</td></tr>
 </table><i>Table length=4</i>
-<table id="table140169956306368" class="table-striped table-bordered table-condensed">
+<table id="table139856691678656" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ID</th><th>MASS</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th></tr></thead>
 <tr><td>CL0b</td><td>1000000000000000.0</td></tr>
@@ -281,7 +282,7 @@ proximity</p>
 <tr><td>CL2b</td><td>3000000000000000.0</td></tr>
 <tr><td>CL3b</td><td>4000000000000000.0</td></tr>
 </table><i>Table length=15</i>
-<table id="table140169956306176" class="table-striped table-bordered table-condensed">
+<table id="table139856691678464" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
 <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -300,7 +301,7 @@ proximity</p>
 <tr><td>MEM13</td><td>CL3a</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 <tr><td>MEM14</td><td>CL4a</td><td>140.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 </table><i>Table length=14</i>
-<table id="table140167957231792" class="table-striped table-bordered table-condensed">
+<table id="table139854706138704" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
 <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -317,22 +318,26 @@ proximity</p>
 <tr><td>MEM11</td><td>CL2b</td><td>110.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 <tr><td>MEM12</td><td>CL3b</td><td>120.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 <tr><td>MEM13</td><td>CL3b</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
-</table><p>Create two <code class="docutils literal notranslate"><span class="pre">ClCatalog</span></code> objects. For membership matching it is
-necessary to have at least <code class="docutils literal notranslate"><span class="pre">id_cluster</span></code> in the member catalogs that
-corresponds to <code class="docutils literal notranslate"><span class="pre">id</span></code> in the cluster catalogs. If the matching of the
-members is done by anngular distance, <code class="docutils literal notranslate"><span class="pre">ra</span></code> and <code class="docutils literal notranslate"><span class="pre">dec</span></code> of the members
-also must be included. It is also possible to add the probability of
-each member belong to the host cluster with a <code class="docutils literal notranslate"><span class="pre">pmem</span></code> argument:</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.catalog</span> <span class="kn">import</span> <span class="n">ClCatalog</span><span class="p">,</span> <span class="n">MemCatalog</span>
+</table><p>Create two <code class="docutils literal notranslate"><span class="pre">ClCatalog</span></code> objects, they have the same properties of
+<code class="docutils literal notranslate"><span class="pre">astropy</span></code> tables with additional functionality. For the membership
+matching, the main columns to be included are: - <code class="docutils literal notranslate"><span class="pre">id</span></code> - must
+correspond to <code class="docutils literal notranslate"><span class="pre">id_cluster</span></code> in the cluster member catalog. - <code class="docutils literal notranslate"><span class="pre">mass</span></code>
+(or mass proxy) - necessary for proxity matching if
+<code class="docutils literal notranslate"><span class="pre">shared_member_fraction</span></code> used as preference criteria for unique
+matches, default use.</p>
+<p>All of the columns can be added when creating the <code class="docutils literal notranslate"><span class="pre">ClCatalog</span></code> object
+passing them as keys:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat&#39;</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>or can also be added afterwards:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat&#39;</span><span class="p">)</span>
+<span class="n">cat</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.catalog</span> <span class="kn">import</span> <span class="n">ClCatalog</span>
 <span class="n">c1</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat1&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">])</span>
 <span class="n">c2</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat2&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">])</span>
-
-<span class="n">m1</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="p">(</span><span class="s1">&#39;Mem1&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">id_cluster</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">],</span>
-                <span class="n">ra</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
-                <span class="n">pmem</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;PMEM&#39;</span><span class="p">])</span>
-<span class="n">m2</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="p">(</span><span class="s1">&#39;Mem2&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">id_cluster</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">],</span>
-                <span class="n">ra</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
-                <span class="n">pmem</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;PMEM&#39;</span><span class="p">])</span>
 
 <span class="c1"># Format for nice display</span>
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mass&#39;</span><span class="p">,):</span>
@@ -341,12 +346,10 @@ each member belong to the host cluster with a <code class="docutils literal notr
 
 <span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">m1</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">m2</span><span class="p">)</span>
 </pre></div>
 </div>
 <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-<table id="table140169956296256" class="table-striped table-bordered table-condensed">
+<table id="table139856691668544" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>CL0a</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -355,15 +358,36 @@ each member belong to the host cluster with a <code class="docutils literal notr
 <tr><td>CL3a</td><td>4.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 </table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-<table id="table140167088375072" class="table-striped table-bordered table-condensed">
+<table id="table139853840858080" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>CL0b</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>CL1b</td><td>2.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>CL2b</td><td>3.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>CL3b</td><td>4.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-</table><b>Mem1</b><br><i>ClData length=15</i>
-<table id="table140167088376176" class="table-striped table-bordered table-condensed">
+</table><p>Also create the corresponding <code class="docutils literal notranslate"><span class="pre">MemCatalog</span></code> objects, they have the same
+properties of <code class="docutils literal notranslate"><span class="pre">astropy</span></code> tables with additional functionality. The main
+columns to be included are: - <code class="docutils literal notranslate"><span class="pre">id</span></code> - necessary in membership matching
+of members. - <code class="docutils literal notranslate"><span class="pre">id_cluster</span></code> - always necessary and must correspond to
+<code class="docutils literal notranslate"><span class="pre">id</span></code> in the main cluster catalog. - <code class="docutils literal notranslate"><span class="pre">ra</span></code> (in degrees) - necessary
+for proxity matching of members. - <code class="docutils literal notranslate"><span class="pre">dec</span></code> (in degrees) - necessary for
+proxity matching of members. - <code class="docutils literal notranslate"><span class="pre">pmem</span></code> - Probability of the galaxy
+being a member, must be [0, 1]. If not provided, it will assing 1 for
+all members.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.catalog</span> <span class="kn">import</span> <span class="n">MemCatalog</span>
+<span class="n">m1</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="p">(</span><span class="s1">&#39;Mem1&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">id_cluster</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">],</span>
+                <span class="n">ra</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
+                <span class="n">pmem</span><span class="o">=</span><span class="n">input1_mem</span><span class="p">[</span><span class="s1">&#39;PMEM&#39;</span><span class="p">])</span>
+<span class="n">m2</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="p">(</span><span class="s1">&#39;Mem2&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">],</span> <span class="n">id_cluster</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">],</span>
+                <span class="n">ra</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span>
+                <span class="n">pmem</span><span class="o">=</span><span class="n">input2_mem</span><span class="p">[</span><span class="s1">&#39;PMEM&#39;</span><span class="p">])</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">m1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">m2</span><span class="p">)</span>
+</pre></div>
+</div>
+<b>Mem1</b><br><i>ClData length=15</i>
+<table id="table139856691674560" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>z</th><th>pmem</th></tr></thead>
 <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -382,7 +406,7 @@ each member belong to the host cluster with a <code class="docutils literal notr
 <tr><td>MEM13</td><td>CL3a</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 <tr><td>MEM14</td><td>CL4a</td><td>140.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 </table><b>Mem2</b><br><i>ClData length=14</i>
-<table id="table140167088376464" class="table-striped table-bordered table-condensed">
+<table id="table139853840419520" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>z</th><th>pmem</th></tr></thead>
 <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -399,7 +423,9 @@ each member belong to the host cluster with a <code class="docutils literal notr
 <tr><td>MEM11</td><td>CL2b</td><td>110.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 <tr><td>MEM12</td><td>CL3b</td><td>120.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 <tr><td>MEM13</td><td>CL3b</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
-</table></div>
+</table><p>The catalogs can also be read directly from files, for more details see
+catalogs.ipynb.</p>
+</div>
 <div class="section" id="matching">
 <h2>Matching<a class="headerlink" href="#matching" title="Permalink to this headline">¶</a></h2>
 <p>Import the <code class="docutils literal notranslate"><span class="pre">MembershipMatch</span></code> and create a object for matching</p>
@@ -439,8 +465,8 @@ size (this is done internally).</p>
 <span class="n">mt</span><span class="o">.</span><span class="n">match_members</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">23</span> <span class="n">µs</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">38</span> <span class="n">µs</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mi">61</span> <span class="n">µs</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">63.7</span> <span class="n">µs</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">201</span> <span class="n">µs</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">0</span> <span class="n">ns</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mi">201</span> <span class="n">µs</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mi">224</span> <span class="n">µs</span>
 </pre></div>
 </div>
 <p>To match the members by angular proximity you also have to provide: -
@@ -510,7 +536,7 @@ as:</p>
 </pre></div>
 </div>
 <i>ClData length=5</i>
-<table id="table140167939414336" class="table-striped table-bordered table-condensed">
+<table id="table139856691829632" class="table-striped table-bordered table-condensed">
 <thead><tr><th>share_mems</th><th>nmem</th></tr></thead>
 <thead><tr><th>object</th><th>float64</th></tr></thead>
 <tr><td>{&apos;CL3b&apos;: 1.0, &apos;CL0b&apos;: 4.0}</td><td>5.0</td></tr>
@@ -519,7 +545,7 @@ as:</p>
 <tr><td>{&apos;CL3b&apos;: 2.0}</td><td>2.0</td></tr>
 <tr><td>{}</td><td>1.0</td></tr>
 </table><i>ClData length=4</i>
-<table id="table140167939414720" class="table-striped table-bordered table-condensed">
+<table id="table139853840616032" class="table-striped table-bordered table-condensed">
 <thead><tr><th>share_mems</th><th>nmem</th></tr></thead>
 <thead><tr><th>object</th><th>float64</th></tr></thead>
 <tr><td>{&apos;CL0a&apos;: 4.0}</td><td>4.0</td></tr>
@@ -547,8 +573,8 @@ pass the matching criteria.</p>
 <span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 <span class="n">Finding</span> <span class="n">candidates</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
 <span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
-<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">673</span> <span class="n">µs</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">964</span> <span class="n">µs</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">1.64</span> <span class="n">ms</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">1.55</span> <span class="n">ms</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">3.11</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">0</span> <span class="n">ns</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">3.11</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">2.66</span> <span class="n">ms</span>
 </pre></div>
 </div>
 <p>This will fill the <code class="docutils literal notranslate"><span class="pre">mt_multi_self</span></code> and <code class="docutils literal notranslate"><span class="pre">mt_multi_other</span></code> columns:</p>
@@ -557,16 +583,16 @@ pass the matching criteria.</p>
 </pre></div>
 </div>
 <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-<table id="table140167939413760" class="table-striped table-bordered table-condensed">
+<table id="table139853840191248" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-<tr><td>CL0a</td><td>1.00e+15</td><td>None</td><td>None</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td></tr>
+<tr><td>CL0a</td><td>1.00e+15</td><td>None</td><td>None</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td></tr>
 <tr><td>CL1a</td><td>2.00e+15</td><td>None</td><td>None</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td></tr>
 <tr><td>CL2a</td><td>3.00e+15</td><td>None</td><td>None</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td></tr>
 <tr><td>CL3a</td><td>4.00e+15</td><td>None</td><td>None</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td></tr>
 <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 </table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-<table id="table140169956452384" class="table-striped table-bordered table-condensed">
+<table id="table139856691655776" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>CL0b</td><td>1.00e+15</td><td>None</td><td>None</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td></tr>
@@ -590,8 +616,8 @@ Options are: <code class="docutils literal notranslate"><span class="pre">'more_
 <span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 <span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
 <span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
-<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mi">696</span> <span class="n">µs</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">985</span> <span class="n">µs</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">1.68</span> <span class="n">ms</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">1.63</span> <span class="n">ms</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">2.65</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">0</span> <span class="n">ns</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">2.65</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">2.53</span> <span class="n">ms</span>
 </pre></div>
 </div>
 <p>This will fill the matching columns: - <code class="docutils literal notranslate"><span class="pre">mt_self</span></code>: Best candidate found
@@ -607,16 +633,16 @@ computed by:</p>
 </pre></div>
 </div>
 <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-<table id="table140167088081600" class="table-striped table-bordered table-condensed">
+<table id="table139856691655536" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>0.8</td><td>1.0</td></tr>
+<tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td></tr>
 <tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td></tr>
 <tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td></tr>
 <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td></tr>
 <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td></tr>
 </table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-<table id="table140167088090080" class="table-striped table-bordered table-condensed">
+<table id="table139856691829344" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td></tr>
@@ -637,16 +663,16 @@ computed by:</p>
 </pre></div>
 </div>
 <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-<table id="table140167088089888" class="table-striped table-bordered table-condensed">
+<table id="table139856691654864" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
-<tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
+<tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
 <tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td><td>CL1b</td></tr>
 <tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td><td>CL2b</td></tr>
 <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
 <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td><td>None</td></tr>
 </table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-<table id="table140167939415392" class="table-striped table-bordered table-condensed">
+<table id="table139853840616032" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
 <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
@@ -685,16 +711,16 @@ computed by:</p>
 </pre></div>
 </div>
 <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-<table id="table140169956302224" class="table-striped table-bordered table-condensed">
+<table id="table139856691658032" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
-<tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
+<tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
 <tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td><td>CL1b</td></tr>
 <tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td><td>CL2b</td></tr>
 <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
 <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td><td>None</td></tr>
 </table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-<table id="table140167939415008" class="table-striped table-bordered table-condensed">
+<table id="table139856691829872" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
 <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
@@ -702,6 +728,56 @@ computed by:</p>
 <tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
 <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
 </table></div>
+<div class="section" id="getting-matched-pairs">
+<h2>Getting Matched Pairs<a class="headerlink" href="#getting-matched-pairs" title="Permalink to this headline">¶</a></h2>
+<p>There is functionality inbuilt in <code class="docutils literal notranslate"><span class="pre">clevar</span></code> to plot some results of the
+matching, such as: - Recovery rates - Distances (anguar and redshift) of
+cluster centers - Scaling relations (mass, redshift, …) for those cases,
+check the match_metrics.ipynb and match_metrics_advanced.ipynb
+notebooks.</p>
+<p>If those do not provide your needs, you can get directly the matched
+pairs of clusters:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.match</span> <span class="kn">import</span> <span class="n">get_matched_pairs</span>
+<span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="n">get_matched_pairs</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These will be catalogs with the corresponding matched pairs:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mt1</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">mt2</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">PathCollection</span> <span class="n">at</span> <span class="mh">0x7f32425df700</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<img alt="../_images/membership_matching_detailed_42_1.png" src="../_images/membership_matching_detailed_42_1.png" />
+</div>
+<div class="section" id="outputing-matched-catalogs">
+<h2>Outputing matched catalogs<a class="headerlink" href="#outputing-matched-catalogs" title="Permalink to this headline">¶</a></h2>
+<p>Assuming your input data came from initial files, <code class="docutils literal notranslate"><span class="pre">clevar</span></code> also
+provides functions create output files that combine all the information
+on them with the matching results.</p>
+<p>To add the matching information to an input catalog, use:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.match</span> <span class="kn">import</span> <span class="n">output_catalog_with_matching</span>
+<span class="n">output_catalog_with_matching</span><span class="p">(</span><span class="s1">&#39;input_catalog.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;output_catalog.fits&#39;</span><span class="p">,</span> <span class="n">c1</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>note: <code class="docutils literal notranslate"><span class="pre">input_catalog.fits</span></code> must have the same number of rows that
+<code class="docutils literal notranslate"><span class="pre">c1</span></code>.</p></li>
+</ul>
+<p>To create a matched catalog containig all columns of both input
+catalogs, use:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.match</span> <span class="kn">import</span> <span class="n">output_matched_catalog</span>
+<span class="n">output_matched_catalog</span><span class="p">(</span><span class="s1">&#39;input_catalog1.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;input_catalog2.fits&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;output_catalog.fits&#39;</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">matching_type</span><span class="o">=</span><span class="s1">&#39;cross&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">matching_type</span></code> must be <code class="docutils literal notranslate"><span class="pre">cross</span></code>, <code class="docutils literal notranslate"><span class="pre">cat1</span></code> or <code class="docutils literal notranslate"><span class="pre">cat2</span></code>.</p>
+<ul class="simple">
+<li><p>note: <code class="docutils literal notranslate"><span class="pre">input_catalog1.fits</span></code> must have the same number of rows that
+<code class="docutils literal notranslate"><span class="pre">c1</span></code> (and the same for <code class="docutils literal notranslate"><span class="pre">c2</span></code>).</p></li>
+</ul>
+</div>
 </div>
 
 

@@ -42,7 +42,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=5</i>
-    <table id="table140463205637520" class="table-striped table-bordered table-condensed">
+    <table id="table140212645521056" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>RA</th><th>DEC</th><th>Z</th><th>MASS</th><th>RADIUS_ARCMIN</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.2</td><td>31622776601683.793</td><td>1.0</td></tr>
@@ -57,7 +57,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=4</i>
-    <table id="table140465161064608" class="table-striped table-bordered table-condensed">
+    <table id="table140212663746720" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>RA</th><th>DEC</th><th>Z</th><th>MASS</th><th>RADIUS_ARCMIN</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.3</td><td>19952623149688.83</td><td>1.0</td></tr>
@@ -67,9 +67,11 @@ Given some input data
     </table>
 
 
-Create two ``ClCatalog`` objects. For the proximity matching it is
-necessary to have at least (``ra, dec``). If the redshift is used in the
-matching, it also must be included. The same goes for the mass:
+Create two ``ClCatalog`` objects, they have the same properties of
+``astropy`` tables with additional functionality. For the proximity
+matching, the main columns to be included are: -
+``id - if not included, one will be assigned -``\ ra\ ``(in degrees) - necessary -``\ dec\ ``(in degrees) - necessary -``\ z\ ``- necessary if used as matching criteria or for angular to physical convertion -``\ mass\ ``(or mass proxy) - necessary if used as preference criteria for unique matches -``\ radius\ ``- necessary if used as a criteria of matching (also requires``\ radius_unit\`
+to be passed)
 
 .. code:: ipython3
 
@@ -91,7 +93,7 @@ matching, it also must be included. The same goes for the mass:
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table140463191130064" class="table-striped table-bordered table-condensed">
+    <table id="table140214650960096" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -106,7 +108,7 @@ matching, it also must be included. The same goes for the mass:
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table140462340446048" class="table-striped table-bordered table-condensed">
+    <table id="table140211782992848" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -115,6 +117,9 @@ matching, it also must be included. The same goes for the mass:
     <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
     </table>
 
+
+The ``ClCatalog`` object can also be read directly from a file, for
+details, see catalogs.ipynb.
 
 Matching
 --------
@@ -213,8 +218,8 @@ one call:
     * 4/5 objects matched.
     Cross Matches (Cat2)
     * 4/4 objects matched.
-    CPU times: user 36 ms, sys: 197 µs, total: 36.2 ms
-    Wall time: 35.6 ms
+    CPU times: user 92.8 ms, sys: 1.01 ms, total: 93.8 ms
+    Wall time: 92 ms
 
 
 This will fill the matching columns in the catalogs: -
@@ -233,12 +238,12 @@ Best candidate found in both directions
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table140462340095088" class="table-striped table-bordered table-condensed">
+    <table id="table140214650955376" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
-    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
-    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
     <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
     <tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>None</td></tr>
     </table>
@@ -248,12 +253,12 @@ Best candidate found in both directions
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table140462340054944" class="table-striped table-bordered table-condensed">
+    <table id="table140214650954320" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
-    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
-    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
     <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
     </table>
 
@@ -298,12 +303,12 @@ The results of the matching can easily be saved and load using
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table140462340055680" class="table-striped table-bordered table-condensed">
+    <table id="table140211783182944" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
-    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
-    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>2.00e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
     <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
     <tr><td>CL4</td><td>20.00</td><td>0.00</td><td>0.35</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>None</td></tr>
     </table>
@@ -313,12 +318,80 @@ The results of the matching can easily be saved and load using
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table140462369525280" class="table-striped table-bordered table-condensed">
+    <table id="table140211812570688" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
-    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
-    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>[&apos;CL0&apos;, &apos;CL2&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
+    <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL0</td></tr>
+    <tr><td>CL1</td><td>0.00</td><td>0.00</td><td>0.20</td><td>2.51e+13</td><td>CL1</td><td>CL1</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL1</td></tr>
+    <tr><td>CL2</td><td>0.00</td><td>0.00</td><td>0.25</td><td>3.16e+13</td><td>CL2</td><td>CL2</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>[&apos;CL2&apos;, &apos;CL0&apos;, &apos;CL1&apos;]</td><td>CL2</td></tr>
     <tr><td>CL3</td><td>25.00</td><td>0.00</td><td>0.40</td><td>6.31e+13</td><td>CL3</td><td>CL3</td><td>[&apos;CL3&apos;]</td><td>[&apos;CL3&apos;]</td><td>CL3</td></tr>
     </table>
 
+
+Getting Matched Pairs
+---------------------
+
+There is functionality inbuilt in ``clevar`` to plot some results of the
+matching, such as: - Recovery rates - Distances (anguar and redshift) of
+cluster centers - Scaling relations (mass, redshift, …) for those cases,
+check the match_metrics.ipynb and match_metrics_advanced.ipynb
+notebooks.
+
+If those do not provide your needs, you can get directly the matched
+pairs of clusters:
+
+.. code:: ipython3
+
+    from clevar.match import get_matched_pairs
+    mt1, mt2 = get_matched_pairs(c1, c2, 'cross')
+
+These will be catalogs with the corresponding matched pairs:
+
+.. code:: ipython3
+
+    import pylab as plt
+    plt.scatter(mt1['mass'], mt2['mass'])
+
+
+
+
+.. parsed-literal::
+
+    <matplotlib.collections.PathCollection at 0x7f8599655a90>
+
+
+
+
+.. image:: proximity_matching_files/proximity_matching_21_1.png
+
+
+Outputing matched catalogs
+--------------------------
+
+Assuming your input data came from initial files, ``clevar`` also
+provides functions create output files that combine all the information
+on them with the matching results.
+
+To add the matching information to an input catalog, use:
+
+::
+
+   from clevar.match import output_catalog_with_matching
+   output_catalog_with_matching('input_catalog.fits', 'output_catalog.fits', c1)
+
+-  note: ``input_catalog.fits`` must have the same number of rows that
+   ``c1``.
+
+To create a matched catalog containig all columns of both input
+catalogs, use:
+
+::
+
+   from clevar.match import output_matched_catalog
+   output_matched_catalog('input_catalog1.fits', 'input_catalog2.fits',
+       'output_catalog.fits', c1, c2, matching_type='cross')
+
+where ``matching_type`` must be ``cross``, ``cat1`` or ``cat2``.
+
+-  note: ``input_catalog1.fits`` must have the same number of rows that
+   ``c1`` (and the same for ``c2``).
