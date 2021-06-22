@@ -171,6 +171,11 @@ def test_yaml_funcs_mem():
     mock.builtins.input = lambda _: 'q'
     clevar_yaml.write_full_output(config_file, True, False)
     mock.builtins.input = original_input
+        # Error type
+    config = create_base_matched_files(in_file, 'membership')
+    config['mmatching_mode'] = 'unknown'
+    yaml.write(config, 'cfg.yml')
+    assert_raises(ValueError, clevar_yaml.write_full_output, config_file)
     # cleanup
     base_matched_files_cleanup(config_file, 'membership')
     os.system("rm -f test_config.yml cfg.yml")
