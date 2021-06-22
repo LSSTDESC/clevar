@@ -9,7 +9,7 @@ import numpy as np
 
 from ..utils import none_val, autobins, binmasks
 from ..geometry import convert_units
-from ..match import MatchedPairs
+from ..match import get_matched_pairs
 from . import plot_helper as ph
 
 class ClCatalogFuncs():
@@ -121,16 +121,16 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        mp = MatchedPairs(cat1, cat2, matching_type,
+        mt1, mt2 = get_matched_pairs(cat1, cat2, matching_type,
                           mask1=kwargs.pop('mask1', None),
                           mask2=kwargs.pop('mask2', None))
-        sk1, sk2 = mp.data1['SkyCoord'], mp.data2['SkyCoord']
+        sk1, sk2 = mt1['SkyCoord'], mt2['SkyCoord']
         distances = convert_units(sk1.separation(sk2).deg, 'degrees',
-                                  radial_bin_units, redshift=mp.data1['z'],
+                                  radial_bin_units, redshift=mt1['z'],
                                   cosmo=cosmo)
         ax = ClCatalogFuncs._histograms(distances=distances,
                                       distance_bins=radial_bins,
-                                      quantity2=mp.data1[col2] if col2 in mp.data1.colnames else None,
+                                      quantity2=mt1[col2] if col2 in mt1.colnames else None,
                                       bins2=bins2, **kwargs)
         dist_labels = {'degrees':'deg', 'arcmin': 'arcmin', 'arcsec':'arcsec',
                         'pc':'pc', 'kpc':'kpc', 'mpc': 'Mpc'}
@@ -181,10 +181,10 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        mp = MatchedPairs(cat1, cat2, matching_type,
+        mt1, mt2 = get_matched_pairs(cat1, cat2, matching_type,
                           mask1=kwargs.pop('mask1', None),
                           mask2=kwargs.pop('mask2', None))
-        z1, z2 = mp.data1['z'], mp.data2['z']
+        z1, z2 = mt1['z'], mt2['z']
         norm = {
                 None:1,
                 'cat1':(1+z1),
@@ -193,7 +193,7 @@ class ClCatalogFuncs():
                 }[normalize]
         ax = ClCatalogFuncs._histograms(distances=(z1-z2)/norm,
                                       distance_bins=redshift_bins,
-                                      quantity2=mp.data1[col2] if col2 in mp.data1.colnames else None,
+                                      quantity2=mt1[col2] if col2 in mt1.colnames else None,
                                       bins2=bins2, **kwargs)
         zl1, zl2 = cat1.labels['z'], cat2.labels['z']
         dz = f'{zl1}-{zl2}'

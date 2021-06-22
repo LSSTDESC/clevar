@@ -16,6 +16,8 @@ class ClData(APtable):
     ----------
     meta: dict
         Dictionary with metadata for this object
+    namedict: dict
+        Dictionary for making ClData case insensitive
 
     Same as astropy tables
     """
@@ -25,34 +27,36 @@ class ClData(APtable):
         ----------
         *args, **kwargs: Same used for astropy tables
         """
+        self.namedict = {}
         APtable.__init__(self, *args, **kwargs)
     def __getitem__(self, item):
         """
-        Makes sure GCData keeps its properties after [] operations are used.
-        It also makes all letter casings accepted
-
-        Returns
-        -------
-        GCData
-            Data with [] operations applied
+        To make case insensitive
         """
         if isinstance(item, str):
-            name_dict = {n.lower():n for n in self.colnames}
-            item = item.lower()
-            missing_cols = [i for i in item.split(',') if i not in name_dict]
-            if len(missing_cols)>0:
-                missing_cols = ', '.join(missing_cols)
-                raise ValueError(f"Columns '{missing_cols}' not found in {name_dict.keys()}")
-            item = ','.join([name_dict[i] for i in item.split(',')])
-        out = APtable.__getitem__(self, item)
-        return out
+            item = self.namedict.get(item.lower(), item)
+        return APtable.__getitem__(self, item)
+    def __setitem__(self, item, value):
+        """
+        To make case insensitive
+        """
+        if isinstance(item, str):
+            item = self.namedict.get(item.lower(), item)
+            self.namedict[item.lower()] = item
+        APtable.__setitem__(self, item, value)
     def get(self, key, default=None):
         """
         Return the column for key if key is in the dictionary, else default
         """
-        return self[key] if key in self.colnames else default
+        return self[key] if key.lower() in self.namedict else default
     def _repr_html_(self):
         return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
+    @classmethod
+    def read(self, filename, **kwargs):
+        out = APtable.read(filename, **kwargs)
+        out.namedict = {c.lower():c for c in out.colnames}
+        return out
+
 _matching_mask_funcs = {
     'cross': lambda match: match['mt_cross']!=None,
     'self': lambda match: match['mt_self']!=None,
@@ -71,9 +75,9 @@ class Catalog():
         ClCatalog name
     data: ClData
         Main catalog data (ex: id, ra, dec, z). Fixed values.
-        Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
+        Matching data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
     mt_input: object
-        Constains the necessary inputs for the match (added by Match objects)
+        Contains the necessary inputs for the match (added by Match objects)
     size: int
         Number of objects in the catalog
     id_dict: dict
@@ -88,21 +92,33 @@ class Catalog():
         self.size = None
         self.id_dict = {}
         self.labels = {}
+        self.colnames = []
         if len(kwargs)>0:
             self._add_values(**kwargs)
     def __setitem__(self, item, value):
         if isinstance(item, str):
-            self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
+            if item[:3]!='mt_':
+                self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
+            if item not in self.colnames:
+                self.colnames.append(item)
         self.data[item] = value
     def __getitem__(self, item):
-        return self.data[item]
+        data = self.data[item]
+        if isinstance(item, (str, int, np.int64)):
+            return data
+        else:
+            return Catalog(name=self.name, labels=self.labels,
+                **{c:data[c] for c in data.colnames})
+    def __len__(self):
+        return self.size
     def __delitem__(self, item):
         del self.data[item]
     def __str__(self):
         return f'{self.name}:\n{self.data.__str__()}'
+    def _repr_html_(self):
+        return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
-        self.radius_unit = columns.pop('radius_unit', None)
         self.labels.update(columns.pop('labels', {}))
         # Check all columns have same size
         names = [n for n in columns]
@@ -231,6 +247,11 @@ class Catalog():
         self[f"cf_{none_val(colname, window_cfg['colname'])}"] = [
             window_cfg['func'](*window_cfg['get_args'](c), cosmo=cosmo)
             for c in self]
+    def get(self, key, default=None):
+        """
+        Return the column for key if key is in the dictionary, else default
+        """
+        return ClData.get(self.data, key, default)
     def save_match(self, filename, overwrite=False):
         """
         Saves the matching results of one catalog
@@ -292,7 +313,7 @@ class Catalog():
         overwrite: bool
             Overwrite saved files
         """
-        out = self[['id']+[c for c in self.data.colnames if c[:2] in ('ft', 'cf')]]
+        out = self.data[['id']+[c for c in self.data.colnames if c[:2] in ('ft', 'cf')]]
         out.write(filename, overwrite=overwrite)
     def load_footprint_quantities(self, filename):
         """
@@ -307,6 +328,32 @@ class Catalog():
         for col in ftq.colnames:
             if col!='id':
                 self[col] = ftq[col]
+def _read_catalog(filename, name, dataclass, **kwargs):
+    """Read catalog from fits file
+
+    Parameters
+    ----------
+    filename: str
+        Input file.
+    name: str
+        Catalog name.
+    labels: dict
+        Labels of data columns for plots (default={}).
+    **kwargs: keyword argumens
+        All columns to be added must be passes with named argument,
+        the name is used in the Catalog data and the value must
+        be the column name in your input file (ex: z='REDSHIFT').
+    """
+    if len(kwargs)==0:
+        raise ValueError('At least one column must be provided.')
+    data = ClData.read(filename)
+    labels = kwargs.pop('labels', {})
+    missing = [f"'{k}'" for k in kwargs.values() if k.lower() not in data.namedict]
+    if len(missing)>0:
+        missing = ", ".join(missing)
+        raise KeyError(f"Column(s) '{missing}' not found in catalog {data.colnames}")
+    return dataclass(name, labels=labels, **{k:data[v] for k, v in kwargs.items()})
+
 class ClCatalog(Catalog):
     """
     Object to handle cluster catalogs.
@@ -319,7 +366,7 @@ class ClCatalog(Catalog):
         Main catalog data (ex: id, ra, dec, z). Fixed values.
         Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
     mt_input: object
-        Constains the necessary inputs for the match (added by Match objects)
+        Contains the necessary inputs for the match (added by Match objects)
     size: int
         Number of objects in the catalog
     id_dict: dict
@@ -330,8 +377,9 @@ class ClCatalog(Catalog):
         Labels of data columns for plots
     """
     def __init__(self, name, **kwargs):
-        self.radius_unit = None
+        radius_unit = kwargs.pop('radius_unit', None)
         Catalog.__init__(self, name, **kwargs)
+        self.radius_unit = radius_unit
     def _repr_html_(self):
         return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
@@ -339,6 +387,30 @@ class ClCatalog(Catalog):
         Catalog._add_values(self, **columns)
         self.radius_unit = columns.pop('radius_unit', None)
         self._init_match_vals()
+    @classmethod
+    def read(self, filename, name, **kwargs):
+        """Read catalog from fits file
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        name: str
+            ClCatalog name.
+        labels: dict
+            Labels of data columns for plots (default={}).
+        radius_unit: str, None
+            Unit of the radius column (default=None).
+        **kwargs: keyword argumens
+            All columns to be added must be passes with named argument,
+            the name is used in the ClCatalog data and the value must
+            be the column name in your input file (ex: z='REDSHIFT').
+        """
+        radius_unit = kwargs.pop('radius_unit', None)
+        out = _read_catalog(filename, name, ClCatalog, **kwargs)
+        out.radius_unit = radius_unit
+        return out
+
 class MemCatalog(Catalog):
     """
     Object to handle member catalogs.
@@ -350,7 +422,7 @@ class MemCatalog(Catalog):
     data: ClData
         Main catalog data (ex: id, id_cluster, pmem). Fixed values.
     mt_input: object
-        Constains the necessary inputs for the match (added by Match objects)
+        Contains the necessary inputs for the match (added by Match objects)
     size: int
         Number of objects in the catalog
     id_dict: dict
@@ -364,8 +436,6 @@ class MemCatalog(Catalog):
         if all('id_cluster'!=n.lower() for n in kwargs):
             raise ValueError("Members catalog must have a 'id_cluster' column!")
         Catalog.__init__(self, name, **kwargs)
-    def _repr_html_(self):
-        return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
@@ -373,3 +443,21 @@ class MemCatalog(Catalog):
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
             self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]
+    @classmethod
+    def read(self, filename, name, **kwargs):
+        """Read catalog from fits file
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        name: str
+            ClCatalog name.
+        labels: dict
+            Labels of data columns for plots (default={}).
+        **kwargs: keyword argumens
+            All columns to be added must be passes with named argument,
+            the name is used in the MemCatalog data and the value must
+            be the column name in your input file (ex: z='REDSHIFT').
+        """
+        return _read_catalog(filename, name, MemCatalog, **kwargs)

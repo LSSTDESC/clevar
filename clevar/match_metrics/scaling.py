@@ -10,7 +10,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 
 from ..utils import none_val, autobins, binmasks
-from ..match import MatchedPairs
+from ..match import get_matched_pairs
 from . import plot_helper as ph
 
 def _prep_fit_data(x, y, yerr=None, statistics='mean', bins_x=None, bins_y=None):
@@ -1330,21 +1330,21 @@ class ClCatalogFuncs():
             Matched catalogs
         """
         func_kwargs = {k:v for k, v in kwargs.items() if k not in ClCatalogFuncs.class_args}
-        mp = MatchedPairs(cat1, cat2, matching_type,
+        mt1, mt2 = get_matched_pairs(cat1, cat2, matching_type,
                           mask1=kwargs.get('mask1', None),
                           mask2=kwargs.get('mask2', None))
-        func_kwargs['values1'] = mp.data1[col]
-        func_kwargs['values2'] = mp.data2[col]
-        func_kwargs['err1'] = mp.data1.get(f'{col}_err') if kwargs.get('add_err', True) else None
-        func_kwargs['err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_err', True) else None
-        func_kwargs['fit_err2'] = mp.data2.get(f'{col}_err') if kwargs.get('add_fit_err', True) else None
+        func_kwargs['values1'] = mt1[col]
+        func_kwargs['values2'] = mt2[col]
+        func_kwargs['err1'] = mt1.get(f'{col}_err') if kwargs.get('add_err', True) else None
+        func_kwargs['err2'] = mt2.get(f'{col}_err') if kwargs.get('add_err', True) else None
+        func_kwargs['fit_err2'] = mt2.get(f'{col}_err') if kwargs.get('add_fit_err', True) else None
         class_kwargs = {
             'xlabel': kwargs.get('xlabel', f'${cat1.labels[col]}$'),
             'ylabel': kwargs.get('ylabel', f'${cat2.labels[col]}$'),
             'xscale': kwargs.get('xscale', 'linear'),
             'yscale': kwargs.get('yscale', 'linear'),
         }
-        return class_kwargs, func_kwargs, mp
+        return class_kwargs, func_kwargs, mt1, mt2
     def _fmt_plot(ax, **kwargs):
         """
         Format plot (scale and label of ax)
@@ -1429,7 +1429,7 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         ax = ArrayFuncs.plot(**f_kwargs)
         ClCatalogFuncs._fmt_plot(ax, **cl_kwargs)
         return ax
@@ -1515,8 +1515,8 @@ class ClCatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
-        f_kwargs['values_color'] = mp.data1[col_color] if color1 else mp.data2[col_color]
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
         f_kwargs['values_color'] = np.log10(f_kwargs['values_color']) if color_log\
                                     else f_kwargs['values_color']
         res = ArrayFuncs.plot_color(**f_kwargs)
@@ -1606,7 +1606,7 @@ class ClCatalogFuncs():
         matplotlib.colorbar.Colorbar (optional)
             Colorbar of the recovey rates. Only returned if add_cb=True.
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
         f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
         res = ArrayFuncs.plot_density(**f_kwargs)
@@ -1653,11 +1653,11 @@ class ClCatalogFuncs():
         mp: clevar.match.MatchedPairs
             Matched catalogs
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
-        f_kwargs['values_panel'] = mp.data1[col_panel] if panel_cat1 else mp.data2[col_panel]
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        f_kwargs['values_panel'] = mt1[col_panel] if panel_cat1 else mt2[col_panel]
         f_kwargs['bins_panel'] = autobins(f_kwargs['values_panel'], bins_panel, log_panel)
         ph._set_label_format(f_kwargs, 'label_format', 'label_fmt', log_panel)
-        return cl_kwargs, f_kwargs, mp
+        return cl_kwargs, f_kwargs, mt1, mt2
     def plot_panel(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=True, log_panel=False,
         **kwargs):
@@ -1749,7 +1749,7 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axes with the panels
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
         fig, axes = ArrayFuncs.plot_panel(**f_kwargs)
         ph.nice_panel(axes, **cl_kwargs)
@@ -1854,9 +1854,9 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
-        f_kwargs['values_color'] = mp.data1[col_color] if color1 else mp.data2[col_color]
+        f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
         fig, axes = ArrayFuncs.plot_color_panel(**f_kwargs)
         ph.nice_panel(axes, **cl_kwargs)
         return fig, axes
@@ -1964,7 +1964,7 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._get_panel_args(cat1, cat2, matching_type, col,
             col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
         f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
         f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
@@ -2025,7 +2025,7 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axis of the plot
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs.pop('fit_err2', None)
         f_kwargs.pop('err1', None)
         f_kwargs.pop('err2', None)
@@ -2130,7 +2130,7 @@ class ClCatalogFuncs():
         list
             Axes with the panels (main, right, top, label)
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
         f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
         xlabel = kwargs.get('label1', cl_kwargs['xlabel'])
@@ -2200,11 +2200,11 @@ class ClCatalogFuncs():
         ax: matplotlib.axes
             Axes with the panels
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs.pop('err1', None)
         f_kwargs.pop('err2', None)
         f_kwargs.pop('fit_err2', None)
-        f_kwargs['values_aux'] = None if col_aux is None else mp.data2[col_aux]
+        f_kwargs['values_aux'] = None if col_aux is None else mt2[col_aux]
         f_kwargs['bins1_dist'] = bins1
         f_kwargs['bins2'] = bins2
         f_kwargs['bins_aux'] = bins_aux
@@ -2388,7 +2388,7 @@ class ClCatalogFuncs():
         list
             Axes with the panels (main, right, top, label)
         """
-        cl_kwargs, f_kwargs, mp = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+        cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
         f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
         fig, axes = ArrayFuncs.plot_density_dist(**f_kwargs)
