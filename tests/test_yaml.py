@@ -175,7 +175,7 @@ def test_yaml_funcs_mem():
     config = create_base_matched_files(in_file, 'membership')
     config['mmatching_mode'] = 'unknown'
     yaml.write(config, 'cfg.yml')
-    assert_raises(ValueError, clevar_yaml.write_full_output, config_file)
+    assert_raises(ValueError, clevar_yaml.write_full_output, 'cfg.yml', True, True)
     # cleanup
     base_matched_files_cleanup(config_file, 'membership')
     os.system("rm -f test_config.yml cfg.yml")
