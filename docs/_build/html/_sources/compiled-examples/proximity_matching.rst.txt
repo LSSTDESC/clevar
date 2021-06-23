@@ -42,7 +42,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=5</i>
-    <table id="table139624624007392" class="table-striped table-bordered table-condensed">
+    <table id="table139725081545696" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>RA</th><th>DEC</th><th>Z</th><th>MASS</th><th>RADIUS_ARCMIN</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.2</td><td>31622776601683.793</td><td>1.0</td></tr>
@@ -57,7 +57,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=4</i>
-    <table id="table139624624041936" class="table-striped table-bordered table-condensed">
+    <table id="table139725093519520" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>RA</th><th>DEC</th><th>Z</th><th>MASS</th><th>RADIUS_ARCMIN</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.3</td><td>19952623149688.83</td><td>1.0</td></tr>
@@ -93,7 +93,7 @@ to be passed)
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table139622606876480" class="table-striped table-bordered table-condensed">
+    <table id="table139725063983696" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -108,7 +108,7 @@ to be passed)
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table139621755835152" class="table-striped table-bordered table-condensed">
+    <table id="table139724212701120" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -218,8 +218,8 @@ one call:
     * 4/5 objects matched.
     Cross Matches (Cat2)
     * 4/4 objects matched.
-    CPU times: user 99.7 ms, sys: 183 µs, total: 99.8 ms
-    Wall time: 96.6 ms
+    CPU times: user 135 ms, sys: 7.06 ms, total: 142 ms
+    Wall time: 136 ms
 
 
 This will fill the matching columns in the catalogs: -
@@ -238,7 +238,7 @@ Best candidate found in both directions
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table139624623788240" class="table-striped table-bordered table-condensed">
+    <table id="table139727047112832" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL1&apos;, &apos;CL2&apos;]</td><td>[&apos;CL0&apos;, &apos;CL1&apos;, &apos;CL2&apos;]</td><td>CL0</td></tr>
@@ -253,7 +253,7 @@ Best candidate found in both directions
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table139624623791264" class="table-striped table-bordered table-condensed">
+    <table id="table139727047114320" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL1&apos;, &apos;CL2&apos;]</td><td>[&apos;CL0&apos;, &apos;CL1&apos;, &apos;CL2&apos;]</td><td>CL0</td></tr>
@@ -303,7 +303,7 @@ The results of the matching can easily be saved and load using
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table139621756024864" class="table-striped table-bordered table-condensed">
+    <table id="table139724212886784" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.20</td><td>3.16e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL1&apos;, &apos;CL2&apos;]</td><td>[&apos;CL0&apos;, &apos;CL1&apos;, &apos;CL2&apos;]</td><td>CL0</td></tr>
@@ -318,7 +318,7 @@ The results of the matching can easily be saved and load using
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table139621756275632" class="table-striped table-bordered table-condensed">
+    <table id="table139724212541952" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.00</td><td>0.00</td><td>0.30</td><td>2.00e+13</td><td>CL0</td><td>CL0</td><td>[&apos;CL0&apos;, &apos;CL1&apos;, &apos;CL2&apos;]</td><td>[&apos;CL0&apos;, &apos;CL1&apos;, &apos;CL2&apos;]</td><td>CL0</td></tr>
@@ -357,7 +357,7 @@ These will be catalogs with the corresponding matched pairs:
 
 .. parsed-literal::
 
-    <matplotlib.collections.PathCollection at 0x7efc390987f0>
+    <matplotlib.collections.PathCollection at 0x7f1413f25190>
 
 
 

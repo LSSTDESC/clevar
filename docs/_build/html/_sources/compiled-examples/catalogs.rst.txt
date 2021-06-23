@@ -48,7 +48,7 @@ and the data for the table as keyword arguments:
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table139930243513264" class="table-striped table-bordered table-condensed">
+    <table id="table139915611698752" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -60,7 +60,7 @@ and the data for the table as keyword arguments:
 .. raw:: html
 
     <b>members</b><br><i>ClData length=3</i>
-    <table id="table139930243510384" class="table-striped table-bordered table-condensed">
+    <table id="table139915611697504" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th></tr></thead>
     <thead><tr><th>str2</th><th>str2</th></tr></thead>
     <tr><td>m1</td><td>c1</td></tr>
@@ -100,7 +100,7 @@ will be created:
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table139927367453808" class="table-striped table-bordered table-condensed">
+    <table id="table139915611826064" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>0</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -124,7 +124,7 @@ exeptions in `Properties of ``ClCatalog`` <#clcat>`__ and `Properties of
 .. raw:: html
 
     <b>test name</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table139930243513840" class="table-striped table-bordered table-condensed">
+    <table id="table139915611871312" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>test_column</th><th>other</th><th>third</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>int64</th><th>bool</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>0</td><td>1</td><td>True</td><td>None</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -213,7 +213,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table139930243513216" class="table-striped table-bordered table-condensed">
+    <table id="table139912743765088" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td></tr>
@@ -232,7 +232,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table139930243513744" class="table-striped table-bordered table-condensed">
+    <table id="table139912743766480" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -251,7 +251,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=1</i>
-    <table id="table139927367453136" class="table-striped table-bordered table-condensed">
+    <table id="table139915611699328" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -269,7 +269,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <i>Row index=0</i>
-    <table id="table139927367454384">
+    <table id="table139912743766384">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -297,7 +297,7 @@ footprint.ipynb for information on those.
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table139927367451744" class="table-striped table-bordered table-condensed">
+    <table id="table139912743767200" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -309,7 +309,7 @@ footprint.ipynb for information on those.
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table139927367452704" class="table-striped table-bordered table-condensed">
+    <table id="table139912743764416" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
