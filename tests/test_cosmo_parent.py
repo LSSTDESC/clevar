@@ -1,4 +1,4 @@
-"""Tests for clmm_cosmo.py"""
+"""Tests for cosmo"""
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 from clevar.cosmology.parent_class import Cosmology

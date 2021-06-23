@@ -107,8 +107,8 @@ class ArrayFuncs():
         add_fit = kwargs.get('add_fit', False)
         plot_kwargs = kwargs.get('plot_kwargs', {})
         xl, yl = kwargs.get('label_components', ('x', 'y'))
-        xl = xl.replace('$', '')  if '$' in xl else '$%s$'%xl.replace('_', '\_')
-        yl = yl.replace('$', '')  if '$' in yl else '$%s$'%yl.replace('_', '\_')
+        xl = xl.replace('$', '')  if '$' in xl else '%s'%xl.replace('_', '\_')
+        yl = yl.replace('$', '')  if '$' in yl else '%s'%yl.replace('_', '\_')
         if ((not add_bindata) and (not add_fit)) or len(values1)<=1:
             return
         # set log/lin funcs
