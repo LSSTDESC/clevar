@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Catalog Objects &mdash; ClEvaR 0.4.1 documentation</title>
+  <title>Catalog Objects &mdash; ClEvaR 0.4.2 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.4.1
+                0.4.2
               </div>
             
           
@@ -249,13 +249,13 @@ and the data for the table as keyword arguments:</p>
 </pre></div>
 </div>
 <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-<table id="table139914135948208" class="table-striped table-bordered table-condensed">
+<table id="table139930243513264" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>c2</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 </table><b>members</b><br><i>ClData length=3</i>
-<table id="table139914135945328" class="table-striped table-bordered table-condensed">
+<table id="table139930243510384" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>id_cluster</th></tr></thead>
 <thead><tr><th>str2</th><th>str2</th></tr></thead>
 <tr><td>m1</td><td>c1</td></tr>
@@ -283,7 +283,7 @@ will be created:</p>
 </pre></div>
 </div>
 <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-<table id="table139911259834688" class="table-striped table-bordered table-condensed">
+<table id="table139927367453808" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str1</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>0</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -296,7 +296,7 @@ exeptions in <cite>Properties of ``ClCatalog`</cite> &lt;#clcat&gt;`__ and <cite
 </pre></div>
 </div>
 <b>test name</b><br>Radius unit: None<br><i>ClData length=2</i>
-<table id="table139911259833296" class="table-striped table-bordered table-condensed">
+<table id="table139930243513840" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>test_column</th><th>other</th><th>third</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str1</th><th>int64</th><th>bool</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>0</td><td>1</td><td>True</td><td>None</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -318,81 +318,54 @@ not provided as argument, a default value is assigned:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;cluster ID&#39;</span><span class="p">,</span> <span class="s1">&#39;mass&#39;</span><span class="p">:</span> <span class="s1">&#39;cluster M_200&#39;</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>To de main data table of the catalog can be accessed with <code class="docutils literal notranslate"><span class="pre">[]</span></code>
+<p>The main data table of the catalog can be accessed with <code class="docutils literal notranslate"><span class="pre">[]</span></code>
 operations in the same way as <code class="docutils literal notranslate"><span class="pre">astropy</span></code> tables. The output is a new
 <code class="docutils literal notranslate"><span class="pre">Catalog</span></code> object, exept when only 1 row or column is required:</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;cluster&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span> <span class="s1">&#39;c2&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="p">[</span><span class="mf">1e13</span><span class="p">,</span> <span class="mf">1e14</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;astropy.table.column.Column&#39;&gt;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 &lt;Column name=&apos;id&apos; dtype=&apos;str2&apos; length=2&gt;
 <table>
 <tr><td>c1</td></tr>
 <tr><td>c2</td></tr>
-</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;astropy.table.column.Column&#39;&gt;
+</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 &lt;Column name=&apos;id&apos; dtype=&apos;str2&apos; length=2&gt;
 <table>
 <tr><td>c1</td></tr>
 <tr><td>c2</td></tr>
-</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;mass&#39;</span><span class="p">]))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;mass&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;clevar.catalog.Catalog&#39;&gt;
+</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;mass&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <b>cluster</b><br><i>ClData length=2</i>
-<table id="table139911259835840" class="table-striped table-bordered table-condensed">
+<table id="table139930243513216" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th></tr></thead>
 <tr><td>c1</td><td>10000000000000.0</td></tr>
 <tr><td>c2</td><td>100000000000000.0</td></tr>
-</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cat</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">cat</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
-</pre></div>
-</div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;clevar.catalog.Catalog&#39;&gt;
+</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
 </pre></div>
 </div>
 <b>cluster</b><br><i>ClData length=2</i>
-<table id="table139911259833872" class="table-striped table-bordered table-condensed">
+<table id="table139930243513744" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cat</span><span class="p">[:</span><span class="mi">1</span><span class="p">]))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">cat</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;clevar.catalog.Catalog&#39;&gt;
+</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 <b>cluster</b><br><i>ClData length=1</i>
-<table id="table139911259833824" class="table-striped table-bordered table-condensed">
+<table id="table139927367453136" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">cat</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</pre></div>
-</div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;astropy.table.row.Row&#39;&gt;
+</table><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
 <i>Row index=0</i>
-<table id="table139914135948544">
+<table id="table139927367454384">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -410,13 +383,13 @@ footprint.ipynb for information on those.</p>
 </pre></div>
 </div>
 <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-<table id="table139914136118176" class="table-striped table-bordered table-condensed">
+<table id="table139927367451744" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 </table><b>cluster</b><br><i>ClData length=2</i>
-<table id="table139914135945424" class="table-striped table-bordered table-condensed">
+<table id="table139927367452704" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>

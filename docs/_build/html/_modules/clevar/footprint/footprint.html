@@ -1,0 +1,596 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.footprint.footprint &mdash; ClEvaR 0.4.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/footprint.html">Footprint functionality</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>clevar.footprint.footprint</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clevar.footprint.footprint</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">..catalog</span> <span class="kn">import</span> <span class="n">ClData</span>
+<span class="kn">from</span> <span class="nn">..geometry</span> <span class="kn">import</span> <span class="n">convert_units</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">none_val</span><span class="p">,</span> <span class="n">hp</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
+<span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
+<span class="kn">from</span> <span class="nn">.nfw_funcs</span> <span class="kn">import</span> <span class="n">nfw2D_profile_flatcore</span>
+
+<div class="viewcode-block" id="Footprint"><a class="viewcode-back" href="../../../api/clevar.footprint.footprint.html#clevar.footprint.footprint.Footprint">[docs]</a><span class="k">class</span> <span class="nc">Footprint</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Functions for footprint management</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nside: int</span>
+<span class="sd">        Heapix NSIDE</span>
+<span class="sd">    nest: bool</span>
+<span class="sd">        If ordering is nested</span>
+<span class="sd">    data: clevar.ClData</span>
+<span class="sd">        Data with columns: pixel, detfrac, zmax</span>
+<span class="sd">    pixel_dict: dict</span>
+<span class="sd">        Dictionary to point to pixel in data</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nside: int</span>
+<span class="sd">            Heapix NSIDE</span>
+<span class="sd">        nest: bool</span>
+<span class="sd">            If ordering is nested</span>
+<span class="sd">        pixels: array</span>
+<span class="sd">            Pixels inside the footprint</span>
+<span class="sd">        detfrac_vals: array</span>
+<span class="sd">            Detection fraction</span>
+<span class="sd">        zmax_vals: array</span>
+<span class="sd">            Zmax</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nside</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nest</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">kargs</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_values</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_add_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nside</span><span class="p">,</span> <span class="n">pixels</span><span class="p">,</span> <span class="n">detfrac</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">nest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Adds provided values for attribues and assign default values to rest</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nside: int</span>
+<span class="sd">            Heapix NSIDE</span>
+<span class="sd">        nest: bool</span>
+<span class="sd">            If ordering is nested</span>
+<span class="sd">        pixels: array</span>
+<span class="sd">            Pixels inside the footprint</span>
+<span class="sd">        detfrac: array</span>
+<span class="sd">            Detection fraction. If None, value 1 is assigned.</span>
+<span class="sd">        zmax: array</span>
+<span class="sd">            Zmax. If None, value 99 is assigned.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nside</span> <span class="o">=</span> <span class="n">nside</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nest</span> <span class="o">=</span> <span class="n">nest</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;nside&#39;</span><span class="p">:</span><span class="n">nside</span><span class="p">,</span> <span class="s1">&#39;nest&#39;</span><span class="p">:</span><span class="n">nest</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;pixel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pixels</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;detfrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">none_val</span><span class="p">(</span><span class="n">detfrac</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;zmax&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">none_val</span><span class="p">(</span><span class="n">zmax</span><span class="p">,</span> <span class="mi">99</span><span class="p">)</span>
+        <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixels</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="n">ra</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">dec</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s1">&#39;icrs&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixel_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;pixel&#39;</span><span class="p">])}</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+<div class="viewcode-block" id="Footprint.get_map"><a class="viewcode-back" href="../../../api/clevar.footprint.footprint.html#clevar.footprint.footprint.Footprint.get_map">[docs]</a>    <span class="k">def</span> <span class="nf">get_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Transforms a internal quantity into a map</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        values: array</span>
+<span class="sd">            Values in each pixel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Map</span>
+<span class="sd">            Healpix map with the given values, other pixels are zero</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;pixel&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Footprint.get_values_in_pixels"><a class="viewcode-back" href="../../../api/clevar.footprint.footprint.html#clevar.footprint.footprint.Footprint.get_values_in_pixels">[docs]</a>    <span class="k">def</span> <span class="nf">get_values_in_pixels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">pixel_vals</span><span class="p">,</span> <span class="n">bad_val</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Transforms a internal quantity into a map</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        values: array</span>
+<span class="sd">            Values in each pixel</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Map</span>
+<span class="sd">            Healpix map with the given values, other pixels are zero</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">data</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">pixel_dict</span><span class="p">[</span><span class="n">p</span><span class="p">]])</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_dict</span> <span class="k">else</span> <span class="n">bad_val</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pixel_vals</span><span class="p">])</span></div>
+<div class="viewcode-block" id="Footprint.zmax_masks_from_footprint"><a class="viewcode-back" href="../../../api/clevar.footprint.footprint.html#clevar.footprint.footprint.Footprint.zmax_masks_from_footprint">[docs]</a>    <span class="k">def</span> <span class="nf">zmax_masks_from_footprint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Create a mask for a catalog based on a footprint</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ra: numpy array</span>
+<span class="sd">            Ra array in degrees</span>
+<span class="sd">        dec: numpy array</span>
+<span class="sd">            Dec array in degrees</span>
+<span class="sd">        z: numpy array</span>
+<span class="sd">            Redshift array</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ndarray</span>
+<span class="sd">            Arrays of booleans of objects in footprint</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">pixels</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ang2pix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span> <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span><span class="p">,</span> <span class="n">nest</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nest</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;## creating visibility mask ##&quot;</span><span class="p">)</span>
+        <span class="c1">#zmax_vals = self.get_map(self[&#39;zmax&#39;])[pixels] old method</span>
+        <span class="n">zmax_vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_values_in_pixels</span><span class="p">(</span><span class="s1">&#39;zmax&#39;</span><span class="p">,</span> <span class="n">pixels</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span><span class="o">&lt;=</span><span class="n">zmax_vals</span></div>
+<div class="viewcode-block" id="Footprint.read"><a class="viewcode-back" href="../../../api/clevar.footprint.footprint.html#clevar.footprint.footprint.Footprint.read">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">nside</span><span class="p">,</span> <span class="n">pixel_name</span><span class="p">,</span> <span class="n">detfrac_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zmax_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+             <span class="n">nest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads fits file and converst to FootprintZmax object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Name of input file</span>
+<span class="sd">        nside: int</span>
+<span class="sd">            Healpix nside</span>
+<span class="sd">        pixel_name: str</span>
+<span class="sd">            Name of pixel column</span>
+<span class="sd">        detfrac_name: str, None</span>
+<span class="sd">            Name of detection fraction colum. If None value 1 is assigned.</span>
+<span class="sd">        zmax_name:</span>
+<span class="sd">            Name of maximum redshit colum. If None value 99 is assigned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">()</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_values</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">nest</span><span class="o">=</span><span class="n">nest</span><span class="p">,</span>
+            <span class="n">pixels</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="n">pixel_name</span><span class="p">],</span>
+            <span class="n">detfrac</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="n">detfrac_name</span><span class="p">]</span> <span class="k">if</span> <span class="n">detfrac_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">zmax</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="n">zmax_name</span><span class="p">]</span> <span class="k">if</span> <span class="n">zmax_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;FootprintZmax object with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> pixels</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="s2">&quot;zmax: [</span><span class="si">%g</span><span class="s2">, </span><span class="si">%g</span><span class="s2">]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;zmax&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;zmax&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="s2">&quot;detfrac: [</span><span class="si">%g</span><span class="s2">, </span><span class="si">%g</span><span class="s2">]&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;detfrac&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;detfrac&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">out</span>
+    <span class="k">def</span> <span class="nf">_get_coverfrac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl_sk</span><span class="p">,</span> <span class="n">cl_z</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">aperture_radius_unit</span><span class="p">,</span>
+                       <span class="n">cosmo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wtfunc</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pixels</span><span class="p">,</span> <span class="n">sk</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pixels</span><span class="p">))):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get cover fraction</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cl_sk: astropy.coordinates.SkyCoord</span>
+<span class="sd">            Cluster SkyCoord [degrees, frame=&#39;icrs&#39;]</span>
+<span class="sd">        cl_z: float</span>
+<span class="sd">            Cluster redshift</span>
+<span class="sd">        aperture_radius: float</span>
+<span class="sd">            Radius of aperture</span>
+<span class="sd">        aperture_radius_unit: str</span>
+<span class="sd">            Unit of aperture radius</span>
+<span class="sd">        cosmo: clevar.Cosmology object</span>
+<span class="sd">            Cosmology object for when radius has angular units</span>
+<span class="sd">        wtfunc: function</span>
+<span class="sd">            Window function</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Cover fraction</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">pix_list</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">query_disc</span><span class="p">(</span>
+            <span class="n">nside</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nside</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">vec</span><span class="o">=</span><span class="n">hp</span><span class="o">.</span><span class="n">pixelfunc</span><span class="o">.</span><span class="n">ang2vec</span><span class="p">(</span><span class="n">cl_sk</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">cl_sk</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">convert_units</span><span class="p">(</span><span class="n">aperture_radius</span><span class="p">,</span> <span class="n">aperture_radius_unit</span><span class="p">,</span> <span class="s1">&#39;radians&#39;</span><span class="p">,</span>
+                                 <span class="n">redshift</span><span class="o">=</span><span class="n">cl_z</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">wtfunc</span><span class="p">(</span><span class="n">pix_list</span><span class="p">,</span> <span class="n">cl_sk</span><span class="p">)</span>
+        <span class="n">detfrac_vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_values_in_pixels</span><span class="p">(</span><span class="s1">&#39;detfrac&#39;</span><span class="p">,</span> <span class="n">pix_list</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">zmax_vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_values_in_pixels</span><span class="p">(</span><span class="s1">&#39;zmax&#39;</span><span class="p">,</span> <span class="n">pix_list</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">detfrac_vals</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cl_z</span><span class="o">&lt;=</span><span class="n">zmax_vals</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="o">*</span><span class="n">values</span><span class="p">)</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_get_coverfrac_nfw2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl_sk</span><span class="p">,</span> <span class="n">cl_z</span><span class="p">,</span> <span class="n">cl_radius</span><span class="p">,</span> <span class="n">cl_radius_unit</span><span class="p">,</span>
+                             <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">aperture_radius_unit</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Cover fraction with NFW 2D flatcore window. It is computed using:</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cl_sk: astropy.coordinates.SkyCoord</span>
+<span class="sd">            Cluster SkyCoord [degrees, frame=&#39;icrs&#39;]</span>
+<span class="sd">        cl_z: float</span>
+<span class="sd">            Cluster redshift</span>
+<span class="sd">        cl_radius: float</span>
+<span class="sd">            Cluster radius</span>
+<span class="sd">        cl_radius_unit: str</span>
+<span class="sd">            Unit of cluster radius</span>
+<span class="sd">        aperture_radius: float</span>
+<span class="sd">            Radius of aperture</span>
+<span class="sd">        aperture_radius_unit: str</span>
+<span class="sd">            Unit of aperture radius</span>
+<span class="sd">        cosmo: clevar.Cosmology object</span>
+<span class="sd">            Cosmology object for when radius has angular units</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">cl_radius_mpc</span> <span class="o">=</span> <span class="n">convert_units</span><span class="p">(</span><span class="n">cl_radius</span><span class="p">,</span> <span class="n">cl_radius_unit</span><span class="p">,</span> <span class="s1">&#39;mpc&#39;</span><span class="p">,</span>
+                                      <span class="n">redshift</span><span class="o">=</span><span class="n">cl_z</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_coverfrac</span><span class="p">(</span><span class="n">cl_sk</span><span class="p">,</span> <span class="n">cl_z</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">aperture_radius_unit</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">,</span>
+            <span class="n">wtfunc</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pix_list</span><span class="p">,</span> <span class="n">cl_sk</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_nfw_flatcore_window_func</span><span class="p">(</span><span class="n">pix_list</span><span class="p">,</span> <span class="n">cl_sk</span><span class="p">,</span> <span class="n">cl_z</span><span class="p">,</span>
+                                                                       <span class="n">cl_radius_mpc</span><span class="p">,</span> <span class="n">cosmo</span><span class="p">))</span>
+<div class="viewcode-block" id="Footprint.get_coverfrac"><a class="viewcode-back" href="../../../api/clevar.footprint.footprint.html#clevar.footprint.footprint.Footprint.get_coverfrac">[docs]</a>    <span class="k">def</span> <span class="nf">get_coverfrac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl_ra</span><span class="p">,</span> <span class="n">cl_dec</span><span class="p">,</span> <span class="n">cl_z</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">aperture_radius_unit</span><span class="p">,</span>
+                      <span class="n">cosmo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wtfunc</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pixels</span><span class="p">,</span> <span class="n">sk</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pixels</span><span class="p">))):</span>
+        <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get cover fraction with a given window.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            CF(R) = \frac{\sum_{r_i&lt;R}w(r_i)df(r_i)}{\sum_{r_i&lt;R}w(r_i)}</span>
+
+<span class="sd">        where the index `i` represents pixels of the footprint,</span>
+<span class="sd">        :math:`r_i` is the distance between the cluster center and the pixel center,</span>
+<span class="sd">        :math:`R` is the aperture radius to be considered</span>
+<span class="sd">        and :math:`w` is the window function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cl_ra: float</span>
+<span class="sd">            Cluster RA in deg</span>
+<span class="sd">        cl_dec: float</span>
+<span class="sd">            Cluster DEC in deg</span>
+<span class="sd">        cl_z: float</span>
+<span class="sd">            Cluster redshift</span>
+<span class="sd">        aperture_radius: float</span>
+<span class="sd">            Radius of aperture</span>
+<span class="sd">        aperture_radius_unit: str</span>
+<span class="sd">            Unit of aperture radius</span>
+<span class="sd">        cosmo: clevar.Cosmology object</span>
+<span class="sd">            Cosmology object for when radius has angular units</span>
+<span class="sd">        wtfunc: function</span>
+<span class="sd">            Window function</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            Cover fraction</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_coverfrac</span><span class="p">(</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">cl_ra</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">cl_dec</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s1">&#39;icrs&#39;</span><span class="p">),</span>
+                                   <span class="n">cl_z</span><span class="p">,</span> <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">aperture_radius_unit</span><span class="p">,</span>
+                                   <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">,</span> <span class="n">wtfunc</span><span class="o">=</span><span class="n">wtfunc</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Footprint.get_coverfrac_nfw2D"><a class="viewcode-back" href="../../../api/clevar.footprint.footprint.html#clevar.footprint.footprint.Footprint.get_coverfrac_nfw2D">[docs]</a>    <span class="k">def</span> <span class="nf">get_coverfrac_nfw2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cl_ra</span><span class="p">,</span> <span class="n">cl_dec</span><span class="p">,</span> <span class="n">cl_z</span><span class="p">,</span> <span class="n">cl_radius</span><span class="p">,</span> <span class="n">cl_radius_unit</span><span class="p">,</span>
+                            <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">aperture_radius_unit</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Cover fraction with NFW 2D flatcore window.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            CF(R) = \frac{\sum_{r_i&lt;R}w_{NFW}(r_i)df(r_i)}{\sum_{r_i&lt;R}w_{NFW}(r_i)}</span>
+
+<span class="sd">        where the index `i` represents pixels of the footprint,</span>
+<span class="sd">        :math:`r_i` is the distance between the cluster center and the pixel center,</span>
+<span class="sd">        :math:`R` is the aperture radius to be considered</span>
+<span class="sd">        and :math:`w_{nfw}` is the NFW 2D flatcore window function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cl_ra: float</span>
+<span class="sd">            Cluster RA in deg</span>
+<span class="sd">        cl_dec: float</span>
+<span class="sd">            Cluster DEC in deg</span>
+<span class="sd">        cl_z: float</span>
+<span class="sd">            Cluster redshift</span>
+<span class="sd">        cl_radius: float</span>
+<span class="sd">            Cluster radius</span>
+<span class="sd">        cl_radius_unit: str</span>
+<span class="sd">            Unit of cluster radius</span>
+<span class="sd">        aperture_radius: float</span>
+<span class="sd">            Radius of aperture</span>
+<span class="sd">        aperture_radius_unit: str</span>
+<span class="sd">            Unit of aperture radius</span>
+<span class="sd">        cosmo: clevar.Cosmology object</span>
+<span class="sd">            Cosmology object for when radius has angular units</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">            The NFW 2D function was taken from section 3.1 of arXiv:1104.2089 and was</span>
+<span class="sd">            validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_coverfrac_nfw2D</span><span class="p">(</span><span class="n">SkyCoord</span><span class="p">(</span><span class="n">cl_ra</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">cl_dec</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s1">&#39;icrs&#39;</span><span class="p">),</span>
+                                         <span class="n">cl_z</span><span class="p">,</span> <span class="n">cl_radius</span><span class="p">,</span> <span class="n">cl_radius_unit</span><span class="p">,</span>
+                                         <span class="n">aperture_radius</span><span class="p">,</span> <span class="n">aperture_radius_unit</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">_nfw_flatcore_window_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pix_list</span><span class="p">,</span> <span class="n">cl_sk</span><span class="p">,</span> <span class="n">cl_z</span><span class="p">,</span> <span class="n">cl_radius</span><span class="p">,</span> <span class="n">cosmo</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get aperture function for NFW 2D Profile with a top-hat core</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pix_list: list</span>
+<span class="sd">            List of pixels in the aperture</span>
+<span class="sd">        cl_sk: astropy.coordinates.SkyCoord</span>
+<span class="sd">            Cluster SkyCoord [degrees, frame=&#39;icrs&#39;]</span>
+<span class="sd">        cl_z: float</span>
+<span class="sd">            Cluster redshift</span>
+<span class="sd">        cl_radius: float</span>
+<span class="sd">            Cluster radius in Mpc</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array</span>
+<span class="sd">            Value of the aperture function at each pixel</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">Rs</span> <span class="o">=</span> <span class="mf">0.15</span><span class="o">/</span><span class="n">cosmo</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">]</span> <span class="c1"># 0.214Mpc</span>
+        <span class="n">Rcore</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">/</span><span class="n">cosmo</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">]</span> <span class="c1"># 0.142Mpc</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_values_in_pixels</span><span class="p">(</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">,</span> <span class="n">pix_list</span><span class="p">,</span> <span class="n">Rcore</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">convert_units</span><span class="p">(</span><span class="n">cl_sk</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                                              <span class="s1">&#39;degrees&#39;</span><span class="p">,</span> <span class="s1">&#39;mpc&#39;</span><span class="p">,</span> <span class="n">cl_z</span><span class="p">,</span> <span class="n">cosmo</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">nfw2D_profile_flatcore</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">cl_radius</span><span class="p">,</span> <span class="n">Rs</span><span class="p">,</span> <span class="n">Rcore</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

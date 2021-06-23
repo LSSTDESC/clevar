@@ -2289,8 +2289,8 @@ take the name of the quantity to be binned:
 
 .. parsed-literal::
 
-    CPU times: user 186 ms, sys: 156 ms, total: 342 ms
-    Wall time: 133 ms
+    CPU times: user 179 ms, sys: 160 ms, total: 339 ms
+    Wall time: 164 ms
 
 
 
