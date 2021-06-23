@@ -66,7 +66,7 @@ class Cosmology:
 
         Parameters
         ----------
-        be_cosmo: clmm.cosmology.Cosmology object, None
+        be_cosmo: clevar.Cosmology, None
             Input cosmology, used if not None
         **kwargs
             Individual cosmological parameters
