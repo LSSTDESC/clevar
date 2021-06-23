@@ -99,7 +99,7 @@ Check to see if selected pixels are correct
 
 .. parsed-literal::
 
-    <matplotlib.legend.Legend at 0x7fc50e054d30>
+    <matplotlib.legend.Legend at 0x7f79d3a99760>
 
 
 
@@ -234,8 +234,8 @@ weighted by a project NFW profile
     ## creating visibility mask ##
     ## creating visibility mask ##
     ## creating visibility mask ##
-    CPU times: user 4.42 ms, sys: 337 µs, total: 4.76 ms
-    Wall time: 4.53 ms
+    CPU times: user 6.41 ms, sys: 0 ns, total: 6.41 ms
+    Wall time: 6.11 ms
 
 
 .. code:: ipython3
@@ -248,7 +248,7 @@ weighted by a project NFW profile
 .. raw:: html
 
     <b>Cat1</b><br><i>ClData length=4</i>
-    <table id="table140484320038000" class="table-striped table-bordered table-condensed">
+    <table id="table140161218024928" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
     <tr><td>0</td><td>1.68</td><td>-6.91</td><td>1.00</td><td>1.22e+13</td><td>2.68e+12</td><td>0.06</td><td>0.37</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
@@ -262,7 +262,7 @@ weighted by a project NFW profile
 .. raw:: html
 
     <b>Cat2</b><br><i>ClData length=4</i>
-    <table id="table140484321184400" class="table-striped table-bordered table-condensed">
+    <table id="table140161218379152" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
     <tr><td>0</td><td>25.50</td><td>-71.28</td><td>1.03</td><td>8.95e+12</td><td>2.06e+12</td><td>0.06</td><td>0.10</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
@@ -290,8 +290,8 @@ object.
 
 .. parsed-literal::
 
-    CPU times: user 3.45 s, sys: 18.4 ms, total: 3.47 s
-    Wall time: 3.46 s
+    CPU times: user 3.76 s, sys: 7.85 ms, total: 3.77 s
+    Wall time: 3.76 s
 
 
 .. code:: ipython3
@@ -304,7 +304,7 @@ object.
 .. raw:: html
 
     <b>Cat1</b><br><i>ClData length=4</i>
-    <table id="table140484320073472" class="table-striped table-bordered table-condensed">
+    <table id="table140161218490720" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>0</td><td>1.68</td><td>-6.91</td><td>1.00</td><td>1.22e+13</td><td>2.68e+12</td><td>0.06</td><td>0.37</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
@@ -318,7 +318,7 @@ object.
 .. raw:: html
 
     <b>Cat2</b><br><i>ClData length=4</i>
-    <table id="table140484320169936" class="table-striped table-bordered table-condensed">
+    <table id="table140161218027328" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
     <tr><td>0</td><td>25.50</td><td>-71.28</td><td>1.03</td><td>8.95e+12</td><td>2.06e+12</td><td>0.06</td><td>0.10</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
@@ -397,8 +397,8 @@ Match catalogs
     * 400/700 objects matched.
     Cross Matches (Cat2)
     * 400/700 objects matched.
-    CPU times: user 8.37 s, sys: 237 ms, total: 8.61 s
-    Wall time: 8.36 s
+    CPU times: user 9.11 s, sys: 216 ms, total: 9.32 s
+    Wall time: 9.11 s
 
 
 Recovery rate
