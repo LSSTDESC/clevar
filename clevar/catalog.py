@@ -289,7 +289,7 @@ class Catalog():
             out.meta['name'] = self.name
             out.meta.update({f'hierarch label_{k}':v for k, v in self.labels.items()})
         for col in self.colnames:
-            if col in ('mt_self', 'mt_other'):
+            if col in ('mt_self', 'mt_other', 'mt_cross'):
                 out[col] = [c if c else '' for c in self[col]]
             elif col in ('mt_multi_self', 'mt_multi_other'):
                 out[col] = [','.join(c) if c else '' for c in self[col]]
