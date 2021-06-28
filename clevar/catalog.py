@@ -254,6 +254,31 @@ class Catalog():
         Return the column for key if key is in the dictionary, else default
         """
         return ClData.get(self.data, key, default)
+    def write(self, filename, add_header=True, overwrite=False):
+        """
+        Write catalog.
+
+        Parameters
+        ----------
+        filename: str
+            Name of file
+        add_header: bool
+            Saves catalog name and labels.
+        overwrite: bool
+            Overwrite saved files
+        """
+        out = ClData()
+        if add_header:
+            out.meta['name'] = self.name
+            out.meta.update({f'label_{k}':v for k, v in self.labels.items()})
+        for col in self.colnames:
+            if col in ('mt_self', 'mt_other'):
+                out[col] = [c if c else '' for c in self[col]]
+            elif col in ('mt_multi_self', 'mt_multi_other'):
+                out[col] = [','.join(c) if c else '' for c in self[col]]
+            else:
+                out[col] = self[col]
+        out.write(filename, overwrite=overwrite)
     def save_match(self, filename, overwrite=False):
         """
         Saves the matching results of one catalog
@@ -265,16 +290,24 @@ class Catalog():
         overwrite: bool
             Overwrite saved files
         """
-        out = ClData()
-        out['id'] = self['id']
-        for col in ('mt_self', 'mt_other'):
-            out[col] = [c if c else '' for c in self[col]]
-        for col in ('mt_multi_self', 'mt_multi_other'):
-            out[col] = [','.join(c) if c else '' for c in self[col]]
-        for col in self.data.colnames:
-            if (col[:3]=='mt_' and col not in out.colnames+['mt_cross']):
-                out[col] = self[col]
-        out.write(filename, overwrite=overwrite)
+        cols = ['id', 'mt_self', 'mt_other',
+            'mt_multi_self', 'mt_multi_other']
+        cols += [col for col in self.data.colnames
+            if (col[:3]=='mt_' and col not in cols+['mt_cross'])]
+        self[cols].write(filename, overwrite=overwrite)
+    def _load_match_cols_fmt(self, cldata):
+        for col in mt.colnames:
+            if col in ('mt_self', 'mt_other'):
+                self[col] = np.array([c if c!='' else None for c in mt[col]], dtype=np.ndarray)
+            elif col in ('mt_multi_self', 'mt_multi_other'):
+                self[col] = np.array([None for c in mt[col]], dtype=np.ndarray)
+                for i, c in enumerate(mt[col]):
+                    if len(c)>0:
+                        self[col][i] = c.split(',')
+                    else:
+                        self[col][i] = []
+            elif col!='id':
+                self[col] = mt[col]
     def load_match(self, filename):
         """
         Load matching results to catalogs
