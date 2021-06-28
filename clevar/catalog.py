@@ -53,8 +53,10 @@ class ClData(APtable):
         return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
     @classmethod
     def read(self, filename, **kwargs):
-        out = APtable.read(filename, **kwargs)
-        out.namedict = {c.lower():c for c in out.colnames}
+        tab = APtable.read(filename, **kwargs)
+        out = ClData(meta=tab.meta)
+        for c in tab.colnames:
+            out[c] = tab[c]
         return out
 
 _matching_mask_funcs = {
