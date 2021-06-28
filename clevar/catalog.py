@@ -287,7 +287,7 @@ class Catalog():
         out = ClData()
         if add_header:
             out.meta['name'] = self.name
-            out.meta.update({f'label_{k}':v for k, v in self.labels.items()})
+            out.meta.update({f'hierarch label_{k}':v for k, v in self.labels.items()})
         for col in self.colnames:
             if col in ('mt_self', 'mt_other'):
                 out[col] = [c if c else '' for c in self[col]]
@@ -303,24 +303,36 @@ class Catalog():
         for col in self.colnames:
             if col in ('mt_self', 'mt_other'):
                 self[col] = np.array(self[col], dtype=np.ndarray)
-                none_vals = self[col]==b''
+                in_vals = np.array(self[col], dtype=str)
+                none_vals = in_vals==''
                 self[col][none_vals] = None
-                self[col][~none_vals] = np.array(self[col][~none_vals], dtype=str)
+                self[col][~none_vals] = in_vals[~none_vals]
             if col in ('mt_multi_self', 'mt_multi_other'):
-                if self[col].dtype!=np.dtype(object):
-                    self[col] = np.array(
-                        [c.split(',') if len(c)>0 else [] for c in self[col]],
-                        dtype=np.ndarray)
+                self[col] = np.array(self[col], dtype=np.ndarray)
+                for i, c in enumerate(self[col]):
+                    self[col][i] = c.split(',') if len(c)>0 else []
 
     @classmethod
-    def _read(self, filename, name=None, **kwargs):
+    def _read(self, data, name=None, **kwargs):
         """Does the main execution for reading catalog.
+
+        Parameters
+        ----------
+        data: clevar.ClData
+            Input data.
+        name: str, None
+            Catalog name, if none reads from file.
+        labels: dict
+            Labels of data columns for plots (default vals from file header).
+        **kwargs: keyword argumens
+            All columns to be added must be passes with named argument,
+            the name is used in the Catalog data and the value must
+            be the column name in your input file (ex: z='REDSHIFT').
         """
         columns = {k: v for k, v in kwargs.items()
             if k not in ('labels', 'radius_unit')}
         if len(columns)==0:
             raise ValueError('At least one column must be provided.')
-        data = ClData.read(filename)
         # Catalog name
         if name is None:
             if 'NAME' not in data.meta:
@@ -338,12 +350,18 @@ class Catalog():
         # Missing cols
         data._check_cols(columns.values())
         # out data
-        out = self(name, **kwargs_info, **{k:data[v] for k, v in columns.items()})
+        mt_cols = ('mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other')
+        out = self(name, **kwargs_info,
+            **{k:data[v] for k, v in columns.items()
+                if k not in mt_cols})
+        for k, v in columns.items():
+            if k in mt_cols: # matching cols
+                out[k] = np.array(data[v], dtype=str)
         out._fmt_loaded_mt()
         return out
     @classmethod
     def read(self, filename, name=None, **kwargs):
-        """Read catalog from fits file
+        """Read catalog from fits file.
 
         Parameters
         ----------
@@ -358,7 +376,21 @@ class Catalog():
             the name is used in the Catalog data and the value must
             be the column name in your input file (ex: z='REDSHIFT').
         """
-        return self._read(filename, name=name, **kwargs)
+        data = ClData.read(filename)
+        return self._read(data, name=name, **kwargs)
+    @classmethod
+    def read_full(self, filename):
+        """Read fits file catalog saved by clevar with all information.
+        The catalog must contain name information.
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        """
+        data = ClData.read(filename)
+        out = self._read(data, **{c:c for c in data.colnames})
+        return out
     def save_match(self, filename, overwrite=False):
         """
         Saves the matching results of one catalog
@@ -384,13 +416,10 @@ class Catalog():
         filename: str
             Name of file with matching results
         """
-        mt = ClData.read(filename)
-        mt._check_cols(['mt_self', 'mt_other',
-            'mt_multi_self', 'mt_multi_other'])
+        mt = self.read_full(filename)
         for col in mt.colnames:
             if col!='id':
                 self[col] = mt[col]
-        self._fmt_loaded_mt()
         self.cross_match()
         print(f' * Total objects:    {self.size:,}')
         print(f' * multiple (self):  {len(self[veclen(self["mt_multi_self"])>0]):,}')
@@ -477,7 +506,8 @@ class ClCatalog(Catalog):
             the name is used in the ClCatalog data and the value must
             be the column name in your input file (ex: z='REDSHIFT').
         """
-        return self._read(filename, name, **kwargs)
+        data = ClData.read(filename)
+        return self._read(data, name=name, **kwargs)
 
 class MemCatalog(Catalog):
     """
