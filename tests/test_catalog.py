@@ -1,6 +1,7 @@
 from clevar import ClCatalog, MemCatalog
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
+import os
 
 def test_clcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
@@ -41,9 +42,13 @@ def test_clcatalog():
     # Check inexistent mask
     assert_raises(ValueError, c.get_matching_mask, 'made up mask')
     # Reading function
+    assert_raises(ValueError, ClCatalog.read, 'demo/cat1.fits', id='ID')
     assert_raises(ValueError, ClCatalog.read, 'demo/cat1.fits', 'test')
     assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test', id='ID2')
     c = ClCatalog.read('demo/cat1.fits', 'test', id='ID')
+    c.write('cat1_with_header.fits', overwrite=True)
+    c_read = ClCatalog.read('cat1_with_header.fits', id='ID')
+    os.system('rm -f cat1_with_header.fits')
 
 def test_memcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30],
