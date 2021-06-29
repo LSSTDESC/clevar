@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.catalog &mdash; ClEvaR 0.4.3 documentation</title>
+  <title>clevar.catalog &mdash; ClEvaR 0.5.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.5.0
               </div>
             
           
@@ -265,9 +265,27 @@
         <span class="k">return</span> <span class="n">APtable</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">colnames</span> <span class="k">if</span> <span class="n">c</span><span class="o">!=</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">]])</span>
 <div class="viewcode-block" id="ClData.read"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClData.read">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">APtable</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">namedict</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">colnames</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">out</span></div></div>
+        <span class="n">tab</span> <span class="o">=</span> <span class="n">APtable</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">(</span><span class="n">meta</span><span class="o">=</span><span class="n">tab</span><span class="o">.</span><span class="n">meta</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tab</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">tab</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+    <span class="k">def</span> <span class="nf">_check_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if required columns exist</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        columns: list</span>
+<span class="sd">            Names of columns to find.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">columns</span>
+                   <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">namedict</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">missing</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Column(s) &#39;</span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&#39; not found &quot;</span>
+                <span class="s2">&quot;in catalog </span><span class="si">{data.colnames}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <span class="n">_matching_mask_funcs</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;cross&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_cross&#39;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">,</span>
@@ -277,6 +295,7 @@
     <span class="s1">&#39;multi_other&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">veclen</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_multi_other&#39;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">,</span>
     <span class="s1">&#39;multi_join&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="p">(</span><span class="n">veclen</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">veclen</span><span class="p">(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;mt_multi_other&#39;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">),</span>
 <span class="p">}</span>
+
 <div class="viewcode-block" id="Catalog"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog">[docs]</a><span class="k">class</span> <span class="nc">Catalog</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parent object to handle catalogs.</span>
@@ -464,6 +483,126 @@
 <span class="sd">        Return the column for key if key is in the dictionary, else default</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ClData</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Catalog.write"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">add_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write catalog.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Name of file</span>
+<span class="sd">        add_header: bool</span>
+<span class="sd">            Saves catalog name and labels.</span>
+<span class="sd">        overwrite: bool</span>
+<span class="sd">            Overwrite saved files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">add_header</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="sa">f</span><span class="s1">&#39;hierarch label_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_cross&#39;</span><span class="p">):</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
+            <span class="k">elif</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">):</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">_fmt_loaded_mt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Format matching columns read from file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+                <span class="n">in_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+                <span class="n">none_vals</span> <span class="o">=</span> <span class="n">in_vals</span><span class="o">==</span><span class="s1">&#39;&#39;</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">none_vals</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="o">~</span><span class="n">none_vals</span><span class="p">]</span> <span class="o">=</span> <span class="n">in_vals</span><span class="p">[</span><span class="o">~</span><span class="n">none_vals</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="p">[]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Does the main execution for reading catalog.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data: clevar.ClData</span>
+<span class="sd">            Input data.</span>
+<span class="sd">        name: str, None</span>
+<span class="sd">            Catalog name, if none reads from file.</span>
+<span class="sd">        labels: dict</span>
+<span class="sd">            Labels of data columns for plots (default vals from file header).</span>
+<span class="sd">        **kwargs: keyword argumens</span>
+<span class="sd">            All columns to be added must be passes with named argument,</span>
+<span class="sd">            the name is used in the Catalog data and the value must</span>
+<span class="sd">            be the column name in your input file (ex: z=&#39;REDSHIFT&#39;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="s1">&#39;radius_unit&#39;</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one column must be provided.&#39;</span><span class="p">)</span>
+        <span class="c1"># Catalog name</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;NAME&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">meta</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Name not found in file, please provide as argument.&#39;</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;NAME&#39;</span><span class="p">]</span>
+        <span class="c1"># labels and radius unit</span>
+        <span class="n">kwargs_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span><span class="n">v</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">k</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;LABEL_&#39;</span><span class="p">},</span>
+        <span class="p">}</span>
+        <span class="n">kwargs_info</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{}))</span>
+        <span class="n">radius_unit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;RADIUS_UNIT&#39;</span><span class="p">))</span>
+        <span class="n">kwargs_info</span><span class="o">.</span><span class="n">update</span><span class="p">({}</span> <span class="k">if</span> <span class="n">radius_unit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">:</span> <span class="n">radius_unit</span><span class="p">})</span>
+        <span class="c1"># Missing cols</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">_check_cols</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="c1"># out data</span>
+        <span class="n">mt_cols</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs_info</span><span class="p">,</span>
+            <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">data</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">columns</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">mt_cols</span><span class="p">})</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">columns</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mt_cols</span><span class="p">:</span> <span class="c1"># matching cols</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">_fmt_loaded_mt</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">out</span>
+<div class="viewcode-block" id="Catalog.read"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.read">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read catalog from fits file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Input file.</span>
+<span class="sd">        name: str, None</span>
+<span class="sd">            Catalog name, if none reads from file.</span>
+<span class="sd">        labels: dict</span>
+<span class="sd">            Labels of data columns for plots (default vals from file header).</span>
+<span class="sd">        **kwargs: keyword argumens</span>
+<span class="sd">            All columns to be added must be passes with named argument,</span>
+<span class="sd">            the name is used in the Catalog data and the value must</span>
+<span class="sd">            be the column name in your input file (ex: z=&#39;REDSHIFT&#39;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Catalog.read_full"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.read_full">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read fits file catalog saved by clevar with all information.</span>
+<span class="sd">        The catalog must contain name information.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Input file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">out</span></div>
 <div class="viewcode-block" id="Catalog.save_match"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.save_match">[docs]</a>    <span class="k">def</span> <span class="nf">save_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the matching results of one catalog</span>
@@ -475,16 +614,11 @@
 <span class="sd">        overwrite: bool</span>
 <span class="sd">            Overwrite saved files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">()</span>
-        <span class="n">out</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">):</span>
-            <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
-        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">):</span>
-            <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
-        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;mt_&#39;</span> <span class="ow">and</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">colnames</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;mt_cross&#39;</span><span class="p">]):</span>
-                <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>
+        <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">]</span>
+        <span class="n">cols</span> <span class="o">+=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">col</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;mt_&#39;</span> <span class="ow">and</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cols</span><span class="o">+</span><span class="p">[</span><span class="s1">&#39;mt_cross&#39;</span><span class="p">])]</span>
+        <span class="bp">self</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>
 <div class="viewcode-block" id="Catalog.load_match"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.Catalog.load_match">[docs]</a>    <span class="k">def</span> <span class="nf">load_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load matching results to catalogs</span>
@@ -494,18 +628,9 @@
 <span class="sd">        filename: str</span>
 <span class="sd">            Name of file with matching results</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">mt</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">mt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_full</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">mt</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">):</span>
-                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">c</span> <span class="k">if</span> <span class="n">c</span><span class="o">!=</span><span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mt</span><span class="p">[</span><span class="n">col</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">):</span>
-                <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">None</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mt</span><span class="p">[</span><span class="n">col</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mt</span><span class="p">[</span><span class="n">col</span><span class="p">]):</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">elif</span> <span class="n">col</span><span class="o">!=</span><span class="s1">&#39;id&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span><span class="o">!=</span><span class="s1">&#39;id&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">mt</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cross_match</span><span class="p">()</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; * Total objects:    </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -540,31 +665,6 @@
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ftq</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">col</span><span class="o">!=</span><span class="s1">&#39;id&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">ftq</span><span class="p">[</span><span class="n">col</span><span class="p">]</span></div></div>
-<span class="k">def</span> <span class="nf">_read_catalog</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Read catalog from fits file</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    filename: str</span>
-<span class="sd">        Input file.</span>
-<span class="sd">    name: str</span>
-<span class="sd">        Catalog name.</span>
-<span class="sd">    labels: dict</span>
-<span class="sd">        Labels of data columns for plots (default={}).</span>
-<span class="sd">    **kwargs: keyword argumens</span>
-<span class="sd">        All columns to be added must be passes with named argument,</span>
-<span class="sd">        the name is used in the Catalog data and the value must</span>
-<span class="sd">        be the column name in your input file (ex: z=&#39;REDSHIFT&#39;).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;At least one column must be provided.&#39;</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{})</span>
-    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">namedict</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-        <span class="n">missing</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Column(s) &#39;</span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&#39; not found in catalog </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">dataclass</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">data</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
 
 <div class="viewcode-block" id="ClCatalog"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog">[docs]</a><span class="k">class</span> <span class="nc">ClCatalog</span><span class="p">(</span><span class="n">Catalog</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -600,28 +700,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_match_vals</span><span class="p">()</span>
 <div class="viewcode-block" id="ClCatalog.read"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog.read">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read catalog from fits file</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        filename: str</span>
 <span class="sd">            Input file.</span>
-<span class="sd">        name: str</span>
-<span class="sd">            ClCatalog name.</span>
+<span class="sd">        name: str, None</span>
+<span class="sd">            ClCatalog name, if none reads from file.</span>
 <span class="sd">        labels: dict</span>
-<span class="sd">            Labels of data columns for plots (default={}).</span>
+<span class="sd">            Labels of data columns for plots (default vals from file header).</span>
 <span class="sd">        radius_unit: str, None</span>
-<span class="sd">            Unit of the radius column (default=None).</span>
+<span class="sd">            Unit of the radius column (default read from file).</span>
 <span class="sd">        **kwargs: keyword argumens</span>
 <span class="sd">            All columns to be added must be passes with named argument,</span>
 <span class="sd">            the name is used in the ClCatalog data and the value must</span>
 <span class="sd">            be the column name in your input file (ex: z=&#39;REDSHIFT&#39;).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">radius_unit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">_read_catalog</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ClCatalog</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">radius_unit</span> <span class="o">=</span> <span class="n">radius_unit</span>
-        <span class="k">return</span> <span class="n">out</span></div></div>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 <div class="viewcode-block" id="MemCatalog"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.MemCatalog">[docs]</a><span class="k">class</span> <span class="nc">MemCatalog</span><span class="p">(</span><span class="n">Catalog</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -654,25 +752,7 @@
         <span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">columns</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id_dict_list</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">id_dict_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_dict_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">[])</span><span class="o">+</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
-<div class="viewcode-block" id="MemCatalog.read"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.MemCatalog.read">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Read catalog from fits file</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        filename: str</span>
-<span class="sd">            Input file.</span>
-<span class="sd">        name: str</span>
-<span class="sd">            ClCatalog name.</span>
-<span class="sd">        labels: dict</span>
-<span class="sd">            Labels of data columns for plots (default={}).</span>
-<span class="sd">        **kwargs: keyword argumens</span>
-<span class="sd">            All columns to be added must be passes with named argument,</span>
-<span class="sd">            the name is used in the MemCatalog data and the value must</span>
-<span class="sd">            be the column name in your input file (ex: z=&#39;REDSHIFT&#39;).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_read_catalog</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">MemCatalog</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id_dict_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_dict_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">[])</span><span class="o">+</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span></div>
 </pre></div>
 
            </div>

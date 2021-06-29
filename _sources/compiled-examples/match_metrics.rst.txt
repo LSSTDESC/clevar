@@ -375,8 +375,8 @@ catalogs
 
 .. parsed-literal::
 
-    CPU times: user 170 ms, sys: 199 ms, total: 368 ms
-    Wall time: 123 ms
+    CPU times: user 196 ms, sys: 212 ms, total: 408 ms
+    Wall time: 137 ms
 
 
 
@@ -396,8 +396,8 @@ Compare with the distribution on the other catalog
 
 .. parsed-literal::
 
-    CPU times: user 369 ms, sys: 231 ms, total: 600 ms
-    Wall time: 330 ms
+    CPU times: user 430 ms, sys: 233 ms, total: 663 ms
+    Wall time: 399 ms
 
 
 
@@ -505,8 +505,8 @@ catalogs
 
 .. parsed-literal::
 
-    CPU times: user 172 ms, sys: 200 ms, total: 372 ms
-    Wall time: 124 ms
+    CPU times: user 196 ms, sys: 156 ms, total: 352 ms
+    Wall time: 134 ms
 
 
 
@@ -526,8 +526,8 @@ Compare with the distribution on the other catalog
 
 .. parsed-literal::
 
-    CPU times: user 188 ms, sys: 215 ms, total: 403 ms
-    Wall time: 136 ms
+    CPU times: user 219 ms, sys: 200 ms, total: 419 ms
+    Wall time: 154 ms
 
 
 

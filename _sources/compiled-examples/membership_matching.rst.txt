@@ -60,7 +60,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=5</i>
-    <table id="table140380672212368" class="table-striped table-bordered table-condensed">
+    <table id="table139849645922096" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>MASS</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th></tr></thead>
     <tr><td>CL0a</td><td>1000000000000000.0</td></tr>
@@ -75,7 +75,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=4</i>
-    <table id="table140380672212320" class="table-striped table-bordered table-condensed">
+    <table id="table139849645922144" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>MASS</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th></tr></thead>
     <tr><td>CL0b</td><td>1000000000000000.0</td></tr>
@@ -89,7 +89,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=15</i>
-    <table id="table140380672212128" class="table-striped table-bordered table-condensed">
+    <table id="table139849645922336" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
     <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -114,7 +114,7 @@ Given some input data
 .. raw:: html
 
     <i>Table length=14</i>
-    <table id="table140378669956832" class="table-striped table-bordered table-condensed">
+    <table id="table139847640859360" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
     <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -175,7 +175,7 @@ or can also be added afterwards:
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table140380672233136" class="table-striped table-bordered table-condensed">
+    <table id="table139849645915440" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0a</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -190,7 +190,7 @@ or can also be added afterwards:
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table140377804676304" class="table-striped table-bordered table-condensed">
+    <table id="table139846778409888" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0b</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -226,7 +226,7 @@ all members.
 .. raw:: html
 
     <b>Mem1</b><br><i>ClData length=15</i>
-    <table id="table140380672377664" class="table-striped table-bordered table-condensed">
+    <table id="table139846778410800" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
     <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
@@ -251,7 +251,7 @@ all members.
 .. raw:: html
 
     <b>Mem2</b><br><i>ClData length=14</i>
-    <table id="table140377804266128" class="table-striped table-bordered table-condensed">
+    <table id="table139849645893904" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
     <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
@@ -365,8 +365,8 @@ one call:
     * 4/5 objects matched.
     Cross Matches (Cat2)
     * 4/4 objects matched.
-    CPU times: user 12.7 ms, sys: 1.23 ms, total: 14 ms
-    Wall time: 13.4 ms
+    CPU times: user 13.2 ms, sys: 1.98 ms, total: 15.2 ms
+    Wall time: 14.3 ms
 
 
 This will fill the matching columns in the catalogs: -
@@ -409,10 +409,10 @@ computed by:
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table140380672217040" class="table-striped table-bordered table-condensed">
+    <table id="table139846778411232" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
-    <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
+    <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
     <tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td><td>CL1b</td></tr>
     <tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td><td>CL2b</td></tr>
     <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
@@ -424,13 +424,13 @@ computed by:
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table140380672216800" class="table-striped table-bordered table-condensed">
+    <table id="table139846778411376" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
     <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
     <tr><td>CL1b</td><td>2.00e+15</td><td>CL1a</td><td>CL1a</td><td>[&apos;CL1a&apos;]</td><td>[&apos;CL1a&apos;]</td><td>1.0</td><td>1.0</td><td>CL1a</td></tr>
     <tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
-    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
+    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
     </table>
 
 
@@ -474,10 +474,10 @@ The results of the matching can easily be saved and load using
 .. raw:: html
 
     <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table140380672216368" class="table-striped table-bordered table-condensed">
+    <table id="table139846778333360" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
-    <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>[&apos;CL3b&apos;, &apos;CL0b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
+    <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
     <tr><td>CL1a</td><td>2.00e+15</td><td>CL1b</td><td>CL1b</td><td>[&apos;CL1b&apos;]</td><td>[&apos;CL1b&apos;]</td><td>1.0</td><td>1.0</td><td>CL1b</td></tr>
     <tr><td>CL2a</td><td>3.00e+15</td><td>CL2b</td><td>CL2b</td><td>[&apos;CL2b&apos;]</td><td>[&apos;CL2b&apos;]</td><td>1.0</td><td>1.0</td><td>CL2b</td></tr>
     <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
@@ -489,13 +489,13 @@ The results of the matching can easily be saved and load using
 .. raw:: html
 
     <b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-    <table id="table140380672215840" class="table-striped table-bordered table-condensed">
+    <table id="table139849645892320" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
     <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
     <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
     <tr><td>CL1b</td><td>2.00e+15</td><td>CL1a</td><td>CL1a</td><td>[&apos;CL1a&apos;]</td><td>[&apos;CL1a&apos;]</td><td>1.0</td><td>1.0</td><td>CL1a</td></tr>
     <tr><td>CL2b</td><td>3.00e+15</td><td>CL2a</td><td>CL2a</td><td>[&apos;CL2a&apos;]</td><td>[&apos;CL2a&apos;]</td><td>1.0</td><td>1.0</td><td>CL2a</td></tr>
-    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>[&apos;CL3a&apos;, &apos;CL0a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
+    <tr><td>CL3b</td><td>4.00e+15</td><td>CL3a</td><td>CL3a</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>[&apos;CL0a&apos;, &apos;CL3a&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3a</td></tr>
     </table>
 
 
@@ -528,7 +528,7 @@ These will be catalogs with the corresponding matched pairs:
 
 .. parsed-literal::
 
-    <matplotlib.collections.PathCollection at 0x7fac410899d0>
+    <matplotlib.collections.PathCollection at 0x7f309d65f040>
 
 
 
@@ -538,6 +538,19 @@ These will be catalogs with the corresponding matched pairs:
 
 Outputing matched catalogs
 --------------------------
+
+To save the current catalogs, you can use the ``write`` inbuilt
+function:
+
+.. code:: ipython3
+
+    c1.write('c1_temp.fits', overwrite=True)
+
+This will allow you to save the catalog with its current labels and
+matching information.
+
+Outputing matching information to original catalogs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Assuming your input data came from initial files, ``clevar`` also
 provides functions create output files that combine all the information

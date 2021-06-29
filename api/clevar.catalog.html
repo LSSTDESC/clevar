@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.catalog module &mdash; ClEvaR 0.4.3 documentation</title>
+  <title>clevar.catalog module &mdash; ClEvaR 0.5.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.5.0
               </div>
             
           
@@ -326,6 +326,36 @@ It also considers zmax values on the footprint if available.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="clevar.catalog.Catalog.read">
+<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.Catalog.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read catalog from fits file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Input file.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>None</em>) – Catalog name, if none reads from file.</p></li>
+<li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots (default vals from file header).</p></li>
+<li><p><strong>**kwargs</strong> (<em>keyword argumens</em>) – All columns to be added must be passes with named argument,
+the name is used in the Catalog data and the value must
+be the column name in your input file (ex: z=’REDSHIFT’).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.catalog.Catalog.read_full">
+<em class="property">classmethod </em><code class="sig-name descname">read_full</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog.read_full"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.Catalog.read_full" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read fits file catalog saved by clevar with all information.
+The catalog must contain name information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Input file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="clevar.catalog.Catalog.remove_multiple_duplicates">
 <code class="sig-name descname">remove_multiple_duplicates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog.remove_multiple_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.Catalog.remove_multiple_duplicates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes duplicates in multiple match columns</p>
@@ -359,6 +389,21 @@ It also considers zmax values on the footprint if available.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="clevar.catalog.Catalog.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">add_header</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.Catalog.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write catalog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Name of file</p></li>
+<li><p><strong>add_header</strong> (<em>bool</em>) – Saves catalog name and labels.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em>) – Overwrite saved files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -382,15 +427,15 @@ Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)</p></l
 </dl>
 <dl class="py method">
 <dt id="clevar.catalog.ClCatalog.read">
-<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.read" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read catalog from fits file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em>) – Input file.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – ClCatalog name.</p></li>
-<li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots (default={}).</p></li>
-<li><p><strong>radius_unit</strong> (<em>str</em><em>, </em><em>None</em>) – Unit of the radius column (default=None).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>None</em>) – ClCatalog name, if none reads from file.</p></li>
+<li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots (default vals from file header).</p></li>
+<li><p><strong>radius_unit</strong> (<em>str</em><em>, </em><em>None</em>) – Unit of the radius column (default read from file).</p></li>
 <li><p><strong>**kwargs</strong> (<em>keyword argumens</em>) – All columns to be added must be passes with named argument,
 the name is used in the ClCatalog data and the value must
 be the column name in your input file (ex: z=’REDSHIFT’).</p></li>
@@ -749,24 +794,6 @@ name (e.g. <code class="docutils literal notranslate"><span class="pre">ascii.aa
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt id="clevar.catalog.MemCatalog.read">
-<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#MemCatalog.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.MemCatalog.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read catalog from fits file</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – Input file.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – ClCatalog name.</p></li>
-<li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots (default={}).</p></li>
-<li><p><strong>**kwargs</strong> (<em>keyword argumens</em>) – All columns to be added must be passes with named argument,
-the name is used in the MemCatalog data and the value must
-be the column name in your input file (ex: z=’REDSHIFT’).</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>
