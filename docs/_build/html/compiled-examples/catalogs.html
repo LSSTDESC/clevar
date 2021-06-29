@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Catalog Objects &mdash; ClEvaR 0.4.3 documentation</title>
+  <title>Catalog Objects &mdash; ClEvaR 0.5.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.4.3
+                0.5.0
               </div>
             
           
@@ -249,13 +249,13 @@ and the data for the table as keyword arguments:</p>
 </pre></div>
 </div>
 <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-<table id="table139915611698752" class="table-striped table-bordered table-condensed">
+<table id="table140047409494432" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>c2</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 </table><b>members</b><br><i>ClData length=3</i>
-<table id="table139915611697504" class="table-striped table-bordered table-condensed">
+<table id="table140047409493472" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>id_cluster</th></tr></thead>
 <thead><tr><th>str2</th><th>str2</th></tr></thead>
 <tr><td>m1</td><td>c1</td></tr>
@@ -266,14 +266,38 @@ and the data for the table as keyword arguments:</p>
 <p>The catalogs objects can also be read directly from file, by passing the
 fits file as the first argument, the catalog name as the second, and the
 names of the columns in the fits files as keyword arguments:</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;../demo/cat1.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster&#39;</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;../demo/cat1.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;my cluster&#39;</span><span class="p">,</span>
                      <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="s1">&#39;MASS&#39;</span><span class="p">)</span>
-<span class="n">mem</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;../demo/cat1_mem.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;member&#39;</span><span class="p">,</span>
+<span class="n">mem</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;../demo/cat1_mem.fits&#39;</span><span class="p">,</span> <span class="s1">&#39;my cluster members&#39;</span><span class="p">,</span>
                      <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="n">id_cluster</span><span class="o">=</span><span class="s1">&#39;ID_CLUSTER&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<div class="section" id="saving-catalogs">
+<h3>Saving catalogs<a class="headerlink" href="#saving-catalogs" title="Permalink to this headline">¶</a></h3>
+<p>Both Catalog objects have a <code class="docutils literal notranslate"><span class="pre">write</span></code> inbuilt function to save them to
+<code class="docutils literal notranslate"><span class="pre">.fits</span></code> files. These functions also take the argument <code class="docutils literal notranslate"><span class="pre">add_header</span></code>
+that add the name and labels informations to those files. If the file
+was saved with this argument, it can be read without the requirement of
+a <code class="docutils literal notranslate"><span class="pre">name</span></code> argument:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;cat1_with_info.fits&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cat_temp</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">read_full</span><span class="p">(</span><span class="s1">&#39;cat1_with_info.fits&#39;</span><span class="p">)</span>
+<span class="n">cat_temp</span>
+</pre></div>
+</div>
+<b>my cluster</b><br>Radius unit: None<br><i>ClData length=5</i>
+<table id="table140047409492032" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+<thead><tr><th>str3</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+<tr><td>CL0</td><td>31622776601683.793</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL1</td><td>25118864315095.82</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL2</td><td>19952623149688.83</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL3</td><td>63095734448019.43</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+<tr><td>CL4</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+</table></div>
 <div class="section" id="catalog-data">
 <h3>Catalog data<a class="headerlink" href="#catalog-data" title="Permalink to this headline">¶</a></h3>
 <p>All catalogs have an <code class="docutils literal notranslate"><span class="pre">id</span></code> column if not included in the input, one
@@ -283,7 +307,7 @@ will be created:</p>
 </pre></div>
 </div>
 <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-<table id="table139915611826064" class="table-striped table-bordered table-condensed">
+<table id="table140047409672976" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str1</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>0</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -296,7 +320,7 @@ exeptions in <cite>Properties of ``ClCatalog`</cite> &lt;#clcat&gt;`__ and <cite
 </pre></div>
 </div>
 <b>test name</b><br>Radius unit: None<br><i>ClData length=2</i>
-<table id="table139915611871312" class="table-striped table-bordered table-condensed">
+<table id="table140047409674512" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>test_column</th><th>other</th><th>third</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str1</th><th>int64</th><th>bool</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>0</td><td>1</td><td>True</td><td>None</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -339,7 +363,7 @@ operations in the same way as <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <b>cluster</b><br><i>ClData length=2</i>
-<table id="table139912743765088" class="table-striped table-bordered table-condensed">
+<table id="table140047409757056" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th></tr></thead>
 <tr><td>c1</td><td>10000000000000.0</td></tr>
@@ -348,7 +372,7 @@ operations in the same way as <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <b>cluster</b><br><i>ClData length=2</i>
-<table id="table139912743766480" class="table-striped table-bordered table-condensed">
+<table id="table140044550241872" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -357,7 +381,7 @@ operations in the same way as <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <b>cluster</b><br><i>ClData length=1</i>
-<table id="table139915611699328" class="table-striped table-bordered table-condensed">
+<table id="table140047409495824" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -365,7 +389,7 @@ operations in the same way as <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <i>Row index=0</i>
-<table id="table139912743766384">
+<table id="table140044550097744">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -383,13 +407,13 @@ footprint.ipynb for information on those.</p>
 </pre></div>
 </div>
 <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-<table id="table139912743767200" class="table-striped table-bordered table-condensed">
+<table id="table140044550097600" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 </table><b>cluster</b><br><i>ClData length=2</i>
-<table id="table139912743764416" class="table-striped table-bordered table-condensed">
+<table id="table140044550097360" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>

@@ -48,7 +48,7 @@ and the data for the table as keyword arguments:
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table139915611698752" class="table-striped table-bordered table-condensed">
+    <table id="table140047409494432" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -60,7 +60,7 @@ and the data for the table as keyword arguments:
 .. raw:: html
 
     <b>members</b><br><i>ClData length=3</i>
-    <table id="table139915611697504" class="table-striped table-bordered table-condensed">
+    <table id="table140047409493472" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th></tr></thead>
     <thead><tr><th>str2</th><th>str2</th></tr></thead>
     <tr><td>m1</td><td>c1</td></tr>
@@ -78,10 +78,46 @@ names of the columns in the fits files as keyword arguments:
 
 .. code:: ipython3
 
-    cat = ClCatalog.read('../demo/cat1.fits', 'cluster',
+    cat = ClCatalog.read('../demo/cat1.fits', 'my cluster',
                          id='ID', mass='MASS')
-    mem = MemCatalog.read('../demo/cat1_mem.fits', 'member',
+    mem = MemCatalog.read('../demo/cat1_mem.fits', 'my cluster members',
                          id='ID', id_cluster='ID_CLUSTER')
+
+Saving catalogs
+~~~~~~~~~~~~~~~
+
+Both Catalog objects have a ``write`` inbuilt function to save them to
+``.fits`` files. These functions also take the argument ``add_header``
+that add the name and labels informations to those files. If the file
+was saved with this argument, it can be read without the requirement of
+a ``name`` argument:
+
+.. code:: ipython3
+
+    cat.write('cat1_with_info.fits', overwrite=True)
+
+.. code:: ipython3
+
+    cat_temp = cat.read_full('cat1_with_info.fits')
+    cat_temp
+
+
+
+
+.. raw:: html
+
+    <b>my cluster</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table140047409492032" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>31622776601683.793</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL1</td><td>25118864315095.82</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL2</td><td>19952623149688.83</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL3</td><td>63095734448019.43</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL4</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
 
 Catalog data
 ~~~~~~~~~~~~
@@ -100,7 +136,7 @@ will be created:
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table139915611826064" class="table-striped table-bordered table-condensed">
+    <table id="table140047409672976" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>0</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -124,7 +160,7 @@ exeptions in `Properties of ``ClCatalog`` <#clcat>`__ and `Properties of
 .. raw:: html
 
     <b>test name</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table139915611871312" class="table-striped table-bordered table-condensed">
+    <table id="table140047409674512" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>test_column</th><th>other</th><th>third</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>int64</th><th>bool</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>0</td><td>1</td><td>True</td><td>None</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -213,7 +249,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table139912743765088" class="table-striped table-bordered table-condensed">
+    <table id="table140047409757056" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td></tr>
@@ -232,7 +268,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table139912743766480" class="table-striped table-bordered table-condensed">
+    <table id="table140044550241872" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -251,7 +287,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=1</i>
-    <table id="table139915611699328" class="table-striped table-bordered table-condensed">
+    <table id="table140047409495824" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -269,7 +305,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <i>Row index=0</i>
-    <table id="table139912743766384">
+    <table id="table140044550097744">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -297,7 +333,7 @@ footprint.ipynb for information on those.
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table139912743767200" class="table-striped table-bordered table-condensed">
+    <table id="table140044550097600" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -309,7 +345,7 @@ footprint.ipynb for information on those.
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table139912743764416" class="table-striped table-bordered table-condensed">
+    <table id="table140044550097360" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
