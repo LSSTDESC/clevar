@@ -1335,6 +1335,16 @@ class ArrayFuncs():
         ArrayFuncs._add_bindata_and_powlawfit(ax_m, values1, values2,
                                          **{k[4:]:v for k, v in kwargs.items()
                                              if k[:4]=='fit_'})
+        if kwargs['fit_add_bindata']:
+            l = ax_m.lines[-3]
+            color = ax_m.collections[-1]._original_edgecolor
+            for ax, l, p in zip(axes_h, l._y, ax_m.collections[-1]._paths):
+                xlim = ax.get_xlim()
+                ax.axhline(l, color=color)
+                ax.fill_between(xlim, *p._vertices[:,1], alpha=.3, lw=0, color=color)
+                ax.set_xlim(xlim)
+
+
         return fig, [ax_m, axes_h]
 
 class ClCatalogFuncs():
