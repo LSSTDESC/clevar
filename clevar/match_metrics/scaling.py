@@ -8,6 +8,7 @@ from matplotlib.ticker import ScalarFormatter, NullFormatter
 import pylab as plt
 import numpy as np
 from scipy.optimize import curve_fit
+from scipy.stats import binned_statistic
 
 from ..utils import none_val, autobins, binmasks
 from ..match import get_matched_pairs
@@ -112,37 +113,45 @@ class ArrayFuncs():
         if ((not add_bindata) and (not add_fit)) or len(values1)<=1:
             return
         # set log/lin funcs
-        tfunc, ifunc = (np.log, np.exp) if log else (lambda x:x, lambda x:x)
+        tfunc, ifunc = (np.log10, lambda x: 10**x) if log else (lambda x:x, lambda x:x)
         # data
         data = _prep_fit_data(tfunc(values1), tfunc(values2),
                               bins_x=tfunc(bins1) if hasattr(bins1, '__len__') else bins1,
                               bins_y=tfunc(bins2) if hasattr(bins2, '__len__') else bins2,
-                              yerr=None if (err2 is None or not log) else err2/values2,
+                              yerr=None if (err2 is None or not log) else err2/(values2*np.log(10)),
                               statistics=mode)
         if len(data)==0:
             return
         vbin_1, vbin_2, vbin_err2 = data
+        # fit
+        if add_fit:
+            nice_val = lambda x: f'{x:.2f}' if 0.01<abs(x)<100 else \
+                (f'10^{{{np.log10(x):.2f}}}' if x>0 else f'-10^{{{np.log10(-x):.2f}}}')
+            pw_func = lambda x, a, b: a*x+b
+            fit, cov = curve_fit(pw_func, vbin_1, vbin_2,
+                sigma=vbin_err2*2, absolute_sigma=True)
+            sig = np.sqrt(np.diag(cov))
+            fit0_lab = f'({nice_val(fit[0])}\pm {nice_val(sig[0])})'
+            fit1_lab = f'({nice_val(fit[1])}\pm {nice_val(sig[1])})'
+            avg_label = f'\left<{yl}\\right|\left.{xl}\\right>'
+            fit_label = f'${avg_label}=10^{{{fit1_lab}}}\;({xl})^{{{fit0_lab}}}$' if log\
+                else f'${avg_label}={fit0_lab}\;{xl}%s$'%(fit1_lab if fit[1]<0 else '+'+fit1_lab)
+            plot_kwargs_ = {'color': 'r', 'label': fit_label}
+            plot_kwargs_.update(plot_kwargs)
+            sort = np.argsort(values1)
+            xl, yl  = values1[sort], pw_func(tfunc(values1)[sort], *fit)
+            sl = np.sqrt(np.dot([tfunc(xl), 1], np.dot(cov, [tfunc(xl), 1])))
+            ax.plot(xl, ifunc(yl), **plot_kwargs_)
+            ax.fill_between(xl, ifunc(yl-sl), ifunc(yl+sl),
+                color=plot_kwargs_['color'], alpha=.2, lw=0)
         if add_bindata and not mode=='individual':
             eb_kwargs_ = {'elinewidth': 1, 'capsize': 2, 'fmt': '.',
                           'ms': 10, 'ls': '', 'color': 'm'}
             eb_kwargs_.update(bindata_kwargs)
             ax.errorbar(ifunc(vbin_1), ifunc(vbin_2),
-                        yerr=(ifunc(vbin_2)*np.array([1-1/np.exp(vbin_err2), np.exp(vbin_err2)-1])
+                        yerr=(ifunc(vbin_2)*np.array([1-1/ifunc(vbin_err2), ifunc(vbin_err2)-1])
                             if log else vbin_err2),
                         **eb_kwargs_)
-        # fit
-        if add_fit:
-            pw_func = lambda x, a, b: a*x+b
-            fit, cov = curve_fit(pw_func, vbin_1, vbin_2, sigma=vbin_err2)
-            fit1_lab = f'{ifunc(fit[1]):.2f}' if ifunc(fit[1])<100\
-                  else f'10^{{{np.log10(ifunc(fit[1])):.2f}}}'
-            avg_label = f'\left<{yl}\\right|\left.{xl}\\right>'
-            fit_label = f'${avg_label}={fit1_lab}\;({xl})^{{{fit[0]:.2f}}}$' if log\
-                else f'${avg_label}={fit[0]:.2f}\;{xl}%s$'%(fit1_lab if fit[1]<0 else '+'+fit1_lab)
-            plot_kwargs_ = {'color': 'r', 'label': fit_label}
-            plot_kwargs_.update(plot_kwargs)
-            sort = np.argsort(values1)
-            ax.plot(values1[sort], ifunc(pw_func(tfunc(values1)[sort], *fit)), **plot_kwargs_)
         # legend
         if any(c.get_label()[0]!='_' for c in ax.collections+ax.lines):
             legend_kwargs_ = {}
