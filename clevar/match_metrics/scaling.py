@@ -794,7 +794,8 @@ class ArrayFuncs():
             **kwargs,
             )
     def _plot_metrics(values1, values2, bins=30, mode='redshift', ax=None,
-                      bias_kwargs={}, scat_kwargs={}, rotated=False):
+                      bias_kwargs={}, scat_kwargs={}, rotated=False,
+                      metrics=['mean']):
         """
         Plot metrics of 1 component.
 
@@ -819,42 +820,65 @@ class ArrayFuncs():
             Arguments for scatter plot. Used in pylab.fill_between
         rotated: bool
             Rotate ax of plot
+        metrics: list
+            scat, bias, scat.fill
 
         Returns
         -------
         ax: matplotlib.axes
             Axis of the plot
         """
-        edges1 = autobins(values1, bins, log=mode=='log')
-        bmask = np.array(binmasks(values1, edges1))
+        edges = autobins(values1, bins, log=mode=='log')
+        bmask = np.array(binmasks(values1, edges))
         safe = [m[m].size>1 for m in bmask]
-        diff = {
-            'simple': lambda v1, v2: v2-v1,
-            'redshift': lambda v1, v2: (v2-v1)/(1+v1),
-            'log': lambda v1, v2: np.log10(v2)-np.log10(v1)
+        values = {
+            'diff': lambda v1, v2: v2-v1,
+            'diff_z': lambda v1, v2: (v2-v1)/(1+v1),
+            'diff_log': lambda v1, v2: np.log10(v2)-np.log10(v1),
+            'simple': lambda v1, v2: v2,
+            'log': lambda v1, v2: np.log10(v2),
             }[mode](values1, values2)
-        edges1 = np.log10(edges1) if mode=='log' else edges1
-        values1_mid = 0.5*(edges1[1:]+edges1[:-1])
-        values1_mid = 10**values1_mid if mode=='log' else values1_mid
-        values1_mid = values1_mid[safe]
-        bias, scat = np.array([[f(diff[m]) for m in bmask[safe]] for f in (np.mean, np.std)])
+        values_mid = (10**(0.5*(np.log10(edges[1:])+np.log10(edges[:-1])))
+            if mode=='log' else 0.5*(edges[1:]+edges[:-1]))
         # set for rotation
         ax = plt.axes() if ax is None else ax
         ph.add_grid(ax)
-        bias_args = (bias, values1_mid) if rotated else (values1_mid, bias)
-        scat_func = ax.fill_betweenx if rotated else ax.fill_between
         set_scale = ax.set_yscale if rotated else ax.set_xscale
         # plot
-        bias_kwargs_ = {'color':'C0'}
-        bias_kwargs_.update(bias_kwargs)
-        scat_kwargs_ = {'alpha':.3, 'color':'C1'}
-        scat_kwargs_.update(scat_kwargs)
-        ax.plot(*bias_args, **bias_kwargs_)
-        scat_func(values1_mid, -scat, scat, **scat_kwargs_)
+        quant_color = 0
+        for metric in metrics:
+            if metric=='mean' in metrics:
+                stat = binned_statistic(values1, values, bins=edges, statistic='mean')[0]
+                kwargs = {'color':'C0', 'label':'mean'}
+                kwargs.update(bias_kwargs)
+            elif 'std' in metric:
+                stat = binned_statistic(values1, values, bins=edges, statistic='std')[0]
+                kwargs = {'color':'C1', 'label':'std'}
+                kwargs.update(scat_kwargs)
+            elif metric[:2]=='q_':
+                p = 0.01*float(metric[2:].replace('.fill', ''))
+                q1 = binned_statistic(values1, values, bins=edges,
+                    statistic=lambda x: np.quantile(x, .5*(1-p)))[0]
+                q2 = binned_statistic(values1, values, bins=edges,
+                    statistic=lambda x: np.quantile(x, .5*(1+p)))[0]
+                stat = 0.5*(q2-q1)
+                kwargs = {'color':f'C{quant_color+2}',
+                    'label':metric.replace('.fill', '')}
+                kwargs.update(scat_kwargs)
+                quant_color += 1
+            else:
+                raise ValueError(f'Invalid value (={metric}) for metric.')
+            if '.fill' in metric:
+                func = ax.fill_betweenx if rotated else ax.fill_between
+                args = (values_mid, -stat, stat)
+            else:
+                func = ax.plot
+                args = (stat, values_mid) if rotated else (values_mid, stat)
+            func(*(a[safe] for a in args), **kwargs)
         return ax
     def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
                      bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
-                     legend_kwargs={}):
+                     legend_kwargs={}, metrics=['mean', 'std']):
         """
         Plot metrics of 1 component.
 
@@ -896,9 +920,11 @@ class ArrayFuncs():
         scat_kwargs_ = {'label':'scatter'}
         scat_kwargs_.update(scat_kwargs)
         ArrayFuncs._plot_metrics(values1, values2, bins=bins1, mode=mode, ax=axes[0],
-                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_)
+                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
+                                 metrics=metrics)
         ArrayFuncs._plot_metrics(values2, values1, bins=bins2, mode=mode, ax=axes[1],
-                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_)
+                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
+                                 metrics=metrics)
         axes[0].legend(**legend_kwargs)
         axes[0].xaxis.tick_top()
         axes[0].xaxis.set_label_position('top')
@@ -906,7 +932,8 @@ class ArrayFuncs():
 
     def plot_density_metrics(values1, values2, bins1=30, bins2=30,
         ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
-        err1=None, err2=None, metrics_mode='simple', plt_kwargs={}, add_cb=True, cb_kwargs={},
+        err1=None, err2=None, metrics_mode='simple', metrics=['std'],
+        plt_kwargs={}, add_cb=True, cb_kwargs={},
         err_kwargs={}, bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
         fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02), **kwargs):
         """
@@ -1020,29 +1047,34 @@ class ArrayFuncs():
             ax_cb.xaxis.tick_top()
             ax_cb.xaxis.set_label_position('top')
         # Metrics plot
-        bias_kwargs_ = {'label':'bias'}
+        bias_kwargs_ = {}
         bias_kwargs_.update(bias_kwargs)
-        scat_kwargs_ = {'label':'scatter'}
+        scat_kwargs_ = {}
         scat_kwargs_.update(scat_kwargs)
         ArrayFuncs._plot_metrics(values1, values2, bins=bins1, mode=metrics_mode, ax=ax_h,
-                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_)
+                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
+                                 metrics=metrics)
         ArrayFuncs._plot_metrics(values2, values1, bins=bins2, mode=metrics_mode, ax=ax_v,
                                  bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
-                                 rotated=True)
+                                 rotated=True,
+                                 metrics=metrics)
         # Adjust plots
-        ax_l.legend(ax_v.collections+ax_v.lines, ['$\sigma$', '$bias$'])
+        labels = [c.get_label() for c in ax_v.collections+ax_v.lines]
+        labels = ['$\\sigma_{%s}$'%l.replace('q_', '') if l[:2]=='q_'
+            else l for l in labels]
+        ax_l.legend(ax_v.collections+ax_v.lines, labels)
         ax_m.set_xscale(xscale)
         ax_m.set_yscale(yscale)
         # Horizontal
         ax_h.set_xscale(xscale)
-        ax_h.set_xlim(ax_m.get_xlim())
         ax_h.xaxis.set_minor_formatter(NullFormatter())
         ax_h.xaxis.set_major_formatter(NullFormatter())
+        ax_h.set_xlim(ax_m.get_xlim())
         # Vertical
         ax_v.set_yscale(yscale)
-        ax_v.set_ylim(ax_m.get_ylim())
         ax_v.yaxis.set_minor_formatter(NullFormatter())
         ax_v.yaxis.set_major_formatter(NullFormatter())
+        ax_v.set_ylim(ax_m.get_ylim())
         # Label
         ax_l.axis('off')
         return fig, [ax_m, ax_v, ax_h, ax_l]
@@ -2975,9 +3007,9 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     list
         Axes with the panels (main, right, top, label)
     """
-    metrics_mode = kwargs.pop('metrics_mode', 'redshift')
-    return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='z',
-        metrics_mode=metrics_mode, **kwargs)
+    kwargs['metrics_mode'] = kwargs.get('metrics_mode', 'diff_z')
+    kwargs['metrics'] = kwargs.get('metrics', ['std.fill', 'mean'])
+    return ClCatalogFuncs.plot_density_metrics(cat1, cat2, matching_type, col='z', **kwargs)
 def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
               log_mass=True, transpose=False, **kwargs):
     """
