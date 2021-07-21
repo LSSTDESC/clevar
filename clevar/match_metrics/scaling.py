@@ -1353,6 +1353,9 @@ class ClCatalogFuncs():
             'xscale': kwargs.get('xscale', 'linear'),
             'yscale': kwargs.get('yscale', 'linear'),
         }
+        xlabel = kwargs.get('label1', class_kwargs['xlabel'])
+        ylabel = kwargs.get('label2', class_kwargs['ylabel'])
+        func_kwargs['fit_label_components'] = kwargs.get('fit_label_components', (xlabel, ylabel))
         return class_kwargs, func_kwargs, mt1, mt2
     def _fmt_plot(ax, **kwargs):
         """
@@ -2038,6 +2041,8 @@ class ClCatalogFuncs():
         f_kwargs.pop('fit_err2', None)
         f_kwargs.pop('err1', None)
         f_kwargs.pop('err2', None)
+        f_kwargs['bins1'] = bins1
+        f_kwargs['bins2'] = bins2
         fig, axes = ArrayFuncs.plot_metrics(**f_kwargs)
         axes[0].set_ylabel(cat1.name)
         axes[1].set_ylabel(cat2.name)
@@ -2142,10 +2147,11 @@ class ClCatalogFuncs():
         cl_kwargs, f_kwargs, mt1, mt2 = ClCatalogFuncs._prep_kwargs(cat1, cat2, matching_type, col, kwargs)
         f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
         f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
+        f_kwargs['bins1'] = bins1
+        f_kwargs['bins2'] = bins2
+        fig, axes = ArrayFuncs.plot_density_metrics(**f_kwargs)
         xlabel = kwargs.get('label1', cl_kwargs['xlabel'])
         ylabel = kwargs.get('label2', cl_kwargs['ylabel'])
-        f_kwargs['fit_label_components'] = kwargs.get('fit_label_components', (xlabel, ylabel))
-        fig, axes = ArrayFuncs.plot_density_metrics(**f_kwargs)
         axes[0].set_xlabel(xlabel)
         axes[0].set_ylabel(ylabel)
         return fig, axes
