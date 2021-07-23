@@ -179,8 +179,8 @@ class ArrayFuncs():
         err_kwargs: dict
             Additional arguments for pylab.errorbar
 
-        Fit Parameters
-        --------------
+        Other Parameters
+        -----------------
         add_bindata: bool
             Plot binned data used for fit (default=False).
         add_fit: bool
@@ -191,9 +191,11 @@ class ArrayFuncs():
             Bin and fit in log values (default=False).
         fit_statistics: str
             Statistics to be used in fit (default=mean). Options are:
-                `individual` - Use each point
-                `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-                `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+
+                * `individual` - Use each point
+                * `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+                * `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+
         fit_bins1: array, None
             Bins for component 1 (default=10).
         fit_bins2: array, None
@@ -794,8 +796,7 @@ class ArrayFuncs():
             **kwargs,
             )
     def _plot_metrics(values1, values2, bins=30, mode='redshift', ax=None,
-                      bias_kwargs={}, scat_kwargs={}, rotated=False,
-                      metrics=['mean']):
+                      metrics=['mean'], metrics_kwargs={}, rotated=False):
         """
         Plot metrics of 1 component.
 
@@ -814,14 +815,23 @@ class ArrayFuncs():
             log - metrics for log of values
         ax: matplotlib.axes
             Ax to add plot
-        bias_kwargs: dict
-            Arguments for bias plot. Used in pylab.plot
-        scat_kwargs: dict
-            Arguments for scatter plot. Used in pylab.fill_between
+        metrics: list
+            List of mettrics to be plotted. Possibilities are:
+
+                * 'mean' : compute the mean of values for points within each bin.
+                * 'std' : compute the standard deviation within each bin.
+                * 'median' : compute the median of values for points within each bin.
+                * 'count' : compute the count of points within each bin.
+                * 'sum' : compute the sum of values for points within each bin.
+                * 'min' : compute the minimum of values for points within each bin.
+                * 'max' : compute the maximum of values for point within each bin.
+                * 'p_#' : compute half the width where a percentile of data is found. Number must be
+                  between 0-100 (ex: 'p_68', 'p_95', 'p_99').
+
+        metrics_kwargs: dict
+            Dictionary of dictionary configs for each metric plots.
         rotated: bool
             Rotate ax of plot
-        metrics: list
-            scat, bias, scat.fill
 
         Returns
         -------
@@ -845,27 +855,18 @@ class ArrayFuncs():
         ph.add_grid(ax)
         set_scale = ax.set_yscale if rotated else ax.set_xscale
         # plot
-        quant_color = 0
         for metric in metrics:
-            if metric=='mean' in metrics:
-                stat = binned_statistic(values1, values, bins=edges, statistic='mean')[0]
-                kwargs = {'color':'C0', 'label':'mean'}
-                kwargs.update(bias_kwargs)
-            elif 'std' in metric:
-                stat = binned_statistic(values1, values, bins=edges, statistic='std')[0]
-                kwargs = {'color':'C1', 'label':'std'}
-                kwargs.update(scat_kwargs)
-            elif metric[:2]=='q_':
+            if any(key in metric for key in
+                    ('mean', 'std', 'median', 'count', 'sum', 'min', 'max')):
+                stat = binned_statistic(values1, values, bins=edges, statistic=metric)[0]
+                kwargs = {'label':metric.replace('.fill', '')}
+            elif metric[:2]=='p_':
                 p = 0.01*float(metric[2:].replace('.fill', ''))
                 q1 = binned_statistic(values1, values, bins=edges,
                     statistic=lambda x: np.quantile(x, .5*(1-p)))[0]
                 q2 = binned_statistic(values1, values, bins=edges,
                     statistic=lambda x: np.quantile(x, .5*(1+p)))[0]
                 stat = 0.5*(q2-q1)
-                kwargs = {'color':f'C{quant_color+2}',
-                    'label':metric.replace('.fill', '')}
-                kwargs.update(scat_kwargs)
-                quant_color += 1
             else:
                 raise ValueError(f'Invalid value (={metric}) for metric.')
             if '.fill' in metric:
@@ -874,11 +875,13 @@ class ArrayFuncs():
             else:
                 func = ax.plot
                 args = (stat, values_mid) if rotated else (values_mid, stat)
+            kwargs = {'label':metric.replace('.fill', '')}
+            kwargs.update(metrics_kwargs.get(metric, {}))
             func(*(a[safe] for a in args), **kwargs)
         return ax
     def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
-                     bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
-                     legend_kwargs={}, metrics=['mean', 'std']):
+                     metrics=['mean', 'std'], metrics_kwargs={}, fig_kwargs={},
+                     legend_kwargs={}):
         """
         Plot metrics of 1 component.
 
@@ -897,10 +900,24 @@ class ArrayFuncs():
             simple - used simple difference
             redshift - metrics for (values2-values1)/(1+values1)
             log - metrics for log of values
-        bias_kwargs: dict
-            Arguments for bias plot. Used in pylab.plot
-        scat_kwargs: dict
-            Arguments for scatter plot. Used in pylab.fill_between
+        metrics: list
+            List of mettrics to be plotted. Possibilities are:
+
+                * 'mean' : compute the mean of values for points within each bin.
+                * 'std' : compute the standard deviation within each bin.
+                * 'median' : compute the median of values for points within each bin.
+                * 'count' : compute the count of points within each bin.
+                * 'sum' : compute the sum of values for points within each bin.
+                * 'min' : compute the minimum of values for points within each bin.
+                * 'max' : compute the maximum of values for point within each bin.
+                * 'p_#' : compute half the width where a percentile of data is found. Number must be
+                  between 0-100 (ex: 'p_68', 'p_95', 'p_99').
+
+            If `'.fill'` is added to each metric, it will produce a filled region between (-metric,
+            metric).
+
+        metrics_kwargs: dict
+            Dictionary of dictionary configs for each metric plots.
         fig_kwargs: dict
             Additional arguments for plt.subplots
         legend_kwargs: dict
@@ -915,16 +932,10 @@ class ArrayFuncs():
         fig_kwargs_.update(fig_kwargs)
         f, axes = plt.subplots(2, **fig_kwargs_)
         # default args
-        bias_kwargs_ = {'label':'bias'}
-        bias_kwargs_.update(bias_kwargs)
-        scat_kwargs_ = {'label':'scatter'}
-        scat_kwargs_.update(scat_kwargs)
         ArrayFuncs._plot_metrics(values1, values2, bins=bins1, mode=mode, ax=axes[0],
-                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
-                                 metrics=metrics)
+                                 metrics=metrics, metrics_kwargs=metrics_kwargs)
         ArrayFuncs._plot_metrics(values2, values1, bins=bins2, mode=mode, ax=axes[1],
-                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
-                                 metrics=metrics)
+                                 metrics=metrics, metrics_kwargs=metrics_kwargs)
         axes[0].legend(**legend_kwargs)
         axes[0].xaxis.tick_top()
         axes[0].xaxis.set_label_position('top')
@@ -934,7 +945,7 @@ class ArrayFuncs():
         ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
         err1=None, err2=None, metrics_mode='simple', metrics=['std'],
         plt_kwargs={}, add_cb=True, cb_kwargs={},
-        err_kwargs={}, bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
+        err_kwargs={}, metrics_kwargs={}, fig_kwargs={},
         fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02), **kwargs):
         """
         Scatter plot with errorbars and color based on point density with scatter and bias panels
@@ -974,10 +985,8 @@ class ArrayFuncs():
             Colorbar arguments
         err_kwargs: dict
             Additional arguments for pylab.errorbar
-        bias_kwargs: dict
-            Arguments for bias plot. Used in pylab.plot
-        scat_kwargs: dict
-            Arguments for scatter plot. Used in pylab.fill_between
+        metrics_kwargs: dict
+            Dictionary of dictionary configs for each metric plots.
         fig_kwargs: dict
             Additional arguments for plt.subplots
         fig_pos: tuple
@@ -1047,20 +1056,14 @@ class ArrayFuncs():
             ax_cb.xaxis.tick_top()
             ax_cb.xaxis.set_label_position('top')
         # Metrics plot
-        bias_kwargs_ = {}
-        bias_kwargs_.update(bias_kwargs)
-        scat_kwargs_ = {}
-        scat_kwargs_.update(scat_kwargs)
         ArrayFuncs._plot_metrics(values1, values2, bins=bins1, mode=metrics_mode, ax=ax_h,
-                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
-                                 metrics=metrics)
+                                 metrics=metrics, metrics_kwargs=metrics_kwargs)
         ArrayFuncs._plot_metrics(values2, values1, bins=bins2, mode=metrics_mode, ax=ax_v,
-                                 bias_kwargs=bias_kwargs_, scat_kwargs=scat_kwargs_,
                                  rotated=True,
-                                 metrics=metrics)
+                                 metrics=metrics, metrics_kwargs=metrics_kwargs)
         # Adjust plots
         labels = [c.get_label() for c in ax_v.collections+ax_v.lines]
-        labels = ['$\\sigma_{%s}$'%l.replace('q_', '') if l[:2]=='q_'
+        labels = ['$\\sigma_{%s}$'%l.replace('p_', '') if l[:2]=='p_'
             else l for l in labels]
         ax_l.legend(ax_v.collections+ax_v.lines, labels)
         ax_m.set_xscale(xscale)
@@ -1183,9 +1186,8 @@ class ArrayFuncs():
     def plot_density_dist(values1, values2, bins1=30, bins2=30,
         ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
         err1=None, err2=None, metrics_mode='simple', plt_kwargs={}, add_cb=True, cb_kwargs={},
-        err_kwargs={}, bias_kwargs={}, scat_kwargs={}, fig_kwargs={},
-        fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02), vline_kwargs={},
-        **kwargs):
+        err_kwargs={}, fig_kwargs={}, fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02),
+        vline_kwargs={}, **kwargs):
         """
         Scatter plot with errorbars and color based on point density with distribution panels.
 
@@ -1219,10 +1221,6 @@ class ArrayFuncs():
             Colorbar arguments
         err_kwargs: dict
             Additional arguments for pylab.errorbar
-        bias_kwargs: dict
-            Arguments for bias plot. Used in pylab.plot
-        scat_kwargs: dict
-            Arguments for scatter plot. Used in pylab.fill_between
         fig_kwargs: dict
             Additional arguments for plt.subplots
         fig_pos: tuple
@@ -2055,10 +2053,8 @@ class ClCatalogFuncs():
 
         Other parameters
         ----------------
-        bias_kwargs: dict
-            Arguments for bias plot. Used in pylab.plot
-        scat_kwargs: dict
-            Arguments for scatter plot. Used in pylab.fill_between
+        metrics_kwargs: dict
+            Dictionary of dictionary configs for each metric plots.
         fig_kwargs: dict
             Additional arguments for plt.subplots
         legend_kwargs: dict
@@ -2165,10 +2161,8 @@ class ClCatalogFuncs():
             Colorbar arguments
         err_kwargs: dict
             Additional arguments for pylab.errorbar
-        bias_kwargs: dict
-            Arguments for bias plot. Used in pylab.plot
-        scat_kwargs: dict
-            Arguments for scatter plot. Used in pylab.fill_between
+        metrics_kwargs: dict
+            Dictionary of dictionary configs for each metric plots.
         xscale: str
             Scale xaxis.
         yscale: str
@@ -2424,10 +2418,8 @@ class ClCatalogFuncs():
             Colorbar arguments
         err_kwargs: dict
             Additional arguments for pylab.errorbar
-        bias_kwargs: dict
-            Arguments for bias plot. Used in pylab.plot
-        scat_kwargs: dict
-            Arguments for scatter plot. Used in pylab.fill_between
+        metrics_kwargs: dict
+            Dictionary of dictionary configs for each metric plots.
         xscale: str
             Scale xaxis.
         yscale: str
@@ -2899,10 +2891,8 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
-    bias_kwargs: dict
-        Arguments for bias plot. Used in pylab.plot
-    scat_kwargs: dict
-        Arguments for scatter plot. Used in pylab.fill_between
+    metrics_kwargs: dict
+        Dictionary of dictionary configs for each metric plots.
     legend_kwargs: dict
         Additional arguments for plt.legend
     label1: str
@@ -2996,10 +2986,8 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
         Colorbar arguments
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    bias_kwargs: dict
-        Arguments for bias plot. Used in pylab.plot
-    scat_kwargs: dict
-        Arguments for scatter plot. Used in pylab.fill_between
+    metrics_kwargs: dict
+        Dictionary of dictionary configs for each metric plots.
     xscale: str
         Scale xaxis.
     yscale: str
@@ -3247,10 +3235,8 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
         Colorbar arguments
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    bias_kwargs: dict
-        Arguments for bias plot. Used in pylab.plot
-    scat_kwargs: dict
-        Arguments for scatter plot. Used in pylab.fill_between
+    metrics_kwargs: dict
+        Dictionary of dictionary configs for each metric plots.
     xscale: str
         Scale xaxis.
     yscale: str
@@ -3741,10 +3727,8 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
-    bias_kwargs: dict
-        Arguments for bias plot. Used in pylab.plot
-    scat_kwargs: dict
-        Arguments for scatter plot. Used in pylab.fill_between
+    metrics_kwargs: dict
+        Dictionary of dictionary configs for each metric plots.
     legend_kwargs: dict
         Additional arguments for plt.legend
     label1: str
@@ -3842,10 +3826,8 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Colorbar arguments
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    bias_kwargs: dict
-        Arguments for bias plot. Used in pylab.plot
-    scat_kwargs: dict
-        Arguments for scatter plot. Used in pylab.fill_between
+    metrics_kwargs: dict
+        Dictionary of dictionary configs for each metric plots.
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
     fig_frac: tuple
@@ -4069,10 +4051,8 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Colorbar arguments
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    bias_kwargs: dict
-        Arguments for bias plot. Used in pylab.plot
-    scat_kwargs: dict
-        Arguments for scatter plot. Used in pylab.fill_between
+    metrics_kwargs: dict
+        Dictionary of dictionary configs for each metric plots.
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
     fig_frac: tuple
