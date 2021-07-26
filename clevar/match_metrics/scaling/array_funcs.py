@@ -97,7 +97,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     label_components: tuple (of strings)
         Names of fitted components in fit line label, default=('x', 'y').
     """
-    conf = {}
+    info = {}
     # Default parameters
     mode = kwargs.get('statistics', 'mode')
     bins1 = kwargs.get('bins1', 10)
@@ -111,7 +111,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     xl = xl.replace('$', '')  if '$' in xl else '%s'%xl.replace('_', '\_')
     yl = yl.replace('$', '')  if '$' in yl else '%s'%yl.replace('_', '\_')
     if ((not add_bindata) and (not add_fit)) or len(values1)<=1:
-        return conf
+        return info
     # set log/lin funcs
     tfunc, ifunc = (np.log10, lambda x: 10**x) if log else (lambda x:x, lambda x:x)
     # data
@@ -121,7 +121,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
                           yerr=None if (err2 is None or not log) else err2/(values2*np.log(10)),
                           statistics=mode)
     if len(data)==0:
-        return conf
+        return info
     vbin_1, vbin_2, vbin_err2 = data
     # fit
     if add_fit:
@@ -133,7 +133,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         # Functions with fit values
         fit_func = lambda x: pw_func(tfunc(x), *fit)
         scat_func = lambda x: np.sqrt(np.dot([tfunc(x), 1], np.dot(cov, [tfunc(x), 1])))
-        conf['fit'] = {
+        info['fit'] = {
             'pars':fit, 'cov':cov,
             'func':lambda x: ifunc(fit_func(x)),
             'func_plus': lambda x: ifunc(fit_func(x)+scat_func(x)),
@@ -153,17 +153,17 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         plot_kwargs_.update(plot_kwargs)
         sort = np.argsort(values1)
         xl = values1[sort]
-        ax.plot(xl, conf['fit']['func'](xl), **plot_kwargs_)
-        deep_update(conf,
+        ax.plot(xl, info['fit']['func'](xl), **plot_kwargs_)
+        deep_update(info,
             {'plots': {'fit': ax.fill_between(
-                xl, conf['fit']['func_plus'](xl), conf['fit']['func_minus'](xl),
+                xl, info['fit']['func_plus'](xl), info['fit']['func_minus'](xl),
                 color=plot_kwargs_['color'], alpha=.2, lw=0)}}
         )
     if add_bindata and not mode=='individual':
         eb_kwargs_ = {'elinewidth': 1, 'capsize': 2, 'fmt': '.',
                       'ms': 10, 'ls': '', 'color': 'm'}
         eb_kwargs_.update(bindata_kwargs)
-        deep_update(conf,
+        deep_update(info,
             {'plots': {'errorbar': ax.errorbar(
                 ifunc(vbin_1), ifunc(vbin_2),
                 yerr=(ifunc(vbin_2)*np.array([1-1/ifunc(vbin_err2), ifunc(vbin_err2)-1])
@@ -175,7 +175,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         legend_kwargs_ = {}
         legend_kwargs_.update(legend_kwargs)
         ax.legend(**legend_kwargs_)
-    return conf
+    return info
 def plot(values1, values2, err1=None, err2=None,
          ax=None, plt_kwargs={}, err_kwargs={}, **kwargs):
     """
@@ -233,24 +233,24 @@ def plot(values1, values2, err1=None, err2=None,
     ax: matplotlib.axes
         Axis of the plot
     """
-    conf = {'ax': plt.axes() if ax is None else ax}
-    ph.add_grid(conf['ax'])
+    info = {'ax': plt.axes() if ax is None else ax}
+    ph.add_grid(info['ax'])
     plt_kwargs_ = {'s':1}
     plt_kwargs_.update(plt_kwargs)
-    conf['ax'].scatter(values1, values2, **plt_kwargs_)
+    info['ax'].scatter(values1, values2, **plt_kwargs_)
     if err1 is not None or err2 is not None:
         err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
         err_kwargs_.update(err_kwargs)
-        conf['ax'].errorbar(values1, values2, xerr=err1, yerr=err2, **err_kwargs_)
+        info['ax'].errorbar(values1, values2, xerr=err1, yerr=err2, **err_kwargs_)
     # Bindata and fit
     kwargs['fit_err2'] = kwargs.get('fit_err2', err2)
     kwargs['fit_add_fit'] = kwargs.get('add_fit', False)
     kwargs['fit_add_bindata'] = kwargs.get('add_bindata', kwargs['fit_add_fit'])
-    conf.update(
+    info.update(
         _add_bindata_and_powlawfit(
-            conf['ax'], values1, values2,
+            info['ax'], values1, values2,
             **{k[4:]:v for k, v in kwargs.items() if k[:4]=='fit_'}))
-    return conf
+    return info
 def plot_color(values1, values2, values_color, err1=None, err2=None,
                ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
                err_kwargs={}, **kwargs):
@@ -317,37 +317,37 @@ def plot_color(values1, values2, values_color, err1=None, err2=None,
     matplotlib.colorbar.Colorbar (optional)
         Colorbar of the recovey rates. Only returned if add_cb=True.
     """
-    conf = {'ax': plt.axes() if ax is None else ax}
-    ph.add_grid(conf['ax'])
+    info = {'ax': plt.axes() if ax is None else ax}
+    ph.add_grid(info['ax'])
     if len(values1)==0:
-        return conf
+        return info
     isort = np.argsort(values_color)
     xp, yp, zp = [v[isort] for v in (values1, values2, values_color)]
     plt_kwargs_ = {'s':1}
     plt_kwargs_.update(plt_kwargs)
-    sc = conf['ax'].scatter(xp, yp, c=zp, **plt_kwargs_)
-    cb = plt.colorbar(sc, ax=conf['ax'], **cb_kwargs)
+    sc = info['ax'].scatter(xp, yp, c=zp, **plt_kwargs_)
+    cb = plt.colorbar(sc, ax=info['ax'], **cb_kwargs)
     if err1 is not None or err2 is not None:
         xerr = err1[isort] if err1 is not None else [None for i in isort]
         yerr = err2[isort] if err2 is not None else [None for i in isort]
         #err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
         cols = [cb.mappable.cmap(cb.mappable.norm(c)) for c in zp]
         for i in range(xp.size):
-            conf['ax'].errorbar(xp[i], yp[i], xerr=xerr[i], yerr=yerr[i],
+            info['ax'].errorbar(xp[i], yp[i], xerr=xerr[i], yerr=yerr[i],
                 c=cols[i], **err_kwargs)
     # Bindata and fit
     kwargs['fit_err2'] = kwargs.get('fit_err2', err2)
     kwargs['fit_add_fit'] = kwargs.get('add_fit', False)
     kwargs['fit_add_bindata'] = kwargs.get('add_bindata', kwargs['fit_add_fit'])
-    conf.update(
+    info.update(
         _add_bindata_and_powlawfit(
-            conf['ax'], values1, values2,
+            info['ax'], values1, values2,
             **{k[4:]:v for k, v in kwargs.items() if k[:4]=='fit_'}))
     if add_cb:
-        conf['cb'] = cb
+        info['cb'] = cb
     else:
         cb.remove()
-    return conf
+    return info
 def plot_density(values1, values2, bins1=30, bins2=30,
                  ax_rotation=0, rotation_resolution=30,
                  xscale='linear', yscale='linear',
@@ -505,14 +505,14 @@ def _plot_panel(plot_function, values_panel, bins_panel,
     ni = int(np.ceil(len(edges[:-1])/float(nj)))
     fig_kwargs_ = dict(sharex=True, sharey=True, figsize=(8, 6))
     fig_kwargs_.update(fig_kwargs)
-    conf = {key: value for key, value in zip(
+    info = {key: value for key, value in zip(
         ('fig', 'axes'), plt.subplots(ni, nj, **fig_kwargs_))}
     panel_kwargs_list = none_val(panel_kwargs_list, [{} for m in edges[:-1]])
     panel_kwargs_errlist = none_val(panel_kwargs_errlist, [{} for m in edges[:-1]])
     masks = [(values_panel>=v0)*(values_panel<v1) for v0, v1 in zip(edges, edges[1:])]
     ax_conf = []
     for ax, mask, p_kwargs, p_e_kwargs in zip(
-            conf['axes'].flatten(), masks, panel_kwargs_list, panel_kwargs_errlist):
+            info['axes'].flatten(), masks, panel_kwargs_list, panel_kwargs_errlist):
         ph.add_grid(ax)
         kwargs = {}
         kwargs.update(plt_kwargs)
@@ -528,13 +528,13 @@ def _plot_panel(plot_function, values_panel, bins_panel,
                     for k, v in plt_func_kwargs.items()}))
         ax_conf[-1].pop('ax')
     ax_conf += [{} for i in range(ni*nj-len(ax_conf))] # complete missing vals
-    conf['axes_conf'] = np.reshape(ax_conf, (ni, nj))
-    for ax in conf['axes'].flatten()[len(edges)-1:]:
+    info['axes_conf'] = np.reshape(ax_conf, (ni, nj))
+    for ax in info['axes'].flatten()[len(edges)-1:]:
         ax.axis('off')
     if add_label:
-        ph.add_panel_bin_label(conf['axes'],  edges[:-1], edges[1:],
+        ph.add_panel_bin_label(info['axes'],  edges[:-1], edges[1:],
                                format_func=label_format)
-    return conf
+    return info
 def plot_panel(values1, values2, values_panel, bins_panel,
                err1=None, err2=None, plt_kwargs={}, err_kwargs={},
                panel_kwargs_list=None, panel_kwargs_errlist=None,
@@ -876,9 +876,9 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
     values_mid = (10**(0.5*(np.log10(edges[1:])+np.log10(edges[:-1])))
         if mode=='log' else 0.5*(edges[1:]+edges[:-1]))
     # set for rotation
-    conf = {'ax': plt.axes() if ax is None else ax}
-    ph.add_grid(conf['ax'])
-    set_scale = conf['ax'].set_yscale if rotated else conf['ax'].set_xscale
+    info = {'ax': plt.axes() if ax is None else ax}
+    ph.add_grid(info['ax'])
+    set_scale = info['ax'].set_yscale if rotated else info['ax'].set_xscale
     # plot
     for metric in metrics:
         metric_name = metric.replace('.fill', '')
@@ -894,15 +894,15 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
         else:
             raise ValueError(f'Invalid value (={metric}) for metric.')
         if '.fill' in metric:
-            func = conf['ax'].fill_betweenx if rotated else conf['ax'].fill_between
+            func = info['ax'].fill_betweenx if rotated else info['ax'].fill_between
             args = (values_mid, -stat, stat)
         else:
-            func = conf['ax'].plot
+            func = info['ax'].plot
             args = (stat, values_mid) if rotated else (values_mid, stat)
         kwargs = {'label':metric_name}
         kwargs.update(metrics_kwargs.get(metric, {}))
-        deep_update(conf, {'plots': {metric: func(*(a[safe] for a in args), **kwargs)}})
-    return conf
+        deep_update(info, {'plots': {metric: func(*(a[safe] for a in args), **kwargs)}})
+    return info
 def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
                  metrics=['mean', 'std'], metrics_kwargs={}, fig_kwargs={},
                  legend_kwargs={}):
@@ -954,17 +954,17 @@ def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
     """
     fig_kwargs_ = dict(figsize=(8, 6))
     fig_kwargs_.update(fig_kwargs)
-    conf = {key: value for key, value in zip(
+    info = {key: value for key, value in zip(
         ('fig', 'axes'), plt.subplots(2, **fig_kwargs_))}
     # default args
-    conf['top'] = _plot_metrics(values1, values2, bins=bins1, mode=mode, ax=conf['axes'][0],
+    info['top'] = _plot_metrics(values1, values2, bins=bins1, mode=mode, ax=info['axes'][0],
                                 metrics=metrics, metrics_kwargs=metrics_kwargs)
-    conf['bottom'] = _plot_metrics(values2, values1, bins=bins2, mode=mode, ax=conf['axes'][1],
+    info['bottom'] = _plot_metrics(values2, values1, bins=bins2, mode=mode, ax=info['axes'][1],
                                    metrics=metrics, metrics_kwargs=metrics_kwargs)
-    conf['axes'][0].legend(**legend_kwargs)
-    conf['axes'][0].xaxis.tick_top()
-    conf['axes'][0].xaxis.set_label_position('top')
-    return conf
+    info['axes'][0].legend(**legend_kwargs)
+    info['axes'][0].xaxis.tick_top()
+    info['axes'][0].xaxis.set_label_position('top')
+    return info
 
 def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
@@ -1057,56 +1057,56 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     """
     fig_kwargs_ = dict(figsize=(8, 6))
     fig_kwargs_.update(fig_kwargs)
-    conf = {'fig': plt.figure(**fig_kwargs_), 'axes':{}, 'metrics':{}}
+    info = {'fig': plt.figure(**fig_kwargs_), 'axes':{}, 'metrics':{}}
     left, bottom, right, top = fig_pos
     frac, gap, cb = fig_frac
     cb = cb if add_cb else 0
     xmain, xgap, xpanel = (right-left)*np.array([frac, gap, 1-frac-gap-cb])
     ymain, ygap, ypanel, ycb = (top-bottom)*np.array([frac, gap, 1-frac-gap-cb, cb-gap])
-    conf['axes']['main'] = conf['fig'].add_axes([left, bottom, xmain, ymain])
-    conf['axes']['right'] = conf['fig'].add_axes([left+xmain+xgap, bottom, xpanel, ymain])
-    conf['axes']['top'] = conf['fig'].add_axes([left, bottom+ymain+ygap, xmain, ypanel])
-    conf['axes']['label'] = conf['fig'].add_axes([left+xmain+xgap, bottom+ymain+ygap, xpanel, ypanel])
-    conf['axes']['colorbar'] = conf['fig'].add_axes(
+    info['axes']['main'] = info['fig'].add_axes([left, bottom, xmain, ymain])
+    info['axes']['right'] = info['fig'].add_axes([left+xmain+xgap, bottom, xpanel, ymain])
+    info['axes']['top'] = info['fig'].add_axes([left, bottom+ymain+ygap, xmain, ypanel])
+    info['axes']['label'] = info['fig'].add_axes([left+xmain+xgap, bottom+ymain+ygap, xpanel, ypanel])
+    info['axes']['colorbar'] = info['fig'].add_axes(
         [left, bottom+ymain+2*ygap+ypanel, xmain+xgap+xpanel, ycb]) if add_cb else None
     # Main plot
-    cb_kwargs_ = {'cax': conf['axes']['colorbar'], 'orientation': 'horizontal'}
+    cb_kwargs_ = {'cax': info['axes']['colorbar'], 'orientation': 'horizontal'}
     cb_kwargs_.update(cb_kwargs)
     plot_density(values1, values2, bins1=bins1, bins2=bins2,
         ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
-        xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=conf['axes']['main'],
+        xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=info['axes']['main'],
         plt_kwargs=plt_kwargs, add_cb=add_cb, cb_kwargs=cb_kwargs_,
         err_kwargs=err_kwargs, **kwargs)
     if add_cb:
-        conf['axes']['colorbar'].xaxis.tick_top()
-        conf['axes']['colorbar'].xaxis.set_label_position('top')
+        info['axes']['colorbar'].xaxis.tick_top()
+        info['axes']['colorbar'].xaxis.set_label_position('top')
     # Metrics plot
-    conf['metrics']['top'] = _plot_metrics(
-        values1, values2, bins=bins1, mode=metrics_mode, ax=conf['axes']['top'], metrics=metrics,
+    info['metrics']['top'] = _plot_metrics(
+        values1, values2, bins=bins1, mode=metrics_mode, ax=info['axes']['top'], metrics=metrics,
         metrics_kwargs=metrics_kwargs)['plots']
-    conf['metrics']['right'] = _plot_metrics(
-        values2, values1, bins=bins2, mode=metrics_mode, ax=conf['axes']['right'], rotated=True,
+    info['metrics']['right'] = _plot_metrics(
+        values2, values1, bins=bins2, mode=metrics_mode, ax=info['axes']['right'], rotated=True,
         metrics=metrics, metrics_kwargs=metrics_kwargs)['plots']
     # Adjust plots
-    labels = [c.get_label() for c in conf['axes']['right'].collections+conf['axes']['right'].lines]
+    labels = [c.get_label() for c in info['axes']['right'].collections+info['axes']['right'].lines]
     labels = ['$\\sigma_{%s}$'%l.replace('p_', '') if l[:2]=='p_' else l for l in labels]
-    conf['axes']['label'].legend(
-        conf['axes']['right'].collections+conf['axes']['right'].lines, labels)
-    conf['axes']['main'].set_xscale(xscale)
-    conf['axes']['main'].set_yscale(yscale)
+    info['axes']['label'].legend(
+        info['axes']['right'].collections+info['axes']['right'].lines, labels)
+    info['axes']['main'].set_xscale(xscale)
+    info['axes']['main'].set_yscale(yscale)
     # Horizontal
-    conf['axes']['top'].set_xscale(xscale)
-    conf['axes']['top'].xaxis.set_minor_formatter(NullFormatter())
-    conf['axes']['top'].xaxis.set_major_formatter(NullFormatter())
-    conf['axes']['top'].set_xlim(conf['axes']['main'].get_xlim())
+    info['axes']['top'].set_xscale(xscale)
+    info['axes']['top'].xaxis.set_minor_formatter(NullFormatter())
+    info['axes']['top'].xaxis.set_major_formatter(NullFormatter())
+    info['axes']['top'].set_xlim(info['axes']['main'].get_xlim())
     # Vertical
-    conf['axes']['right'].set_yscale(yscale)
-    conf['axes']['right'].yaxis.set_minor_formatter(NullFormatter())
-    conf['axes']['right'].yaxis.set_major_formatter(NullFormatter())
-    conf['axes']['right'].set_ylim(conf['axes']['main'].get_ylim())
+    info['axes']['right'].set_yscale(yscale)
+    info['axes']['right'].yaxis.set_minor_formatter(NullFormatter())
+    info['axes']['right'].yaxis.set_major_formatter(NullFormatter())
+    info['axes']['right'].set_ylim(info['axes']['main'].get_ylim())
     # Label
-    conf['axes']['label'].axis('off')
-    return conf
+    info['axes']['label'].axis('off')
+    return info
 def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
               log_vals=False, log_aux=False, transpose=False,
               shape='steps', plt_kwargs={}, line_kwargs_list=None,
@@ -1183,12 +1183,12 @@ def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
     ni = int(np.ceil(panel_edges[:-1].size/float(nj)))
     fig_kwargs_ = dict(sharex=True, figsize=(8, 6))
     fig_kwargs_.update(fig_kwargs)
-    conf = {key: value for key, value in zip(
+    info = {key: value for key, value in zip(
         ('fig', 'axes'), plt.subplots(ni, nj, **fig_kwargs_))}
     line_kwargs_list = none_val(line_kwargs_list, [{}] if values_aux is None else
         [{'label': ph.get_bin_label(vb, vt, line_label_format)}
             for vb, vt in zip(line_edges, line_edges[1:])])
-    for ax, maskp in zip(conf['axes'].flatten(), panel_masks):
+    for ax, maskp in zip(info['axes'].flatten(), panel_masks):
         ph.add_grid(ax)
         kwargs = {}
         kwargs.update(plt_kwargs)
@@ -1201,15 +1201,15 @@ def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
                               ax=ax, shape=shape, **kwargs)
         ax.set_xscale('log' if log_vals else 'linear')
         ax.set_yticklabels([])
-    for ax in conf['axes'].flatten()[len(panel_edges)-1:]:
+    for ax in info['axes'].flatten()[len(panel_edges)-1:]:
         ax.axis('off')
     if add_panel_label:
-        ph.add_panel_bin_label(conf['axes'],  panel_edges[:-1], panel_edges[1:],
+        ph.add_panel_bin_label(info['axes'],  panel_edges[:-1], panel_edges[1:],
                                format_func=panel_label_format,
                                prefix=panel_label_prefix)
     if values_aux is not None:
-        conf['axes'].flatten()[0].legend(**legend_kwargs)
-    return conf
+        info['axes'].flatten()[0].legend(**legend_kwargs)
+    return info
 def plot_density_dist(values1, values2, bins1=30, bins2=30,
     ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
     err1=None, err2=None, metrics_mode='simple', plt_kwargs={}, add_cb=True, cb_kwargs={},
@@ -1296,47 +1296,47 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
     # Fig
     fig_kwargs_ = dict(figsize=(8, 6))
     fig_kwargs_.update(fig_kwargs)
-    conf = {'fig': plt.figure(**fig_kwargs_), 'axes':{}}
+    info = {'fig': plt.figure(**fig_kwargs_), 'axes':{}}
     left, bottom, right, top = fig_pos
     frac, gap, cb = fig_frac
     cb = cb if add_cb else 0
     xmain, xgap, xpanel = (right-left)*np.array([frac, gap, 1-frac-gap-cb])
     ymain, ygap, ypanel, ycb = (top-bottom)*np.array([frac, gap, 1-frac-gap-cb, cb-gap])
-    conf['axes']['main'] = conf['fig'].add_axes([left, bottom, xmain, ymain])
-    conf['axes']['colorbar'] = conf['fig'].add_axes(
+    info['axes']['main'] = info['fig'].add_axes([left, bottom, xmain, ymain])
+    info['axes']['colorbar'] = info['fig'].add_axes(
         [left+xmain+xgap, bottom, ycb, ymain]) if add_cb else None
     # Main plot
-    cb_kwargs_ = {'cax': conf['axes']['colorbar'], 'orientation': 'vertical'}
+    cb_kwargs_ = {'cax': info['axes']['colorbar'], 'orientation': 'vertical'}
     cb_kwargs_.update(cb_kwargs)
     plot_density(values1, values2, bins1=bins1, bins2=bins2,
         ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
-        xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=conf['axes']['main'],
+        xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=info['axes']['main'],
         plt_kwargs=plt_kwargs, add_cb=add_cb, cb_kwargs=cb_kwargs_,
         err_kwargs=err_kwargs)
     if add_cb:
-        conf['axes']['colorbar'].xaxis.tick_top()
-        conf['axes']['colorbar'].xaxis.set_label_position('top')
-    conf['axes']['main'].set_xscale(xscale)
-    conf['axes']['main'].set_yscale(yscale)
+        info['axes']['colorbar'].xaxis.tick_top()
+        info['axes']['colorbar'].xaxis.set_label_position('top')
+    info['axes']['main'].set_xscale(xscale)
+    info['axes']['main'].set_yscale(yscale)
     # Add v lines
-    conf['axes']['main'].xaxis.grid(False, which='both')
+    info['axes']['main'].xaxis.grid(False, which='both')
     fit_bins1 = autobins(values1, kwargs.get('fit_bins1', 10), xscale=='log')
     vline_kwargs_ = {'lw':.5, 'color':'0'}
     vline_kwargs_.update(vline_kwargs)
     for v in fit_bins1:
-        conf['axes']['main'].axvline(v, **vline_kwargs_)
+        info['axes']['main'].axvline(v, **vline_kwargs_)
     # Dist plot
     fit_bins2 = autobins(values2, kwargs.get('fit_bins2', 30), yscale=='log')
     masks1 = binmasks(values1, fit_bins1)
-    xlims = conf['axes']['main'].get_xlim()
+    xlims = info['axes']['main'].get_xlim()
     if xscale=='log':
         xlims, fit_bins1 = np.log(xlims), np.log(fit_bins1)
     xpos = [xmain*(x-xlims[0])/(xlims[1]-xlims[0]) for x in fit_bins1]
-    conf['axes']['top'] = [conf['fig'].add_axes([left+xl, bottom+ymain+ygap, xr-xl, ypanel]) # top
+    info['axes']['top'] = [info['fig'].add_axes([left+xl, bottom+ymain+ygap, xr-xl, ypanel]) # top
                 for xl, xr in zip(xpos, xpos[1:])]
     fit_line_kwargs_list = kwargs.get('fit_line_kwargs_list', [{} for m in masks1])
     dlims = (np.inf, -np.inf)
-    for ax, mask, lkwarg in zip(conf['axes']['top'], masks1, fit_line_kwargs_list):
+    for ax, mask, lkwarg in zip(info['axes']['top'], masks1, fit_line_kwargs_list):
         ph.add_grid(ax)
         kwargs_ = {}
         kwargs_.update(kwargs.get('fit_plt_kwargs', {}))
@@ -1349,26 +1349,25 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
         ax.yaxis.tick_right()
         ax.yaxis.set_label_position('right')
         dlims = min(dlims[0], ax.get_ylim()[0]), max(dlims[1], ax.get_ylim()[1])
-    for ax in conf['axes']['top']:
+    for ax in info['axes']['top']:
         ax.set_ylim(dlims)
-    for ax in conf['axes']['top'][:-1]:
+    for ax in info['axes']['top'][:-1]:
         ax.yaxis.set_minor_formatter(NullFormatter())
         ax.yaxis.set_major_formatter(NullFormatter())
     # Bindata and fit
     kwargs['fit_err2'] = kwargs.get('fit_err2', err2)
     kwargs['fit_add_fit'] = kwargs.get('add_fit', False)
     kwargs['fit_add_bindata'] = kwargs.get('add_bindata', kwargs['fit_add_fit'])
-    conf.update(_add_bindata_and_powlawfit(
-        conf['axes']['main'], values1, values2,
+    info.update(_add_bindata_and_powlawfit(
+        info['axes']['main'], values1, values2,
         **{k[4:]:v for k, v in kwargs.items() if k[:4]=='fit_'}))
-    if kwargs['fit_add_bindata'] and conf.get('plots', {}).get('errorbar', False):
-        print(conf)
-        color = conf['plots']['errorbar'].lines[0]._color
+    if kwargs['fit_add_bindata'] and info.get('plots', {}).get('errorbar', False):
+        color = info['plots']['errorbar'].lines[0]._color
         for ax, m, b, t in zip(
-                conf['axes']['top'], conf['plots']['errorbar'].lines[0]._y,
-                conf['plots']['errorbar'].lines[1][0]._y, conf['plots']['errorbar'].lines[1][1]._y):
+                info['axes']['top'], info['plots']['errorbar'].lines[0]._y,
+                info['plots']['errorbar'].lines[1][0]._y, info['plots']['errorbar'].lines[1][1]._y):
             xlim = ax.get_xlim()
             ax.axhline(m, color=color)
             ax.fill_between(xlim, b, t, alpha=.3, lw=0, color=color)
             ax.set_xlim(xlim)
-    return conf
+    return info
