@@ -143,9 +143,9 @@ def plot(cat1, cat2, matching_type, col, **kwargs):
         Axis of the plot
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
-    ax = array_funcs.plot(**f_kwargs)
-    _fmt_plot(ax, **cl_kwargs)
-    return ax
+    conf = array_funcs.plot(**f_kwargs)
+    _fmt_plot(conf['ax'], **cl_kwargs)
+    return conf
 def plot_color(cat1, cat2, matching_type, col, col_color,
                color1=True, color_log=False, **kwargs):
     """
@@ -230,12 +230,11 @@ def plot_color(cat1, cat2, matching_type, col, col_color,
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
-    f_kwargs['values_color'] = np.log10(f_kwargs['values_color']) if color_log\
-                                else f_kwargs['values_color']
-    res = array_funcs.plot_color(**f_kwargs)
-    ax = res[0] if kwargs.get('add_cb', True) else res
-    _fmt_plot(ax, **cl_kwargs)
-    return res
+    f_kwargs['values_color'] = np.log10(f_kwargs['values_color']
+                                        ) if color_log else f_kwargs['values_color']
+    conf = array_funcs.plot_color(**f_kwargs)
+    _fmt_plot(conf['ax'], **cl_kwargs)
+    return conf
 def plot_density(cat1, cat2, matching_type, col, **kwargs):
     """
     Scatter plot with errorbars and color based on point density
@@ -322,10 +321,9 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
     f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
-    res = array_funcs.plot_density(**f_kwargs)
-    ax = res[0] if kwargs.get('add_cb', True) else res
-    _fmt_plot(ax, **cl_kwargs)
-    return res
+    conf = array_funcs.plot_density(**f_kwargs)
+    _fmt_plot(conf['ax'], **cl_kwargs)
+    return conf
 def _get_panel_args(cat1, cat2, matching_type, col,
     col_panel, bins_panel, panel_cat1=True, log_panel=False,
     **kwargs):
@@ -464,9 +462,9 @@ def plot_panel(cat1, cat2, matching_type, col,
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
-    fig, axes = array_funcs.plot_panel(**f_kwargs)
-    ph.nice_panel(axes, **cl_kwargs)
-    return fig, axes
+    conf = array_funcs.plot_panel(**f_kwargs)
+    ph.nice_panel(conf['axes'], **cl_kwargs)
+    return conf
 def plot_color_panel(cat1, cat2, matching_type, col, col_color,
     col_panel, bins_panel, panel_cat1=True, color1=True, log_panel=False, **kwargs):
     """
@@ -570,9 +568,9 @@ def plot_color_panel(cat1, cat2, matching_type, col, col_color,
     cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
     f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
-    fig, axes = array_funcs.plot_color_panel(**f_kwargs)
-    ph.nice_panel(axes, **cl_kwargs)
-    return fig, axes
+    conf = array_funcs.plot_color_panel(**f_kwargs)
+    ph.nice_panel(conf['axes'], **cl_kwargs)
+    return conf
 def plot_density_panel(cat1, cat2, matching_type, col,
     col_panel, bins_panel, panel_cat1=True, log_panel=False, **kwargs):
     """
@@ -681,9 +679,9 @@ def plot_density_panel(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
     f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
     f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
-    fig, axes = array_funcs.plot_density_panel(**f_kwargs)
-    ph.nice_panel(axes, **cl_kwargs)
-    return fig, axes
+    conf = array_funcs.plot_density_panel(**f_kwargs)
+    ph.nice_panel(conf['axes'], **cl_kwargs)
+    return conf
 def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     """
     Plot metrics.
@@ -742,14 +740,14 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     f_kwargs.pop('err2', None)
     f_kwargs['bins1'] = bins1
     f_kwargs['bins2'] = bins2
-    fig, axes = array_funcs.plot_metrics(**f_kwargs)
-    axes[0].set_ylabel(cat1.name)
-    axes[1].set_ylabel(cat2.name)
-    axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
-    axes[1].set_xlabel(kwargs.get('label2', cl_kwargs['ylabel']))
-    axes[0].set_xscale(kwargs.get('scale1', cl_kwargs['xscale']))
-    axes[1].set_xscale(kwargs.get('scale2', cl_kwargs['yscale']))
-    return fig, axes
+    conf = array_funcs.plot_metrics(**f_kwargs)
+    conf['axes'][0].set_ylabel(cat1.name)
+    conf['axes'][1].set_ylabel(cat2.name)
+    conf['axes'][0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
+    conf['axes'][1].set_xlabel(kwargs.get('label2', cl_kwargs['ylabel']))
+    conf['axes'][0].set_xscale(kwargs.get('scale1', cl_kwargs['xscale']))
+    conf['axes'][1].set_xscale(kwargs.get('scale2', cl_kwargs['yscale']))
+    return conf
 def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with scatter and bias panels
@@ -846,12 +844,13 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
     f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
     f_kwargs['bins1'] = bins1
     f_kwargs['bins2'] = bins2
-    fig, axes = array_funcs.plot_density_metrics(**f_kwargs)
+    conf = array_funcs.plot_density_metrics(**f_kwargs)
     xlabel = kwargs.get('label1', cl_kwargs['xlabel'])
     ylabel = kwargs.get('label2', cl_kwargs['ylabel'])
-    axes[0].set_xlabel(xlabel)
-    axes[0].set_ylabel(ylabel)
-    return fig, axes
+    conf['axes']['main'].set_xlabel(xlabel)
+    conf['axes']['main'].set_ylabel(ylabel)
+    return conf
+
 def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
               log_vals=False, log_aux=False, transpose=False, **kwargs):
     """
@@ -927,11 +926,11 @@ def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, b
     log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
     ph._set_label_format(f_kwargs, 'panel_label_format', 'panel_label_fmt', log_panel)
     ph._set_label_format(f_kwargs, 'line_label_format', 'line_label_fmt', log_line)
-    fig, axes = array_funcs.plot_dist(**f_kwargs)
+    conf = array_funcs.plot_dist(**f_kwargs)
     xlabel = kwargs.get('label', f'${cat1.labels[col]}$')
-    for ax in (axes[-1,:] if len(axes.shape)>1 else axes):
+    for ax in (conf['axes'][-1,:] if len(conf['axes'].shape)>1 else conf['axes']):
         ax.set_xlabel(xlabel)
-    return fig, axes
+    return conf
 def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
                    log_vals=False, log_aux=False, transpose=False, mask=None, **kwargs):
     """
@@ -1005,11 +1004,11 @@ def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
     log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
     ph._set_label_format(f_kwargs, 'panel_label_format', 'panel_label_fmt', log_panel)
     ph._set_label_format(f_kwargs, 'line_label_format', 'line_label_fmt', log_line)
-    fig, axes = array_funcs.plot_dist(**f_kwargs)
+    conf = array_funcs.plot_dist(**f_kwargs)
     xlabel = kwargs.get('label', f'${cat.labels[col]}$')
-    for ax in (axes[-1,:] if len(axes.shape)>1 else axes):
+    for ax in (conf['axes'][-1,:] if len(conf['axes'].shape)>1 else conf['axes']):
         ax.set_xlabel(xlabel)
-    return fig, axes
+    return conf
 def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with distribution panels.
@@ -1101,8 +1100,8 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
     f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
-    fig, axes = array_funcs.plot_density_dist(**f_kwargs)
-    axes[0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
-    axes[0].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
-    axes[1][-1].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
-    return fig, axes
+    conf = array_funcs.plot_density_dist(**f_kwargs)
+    conf['axes']['main'].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
+    conf['axes']['main'].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
+    conf['axes']['top'][-1].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
+    return conf
