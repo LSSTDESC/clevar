@@ -93,6 +93,8 @@ def test_color_panel():
 def test_m_metrics():
     c1, c2 = _test_data.c1, _test_data.c2
     conf = scaling.mass_metrics(c1, c2, 'cat1')
+    conf = scaling.mass_metrics(c1, c2, 'cat1', metrics=['p_68'])
+    assert_raises(ValueError, scaling.mass_metrics, c1, c2, 'cat1', metrics=['xxx'])
 def test_m_density_metrics():
     c1, c2 = _test_data.c1, _test_data.c2
     conf = scaling.mass_density_metrics(c1, c2, 'cat1',
