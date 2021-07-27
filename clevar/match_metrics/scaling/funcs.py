@@ -5,6 +5,11 @@ wrapper of catalog_funcs functions
 """
 from . import catalog_funcs
 
+############################################################################################
+### Redshift Plots #########################################################################
+############################################################################################
+
+
 def redshift(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on input
@@ -24,8 +29,21 @@ def redshift(cat1, cat2, matching_type, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
+    Other Parameters
+    ----------------
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    xlabel: str
+        Label of x axis (default=cat1.labels['z']).
+    ylabel: str
+        Label of y axis (default=cat2.labels['z']).
+
+    Other Parameters
+    ----------------
     add_bindata: bool
         Plot binned data used for fit (default=False).
     add_fit: bool
@@ -34,9 +52,11 @@ def redshift(cat1, cat2, matching_type, **kwargs):
         Use redshift errors of catalog 2 in fit (default=True).
     fit_statistics: str
         Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+
+            * `individual` - Use each point
+            * `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            * `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+
     fit_bins1: array, None
         Bins for redshift of catalog 1 (default=10).
     fit_bins2: array, None
@@ -50,25 +70,30 @@ def redshift(cat1, cat2, matching_type, **kwargs):
     fit_label_components: tuple (of strings)
         Names of fitted components in fit line label, default=(xlabel, ylabel).
 
-    Other parameters
-    ----------------
-    ax: matplotlib.axes
-        Ax to add plot
-    plt_kwargs: dict
-        Additional arguments for pylab.scatter
-    err_kwargs: dict
-        Additional arguments for pylab.errorbar
-    xlabel: str
-        Label of x axis (default=cat1.labels['z']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['z']).
-
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `fit` (optional): fitting output dictionary, with values:
+
+                * `pars`: fitted parameter.
+                * `cov`: covariance of fitted parameters.
+                * `func`: fitting function with fitted parameter.
+                * `func_plus`: fitting function with fitted parameter plus 1x scatter.
+                * `func_minus`: fitting function with fitted parameter minus 1x scatter.
+                * `func_scat`: scatter of fited function.
+                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+
+            * `plots` (optional): additional plots:
+
+                * `fit`: fitted data
+                * `errorbar`: binned data
     """
     return catalog_funcs.plot(cat1, cat2, matching_type, col='z', **kwargs)
+
+
 def redshift_density(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on point density
@@ -94,36 +119,10 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use redshift errors of catalog 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for redshift of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for redshift of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -144,15 +143,24 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
         Scale xaxis.
     yscale: str
         Scale yaxis.
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar (optional)
-        Colorbar of the recovey rates. Only returned if add_cb=True.
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.redshift` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.redshift` for more info).
     """
     return catalog_funcs.plot_density(cat1, cat2, matching_type, col='z', **kwargs)
+
+
 def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs):
     """
     Scatter plot with errorbars and color based on input
@@ -176,36 +184,10 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use redshift errors of catalog 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for redshift of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for redshift of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -218,16 +200,25 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
         Label of x axis (default=cat1.labels['z']).
     ylabel: str
         Label of y axis (default=cat2.labels['z']).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar (optional)
-        Colorbar of the recovey rates. Only returned if add_cb=True.
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.redshift` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.redshift` for more info).
     """
     return catalog_funcs.plot_color(cat1, cat2, matching_type, col='z', col_color='mass',
             color1=color1, color_log=log_mass, **kwargs)
+
+
 def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on input with panels
@@ -253,33 +244,7 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use redshift errors of catalog 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for redshift of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for redshift of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
     plt_kwargs: dict
         Additional arguments for pylab.scatter
@@ -303,18 +268,27 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         Label of x axis (default=cat1.labels['z']).
     ylabel: str
         Label of y axis (default=cat2.labels['z']).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.redshift` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.redshift` for more info).
     """
     kwargs['label_fmt'] = kwargs.get('label_fmt', '.1f')
     return catalog_funcs.plot_panel(cat1, cat2, matching_type, col='z',
             col_panel='mass', bins_panel=mass_bins, log_panel=log_mass,
             **kwargs)
+
+
 def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with panels
@@ -344,36 +318,10 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use redshift errors of catalog 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for redshift of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for redshift of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -404,18 +352,28 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Label of x axis (default=cat1.labels['z']).
     ylabel: str
         Label of y axis (default=cat2.labels['z']).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar (optional)
-        Colorbar of the recovey rates. Only returned if add_cb=True.
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.redshift` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.redshift` for more info).
     """
     kwargs['label_fmt'] = kwargs.get('label_fmt', '.1f')
     return catalog_funcs.plot_density_panel(cat1, cat2, matching_type, col='z',
             col_panel='mass', bins_panel=mass_bins, log_panel=log_mass,
             **kwargs)
+
+
 def redshift_metrics(cat1, cat2, matching_type, **kwargs):
     """
     Plot metrics.
@@ -442,7 +400,7 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -461,14 +419,17 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     mode = kwargs.pop('mode', 'diff_z')
     return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='z', mode=mode,
                                        **kwargs)
+
+
 def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with scatter and bias panels
@@ -499,33 +460,7 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use redshift errors of catalog 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for redshift of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for redshift of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -552,17 +487,23 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     fig_frac: tuple
         Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
         and have values: [0, 1]. Colorbar is only used with add_cb key.
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    list
-        Axes with the panels (main, right, top, label)
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: dictionary with each ax of the plot.
+            * `metrics`: dictionary with the plots for each metric.
     """
     kwargs['metrics_mode'] = kwargs.get('metrics_mode', 'diff_z')
     kwargs['metrics'] = kwargs.get('metrics', ['std.fill', 'mean'])
     return catalog_funcs.plot_density_metrics(cat1, cat2, matching_type, col='z', **kwargs)
+
+
 def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
               log_mass=True, transpose=False, **kwargs):
     """
@@ -588,7 +529,7 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
     transpose: bool
         Invert lines and panels
 
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -612,10 +553,11 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     kwargs_ = {}
     kwargs_.update(kwargs)
@@ -630,6 +572,8 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
         'transpose': transpose,
     })
     return catalog_funcs.plot_dist(cat1, cat2, matching_type, **kwargs_)
+
+
 def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
                    log_mass=True, transpose=False, mask=None, **kwargs):
     """
@@ -652,7 +596,7 @@ def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, ma
     transpose: bool
         Invert lines and panels
 
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -676,10 +620,11 @@ def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, ma
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     kwargs_ = {}
     kwargs_.update(kwargs)
@@ -695,6 +640,8 @@ def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, ma
         'mask': mask,
     })
     return catalog_funcs.plot_dist_self(cat, **kwargs_)
+
+
 def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with scatter and bias panels
@@ -720,61 +667,7 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use redshift errors of catalog 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for redshift of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for redshift of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-    vline_kwargs: dict
-        Arguments for vlines marking bins in main plot, used in plt.axvline.
-
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -801,19 +694,31 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
     fig_frac: tuple
         Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
         and have values: [0, 1]. Colorbar is only used with add_cb key.
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
+    vline_kwargs: dict
+        Arguments for vlines marking bins in main plot, used in plt.axvline.
+
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    list
-        Axes with the panels (main, right, top, label)
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: dictionary with each ax of the plot.
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.redshift` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.redshift` for more info).
     """
     return catalog_funcs.plot_density_dist(cat1, cat2, matching_type, col='z', **kwargs)
 
 ############################################################################################
 ### Mass Plots #############################################################################
 ############################################################################################
+
+
 def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on input
@@ -835,8 +740,21 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
+    Other Parameters
+    ----------------
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
+    plt_kwargs: dict
+        Additional arguments for pylab.scatter
+    err_kwargs: dict
+        Additional arguments for pylab.errorbar
+    xlabel: str
+        Label of x axis (default=cat1.labels['mass']).
+    ylabel: str
+        Label of y axis (default=cat2.labels['mass']).
+
+    Other Parameters
+    ----------------
     add_bindata: bool
         Plot binned data used for fit (default=False).
     add_fit: bool
@@ -847,9 +765,11 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Bin and fit in log values (default=log_mass).
     fit_statistics: str
         Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+
+            * `individual` - Use each point
+            * `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            * `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+
     fit_bins1: array, None
         Bins for mass of catalog 1 (default=10).
     fit_bins2: array, None
@@ -863,29 +783,34 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     fit_label_components: tuple (of strings)
         Names of fitted components in fit line label, default=(xlabel, ylabel).
 
-    Other parameters
-    ----------------
-    ax: matplotlib.axes
-        Ax to add plot
-    plt_kwargs: dict
-        Additional arguments for pylab.scatter
-    err_kwargs: dict
-        Additional arguments for pylab.errorbar
-    xlabel: str
-        Label of x axis (default=cat1.labels['mass']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['mass']).
-
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `fit` (optional): fitting output dictionary, with values:
+
+                * `pars`: fitted parameter.
+                * `cov`: covariance of fitted parameters.
+                * `func`: fitting function with fitted parameter.
+                * `func_plus`: fitting function with fitted parameter plus 1x scatter.
+                * `func_minus`: fitting function with fitted parameter minus 1x scatter.
+                * `func_scat`: scatter of fited function.
+                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+
+            * `plots` (optional): additional plots:
+
+                * `fit`: fitted data
+                * `errorbar`: binned data
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot(cat1, cat2, matching_type, col='mass',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             **kwargs)
+
+
 def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs):
     """
     Scatter plot with errorbars and color based on input
@@ -909,38 +834,10 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use mass errors of catalog 2 in fit (default=True).
-    fit_log: bool
-        Bin and fit in log values (default=log_mass).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for mass of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for mass of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -953,19 +850,29 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
         Label of x axis (default=cat1.labels['mass']).
     ylabel: str
         Label of y axis (default=cat2.labels['mass']).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar (optional)
-        Colorbar of the recovey rates. Only returned if add_cb=True.
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.mass` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.mass` for more info).
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot_color(cat1, cat2, matching_type, col='mass', col_color='z',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             color1=color1, **kwargs)
+
+
 def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on point density
@@ -991,38 +898,10 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use mass errors of catalog 2 in fit (default=True).
-    fit_log: bool
-        Bin and fit in log values (default=log_mass).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for mass of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for mass of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -1039,19 +918,28 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Label of x axis (default=cat1.labels['mass']).
     ylabel: str
         Label of y axis (default=cat2.labels['mass']).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar (optional)
-        Colorbar of the recovey rates. Only returned if add_cb=True.
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.mass` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.mass` for more info).
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot_density(cat1, cat2, matching_type, col='mass',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             **kwargs)
+
+
 def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on input with panels
@@ -1077,35 +965,7 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use mass errors of catalog 2 in fit (default=True).
-    fit_log: bool
-        Bin and fit in log values (default=log_mass).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for mass of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for mass of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
     plt_kwargs: dict
         Additional arguments for pylab.scatter
@@ -1129,13 +989,20 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         Label of x axis (default=cat1.labels['mass']).
     ylabel: str
         Label of y axis (default=cat2.labels['mass']).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.mass` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.mass` for more info).
     """
     kwargs['label_format'] = kwargs.get('label_format',
         lambda v: f'%{kwargs.pop("label_fmt", ".2f")}'%v)
@@ -1145,6 +1012,8 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             **kwargs)
+
+
 def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with panels
@@ -1174,38 +1043,10 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use mass errors of catalog 2 in fit (default=True).
-    fit_log: bool
-        Bin and fit in log values (default=log_mass).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for mass of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for mass of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -1236,13 +1077,21 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Label of x axis (default=cat1.labels['mass']).
     ylabel: str
         Label of y axis (default=cat2.labels['mass']).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar (optional)
-        Colorbar of the recovey rates. Only returned if add_cb=True.
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.mass` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.mass` for more info).
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot_density_panel(cat1, cat2, matching_type, col='mass',
@@ -1250,6 +1099,8 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             **kwargs)
+
+
 def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
     Plot metrics.
@@ -1278,7 +1129,7 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -1297,16 +1148,19 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     mode = kwargs.pop('mode', 'log')
     return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='mass', mode=mode,
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             **kwargs)
+
+
 def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with scatter and bias panels
@@ -1337,35 +1191,7 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use mass errors of catalog 2 in fit (default=True).
-    fit_log: bool
-        Bin and fit in log values (default=log_mass).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for mass of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for mass of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -1388,13 +1214,17 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     fig_frac: tuple
         Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
         and have values: [0, 1]. Colorbar is only used with add_cb key.
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    list
-        Axes with the panels (main, right, top, label)
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: dictionary with each ax of the plot.
+            * `metrics`: dictionary with the plots for each metric.
     """
     metrics_mode = kwargs.pop('metrics_mode', 'log')
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
@@ -1402,6 +1232,8 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             metrics_mode=metrics_mode, **kwargs)
+
+
 def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
               log_mass=True, transpose=False, **kwargs):
     """
@@ -1427,7 +1259,7 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
     transpose: bool
         Invert lines and panels
 
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -1451,10 +1283,11 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     kwargs_ = {}
     kwargs_.update(kwargs)
@@ -1469,6 +1302,8 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
         'transpose': transpose,
     })
     return catalog_funcs.plot_dist(cat1, cat2, matching_type, **kwargs_)
+
+
 def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
                    log_mass=True, transpose=False, mask=None, **kwargs):
     """
@@ -1491,7 +1326,7 @@ def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=
     transpose: bool
         Invert lines and panels
 
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -1515,10 +1350,11 @@ def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     kwargs_ = {}
     kwargs_.update(kwargs)
@@ -1534,6 +1370,7 @@ def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=
         'mask': mask,
     })
     return catalog_funcs.plot_dist_self(cat, **kwargs_)
+
 
 def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
@@ -1562,35 +1399,7 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
     log_mass: bool
         Log scale for mass
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use mass errors of catalog 2 in fit (default=True).
-    fit_log: bool
-        Bin and fit in log values (default=log_mass).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for mass of catalog 1 (default=10).
-    fit_bins2: array, None
-        Bins for mass of catalog 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -1613,13 +1422,20 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
     fig_frac: tuple
         Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
         and have values: [0, 1]. Colorbar is only used with add_cb key.
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    list
-        Axes with the panels (main, right, top, label)
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: dictionary with each ax of the plot.
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.mass` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.mass` for more info).
     """
     kwargs['fit_log'] = kwargs.get('fit_log', True)
     kwargs['xscale'] = 'log' if log_mass else 'linear'

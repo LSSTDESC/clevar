@@ -11,6 +11,8 @@ from . import array_funcs
 
 _local_args = ('xlabel', 'ylabel', 'xscale', 'yscale', 'add_err', 'add_fit_err',
               'label1', 'label2', 'scale1', 'scale2', 'mask1', 'mask2')
+
+
 def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
     """
     Prepare kwargs into args for this class and args for function
@@ -57,6 +59,8 @@ def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
         ylabel = kwargs.get('label2', class_kwargs['ylabel'])
         func_kwargs['fit_label_components'] = kwargs.get('fit_label_components', (xlabel, ylabel))
     return class_kwargs, func_kwargs, mt1, mt2
+
+
 def _fmt_plot(ax, **kwargs):
     """
     Format plot (scale and label of ax)
@@ -64,7 +68,7 @@ def _fmt_plot(ax, **kwargs):
     Parameters
     ----------
     ax: matplotlib.axes
-        Ax to add plot
+        Ax to add plot.
     **kwargs
         Other arguments
     """
@@ -72,6 +76,8 @@ def _fmt_plot(ax, **kwargs):
     ax.set_ylabel(kwargs['ylabel'])
     ax.set_xscale(kwargs['xscale'])
     ax.set_yscale(kwargs['yscale'])
+
+
 def plot(cat1, cat2, matching_type, col, **kwargs):
     """
     Scatter plot with errorbars and color based on input
@@ -93,36 +99,10 @@ def plot(cat1, cat2, matching_type, col, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     err_kwargs: dict
@@ -136,15 +116,63 @@ def plot(cat1, cat2, matching_type, col, **kwargs):
     yscale: str
         Scale yaxis.
 
+    Other Parameters
+    -----------------
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    fit_err2: array, None
+        Error of component 2 (set to err2 if not provided).
+    fit_log: bool
+        Bin and fit in log values (default=False).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+
+            * `individual` - Use each point
+            * `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            * `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+
+    fit_bins1: array, None
+        Bins for component 1 (default=10).
+    fit_bins2: array, None
+        Bins for component 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=('x', 'y').
+
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `fit` (optional): fitting output dictionary, with values:
+
+                * `pars`: fitted parameter.
+                * `cov`: covariance of fitted parameters.
+                * `func`: fitting function with fitted parameter.
+                * `func_plus`: fitting function with fitted parameter plus 1x scatter.
+                * `func_minus`: fitting function with fitted parameter minus 1x scatter.
+                * `func_scat`: scatter of fited function.
+                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+
+            * `plots` (optional): additional plots:
+
+                * `fit`: fitted data
+                * `errorbar`: binned data
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     info = array_funcs.plot(**f_kwargs)
     _fmt_plot(info['ax'], **cl_kwargs)
     return info
+
+
 def plot_color(cat1, cat2, matching_type, col, col_color,
                color1=True, color_log=False, **kwargs):
     """
@@ -173,36 +201,10 @@ def plot_color(cat1, cat2, matching_type, col, col_color,
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -219,13 +221,24 @@ def plot_color(cat1, cat2, matching_type, col, col_color,
         Scale xaxis.
     yscale: str
         Scale yaxis.
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar (optional)
-        Colorbar of the recovey rates. Only returned if add_cb=True.
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.catalog_funcs.plot` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
@@ -234,6 +247,8 @@ def plot_color(cat1, cat2, matching_type, col, col_color,
     info = array_funcs.plot_color(**f_kwargs)
     _fmt_plot(info['ax'], **cl_kwargs)
     return info
+
+
 def plot_density(cat1, cat2, matching_type, col, **kwargs):
     """
     Scatter plot with errorbars and color based on point density
@@ -259,36 +274,10 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -309,13 +298,24 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
         Scale xaxis.
     yscale: str
         Scale yaxis.
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar (optional)
-        Colorbar of the recovey rates. Only returned if add_cb=True.
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.catalog_funcs.plot` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
@@ -323,6 +323,8 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
     info = array_funcs.plot_density(**f_kwargs)
     _fmt_plot(info['ax'], **cl_kwargs)
     return info
+
+
 def _get_panel_args(cat1, cat2, matching_type, col,
     col_panel, bins_panel, panel_cat1=True, log_panel=False,
     **kwargs):
@@ -368,6 +370,8 @@ def _get_panel_args(cat1, cat2, matching_type, col,
     f_kwargs['bins_panel'] = autobins(f_kwargs['values_panel'], bins_panel, log_panel)
     ph._set_label_format(f_kwargs, 'label_format', 'label_fmt', log_panel)
     return cl_kwargs, f_kwargs, mt1, mt2
+
+
 def plot_panel(cat1, cat2, matching_type, col,
     col_panel, bins_panel, panel_cat1=True, log_panel=False,
     **kwargs):
@@ -399,33 +403,7 @@ def plot_panel(cat1, cat2, matching_type, col,
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
     plt_kwargs: dict
         Additional arguments for pylab.scatter
@@ -451,19 +429,32 @@ def plot_panel(cat1, cat2, matching_type, col,
         Scale xaxis.
     yscale: str
         Scale yaxis.
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
 
-    Returns
+    Return
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.catalog_funcs.plot` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
     info = array_funcs.plot_panel(**f_kwargs)
     ph.nice_panel(info['axes'], **cl_kwargs)
     return info
+
+
 def plot_color_panel(cat1, cat2, matching_type, col, col_color,
     col_panel, bins_panel, panel_cat1=True, color1=True, log_panel=False, **kwargs):
     """
@@ -500,33 +491,7 @@ def plot_color_panel(cat1, cat2, matching_type, col, col_color,
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
     plt_kwargs: dict
         Additional arguments for pylab.scatter
@@ -556,13 +521,25 @@ def plot_color_panel(cat1, cat2, matching_type, col, col_color,
         Scale xaxis.
     yscale: str
         Scale yaxis.
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.catalog_funcs.plot` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
@@ -570,6 +547,8 @@ def plot_color_panel(cat1, cat2, matching_type, col, col_color,
     info = array_funcs.plot_color_panel(**f_kwargs)
     ph.nice_panel(info['axes'], **cl_kwargs)
     return info
+
+
 def plot_density_panel(cat1, cat2, matching_type, col,
     col_panel, bins_panel, panel_cat1=True, log_panel=False, **kwargs):
     """
@@ -604,36 +583,10 @@ def plot_density_panel(cat1, cat2, matching_type, col,
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
-    ax: matplotlib.axes
-        Ax to add plot
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool
@@ -666,13 +619,25 @@ def plot_density_panel(cat1, cat2, matching_type, col,
         Scale xaxis.
     yscale: str
         Scale yaxis.
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.catalog_funcs.plot` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
@@ -681,6 +646,8 @@ def plot_density_panel(cat1, cat2, matching_type, col,
     info = array_funcs.plot_density_panel(**f_kwargs)
     ph.nice_panel(info['axes'], **cl_kwargs)
     return info
+
+
 def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     """
     Plot metrics.
@@ -709,7 +676,7 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Other parameters
+    Other Parameters
     ----------------
     metrics_kwargs: dict
         Dictionary of dictionary configs for each metric plots.
@@ -728,10 +695,11 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs.pop('fit_err2', None)
@@ -747,6 +715,8 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     info['axes'][0].set_xscale(kwargs.get('scale1', cl_kwargs['xscale']))
     info['axes'][1].set_xscale(kwargs.get('scale2', cl_kwargs['yscale']))
     return info
+
+
 def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with scatter and bias panels
@@ -777,33 +747,7 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -830,13 +774,21 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
     fig_frac: tuple
         Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
         and have values: [0, 1]. Colorbar is only used with add_cb key.
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    list
-        Axes with the panels (main, right, top, label)
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: dictionary with each ax of the plot.
+            * `metrics`: dictionary with the plots for each metric.
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
@@ -849,6 +801,7 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
     info['axes']['main'].set_xlabel(xlabel)
     info['axes']['main'].set_ylabel(ylabel)
     return info
+
 
 def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
               log_vals=False, log_aux=False, transpose=False, **kwargs):
@@ -881,7 +834,7 @@ def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, b
     transpose: bool
         Invert lines and panels
 
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -905,10 +858,11 @@ def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, b
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs.pop('err1', None)
@@ -930,6 +884,8 @@ def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, b
     for ax in (info['axes'][-1,:] if len(info['axes'].shape)>1 else info['axes']):
         ax.set_xlabel(xlabel)
     return info
+
+
 def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
                    log_vals=False, log_aux=False, transpose=False, mask=None, **kwargs):
     """
@@ -959,7 +915,7 @@ def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
     mask: ndarray
         Mask for catalog
 
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -983,10 +939,11 @@ def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
     """
     f_kwargs = {k:v for k, v in kwargs.items() if k not in _local_args}
     mask = np.ones(cat.size, dtype=bool) if mask is None else mask
@@ -1008,6 +965,8 @@ def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
     for ax in (info['axes'][-1,:] if len(info['axes'].shape)>1 else info['axes']):
         ax.set_xlabel(xlabel)
     return info
+
+
 def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with distribution panels.
@@ -1033,35 +992,7 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
     mask2: array, None
         Mask for clusters 2 properties, must have size=cat2.size
 
-    Fit Parameters
-    --------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    add_fit_err: bool
-        Use error of component 2 in fit (default=True).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel).
-    vline_kwargs: dict
-        Arguments for vlines marking bins in main plot, used in plt.axvline.
-
-    Other parameters
+    Other Parameters
     ----------------
     fig_kwargs: dict
         Additional arguments for plt.subplots
@@ -1088,13 +1019,24 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
     fig_frac: tuple
         Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
         and have values: [0, 1]. Colorbar is only used with add_cb key.
+    add_bindata: bool
+        Plot binned data used for fit (default=False).
+    add_fit: bool
+        Fit and plot binned dat (default=False).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    list
-        Axes with the panels (main, right, top, label)
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: dictionary with each ax of the plot.
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.catalog_funcs.plot` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
