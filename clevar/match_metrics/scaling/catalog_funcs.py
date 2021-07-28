@@ -19,10 +19,8 @@ def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
@@ -85,10 +83,8 @@ def plot(cat1, cat2, matching_type, col, col_color=None,
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
@@ -101,10 +97,8 @@ def plot(cat1, cat2, matching_type, col, col_color=None,
         Use log of col_color
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -118,14 +112,10 @@ def plot(cat1, cat2, matching_type, col, col_color=None,
         Colorbar arguments
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    xlabel: str
-        Label of x axis (default=cat1.labels[col]).
-    ylabel: str
-        Label of y axis (default=cat2.labels[col]).
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
+    xscale, yscale: str
+        Scale for x/y axis.
     add_bindata: bool
         Plot binned data used for fit (default=False).
     add_fit: bool
@@ -170,24 +160,18 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins1: array, int
-        Bins of component 1 for density
-    bins2: array, int
-        Bins of component 2 for density
+    bins1, bins2: array, None
+        Bins for component x and y (for density colors).
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -205,14 +189,10 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    xlabel: str
-        Label of x axis (default=cat1.labels[col]).
-    ylabel: str
-        Label of y axis (default=cat2.labels[col]).
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
+    xscale, yscale: str
+        Scale for x/y axis.
     add_bindata: bool
         Plot binned data used for fit (default=False).
     add_fit: bool
@@ -250,10 +230,8 @@ def _get_panel_args(cat1, cat2, matching_type, col,
     ----------
     panel_plot_function: function
         Plot function
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
@@ -295,12 +273,8 @@ def plot_panel(
 
     Parameters
     ----------
-    pltfunc: function
-        array_funcs function
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
@@ -319,10 +293,8 @@ def plot_panel(
         Scale of the panel values
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -346,14 +318,10 @@ def plot_panel(
         Add bin label to panel
     label_format: function
         Function
-    xlabel: str
-        Label of x axis (default=cat1.labels[col]).
-    ylabel: str
-        Label of y axis (default=cat2.labels[col]).
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
+    xscale, yscale: str
+        Scale for x/y axis.
     add_bindata: bool
         Plot binned data used for fit (default=False).
     add_fit: bool
@@ -390,10 +358,8 @@ def plot_density_panel(cat1, cat2, matching_type, col,
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
@@ -404,18 +370,14 @@ def plot_density_panel(cat1, cat2, matching_type, col,
         Bins to make panels
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
-    bins1: array, int
-        Bins of component 1 for density
-    bins2: array, int
-        Bins of component 2 for density
+    bins1, bins2: array, None
+        Bins for component x and y (for density colors).
     log_panel: bool
         Scale of the panel values
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -445,14 +407,10 @@ def plot_density_panel(cat1, cat2, matching_type, col,
         Add bin label to panel
     label_format: function
         Function to format the values of the bins
-    xlabel: str
-        Label of x axis (default=cat1.labels[col]).
-    ylabel: str
-        Label of y axis (default=cat2.labels[col]).
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
+    xscale, yscale: str
+        Scale for x/y axis.
     add_bindata: bool
         Plot binned data used for fit (default=False).
     add_fit: bool
@@ -488,27 +446,21 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins1: array, int
-        Bins for catalog 1
-    bins2: array, int
-        Bins for catalog 2
+    bins1, bins2: array, None
+        Bins for component of catalog 1 and 2.
     mode: str
         Mode to run. Options are:
         simple - used simple difference
         redshift - metrics for (values2-values1)/(1+values1)
         log - metrics for log of values
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -518,14 +470,10 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
         Additional arguments for plt.subplots
     legend_kwargs: dict
         Additional arguments for plt.legend
-    label1: str
-        Label of component from catalog 1.
-    label2: str
-        Label of component from catalog 2.
-    scale1: str
-        Scale of component from catalog 1.
-    scale2: str
-        Scale of component from catalog 2.
+    label1, label2: str
+        Label for catalog 1/2 components.
+    scale1, scale2: str
+        Scale of catalog 1/2 components.
 
     Returns
     -------
@@ -557,18 +505,14 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins1: array, int
-        Bins for component 1
-    bins2: array, int
-        Bins for component 2
+    bins1, bins2: array, None
+        Bins for component x and y.
     metrics_mode: str
         Mode to run. Options are:
         simple - used simple difference
@@ -576,10 +520,8 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
         log - metrics for log of values
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -599,10 +541,8 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
         Additional arguments for pylab.errorbar
     metrics_kwargs: dict
         Dictionary of dictionary configs for each metric plots.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xscale, yscale: str
+        Scale for x/y axis.
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
     fig_frac: tuple
@@ -645,20 +585,18 @@ def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, b
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
     bins1: array, int
-        Bins for distribution of the cat1 column
+        Bins for distribution of the cat1 column.
     bins2: array, int
-        Bins for cat2 column
+        Bins for cat2 column (for panels/lines).
     col_aux: array
-        Auxiliary colum of cat2 (to bin data in lines)
+        Auxiliary colum of cat2 (to bin data in lines/panels).
     bins_aux: array, int
         Bins for component aux
     log_vals: bool
@@ -733,11 +671,11 @@ def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
     col: str
         Name of column to be plotted
     bins1: array, int
-        Bins for distribution of the column
+        Bins for distribution of the cat1 column.
     bins2: array, int
-        Bins for panels
+        Bins for cat2 column (for panels/lines).
     col_aux: array
-        Auxiliary colum (to bin data in lines)
+        Auxiliary colum of cat2 (to bin data in lines/panels).
     bins_aux: array, int
         Bins for component aux
     log_vals: bool
@@ -807,24 +745,18 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins1: array, int
-        Bins for component 1 (for density colors).
-    bins2: array, int
-        Bins for component 2 (for density colors).
+    bins1, bins2: array, None
+        Bins for component x and y (for density colors).
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -844,10 +776,8 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
         Additional arguments for pylab.errorbar
     metrics_kwargs: dict
         Dictionary of dictionary configs for each metric plots.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xscale, yscale: str
+        Scale for x/y axis.
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
     fig_frac: tuple

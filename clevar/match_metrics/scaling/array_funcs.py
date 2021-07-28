@@ -70,10 +70,8 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     ----------
     ax: matplotlib.axes
         Ax to add plot.
-    values1: array
-        Component 1
-    values2: array
-        Component 2
+    values1, values2: array
+        Components to be binned and fitted
     err2: array
         Error of component 2
     log: bool
@@ -83,10 +81,8 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
             `individual` - Use each point
             `mode` - Use mode of component 2 distribution in each comp 1 bin, requires bins2.
             `mean` - Use mean of component 2 distribution in each comp 1 bin, requires bins2.
-    bins1: array, None
-        Bins for component 1 (default=10).
-    bins2: array, None
-        Bins for component 2 (default=30).
+    bins1, bins2: array, None
+        Bins for component x (default=10) and y (default=30).
     add_bindata: bool
         Plot binned data used for fit (default=False).
     add_fit: bool
@@ -209,14 +205,10 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
-    err1: array
-        Error of component 1
-    err2: array
-        Error of component 2
+    values1, values2: array
+        Components x and y for plot.
+    err1, err2: array, None
+        Errors of component x and y.
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
@@ -316,26 +308,18 @@ def plot_density(values1, values2, bins1=30, bins2=30,
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
-    bins1: array, int
-        Bins for component 1 (for density colors).
-    bins2: array, int
-        Bins for component 2 (for density colors).
+    values1, values2: array
+        Components x and y for plot.
+    bins1, bins2: array, None
+        Bins for component x and y (for density colors).
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
-    err1: array
-        Error of component 1
-    err2: array
-        Error of component 2
+    xscale, yscale: str
+        Scale for x/y axis.
+    err1, err2: array, None
+        Errors of component x and y.
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
@@ -466,20 +450,16 @@ def plot_panel(
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
+    values1, values2: array
+        Components x and y for plot.
     values_color: array
         Values for color (cmap scale)
     values_panel: array
         Values to bin data in panels
     bins_panel: array, int
         Bins defining panels
-    err1: array
-        Error of component 1
-    err2: array
-        Error of component 2
+    err1, err2: array, None
+        Errors of component x and y.
     values_color: array, None
         Values for color (cmap scale).
     plt_kwargs: dict
@@ -552,30 +532,22 @@ def plot_density_panel(values1, values2, values_panel, bins_panel,
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
+    values1, values2: array
+        Components x and y for plot.
     values_panel: array
         Values to bin data in panels
     bins_panel: array, int
         Bins defining panels
-    bins1: array, int
-        Bins for component 1 (for density colors).
-    bins2: array, int
-        Bins for component 2 (for density colors).
+    bins1, bins2: array, None
+        Bins for component x and y (for density colors).
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
-    err1: array
-        Error of component 1
-    err2: array
-        Error of component 2
+    xscale, yscale: str
+        Scale for x/y axis.
+    err1, err2: array, None
+        Errors of component x and y.
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict
@@ -644,10 +616,8 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
+    values1, values2: array
+        Components x and y for plot.
     bins: array, int
         Bins for component 1
     mode: str
@@ -733,14 +703,10 @@ def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
-    bins1: array, int
-        Bins for component 1
-    bins2: array, int
-        Bins for component 2
+    values1, values2: array
+        Components x and y for plot.
+    bins1, bins2: array, None
+        Bins for component x and y.
     mode: str
         Mode to run. Options are:
         simple - used simple difference
@@ -803,26 +769,18 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
-    bins1: array, int
-        Bins for component 1
-    bins2: array, int
-        Bins for component 2
+    values1, values2: array
+        Components x and y for plot.
+    bins1, bins2: array, None
+        Bins for component x and y.
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
-    err1: array
-        Error of component 1
-    err2: array
-        Error of component 2
+    xscale, yscale: str
+        Scale for x/y axis.
+    err1, err2: array, None
+        Errors of component x and y.
     metrics_mode: str
         Mode to run. Options are:
         simple - used simple difference
@@ -930,18 +888,16 @@ def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2 (to bin data in panels)
+    values1, values2: array
+        Components x and y for plot.
     bins1_dist: array, int
-        Bins for component 1
+        Bins for distribution of component 1.
     bins2: array, int
-        Bins for component 2
+        Bins for component 2 (for panels/lines).
     values_aux: array
-        Auxiliary component (to bin data in lines)
+        Auxiliary component (to bin data in lines/panels).
     bins_aux: array, int
-        Bins for component aux
+        Bins for component aux (for lines/panels).
     log_vals: bool
         Log scale for values (and int bins)
     log_aux: bool
@@ -1034,26 +990,18 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
 
     Parameters
     ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
-    bins1: array, int
-        Bins for component 1 (for density colors).
-    bins2: array, int
-        Bins for component 2 (for density colors).
+    values1, values2: array
+        Components x and y for plot.
+    bins1, bins2: array, None
+        Bins for component x and y (for density colors).
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
-    err1: array
-        Error of component 1
-    err2: array
-        Error of component 2
+    xscale, yscale: str
+        Scale for x/y axis.
+    err1, err2: array, None
+        Errors of component x and y.
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool

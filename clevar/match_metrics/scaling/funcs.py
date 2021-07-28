@@ -16,18 +16,14 @@ def redshift(cat1, cat2, matching_type, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -37,10 +33,8 @@ def redshift(cat1, cat2, matching_type, **kwargs):
         Additional arguments for pylab.scatter
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    xlabel: str
-        Label of x axis (default=cat1.labels['z']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['z']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
 
     Other Parameters
     ----------------
@@ -100,24 +94,18 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins1: array, int
-        Bins of redshift 1 for density
-    bins2: array, int
-        Bins of redshift 2 for density
+    bins1, bins2: array, None
+        Bins for redshift of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -135,14 +123,10 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    xlabel: str
-        Label of x axis (default=cat1.labels['z']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['z']).
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
+    xscale, yscale: str
+        Scale for x/y axis.
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
@@ -167,10 +151,8 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
@@ -179,10 +161,8 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
         Use catalog 1 for color. If false uses catalog 2
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -196,10 +176,8 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
         Colorbar arguments
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    xlabel: str
-        Label of x axis (default=cat1.labels['z']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['z']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
@@ -225,10 +203,8 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     mass_bins: int, array, int
@@ -239,10 +215,8 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         Used catalog 1 for col_panel. If false uses catalog 2
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -264,10 +238,8 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
         Function to format the values of the bins
     label_fmt: str
         Format the values of binedges (ex: '.2f')
-    xlabel: str
-        Label of x axis (default=cat1.labels['z']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['z']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
@@ -295,10 +267,8 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     mass_bins: int, array, int
@@ -307,16 +277,12 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Log scale for mass
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
-    bins1: array, int
-        Bins of redshift 1 for density
-    bins2: array, int
-        Bins of redshift 2 for density
+    bins1, bins2: array, None
+        Bins for redshift of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -348,10 +314,8 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
         Function to format the values of the bins
     label_fmt: str
         Format the values of binedges (ex: '.2f')
-    xlabel: str
-        Label of x axis (default=cat1.labels['z']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['z']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
@@ -380,25 +344,19 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    bins1: array, int
-        Bins for catalog 1
-    bins2: array, int
-        Bins for catalog 2
+    bins1, bins2: array, None
+        Bins for redshift of catalog 1 and 2.
     mode: str
         Mode to run (default=redshit). Options are:
         simple - used simple difference
         redshift - metrics for (values2-values1)/(1+values1)
         log - metrics for log of values
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -408,14 +366,10 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
         Dictionary of dictionary configs for each metric plots.
     legend_kwargs: dict
         Additional arguments for plt.legend
-    label1: str
-        Label of component from catalog 1.
-    label2: str
-        Label of component from catalog 2.
-    scale1: str
-        Scale of component from catalog 1.
-    scale2: str
-        Scale of component from catalog 2.
+    label1, label2: str
+        Label for catalog 1/2 redshifts.
+    scale1, scale2: str
+        Scale of catalog 1/2 redshifts.
 
     Returns
     -------
@@ -436,18 +390,14 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins1: array, int
-        Bins for component 1
-    bins2: array, int
-        Bins for component 2
+    bins1, bins2: array, None
+        Bins for redshift of catalog 1 and 2.
     metrics_mode: str
         Mode to run (default=redshit). Options are:
         simple - used simple difference
@@ -455,10 +405,8 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
         log - metrics for log of values
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -478,10 +426,8 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
         Additional arguments for pylab.errorbar
     metrics_kwargs: dict
         Dictionary of dictionary configs for each metric plots.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xscale, yscale: str
+        Scale for x/y axis.
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
     fig_frac: tuple
@@ -512,10 +458,8 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins_dist: array, int
@@ -583,6 +527,8 @@ def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, ma
 
     Parameters
     ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     cat: clevar.ClCatalog
         Input Catalog
     redshift_bins_dist: array, int
@@ -648,24 +594,18 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins1: array, int
-        Bins for component 1 (for density colors).
-    bins2: array, int
-        Bins for component 2 (for density colors).
+    bins1, bins2: array, None
+        Bins for redshift of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -685,10 +625,8 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
         Additional arguments for pylab.errorbar
     metrics_kwargs: dict
         Dictionary of dictionary configs for each metric plots.
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
+    xscale, yscale: str
+        Scale for x/y axis.
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
     fig_frac: tuple
@@ -725,20 +663,16 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -748,10 +682,8 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Additional arguments for pylab.scatter
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    xlabel: str
-        Label of x axis (default=cat1.labels['mass']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['mass']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['mass']/cat2.labels['mass']).
 
     Other Parameters
     ----------------
@@ -817,10 +749,8 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
@@ -829,10 +759,8 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
         Use catalog 1 for color. If false uses catalog 2
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -846,10 +774,8 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
         Colorbar arguments
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-    xlabel: str
-        Label of x axis (default=cat1.labels['mass']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['mass']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['mass']/cat2.labels['mass']).
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
@@ -879,24 +805,18 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
-    bins1: array, int
-        Bins of mass 1 for density
-    bins2: array, int
-        Bins of mass 2 for density
+    bins1, bins2: array, None
+        Bins for mass of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -914,10 +834,8 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    xlabel: str
-        Label of x axis (default=cat1.labels['mass']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['mass']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['mass']/cat2.labels['mass']).
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
@@ -946,10 +864,8 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins: int, array, int
@@ -960,10 +876,8 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         Used catalog 1 for col_panel. If false uses catalog 2
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -985,10 +899,8 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         Function to format the values of the bins
     label_fmt: str
         Format the values of binedges (ex: '.2f')
-    xlabel: str
-        Label of x axis (default=cat1.labels['mass']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['mass']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['mass']/cat2.labels['mass']).
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
@@ -1020,10 +932,8 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     redshift_bins: int, array, int
@@ -1032,16 +942,12 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Log scale for mass
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
-    bins1: array, int
-        Bins of mass 1 for density
-    bins2: array, int
-        Bins of mass 2 for density
+    bins1, bins2: array, None
+        Bins for mass of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -1073,10 +979,8 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
         Function to format the values of the bins
     label_fmt: str
         Format the values of binedges (ex: '.2f')
-    xlabel: str
-        Label of x axis (default=cat1.labels['mass']).
-    ylabel: str
-        Label of y axis (default=cat2.labels['mass']).
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['mass']/cat2.labels['mass']).
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.mass` for more info).
 
@@ -1107,27 +1011,21 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
-    bins1: array, int
-        Bins for catalog 1
-    bins2: array, int
-        Bins for catalog 2
+    bins1, bins2: array, None
+        Bins for mass of catalogs 1 and 2.
     mode: str
         Mode to run (default=log). Options are:
         simple - used simple difference
         redshift - metrics for (values2-values1)/(1+values1)
         log - metrics for log of values
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -1137,14 +1035,10 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Dictionary of dictionary configs for each metric plots.
     legend_kwargs: dict
         Additional arguments for plt.legend
-    label1: str
-        Label of component from catalog 1.
-    label2: str
-        Label of component from catalog 2.
-    scale1: str
-        Scale of component from catalog 1.
-    scale2: str
-        Scale of component from catalog 2.
+    label1, label2: str
+        Label for catalog 1/2 masses.
+    scale1, scale2: str
+        Scale of catalog 1/2 masses.
 
     Returns
     -------
@@ -1167,18 +1061,14 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     log_mass: bool
         Log scale for mass
-    bins1: array, int
-        Bins for component 1
-    bins2: array, int
-        Bins for component 2
+    bins1, bins2: array, None
+        Bins for mass of catalogs 1 and 2.
     metrics_mode: str
         Mode to run (default=log). Options are:
         simple - used simple difference
@@ -1186,10 +1076,8 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         log - metrics for log of values
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
@@ -1242,10 +1130,8 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     mass_bins_dist: array, int
@@ -1313,6 +1199,8 @@ def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=
 
     Parameters
     ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     cat: clevar.ClCatalog
         Input Catalog
     mass_bins_dist: array, int
@@ -1378,24 +1266,18 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Parameters
     ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    bins1: array, int
-        Bins for component 1 (for density colors).
-    bins2: array, int
-        Bins for component 2 (for density colors).
+    bins1, bins2: array, None
+        Bins for mass of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
     log_mass: bool
         Log scale for mass
 
