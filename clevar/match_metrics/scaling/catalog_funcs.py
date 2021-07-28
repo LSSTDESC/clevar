@@ -78,9 +78,10 @@ def _fmt_plot(ax, **kwargs):
     ax.set_yscale(kwargs['yscale'])
 
 
-def plot(cat1, cat2, matching_type, col, **kwargs):
+def plot(cat1, cat2, matching_type, col, col_color=None,
+         color1=True, color_log=False, **kwargs):
     """
-    Scatter plot with errorbars and color based on input
+    Scatter plot with errorbars. Color can be based on input column.
 
     Parameters
     ----------
@@ -92,103 +93,7 @@ def plot(cat1, cat2, matching_type, col, **kwargs):
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    add_err: bool
-        Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
-
-    Other Parameters
-    ----------------
-    ax: matplotlib.axes, None
-        Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
-        Additional arguments for pylab.scatter
-    err_kwargs: dict
-        Additional arguments for pylab.errorbar
-    xlabel: str
-        Label of x axis (default=cat1.labels[col]).
-    ylabel: str
-        Label of y axis (default=cat2.labels[col]).
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
-
-    Other Parameters
-    -----------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    fit_err2: array, None
-        Error of component 2 (set to err2 if not provided).
-    fit_log: bool
-        Bin and fit in log values (default=False).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-
-            * `individual` - Use each point
-            * `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            * `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=('x', 'y').
-
-    Returns
-    -------
-    info: dict
-        Information of data in the plots, it contains the sections:
-
-            * `ax`: ax used in the plot.
-            * `fit` (optional): fitting output dictionary, with values:
-
-                * `pars`: fitted parameter.
-                * `cov`: covariance of fitted parameters.
-                * `func`: fitting function with fitted parameter.
-                * `func_plus`: fitting function with fitted parameter plus 1x scatter.
-                * `func_minus`: fitting function with fitted parameter minus 1x scatter.
-                * `func_scat`: scatter of fited function.
-                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
-
-            * `plots` (optional): additional plots:
-
-                * `fit`: fitted data
-                * `errorbar`: binned data
-    """
-    cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
-    info = array_funcs.plot(**f_kwargs)
-    _fmt_plot(info['ax'], **cl_kwargs)
-    return info
-
-
-def plot_color(cat1, cat2, matching_type, col, col_color,
-               color1=True, color_log=False, **kwargs):
-    """
-    Scatter plot with errorbars and color based on input
-
-    Parameters
-    ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
-    matching_type: str
-        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
-    col_color: str
+    col_color: str, None
         Name of column for color
     color1: bool
         Use catalog 1 for color. If false uses catalog 2
@@ -234,17 +139,27 @@ def plot_color(cat1, cat2, matching_type, col, col_color,
         Information of data in the plots, it contains the sections:
 
             * `ax`: ax used in the plot.
-            * `ax_cb` (optional): ax of colorbar
-            * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
-            * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            * `fit` (optional): fitting output dictionary, with values:
+
+                * `pars`: fitted parameter.
+                * `cov`: covariance of fitted parameters.
+                * `func`: fitting function with fitted parameter.
+                * `func_plus`: fitting function with fitted parameter plus 1x scatter.
+                * `func_minus`: fitting function with fitted parameter minus 1x scatter.
+                * `func_scat`: scatter of fited function.
+                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+
+            * `plots` (optional): additional plots:
+
+                * `fit`: fitted data
+                * `errorbar`: binned data
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
-    f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
-    f_kwargs['values_color'] = np.log10(f_kwargs['values_color']
-                                        ) if color_log else f_kwargs['values_color']
-    info = array_funcs.plot_color(**f_kwargs)
+    if col_color is not None:
+        f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
+        f_kwargs['values_color'] = np.log10(f_kwargs['values_color']
+                                            ) if color_log else f_kwargs['values_color']
+    info = array_funcs.plot(**f_kwargs)
     _fmt_plot(info['ax'], **cl_kwargs)
     return info
 
@@ -372,91 +287,9 @@ def _get_panel_args(cat1, cat2, matching_type, col,
     return cl_kwargs, f_kwargs, mt1, mt2
 
 
-def plot_panel(cat1, cat2, matching_type, col,
-    col_panel, bins_panel, panel_cat1=True, log_panel=False,
-    **kwargs):
-    """
-    Scatter plot with errorbars and color based on input with panels
-
-    Parameters
-    ----------
-    cat1: clevar.ClCatalog
-        ClCatalog with matching information
-    cat2: clevar.ClCatalog
-        ClCatalog matched to
-    matching_type: str
-        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
-    col_panel: str
-        Name of column to make panels
-    bins_panel: array, int
-        Bins to make panels
-    panel_cat1: bool
-        Used catalog 1 for col_panel. If false uses catalog 2
-    log_panel: bool
-        Scale of the panel values
-    add_err: bool
-        Add errorbars
-    mask1: array, None
-        Mask for clusters 1 properties, must have size=cat1.size
-    mask2: array, None
-        Mask for clusters 2 properties, must have size=cat2.size
-
-    Other Parameters
-    ----------------
-    plt_kwargs: dict
-        Additional arguments for pylab.scatter
-    err_kwargs: dict
-        Additional arguments for pylab.errorbar
-    panel_kwargs_list: list, None
-        List of additional arguments for plotting each panel (using pylab.plot).
-        Must have same size as len(bins2)-1
-    panel_kwargs_errlist: list, None
-        List of additional arguments for plotting each panel (using pylab.errorbar).
-        Must have same size as len(bins2)-1
-    fig_kwargs: dict
-        Additional arguments for plt.subplots
-    add_label: bool
-        Add bin label to panel
-    label_format: function
-        Function to format the values of the bins
-    xlabel: str
-        Label of x axis (default=cat1.labels[col]).
-    ylabel: str
-        Label of y axis (default=cat2.labels[col]).
-    xscale: str
-        Scale xaxis.
-    yscale: str
-        Scale yaxis.
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
-
-    Return
-    -------
-    info: dict
-        Information of data in the plots, it contains the sections:
-
-            * `fig`: `matplotlib.figure.Figure` object.
-            * `axes`: `matplotlib.axes` used in the plot.
-            * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
-            * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
-    """
-    cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
-        col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
-    info = array_funcs.plot_panel(**f_kwargs)
-    ph.nice_panel(info['axes'], **cl_kwargs)
-    return info
-
-
-def plot_color_panel(cat1, cat2, matching_type, col, col_color,
-    col_panel, bins_panel, panel_cat1=True, color1=True, log_panel=False, **kwargs):
+def plot_panel(
+    cat1, cat2, matching_type, col, col_panel, bins_panel, panel_cat1=True,
+    col_color=None, color1=True, log_panel=False, **kwargs):
     """
     Scatter plot with errorbars and color based on input with panels
 
@@ -472,14 +305,14 @@ def plot_color_panel(cat1, cat2, matching_type, col, col_color,
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    col_color: str
-        Name of column for color
     col_panel: str
         Name of column to make panels
     bins_panel: array, int
         Bins to make panels
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
+    col_color: str, None
+        Name of column for color.
     color1: bool
         Use catalog 1 for color. If false uses catalog 2
     log_panel: bool
@@ -543,8 +376,9 @@ def plot_color_panel(cat1, cat2, matching_type, col, col_color,
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
         col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
-    f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
-    info = array_funcs.plot_color_panel(**f_kwargs)
+    if col_color is not None:
+        f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
+    info = array_funcs.plot_panel(**f_kwargs)
     ph.nice_panel(info['axes'], **cl_kwargs)
     return info
 

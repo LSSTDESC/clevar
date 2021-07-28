@@ -215,7 +215,7 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
             * `plots` (optional): fit and binning plots \
             (see `scaling.redshift` for more info).
     """
-    return catalog_funcs.plot_color(cat1, cat2, matching_type, col='z', col_color='mass',
+    return catalog_funcs.plot(cat1, cat2, matching_type, col='z', col_color='mass',
             color1=color1, color_log=log_mass, **kwargs)
 
 
@@ -867,7 +867,7 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
             (see `scaling.mass` for more info).
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
-    return catalog_funcs.plot_color(cat1, cat2, matching_type, col='mass', col_color='z',
+    return catalog_funcs.plot(cat1, cat2, matching_type, col='mass', col_color='z',
             xscale='log' if log_mass else 'linear',
             yscale='log' if log_mass else 'linear',
             color1=color1, **kwargs)

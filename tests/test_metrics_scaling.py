@@ -86,9 +86,9 @@ def test_m_density_panel():
     conf = scaling.mass_density_zpanel(c1, c2, 'cat1', add_err=True)
 def test_color_panel():
     c1, c2 = _test_data.c1, _test_data.c2
-    conf = scaling.ClCatalogFuncs.plot_color_panel(c1, c2, 'cat1', 'mass',
+    conf = scaling.ClCatalogFuncs.plot_panel(c1, c2, 'cat1', 'mass',
         col_color='z', col_panel='z', bins_panel=3)
-    conf = scaling.ClCatalogFuncs.plot_color_panel(c1, c2, 'cat1', 'mass',
+    conf = scaling.ClCatalogFuncs.plot_panel(c1, c2, 'cat1', 'mass',
         col_color='z', col_panel='z', bins_panel=[3, 4, 5])
 def test_m_metrics():
     c1, c2 = _test_data.c1, _test_data.c2

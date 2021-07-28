@@ -202,8 +202,8 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     return info
 
 
-def plot(values1, values2, err1=None, err2=None,
-         ax=None, plt_kwargs={}, err_kwargs={}, **kwargs):
+def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwargs={},
+         values_color=None, add_cb=True, cb_kwargs={}, **kwargs):
     """
     Scatter plot with errorbars and color based on input
 
@@ -223,106 +223,12 @@ def plot(values1, values2, err1=None, err2=None,
         Additional arguments for pylab.scatter
     err_kwargs: dict
         Additional arguments for pylab.errorbar
-
-    Other Parameters
-    -----------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    fit_err2: array, None
-        Error of component 2 (set to err2 if not provided).
-    fit_log: bool
-        Bin and fit in log values (default=False).
-    fit_statistics: str
-        Statistics to be used in fit (default=mean). Options are:
-
-            * `individual` - Use each point
-            * `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            * `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
-
-    fit_bins1: array, None
-        Bins for component 1 (default=10).
-    fit_bins2: array, None
-        Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
-        Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
-        Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
-        Additional arguments for plot of fit pylab.scatter.
-    fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=('x', 'y').
-
-    Returns
-    -------
-    info: dict
-        Information of data in the plots, it contains the sections:
-
-            * `ax`: ax used in the plot.
-            * `fit` (optional): fitting output dictionary, with values:
-
-                * `pars`: fitted parameter.
-                * `cov`: covariance of fitted parameters.
-                * `func`: fitting function with fitted parameter.
-                * `func_plus`: fitting function with fitted parameter plus 1x scatter.
-                * `func_minus`: fitting function with fitted parameter minus 1x scatter.
-                * `func_scat`: scatter of fited function.
-                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
-
-            * `plots` (optional): additional plots:
-
-                * `fit`: fitted data
-                * `errorbar`: binned data
-    """
-    info = {'ax': plt.axes() if ax is None else ax}
-    ph.add_grid(info['ax'])
-    plt_kwargs_ = {'s':1}
-    plt_kwargs_.update(plt_kwargs)
-    info['ax'].scatter(values1, values2, **plt_kwargs_)
-    if err1 is not None or err2 is not None:
-        err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
-        err_kwargs_.update(err_kwargs)
-        info['ax'].errorbar(values1, values2, xerr=err1, yerr=err2, **err_kwargs_)
-    # Bindata and fit
-    kwargs['fit_err2'] = kwargs.get('fit_err2', err2)
-    kwargs['fit_add_fit'] = kwargs.get('add_fit', False)
-    kwargs['fit_add_bindata'] = kwargs.get('add_bindata', kwargs['fit_add_fit'])
-    info.update(
-        _add_bindata_and_powlawfit(
-            info['ax'], values1, values2,
-            **{k[4:]:v for k, v in kwargs.items() if k[:4]=='fit_'}))
-    return info
-
-
-def plot_color(values1, values2, values_color, err1=None, err2=None,
-               ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
-               err_kwargs={}, **kwargs):
-    """
-    Scatter plot with errorbars and color based on input
-
-    Parameters
-    ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
-    values_color: array
-        Values for color (cmap scale)
-    err1: array
-        Error of component 1
-    err2: array
-        Error of component 2
-    ax: matplotlib.axes, None
-        Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
-        Additional arguments for pylab.scatter
+    values_color: array, None
+        Values for color (cmap scale).
     add_cb: bool
-        Plot colorbar
+        Plot colorbar when values_color is not `None`.
     cb_kwargs: dict
         Colorbar arguments
-    err_kwargs: dict
-        Additional arguments for pylab.errorbar
 
     Other Parameters
     -----------------
@@ -340,29 +246,52 @@ def plot_color(values1, values2, values_color, err1=None, err2=None,
 
             * `ax`: ax used in the plot.
             * `ax_cb` (optional): ax of colorbar
-            * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
-            * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            * `fit` (optional): fitting output dictionary, with values:
+
+                * `pars`: fitted parameter.
+                * `cov`: covariance of fitted parameters.
+                * `func`: fitting function with fitted parameter.
+                * `func_plus`: fitting function with fitted parameter plus 1x scatter.
+                * `func_minus`: fitting function with fitted parameter minus 1x scatter.
+                * `func_scat`: scatter of fited function.
+                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+
+            * `plots` (optional): additional plots:
+
+                * `fit`: fitted data
+                * `errorbar`: binned data
     """
     info = {'ax': plt.axes() if ax is None else ax}
     ph.add_grid(info['ax'])
     if len(values1)==0:
         return info
-    isort = np.argsort(values_color)
-    xp, yp, zp = [v[isort] for v in (values1, values2, values_color)]
+    # Plot points
     plt_kwargs_ = {'s':1}
+    if values_color is None:
+        xp, yp = values1, values2
+    else:
+        isort = np.argsort(values_color)
+        xp, yp, zp = [v[isort] for v in (values1, values2, values_color)]
+        plt_kwargs_['c'] = zp
     plt_kwargs_.update(plt_kwargs)
-    sc = info['ax'].scatter(xp, yp, c=zp, **plt_kwargs_)
-    cb = plt.colorbar(sc, ax=info['ax'], **cb_kwargs)
+    sc = info['ax'].scatter(xp, yp, **plt_kwargs_)
+    # Plot errorbar
+    err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
+    if values_color is None:
+        xerr, yerr = err1, err2
+    else:
+        cb = plt.colorbar(sc, ax=info['ax'], **cb_kwargs)
+        xerr = err1[isort] if err1 is not None else None
+        yerr = err2[isort] if err2 is not None else None
+        err_kwargs_['ecolor'] = [cb.mappable.cmap(cb.mappable.norm(c)) for c in zp]
     if err1 is not None or err2 is not None:
-        xerr = err1[isort] if err1 is not None else [None for i in isort]
-        yerr = err2[isort] if err2 is not None else [None for i in isort]
-        #err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
-        cols = [cb.mappable.cmap(cb.mappable.norm(c)) for c in zp]
-        for i in range(xp.size):
-            info['ax'].errorbar(xp[i], yp[i], xerr=xerr[i], yerr=yerr[i],
-                c=cols[i], **err_kwargs)
+        err_kwargs_.update(err_kwargs)
+        info['ax'].errorbar(xp, yp, xerr=xerr, yerr=yerr, **err_kwargs_)
+    if values_color is not None:
+        if add_cb:
+            info['cb'] = cb
+        else:
+            cb.remove()
     # Bindata and fit
     kwargs['fit_err2'] = kwargs.get('fit_err2', err2)
     kwargs['fit_add_fit'] = kwargs.get('add_fit', False)
@@ -371,10 +300,6 @@ def plot_color(values1, values2, values_color, err1=None, err2=None,
         _add_bindata_and_powlawfit(
             info['ax'], values1, values2,
             **{k[4:]:v for k, v in kwargs.items() if k[:4]=='fit_'}))
-    if add_cb:
-        info['cb'] = cb
-    else:
-        cb.remove()
     return info
 
 
@@ -446,7 +371,7 @@ def plot_density(values1, values2, bins1=30, bins2=30,
     values_color = ph.get_density_colors(values1, values2, bins1, bins2,
         ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
         xscale=xscale, yscale=yscale) if len(values1)>0 else []
-    return plot_color(values1, values2, values_color=values_color,
+    return plot(values1, values2, values_color=values_color,
             err1=err1, err2=err2, ax=ax, plt_kwargs=plt_kwargs,
             add_cb=add_cb, cb_kwargs=cb_kwargs, err_kwargs=err_kwargs, **kwargs)
 
@@ -532,85 +457,10 @@ def _plot_panel(plot_function, values_panel, bins_panel,
     return info
 
 
-def plot_panel(values1, values2, values_panel, bins_panel,
-               err1=None, err2=None, plt_kwargs={}, err_kwargs={},
-               panel_kwargs_list=None, panel_kwargs_errlist=None,
-               fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
-    """
-    Scatter plot with errorbars and color based on input with panels
-
-    Parameters
-    ----------
-    values1: array
-        Component 1
-    values2: array
-        Component 2
-    values_panel: array
-        Values to bin data in panels
-    bins_panel: array, int
-        Bins defining panels
-    err1: array
-        Error of component 1
-    err2: array
-        Error of component 2
-    ax: matplotlib.axes, None
-        Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
-        Additional arguments for pylab.scatter
-    err_kwargs: dict
-        Additional arguments for pylab.errorbar
-    panel_kwargs_list: list, None
-        List of additional arguments for plotting each panel (using pylab.plot).
-        Must have same size as len(bins2)-1
-    panel_kwargs_errlist: list, None
-        List of additional arguments for plotting each panel (using pylab.errorbar).
-        Must have same size as len(bins2)-1
-    fig_kwargs: dict
-        Additional arguments for plt.subplots
-    add_label: bool
-        Add bin label to panel
-    label_format: function
-        Function to format the values of the bins
-
-    Other Parameters
-    -----------------
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
-    **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
-
-    Returns
-    -------
-    info: dict
-        Information of data in the plots, it contains the sections:
-
-            * `fig`: `matplotlib.figure.Figure` object.
-            * `axes`: `matplotlib.axes` used in the plot.
-            * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
-            * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
-    """
-    return _plot_panel(
-        # _plot_panel arguments
-        plot_function=plot,
-        values_panel=values_panel, bins_panel=bins_panel,
-        panel_kwargs_list=panel_kwargs_list, panel_kwargs_errlist=panel_kwargs_errlist,
-        fig_kwargs=fig_kwargs, add_label=add_label, label_format=label_format,
-        # plot arguments
-        values1=values1, values2=values2, err1=err1, err2=err2,
-        plt_kwargs=plt_kwargs, err_kwargs=err_kwargs,
-        # for fit
-        **kwargs,
-        )
-
-
-def plot_color_panel(values1, values2, values_color, values_panel, bins_panel,
-               err1=None, err2=None, plt_kwargs={}, err_kwargs={},
-               panel_kwargs_list=None, panel_kwargs_errlist=None,
-               fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
+def plot_panel(
+    values1, values2, values_panel, bins_panel, err1=None, err2=None, values_color=None,
+    plt_kwargs={}, err_kwargs={}, add_cb=True, cb_kwargs={}, panel_kwargs_list=None,
+    panel_kwargs_errlist=None, fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
     """
     Scatter plot with errorbars and color based on input with panels
 
@@ -630,12 +480,16 @@ def plot_color_panel(values1, values2, values_color, values_panel, bins_panel,
         Error of component 1
     err2: array
         Error of component 2
-    ax: matplotlib.axes, None
-        Ax to add plot. If equals `None`, one is created.
+    values_color: array, None
+        Values for color (cmap scale).
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     err_kwargs: dict
         Additional arguments for pylab.errorbar
+    add_cb: bool
+        Plot colorbar when values_color is not `None`.
+    cb_kwargs: dict
+        Colorbar arguments
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -673,7 +527,7 @@ def plot_color_panel(values1, values2, values_color, values_panel, bins_panel,
     """
     return _plot_panel(
         # _plot_panel arguments
-        plot_function=plot_color,
+        plot_function=plot,
         values_panel=values_panel, bins_panel=bins_panel,
         panel_kwargs_list=panel_kwargs_list, panel_kwargs_errlist=panel_kwargs_errlist,
         fig_kwargs=fig_kwargs, add_label=add_label, label_format=label_format,
