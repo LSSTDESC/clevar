@@ -212,7 +212,7 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
             * `plots` (optional): fit and binning plots \
             (see `scaling.catalog_funcs.plot` for more info).
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+    cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
     f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
     f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
     info = array_funcs.plot_density(**f_kwargs)
@@ -431,8 +431,9 @@ def plot_density_panel(cat1, cat2, matching_type, col,
             * `plots` (optional): fit and binning plots \
             (see `scaling.catalog_funcs.plot` for more info).
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
-        col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
+    cl_kwargs, f_kwargs = _get_panel_args(
+        cat1, cat2, matching_type, col, col_panel, bins_panel, panel_cat1=panel_cat1,
+        log_panel=log_panel, **kwargs)[:2]
     f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
     f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
     info = array_funcs.plot_density_panel(**f_kwargs)
@@ -483,7 +484,7 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+    cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
     f_kwargs.pop('fit_err2', None)
     f_kwargs.pop('err1', None)
     f_kwargs.pop('err2', None)
@@ -564,7 +565,7 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+    cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
     f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
     f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
     f_kwargs['bins1'] = bins1
@@ -636,7 +637,7 @@ def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, b
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+    f_kwargs, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[1::2]
     f_kwargs.pop('err1', None)
     f_kwargs.pop('err2', None)
     f_kwargs.pop('fit_err2', None)
@@ -802,7 +803,7 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
             * `plots` (optional): fit and binning plots \
             (see `scaling.catalog_funcs.plot` for more info).
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
+    cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
     f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
     f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
     info = array_funcs.plot_density_dist(**f_kwargs)

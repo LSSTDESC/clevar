@@ -518,8 +518,8 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
     return catalog_funcs.plot_dist(cat1, cat2, matching_type, **kwargs_)
 
 
-def redshift_dist_self(cat, bins1=30, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
-                   log_mass=True, transpose=False, mask=None, **kwargs):
+def redshift_dist_self(cat, redshift_bins_dist=30, redshift_bins=5, mass_bins=5, log_mass=True,
+                       transpose=False, mask=None, **kwargs):
     """
     Plot distribution of a cat redshift, binned by redshift (in panels),
     with option for mass bins (in lines).
@@ -738,9 +738,9 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot(cat1, cat2, matching_type, col='mass',
-            xscale='log' if log_mass else 'linear',
-            yscale='log' if log_mass else 'linear',
-            **kwargs)
+                              xscale='log' if log_mass else 'linear',
+                              yscale='log' if log_mass else 'linear',
+                              **kwargs)
 
 
 def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs):
@@ -794,9 +794,9 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot(cat1, cat2, matching_type, col='mass', col_color='z',
-            xscale='log' if log_mass else 'linear',
-            yscale='log' if log_mass else 'linear',
-            color1=color1, **kwargs)
+                              xscale='log' if log_mass else 'linear',
+                              yscale='log' if log_mass else 'linear',
+                              color1=color1, **kwargs)
 
 
 def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
@@ -853,9 +853,9 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot_density(cat1, cat2, matching_type, col='mass',
-            xscale='log' if log_mass else 'linear',
-            yscale='log' if log_mass else 'linear',
-            **kwargs)
+                                      xscale='log' if log_mass else 'linear',
+                                      yscale='log' if log_mass else 'linear',
+                                      **kwargs)
 
 
 def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwargs):
@@ -920,10 +920,10 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
         lambda v: f'%{kwargs.pop("label_fmt", ".2f")}'%v)
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot_panel(cat1, cat2, matching_type, col='mass',
-            col_panel='z', bins_panel=redshift_bins,
-            xscale='log' if log_mass else 'linear',
-            yscale='log' if log_mass else 'linear',
-            **kwargs)
+                                    col_panel='z', bins_panel=redshift_bins,
+                                    xscale='log' if log_mass else 'linear',
+                                    yscale='log' if log_mass else 'linear',
+                                    **kwargs)
 
 
 def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwargs):
@@ -999,10 +999,10 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     """
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot_density_panel(cat1, cat2, matching_type, col='mass',
-            col_panel='z', bins_panel=redshift_bins,
-            xscale='log' if log_mass else 'linear',
-            yscale='log' if log_mass else 'linear',
-            **kwargs)
+                                            col_panel='z', bins_panel=redshift_bins,
+                                            xscale='log' if log_mass else 'linear',
+                                            yscale='log' if log_mass else 'linear',
+                                            **kwargs)
 
 
 def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
@@ -1050,9 +1050,9 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     """
     mode = kwargs.pop('mode', 'log')
     return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='mass', mode=mode,
-            xscale='log' if log_mass else 'linear',
-            yscale='log' if log_mass else 'linear',
-            **kwargs)
+                                      xscale='log' if log_mass else 'linear',
+                                      yscale='log' if log_mass else 'linear',
+                                      **kwargs)
 
 
 def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
@@ -1117,9 +1117,9 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     metrics_mode = kwargs.pop('metrics_mode', 'log')
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot_density_metrics(cat1, cat2, matching_type, col='mass',
-            xscale='log' if log_mass else 'linear',
-            yscale='log' if log_mass else 'linear',
-            metrics_mode=metrics_mode, **kwargs)
+                                              xscale='log' if log_mass else 'linear',
+                                              yscale='log' if log_mass else 'linear',
+                                              metrics_mode=metrics_mode, **kwargs)
 
 
 def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
@@ -1190,7 +1190,7 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
     return catalog_funcs.plot_dist(cat1, cat2, matching_type, **kwargs_)
 
 
-def mass_dist_self(cat, bins1=30, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
+def mass_dist_self(cat, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
                    log_mass=True, transpose=False, mask=None, **kwargs):
     """
     Plot distribution of a cat mass, binned by mass (in panels),

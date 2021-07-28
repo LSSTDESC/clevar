@@ -8,7 +8,7 @@ import matplotlib as mpl
 if os.environ.get('DISPLAY','') == 'test':
     print('no display found. Using non-interactive Agg backend')
     mpl.use('Agg')
-from matplotlib.ticker import ScalarFormatter, NullFormatter
+from matplotlib.ticker import NullFormatter
 import pylab as plt
 import numpy as np
 from scipy.optimize import curve_fit
@@ -18,15 +18,15 @@ from ...utils import none_val, autobins, binmasks, deep_update
 from .. import plot_helper as ph
 
 
-def _prep_fit_data(x, y, yerr=None, statistics='mean', bins_x=None, bins_y=None):
+def _prep_fit_data(xvals, yvals, yerr=None, statistics='mean', bins_x=None, bins_y=None):
     """
     Prepare data for fit with binning.
 
     Parameters
     ----------
-    x: array
+    xvals: array
         Input values for fit
-    y: array
+    yvals: array
         Values to be fitted
     yerr: array, None
         Errors of y
@@ -46,19 +46,19 @@ def _prep_fit_data(x, y, yerr=None, statistics='mean', bins_x=None, bins_y=None)
         Data for fit
     """
     if statistics=='individual':
-        return x, y, yerr
+        return xvals, yvals, yerr
     elif statistics=='mode':
-        bins_hist = autobins(y, bins_y)
+        bins_hist = autobins(yvals, bins_y)
         bins_hist_m = 0.5*(bins_hist[1:]+bins_hist[:-1])
         stat_func = lambda vals: bins_hist_m[np.histogram(vals, bins=bins_hist)[0].argmax()]
     elif statistics=='mean':
         stat_func = lambda vals: np.mean(vals)
     else:
         raise ValueError(f'statistics ({statistics}) must be in (individual, mean, mode)')
-    point_masks = [m for m in binmasks(x, autobins(x, bins_x)) if m[m].size>1]
-    err = np.zeros(len(y)) if yerr is None else yerr
+    point_masks = [m for m in binmasks(xvals, autobins(xvals, bins_x)) if m[m].size>1]
+    err = np.zeros(len(yvals)) if yerr is None else yerr
     err_func = lambda vals, err: np.mean(np.sqrt(np.std(vals)**2+err**2))
-    return np.transpose([[np.mean(x[m]), stat_func(y[m]), err_func(y[m], err[m])]
+    return np.transpose([[np.mean(xvals[m]), stat_func(yvals[m]), err_func(yvals[m], err[m])]
                             for m in point_masks])
 
 
@@ -128,8 +128,8 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     add_fit = kwargs.get('add_fit', False)
     plot_kwargs = kwargs.get('plot_kwargs', {})
     xl, yl = kwargs.get('label_components', ('x', 'y'))
-    xl = xl.replace('$', '')  if '$' in xl else '%s'%xl.replace('_', '\_')
-    yl = yl.replace('$', '')  if '$' in yl else '%s'%yl.replace('_', '\_')
+    xl = xl.replace('$', '')  if '$' in xl else xl.replace('_', r'\_')
+    yl = yl.replace('$', '')  if '$' in yl else yl.replace('_', r'\_')
     if ((not add_bindata) and (not add_fit)) or len(values1)<=1:
         return info
     # set log/lin funcs
@@ -163,11 +163,11 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         }
         # labels
         sig = np.sqrt(np.diag(cov))
-        fit0_lab = f'({nice_val(fit[0])}\pm {nice_val(sig[0])})'
-        fit1_lab = f'({nice_val(fit[1])}\pm {nice_val(sig[1])})'
-        avg_label = f'\left<{yl}\\right|\left.{xl}\\right>'
-        fit_label = f'${avg_label}=10^{{{fit1_lab}}}\;({xl})^{{{fit0_lab}}}$' if log\
-            else f'${avg_label}={fit0_lab}\;{xl}%s$'%(fit1_lab if fit[1]<0 else '+'+fit1_lab)
+        fit0_lab = rf'({nice_val(fit[0])}\pm {nice_val(sig[0])})'
+        fit1_lab = rf'({nice_val(fit[1])}\pm {nice_val(sig[1])})'
+        avg_label = rf'\left<{yl}\right|\left.{xl}\right>'
+        fit_label = rf'${avg_label}=10^{{{fit1_lab}}}\;({xl})^{{{fit0_lab}}}$' if log\
+            else rf"${avg_label}={fit0_lab}\;{xl}{(fit1_lab if fit[1]<0 else '+'+fit1_lab)}$"
         # plot fit
         plot_kwargs_ = {'color': 'r', 'label': fit_label}
         plot_kwargs_.update(plot_kwargs)
@@ -260,13 +260,13 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
     # Plot points
     plt_kwargs_ = {'s':1}
     if values_color is None:
-        xp, yp = values1, values2
+        xplot, yplot = values1, values2
     else:
         isort = np.argsort(values_color)
-        xp, yp, zp = [v[isort] for v in (values1, values2, values_color)]
-        plt_kwargs_['c'] = zp
+        xplot, yplot, zplot = [v[isort] for v in (values1, values2, values_color)]
+        plt_kwargs_['c'] = zplot
     plt_kwargs_.update(plt_kwargs)
-    sc = info['ax'].scatter(xp, yp, **plt_kwargs_)
+    sc = info['ax'].scatter(xplot, yplot, **plt_kwargs_)
     # Plot errorbar
     err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
     if values_color is None:
@@ -275,10 +275,10 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
         cb = plt.colorbar(sc, ax=info['ax'], **cb_kwargs)
         xerr = err1[isort] if err1 is not None else None
         yerr = err2[isort] if err2 is not None else None
-        err_kwargs_['ecolor'] = [cb.mappable.cmap(cb.mappable.norm(c)) for c in zp]
+        err_kwargs_['ecolor'] = [cb.mappable.cmap(cb.mappable.norm(c)) for c in zplot]
     if err1 is not None or err2 is not None:
         err_kwargs_.update(err_kwargs)
-        info['ax'].errorbar(xp, yp, xerr=xerr, yerr=yerr, **err_kwargs_)
+        info['ax'].errorbar(xplot, yplot, xerr=xerr, yerr=yerr, **err_kwargs_)
     if values_color is not None:
         if add_cb:
             info['cb'] = cb
@@ -513,7 +513,7 @@ def plot_panel(
         fig_kwargs=fig_kwargs, add_label=add_label, label_format=label_format,
         # plot_color arguments
         values1=values1, values2=values2, err1=err1, err2=err2,
-        values_color=values_color,
+        values_color=values_color, add_cb=add_cb, cb_kwargs=cb_kwargs,
         plt_kwargs=plt_kwargs, err_kwargs=err_kwargs,
         # for fit
         **kwargs,
@@ -523,7 +523,7 @@ def plot_panel(
 def plot_density_panel(values1, values2, values_panel, bins_panel,
     bins1=30, bins2=30, ax_rotation=0, rotation_resolution=30,
     xscale='linear', yscale='linear',
-    err1=None, err2=None, plt_kwargs={},add_cb=True, cb_kwargs={},
+    err1=None, err2=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
     err_kwargs={}, panel_kwargs_list=None, panel_kwargs_errlist=None,
     fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
 
@@ -604,6 +604,7 @@ def plot_density_panel(values1, values2, values_panel, bins_panel,
         values1=values1, values2=values2, err1=err1, err2=err2, bins1=bins1, bins2=bins2,
         ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
         plt_kwargs=plt_kwargs, err_kwargs=err_kwargs,
+        add_cb=add_cb, cb_kwargs=cb_kwargs,
         # for fit
         **kwargs,
         )
@@ -668,7 +669,6 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
     # set for rotation
     info = {'ax': plt.axes() if ax is None else ax}
     ph.add_grid(info['ax'])
-    set_scale = info['ax'].set_yscale if rotated else info['ax'].set_xscale
     # plot
     for metric in metrics:
         metric_name = metric.replace('.fill', '')
@@ -774,7 +774,8 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     bins1, bins2: array, None
         Bins for component x and y.
     ax_rotation: float
-        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main
+        plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     xscale, yscale: str
@@ -833,7 +834,8 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     info['axes']['main'] = info['fig'].add_axes([left, bottom, xmain, ymain])
     info['axes']['right'] = info['fig'].add_axes([left+xmain+xgap, bottom, xpanel, ymain])
     info['axes']['top'] = info['fig'].add_axes([left, bottom+ymain+ygap, xmain, ypanel])
-    info['axes']['label'] = info['fig'].add_axes([left+xmain+xgap, bottom+ymain+ygap, xpanel, ypanel])
+    info['axes']['label'] = info['fig'].add_axes(
+        [left+xmain+xgap, bottom+ymain+ygap, xpanel, ypanel])
     info['axes']['colorbar'] = info['fig'].add_axes(
         [left, bottom+ymain+2*ygap+ypanel, xmain+xgap+xpanel, ycb]) if add_cb else None
     # Main plot
@@ -856,7 +858,7 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
         metrics=metrics, metrics_kwargs=metrics_kwargs)['plots']
     # Adjust plots
     labels = [c.get_label() for c in info['axes']['right'].collections+info['axes']['right'].lines]
-    labels = ['$\\sigma_{%s}$'%l.replace('p_', '') if l[:2]=='p_' else l for l in labels]
+    labels = [rf"$\sigma_{{{l.replace('p_', '')}}}$" if l[:2]=='p_' else l for l in labels]
     info['axes']['label'].legend(
         info['axes']['right'].collections+info['axes']['right'].lines, labels)
     info['axes']['main'].set_xscale(xscale)
@@ -975,14 +977,14 @@ def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
         ph.add_panel_bin_label(info['axes'],  panel_edges[:-1], panel_edges[1:],
                                format_func=panel_label_format,
                                prefix=panel_label_prefix)
-    if values_aux is not None:
+    if values_aux is not None and add_line_label:
         info['axes'].flatten()[0].legend(**legend_kwargs)
     return info
 
 
 def plot_density_dist(values1, values2, bins1=30, bins2=30,
     ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
-    err1=None, err2=None, metrics_mode='simple', plt_kwargs={}, add_cb=True, cb_kwargs={},
+    err1=None, err2=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
     err_kwargs={}, fig_kwargs={}, fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02),
     vline_kwargs={}, **kwargs):
     """
@@ -995,7 +997,8 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
     bins1, bins2: array, None
         Bins for component x and y (for density colors).
     ax_rotation: float
-        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main
+        plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     xscale, yscale: str
@@ -1048,7 +1051,7 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
     left, bottom, right, top = fig_pos
     frac, gap, cb = fig_frac
     cb = cb if add_cb else 0
-    xmain, xgap, xpanel = (right-left)*np.array([frac, gap, 1-frac-gap-cb])
+    xmain, xgap = (right-left)*np.array([frac, gap])
     ymain, ygap, ypanel, ycb = (top-bottom)*np.array([frac, gap, 1-frac-gap-cb, cb-gap])
     info['axes']['main'] = info['fig'].add_axes([left, bottom, xmain, ymain])
     info['axes']['colorbar'] = info['fig'].add_axes(
