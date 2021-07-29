@@ -57,16 +57,26 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `distances`: values of distances.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `hist`: Binned angular distances with (distance_bins, bin2).\
+                bins where no cluster was found have nan value.
+                * `distance_bins`: The bin edges for distances.
+                * `bins2` (optional): The bin edges along the second dimension.
     """
     legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_quantity else ".2f")
     kwargs['legend_format'] = kwargs.get('legend_format',
         lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_quantity else f'%{legend_fmt}'%v)
     kwargs['add_legend'] = kwargs.get('add_legend', True)*(bins is not None)
-    return catalog_funcs.central_position(cat1, cat2, matching_type, radial_bins=radial_bins,
-            radial_bin_units=radial_bin_units, cosmo=cosmo, col2=quantity_bins, bins2=bins,
-            ax=ax, **kwargs)
+    return catalog_funcs.central_position(
+        cat1, cat2, matching_type, radial_bins=radial_bins,
+        radial_bin_units=radial_bin_units, cosmo=cosmo, col2=quantity_bins,
+        bins2=bins, ax=ax, **kwargs)
 
 def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
              quantity_bins=None, bins=None, log_quantity=False,
@@ -120,12 +130,22 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `distances`: values of distances.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `hist`: Binned redshift distances with (distance_bins, bin2).\
+                bins where no cluster was found have nan value.
+                * `distance_bins`: The bin edges for distances.
+                * `bins2` (optional): The bin edges along the second dimension.
     """
     legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_quantity else ".2f")
     kwargs['legend_format'] = kwargs.get('legend_format',
         lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_quantity else f'%{legend_fmt}'%v)
     kwargs['add_legend'] = kwargs.get('add_legend', True)*(bins is not None)
-    return catalog_funcs.redshift(cat1, cat2, matching_type, redshift_bins=redshift_bins,
-            normalize=normalize, col2=quantity_bins, bins2=bins, ax=ax, **kwargs)
+    return catalog_funcs.redshift(
+        cat1, cat2, matching_type, redshift_bins=redshift_bins,
+        normalize=normalize, col2=quantity_bins, bins2=bins, ax=ax, **kwargs)
