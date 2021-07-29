@@ -2,20 +2,13 @@
 
 Main scaling functions using arrays.
 """
-# Set mpl backend run plots on github actions
-import os
-import matplotlib as mpl
-if os.environ.get('DISPLAY','') == 'test':
-    print('no display found. Using non-interactive Agg backend')
-    mpl.use('Agg')
-from matplotlib.ticker import NullFormatter
-import pylab as plt
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.stats import binned_statistic
 
 from ...utils import none_val, autobins, binmasks, deep_update
 from .. import plot_helper as ph
+from ..plot_helper import plt, NullFormatter
 
 
 def _prep_fit_data(xvals, yvals, yerr=None, statistics='mean', bins_x=None, bins_y=None):

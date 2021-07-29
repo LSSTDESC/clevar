@@ -4,6 +4,7 @@ import matplotlib as mpl
 if os.environ.get('DISPLAY','') == 'test':
     print('no display found. Using non-interactive Agg backend')
     mpl.use('Agg')
+import pylab as plt
 import numpy as np
 from scipy.interpolate import interp2d
 from matplotlib.ticker import ScalarFormatter, NullFormatter

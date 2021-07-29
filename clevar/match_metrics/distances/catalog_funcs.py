@@ -2,19 +2,12 @@
 
 Main distances functions using catalogs.
 """
-# Set mpl backend run plots on github actions
-import os
-import matplotlib as mpl
-if os.environ.get('DISPLAY','') == 'test':
-    print('no display found. Using non-interactive Agg backend')
-    mpl.use('Agg')
-import pylab as plt
 import numpy as np
 
-from ...utils import none_val, autobins, binmasks
 from ...geometry import convert_units
 from ...match import get_matched_pairs
 from .. import plot_helper as ph
+from ..plot_helper import plt
 
 def _histograms(distances, distance_bins, quantity2=None, bins2=None, log2=False,
                 shape='steps', ax=None, plt_kwargs={}, lines_kwargs_list=None,
