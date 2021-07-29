@@ -29,10 +29,16 @@ def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins,
         Transpose mass and redshift in plots
     **kwargs:
         Additional arguments to be passed to pltfunc
+
+    Returns
+    -------
+    Same as pltfunc
     """
     args = ('mass', 'z', mass_bins, redshift_bins) if transpose\
         else ('z', 'mass', redshift_bins, mass_bins)
     return pltfunc(cat, *args, matching_type, **kwargs)
+
+
 def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
          redshift_label=None, mass_label=None, recovery_label=None, **kwargs):
     """
@@ -84,6 +90,21 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         Format the values of binedges (ex: '.2f')
     legend_kwargs: dict
         Additional arguments for pylab.legend
+
+    Returns
+    -------
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `recovery`: Recovery rate binned with (bin1, bin2).\
+                bins where no cluster was found have nan value.
+                * `edges1`: The bin edges along the first dimension.
+                * `edges2`: The bin edges along the second dimension.
+                * `counts`: Counts of all clusters in bins.
+                * `matched`: Counts of matched clusters in bins.
     """
     legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass*(not transpose) else ".2f")
     kwargs['legend_format'] = kwargs.get('legend_format',
@@ -95,6 +116,8 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
                       xlabel=mass_label if transpose else redshift_label,
                       ylabel=recovery_label,
                       **kwargs)
+
+
 def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
                redshift_label=None, mass_label=None, recovery_label=None, **kwargs):
     """
@@ -149,10 +172,19 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    ax: matplotlib.axes
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `recovery`: Recovery rate binned with (bin1, bin2).\
+                bins where no cluster was found have nan value.
+                * `edges1`: The bin edges along the first dimension.
+                * `edges2`: The bin edges along the second dimension.
+                * `counts`: Counts of all clusters in bins.
+                * `matched`: Counts of matched clusters in bins.
     """
     log = log_mass*(not transpose)
     ph._set_label_format(kwargs, 'label_format', 'label_fmt',
@@ -163,6 +195,8 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
                       xlabel=mass_label if transpose else redshift_label,
                       ylabel=recovery_label,
                       **kwargs)
+
+
 def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
            redshift_label=None, mass_label=None, recovery_label=None, **kwargs):
     """
@@ -211,8 +245,19 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
 
     Returns
     -------
-    matplotlib.colorbar.Colorbar
-        Colorbar of the recovey rates
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `cb` (optional): colorbar.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `recovery`: Recovery rate binned with (bin1, bin2).\
+                bins where no cluster was found have nan value.
+                * `edges1`: The bin edges along the first dimension.
+                * `edges2`: The bin edges along the second dimension.
+                * `counts`: Counts of all clusters in bins.
+                * `matched`: Counts of matched clusters in bins.
     """
     return _plot_base(catalog_funcs.plot2D, cat, matching_type,
                       redshift_bins, mass_bins, transpose,

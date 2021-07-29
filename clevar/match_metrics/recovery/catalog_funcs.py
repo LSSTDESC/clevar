@@ -18,14 +18,10 @@ def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
         ArrayFuncs function
     cat: clevar.ClCatalog
         ClCatalog with matching information
-    col1: str
-        Name of column 1
-    col2: str
-        Name of column 2
-    bins1: array, int
-        Bins for component 1
-    bins2: array, int
-        Bins for component 2
+    col1, col2: str
+        Names of columns 1 and 2.
+    bins1, bins2: array, int
+        Bins for components 1 and 2.
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
@@ -35,6 +31,10 @@ def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
         Mask of unwanted unmatched clusters (ex: out of footprint)
     **kwargs:
         Additional arguments to be passed to pltfunc
+
+    Returns
+    -------
+    Same as pltfunc
     """
     # convert matching type to the values expected by get_matching_mask
     matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
@@ -45,6 +45,8 @@ def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
     edges1, edges2 = np.histogram2d(cat[col1], cat[col2], bins=(bins1, bins2))[1:]
     return pltfunc(cat[mask_][col1], cat[mask_][col2], edges1, edges2,
                    is_matched=is_matched[mask_], **kwargs)
+
+
 def plot(cat, col1, col2, bins1, bins2, matching_type,
          xlabel=None, ylabel=None, scale1='linear', **kwargs):
     """
@@ -54,14 +56,10 @@ def plot(cat, col1, col2, bins1, bins2, matching_type,
     ----------
     cat: clevar.ClCatalog
         ClCatalog with matching information
-    col1: str
-        Name of column 1
-    col2: str
-        Name of column 2
-    bins1: array, int
-        Bins for component 1
-    bins2: array, int
-        Bins for component 2
+    col1, col2: str
+        Names of columns 1 and 2.
+    bins1, bins2: array, int
+        Bins for components 1 and 2.
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
@@ -96,16 +94,28 @@ def plot(cat, col1, col2, bins1, bins2, matching_type,
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `recovery`: Recovery rate binned with (bin1, bin2).\
+                bins where no cluster was found have nan value.
+                * `edges1`: The bin edges along the first dimension.
+                * `edges2`: The bin edges along the second dimension.
+                * `counts`: Counts of all clusters in bins.
+                * `matched`: Counts of matched clusters in bins.
     """
-    ax = _plot_base(array_funcs.plot,
+    info = _plot_base(array_funcs.plot,
             cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-    ax.set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
-    ax.set_ylabel(ylabel if ylabel else 'recovery rate')
-    ax.set_xscale(scale1)
-    ax.set_ylim(-.01, 1.05)
-    return ax
+    info['ax'].set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
+    info['ax'].set_ylabel(ylabel if ylabel else 'recovery rate')
+    info['ax'].set_xscale(scale1)
+    info['ax'].set_ylim(-.01, 1.05)
+    return info
+
+
 def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
                xlabel=None, ylabel=None, scale1='linear', **kwargs):
     """
@@ -116,14 +126,10 @@ def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
     ----------
     cat: clevar.ClCatalog
         ClCatalog with matching information
-    col1: str
-        Name of column 1
-    col2: str
-        Name of column 2
-    bins1: array, int
-        Bins for component 1
-    bins2: array, int
-        Bins for component 2
+    col1, col2: str
+        Names of columns 1 and 2.
+    bins1, bins2: array, int
+        Bins for components 1 and 2.
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
@@ -158,18 +164,29 @@ def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
 
     Returns
     -------
-    fig: matplotlib.figure.Figure
-        `matplotlib.figure.Figure` object
-    axes: array
-        Axes with the panels
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `recovery`: Recovery rate binned with (bin1, bin2).\
+                bins where no cluster was found have nan value.
+                * `edges1`: The bin edges along the first dimension.
+                * `edges2`: The bin edges along the second dimension.
+                * `counts`: Counts of all clusters in bins.
+                * `matched`: Counts of matched clusters in bins.
     """
-    fig, axes = _plot_base(array_funcs.plot_panel,
+    info = _plot_base(array_funcs.plot_panel,
             cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-    ph.nice_panel(axes, xlabel=none_val(xlabel, f'${cat.labels[col1]}$'),
+    ph.nice_panel(info['axes'], xlabel=none_val(xlabel, f'${cat.labels[col1]}$'),
                   ylabel=none_val(ylabel, 'recovery rate'),
                   xscale=scale1, yscale='linear')
-    axes.flatten()[0].set_ylim(-.01, 1.05)
-    return fig, axes
+    info['axes'].flatten()[0].set_ylim(-.01, 1.05)
+    return info
+
+
 def plot2D(cat, col1, col2, bins1, bins2, matching_type,
            xlabel=None, ylabel=None, scale1='linear', scale2='linear',
            **kwargs):
@@ -180,10 +197,8 @@ def plot2D(cat, col1, col2, bins1, bins2, matching_type,
     ----------
     cat: clevar.ClCatalog
         ClCatalog with matching information
-    col1: str
-        Name of column 1
-    col2: str
-        Name of column 2
+    col1, col2: str
+        Names of columns 1 and 2.
     bins1: array, int
         Bins for component 1
     bins2: array, int
@@ -200,14 +215,10 @@ def plot2D(cat, col1, col2, bins1, bins2, matching_type,
     ----------------
     ax: matplotlib.axes
         Ax to add plot
-    xlabel: str
-        Label of component 1. Default is col1.
-    ylabel: str
-        Label of component 2. Default is col2.
-    scale1: str
-        Scale of col 1 component
-    scale2: str
-        Scale of col 2 component
+    xlabel, ylabel: str
+        Labels of components 1 and 2. Default is col1, col2.
+    scale1, scale2: str
+        Scales of col 1, 2 components.
     plt_kwargs: dict
         Additional arguments for pylab.plot
     add_cb: bool
@@ -221,15 +232,24 @@ def plot2D(cat, col1, col2, bins1, bins2, matching_type,
 
     Returns
     -------
-    ax: matplotlib.axes
-        Axis of the plot
-    matplotlib.colorbar.Colorbar
-        Colorbar of the recovey rates
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `cb` (optional): colorbar.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `recovery`: Recovery rate binned with (bin1, bin2).\
+                bins where no cluster was found have nan value.
+                * `edges1`: The bin edges along the first dimension.
+                * `edges2`: The bin edges along the second dimension.
+                * `counts`: Counts of all clusters in bins.
+                * `matched`: Counts of matched clusters in bins.
     """
-    ax, cb = _plot_base(array_funcs.plot2D,
+    info = _plot_base(array_funcs.plot2D,
             cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-    ax.set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
-    ax.set_ylabel(ylabel if ylabel else f'${cat.labels[col2]}$')
-    ax.set_xscale(scale1)
-    ax.set_yscale(scale2)
-    return ax, cb
+    info['ax'].set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
+    info['ax'].set_ylabel(ylabel if ylabel else f'${cat.labels[col2]}$')
+    info['ax'].set_xscale(scale1)
+    info['ax'].set_yscale(scale2)
+    return info

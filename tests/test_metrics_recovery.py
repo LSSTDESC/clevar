@@ -24,11 +24,8 @@ class _test_data():
     c2 = ClCatalog('Cat2', **input2)
     cosmo = CosmoClass()
     mt = ProximityMatch()
-    mt_config1 = {'delta_z':.2,
-                'match_radius': '1 mpc',
-                'cosmo':cosmo}
-    mt_config2 = {'delta_z':.2,
-                'match_radius': '1 arcsec'}
+    mt_config1 = {'delta_z':.2, 'match_radius': '1 mpc', 'cosmo':cosmo}
+    mt_config2 = {'delta_z':.2, 'match_radius': '1 arcsec'}
     mt.prep_cat_for_match(c1, **mt_config1)
     mt.prep_cat_for_match(c2, **mt_config2)
     mt.multiple(c1, c2)
@@ -45,25 +42,30 @@ def test_plot():
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e16]
     rc.plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
-         redshift_label=None, mass_label=None, recovery_label=None)
+            redshift_label=None, mass_label=None, recovery_label=None)
     rc.plot(cat, matching_type, redshift_bins, mass_bins, shape='line')
     rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True)
-    assert_raises(ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins, shape='unknown')
+    assert_raises(ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins,
+                  shape='unknown')
+
 
 def test_plot_panel():
     cat = _test_data.c1
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
-    rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
-               redshift_label=None, mass_label=None, recovery_label=None,)
+    rc.plot_panel(
+        cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
+        redshift_label=None, mass_label=None, recovery_label=None,)
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, add_label=True, label_fmt='.2f')
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=True)
+
+
 def test_plot2D():
     cat = _test_data.c1
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
     rc.plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
-           redshift_label=None, mass_label=None, recovery_label=None,)
+              redshift_label=None, mass_label=None, recovery_label=None,)
     rc.plot2D(cat, matching_type, redshift_bins, mass_bins, add_num=True)
