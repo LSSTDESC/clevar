@@ -55,27 +55,31 @@ def _histograms(distances, distance_bins, quantity2=None, bins2=None, log2=False
     ax: matplotlib.axes
         Axis of the plot
     """
+    info = {}
     if quantity2 is not None:
-        bins2 = autobins(quantity2, bins2, log2)
-        bin_masks = binmasks(quantity2, bins2)
+        info['data'] = {key:value for value, key in zip(
+            np.histogram2d(distances, quantity2, bins=(distance_bins, bins2)),
+            ('hist', 'distance_bins', 'edges2'))}
+        hist = info['data']['hist'].T
+        edges1 = info['data']['distance_bins']
+        edges2 = info['data']['edges2']
     else:
-        bins2 = [0, 1]
-        bin_masks = [np.ones(len(distances), dtype=bool)]
+        info['data'] = {key:value for value, key in zip(
+            np.histogram(distances, bins=(distance_bins)),
+            ('hist', 'distance_bins'))}
+        hist = [info['data']['hist']]
+        edges1 = info['data']['distance_bins']
+        edges2 = [0, 1]
         add_legend = False
-    lines_kwargs_list = none_val(lines_kwargs_list, [{} for m in bin_masks])
-    ax = plt.axes() if ax is None else ax
-    ph.add_grid(ax)
-    distance_bins_ = np.histogram(distances, bins=distance_bins)[1]
-    for m, l_kwargs, e0, e1 in zip(bin_masks, lines_kwargs_list, bins2, bins2[1:]):
-        kwargs = {}
-        kwargs['label'] = ph.get_bin_label(e0, e1, legend_format) if add_legend else None
-        kwargs.update(plt_kwargs)
-        kwargs.update(l_kwargs)
-        ph.plot_hist_line(*np.histogram(distances[m], bins=distance_bins_),
-                          ax=ax, shape=shape, **kwargs)
-    if add_legend:
-        ax.legend(**legend_kwargs)
-    return ax
+    info['ax'] = plt.axes() if ax is None else ax
+    ph.plot_histograms(
+        hist, edges1, edges2, shape=shape, ax=info['ax'],
+        plt_kwargs=plt_kwargs, lines_kwargs_list=lines_kwargs_list,
+        add_legend=add_legend, legend_format=legend_format,
+        legend_kwargs=legend_kwargs)
+    return info['ax']
+
+
 def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units='degrees', cosmo=None,
                      col2=None, bins2=None, **kwargs):
     """

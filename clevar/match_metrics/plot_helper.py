@@ -7,6 +7,7 @@ if os.environ.get('DISPLAY','') == 'test':
 import numpy as np
 from scipy.interpolate import interp2d
 from matplotlib.ticker import ScalarFormatter, NullFormatter
+from ..utils import none_val
 
 def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     """
@@ -25,6 +26,8 @@ def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     ax.yaxis.grid(True, which='major', lw=major_lw)
     ax.xaxis.grid(True, which='minor', lw=minor_lw)
     ax.yaxis.grid(True, which='minor', lw=minor_lw)
+
+
 def plot_hist_line(hist_values, bins, ax, shape='steps', rotate=False, **kwargs):
     """
     Plot recovey rate as lines. Can be in steps or continuous
@@ -54,6 +57,8 @@ def plot_hist_line(hist_values, bins, ax, shape='steps', rotate=False, **kwargs)
     if rotate:
         data = data[::-1]
     ax.plot(*data, **kwargs)
+
+
 def get_bin_label(edge_lower, edge_higher,
                   format_func=lambda v:v,
                   prefix=''):
@@ -77,6 +82,8 @@ def get_bin_label(edge_lower, edge_higher,
         Label of bin
     """
     return f'${prefix}[{format_func(edge_lower)}$ : ${format_func(edge_higher)}]$'
+
+
 def add_panel_bin_label(axes, edges_lower, edges_higher,
                         format_func=lambda v:v, prefix=''):
     """
@@ -99,8 +106,10 @@ def add_panel_bin_label(axes, edges_lower, edges_higher,
         topax = ax.twiny()
         topax.set_xticks([])
         topax.set_xlabel(get_bin_label(vb, vt, format_func, prefix))
-def get_density_colors(x, y, xbins, ybins, ax_rotation=0,
-                rotation_resolution=30, xscale='linear', yscale='linear'):
+
+
+def get_density_colors(x, y, xbins, ybins, ax_rotation=0, rotation_resolution=30, xscale='linear',
+    yscale='linear'):
     """
     Get colors of point based on density
 
@@ -147,6 +156,8 @@ def get_density_colors(x, y, xbins, ybins, ax_rotation=0,
     ym = .5*(yedges[:-1]+ yedges[1:])
     fz = interp2d(xm, ym, hist, kind='cubic')
     return np.array([fz(*coord)[0] for coord in zip(x2, y2)])
+
+
 def nice_panel(axes, xlabel=None, ylabel=None, xscale='linear', yscale='linear'):
     """
     Add nice labels and ticks to panel plot
@@ -205,6 +216,8 @@ def nice_panel(axes, xlabel=None, ylabel=None, xscale='linear', yscale='linear')
             ax.set_yticklabels([f'${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$'
                                 for t in yticks], rotation=-45)
     return
+
+
 def _set_label_format(kwargs, label_format_key, label_fmt_key, log,
                       default_fmt='.2f'):
     """
@@ -234,3 +247,50 @@ def _set_label_format(kwargs, label_format_key, label_fmt_key, log,
     label_fmt = kwargs.pop(label_fmt_key, default_fmt)
     kwargs[label_format_key] = kwargs.get(label_format_key,
         lambda v: f'10^{{%{label_fmt}}}'%np.log10(v) if log else f'%{label_fmt}'%v)
+
+
+def plot_histograms(
+    histogram, edges1, edges2, ax, shape='steps',
+    plt_kwargs={}, lines_kwargs_list=None,
+    add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
+    """
+    Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
+
+    Parameters
+    ----------
+    histogram: array
+        Histogram 2D with dimention (edges2, edges1).
+    edges1, edges2: array
+        Edges of histogram.
+    ax: matplotlib.axes
+        Ax to add plot
+    shape: str
+        Shape of the lines. Can be steps or line.
+    plt_kwargs: dict
+        Additional arguments for pylab.plot
+    lines_kwargs_list: list, None
+        List of additional arguments for plotting each line (using pylab.plot).
+        Must have same size as len(bins2)-1
+    add_legend: bool
+        Add legend of bins
+    legend_format: function
+        Function to format the values of the bins in legend
+    legend_kwargs: dict
+        Additional arguments for pylab.legend
+
+    Returns
+    -------
+    ax
+    """
+    add_grid(ax)
+    for hist_line, l_kwargs, edges in zip(
+            histogram, none_val(lines_kwargs_list, iter(lambda: {}, 1)),
+            zip(edges2, edges2[1:]),
+        ):
+        kwargs = {'label': get_bin_label(*edges, legend_format) if add_legend else None}
+        kwargs.update(plt_kwargs)
+        kwargs.update(l_kwargs)
+        plot_hist_line(hist_line, edges1, ax, shape, **kwargs)
+    if add_legend:
+        ax.legend(**legend_kwargs)
+    return ax

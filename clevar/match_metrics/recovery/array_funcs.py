@@ -98,18 +98,12 @@ def plot(values1, values2, bins1, bins2, is_matched, shape='steps',
     info = {
         'data': get_recovery_rate(values1, values2, bins1, bins2, is_matched),
         'ax': plt.axes() if ax is None else ax,}
-    ph.add_grid(info['ax'])
-    for rec_line, l_kwargs, edges in zip(
-            info['data']['recovery'].T,
-            none_val(lines_kwargs_list, iter(lambda: {}, 1)),
-            zip(info['data']['edges2'], info['data']['edges2'][1:]),
-        ):
-        kwargs = {'label': ph.get_bin_label(*edges, legend_format) if add_legend else None}
-        kwargs.update(plt_kwargs)
-        kwargs.update(l_kwargs)
-        ph.plot_hist_line(rec_line, info['data']['edges1'], info['ax'], shape, **kwargs)
-    if add_legend:
-        info['ax'].legend(**legend_kwargs)
+    ph.plot_histograms(
+        info['data']['recovery'].T, info['data']['edges1'],
+        info['data']['edges2'], ax=info['ax'], shape=shape,
+        plt_kwargs=plt_kwargs, lines_kwargs_list=lines_kwargs_list,
+        add_legend=add_legend, legend_format=legend_format,
+        legend_kwargs=legend_kwargs)
     return info
 
 
