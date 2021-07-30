@@ -138,8 +138,6 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     vbin_1, vbin_2, vbin_err2 = data
     # fit
     if add_fit:
-        nice_val = lambda x: f'{x:.2f}' if 0.01<abs(x)<100 else \
-            (f'10^{{{np.log10(x):.2f}}}' if x>0 else f'-10^{{{np.log10(-x):.2f}}}')
         pw_func = lambda x, a, b: a*x+b
         fit, cov = curve_fit(pw_func, vbin_1, vbin_2,
             sigma=vbin_err2*2, absolute_sigma=True)
@@ -156,11 +154,13 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         }
         # labels
         sig = np.sqrt(np.diag(cov))
-        fit0_lab = rf'({nice_val(fit[0])}\pm {nice_val(sig[0])})'
-        fit1_lab = rf'({nice_val(fit[1])}\pm {nice_val(sig[1])})'
+        fmt0 = lambda x: f'{x:.2f}' if 0.01<abs(fit[0])<100 else f'{x:.2e}'
+        fmt1 = lambda x: f'{x:.2f}' if 0.01<abs(fit[1])<100 else f'{x:.2e}'
+        fit0_lab = rf'({fmt0(fit[0])}\pm {fmt0(sig[0])})'
+        fit1_lab = rf'{"-"*(fit[1]<0)}({fmt1(abs(fit[1]))}\pm {fmt1(sig[1])})'
         avg_label = rf'\left<{yl}\right|\left.{xl}\right>'
         fit_label = rf'${avg_label}=10^{{{fit1_lab}}}\;({xl})^{{{fit0_lab}}}$' if log\
-            else rf"${avg_label}={fit0_lab}\;{xl}{(fit1_lab if fit[1]<0 else '+'+fit1_lab)}$"
+            else rf"${avg_label}={fit0_lab}\;{xl}{'+'*(fit[1]>=0)}{fit1_lab}$"
         # plot fit
         plot_kwargs_ = {'color': 'r', 'label': fit_label}
         plot_kwargs_.update(plot_kwargs)
