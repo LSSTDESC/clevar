@@ -120,8 +120,31 @@ def plot(cat1, cat2, matching_type, col, col_color=None,
         Plot binned data used for fit (default=False).
     add_fit: bool
         Fit and plot binned dat (default=False).
-    **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+    fit_err2: array, None
+        Error of catalog 2 component (set to err2 if not provided).
+    fit_log: bool
+        Bin and fit in log values (default=False).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+
+            * `individual` : Use each point
+            * `mode` : Use mode of catalog 2 component distribution in each catalog 1 component \
+            bin, requires bins2.
+            * `mean` : Use mean of catalog 2 component distribution in each catalog 1 component \
+            bin, requires bins2.
+
+    fit_bins1: array, None
+        Bins for catalog 1 component (default=10).
+    fit_bins2: array, None
+        Bins for catalog 2 component (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=(xlabel, ylabel)
 
     Returns
     -------

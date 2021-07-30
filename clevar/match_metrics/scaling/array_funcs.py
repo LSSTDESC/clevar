@@ -24,10 +24,12 @@ def _prep_fit_data(xvals, yvals, yerr=None, statistics='mean', bins_x=None, bins
     yerr: array, None
         Errors of y
     statistics: str
-        Statistics to be used. Options are:
-            `individual` - Use each point
-            `mode` - Use mode of y distribution in each x bin, requires bins_y.
-            `mean` - Use mean of y distribution in each x bin, requires bins_y.
+        Statistics to be used in fit (default=mean). Options are:
+
+            * `individual` : Use each point
+            * `mode` : Use mode of component 2 distribution in each comp 1 bin, requires bins2.
+            * `mean` : Use mean of component 2 distribution in each comp 1 bin, requires bins2.
+
     bins_x: array, None
         Bins for component x
     bins_y: array, None
@@ -71,9 +73,11 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         Bin and fit in log values (default=False).
     statistics: str
         Statistics to be used in fit (default=mean). Options are:
-            `individual` - Use each point
-            `mode` - Use mode of component 2 distribution in each comp 1 bin, requires bins2.
-            `mean` - Use mean of component 2 distribution in each comp 1 bin, requires bins2.
+
+            * `individual` : Use each point
+            * `mode` : Use mode of component 2 distribution in each comp 1 bin, requires bins2.
+            * `mean` : Use mean of component 2 distribution in each comp 1 bin, requires bins2.
+
     bins1, bins2: array, None
         Bins for component x (default=10) and y (default=30).
     add_bindata: bool
@@ -221,8 +225,29 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
         Plot binned data used for fit (default=False).
     add_fit: bool
         Fit and plot binned dat (default=False).
-    **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+    fit_err2: array, None
+        Error of component 2 (set to err2 if not provided).
+    fit_log: bool
+        Bin and fit in log values (default=False).
+    fit_statistics: str
+        Statistics to be used in fit (default=mean). Options are:
+
+            * `individual` : Use each point
+            * `mode` : Use mode of component 2 distribution in each comp 1 bin, requires bins2.
+            * `mean` : Use mean of component 2 distribution in each comp 1 bin, requires bins2.
+
+    fit_bins1: array, None
+        Bins for component 1 (default=10).
+    fit_bins2: array, None
+        Bins for component 2 (default=30).
+    fit_legend_kwargs: dict
+        Additional arguments for plt.legend.
+    fit_bindata_kwargs: dict
+        Additional arguments for pylab.errorbar.
+    fit_plt_kwargs: dict
+        Additional arguments for plot of fit pylab.scatter.
+    fit_label_components: tuple (of strings)
+        Names of fitted components in fit line label, default=('x', 'y').
 
     Returns
     -------

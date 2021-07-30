@@ -48,9 +48,11 @@ def redshift(cat1, cat2, matching_type, **kwargs):
     fit_statistics: str
         Statistics to be used in fit (default=mean). Options are:
 
-            * `individual` - Use each point
-            * `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            * `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            * `individual` - Use each point.
+            * `mode` - Use mode of catalog 2 redshift distribution in each catalog 1 redshift bin,\
+            requires fit_bins2.
+            * `mean` - Use mean of catalog 2 redshift distribution in each catalog 1 redshift bin,\
+            requires fit_bins2.
 
     fit_bins1: array, None
         Bins for redshift of catalog 1 (default=10).
@@ -737,13 +739,15 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     add_fit_err: bool
         Use mass errors of catalog 2 in fit (default=True).
     fit_log: bool
-        Bin and fit in log values (default=log_mass).
+        Bin and fit in log values (default=True).
     fit_statistics: str
         Statistics to be used in fit (default=mean). Options are:
 
-            * `individual` - Use each point
-            * `mode` - Use mode of component 2 distribution in each comp 1 bin, requires fit_bins2.
-            * `mean` - Use mean of component 2 distribution in each comp 1 bin, requires fit_bins2.
+            * `individual` - Use each point.
+            * `mode` - Use mode of catalog 2 mass distribution in each catalog 1 mass bin,\
+            requires fit_bins2.
+            * `mean` - Use mean of catalog 2 mass distribution in each catalog 1 mass bin,\
+            requires fit_bins2.
 
     fit_bins1: array, None
         Bins for mass of catalog 1 (default=10).
