@@ -147,7 +147,8 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
             sigma=vbin_err2*2, absolute_sigma=True)
         # Functions with fit values
         fit_func = lambda x: pw_func(tfunc(x), *fit)
-        scat_func = lambda x: np.sqrt(np.dot([tfunc(x), 1], np.dot(cov, [tfunc(x), 1])))
+        scat_func = np.vectorize(
+            lambda x: np.sqrt(np.dot([tfunc(x), 1], np.dot(cov, [tfunc(x), 1]))))
         info['fit'] = {
             'pars':fit, 'cov':cov,
             'func':lambda x: ifunc(fit_func(x)),
