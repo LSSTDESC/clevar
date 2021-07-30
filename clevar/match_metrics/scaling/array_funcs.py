@@ -615,10 +615,14 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
     bins: array, int
         Bins for component 1
     mode: str
-        Mode to run. Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+        Mode to run metrics. Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
     metrics: list
@@ -665,6 +669,7 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
     # plot
     for metric in metrics:
         metric_name = metric.replace('.fill', '')
+        kwargs = {'label':metric_name}
         if metric_name in ('mean', 'std', 'median', 'count', 'sum', 'min', 'max'):
             stat = binned_statistic(values1, values, bins=edges, statistic=metric_name)[0]
         elif metric[:2]=='p_':
@@ -677,12 +682,12 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
         else:
             raise ValueError(f'Invalid value (={metric}) for metric.')
         if '.fill' in metric:
+            kwargs.update({'alpha': .4})
             func = info['ax'].fill_betweenx if rotated else info['ax'].fill_between
             args = (values_mid, -stat, stat)
         else:
             func = info['ax'].plot
             args = (stat, values_mid) if rotated else (values_mid, stat)
-        kwargs = {'label':metric_name}
         kwargs.update(metrics_kwargs.get(metric, {}))
         deep_update(info, {'plots': {metric: func(*(a[safe] for a in args), **kwargs)}})
     return info
@@ -701,10 +706,14 @@ def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
     bins1, bins2: array, None
         Bins for component x and y.
     mode: str
-        Mode to run. Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+        Mode to run metrics. Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
     metrics: list
         List of mettrics to be plotted. Possibilities are:
 
@@ -776,10 +785,27 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     err1, err2: array, None
         Errors of component x and y.
     metrics_mode: str
-        Mode to run. Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+        Mode to run metrics. Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
+    metrics: list
+        List of mettrics to be plotted. Possibilities are:
+
+            * 'mean' : compute the mean of values for points within each bin.
+            * 'std' : compute the standard deviation within each bin.
+            * 'median' : compute the median of values for points within each bin.
+            * 'count' : compute the count of points within each bin.
+            * 'sum' : compute the sum of values for points within each bin.
+            * 'min' : compute the minimum of values for points within each bin.
+            * 'max' : compute the maximum of values for point within each bin.
+            * 'p_#' : compute half the width where a percentile of data is found. Number must be
+              between 0-100 (ex: 'p_68', 'p_95', 'p_99').
+
     plt_kwargs: dict
         Additional arguments for pylab.scatter
     add_cb: bool

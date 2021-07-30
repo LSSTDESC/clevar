@@ -456,10 +456,27 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     bins1, bins2: array, None
         Bins for component of catalog 1 and 2.
     mode: str
-        Mode to run. Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+        Mode to run (default=`simple`). Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
+    metrics: list
+        List of mettrics to be plotted (default=[`mean`, `std`]). Possibilities are:
+
+            * `mean` : compute the mean of values for points within each bin.
+            * `std` : compute the standard deviation within each bin.
+            * `median` : compute the median of values for points within each bin.
+            * `count` : compute the count of points within each bin.
+            * `sum` : compute the sum of values for points within each bin.
+            * `min` : compute the minimum of values for points within each bin.
+            * `max` : compute the maximum of values for point within each bin.
+            * `p_#` : compute half the width where a percentile of data is found. Number must be
+              between 0-100 (ex: `p_68`, `p_95`, `p_99`).
+
     mask1, mask2: array, None
         Masks for clusters 1(2), must have size=cat1(2).size
 
@@ -515,10 +532,27 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
     bins1, bins2: array, None
         Bins for component x and y.
     metrics_mode: str
-        Mode to run. Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+        Mode to run metrics (default=`simple`). Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
+    metrics: list
+        List of mettrics to be plotted (default=[`mean`, `std`]). Possibilities are:
+
+            * `mean` : compute the mean of values for points within each bin.
+            * `std` : compute the standard deviation within each bin.
+            * `median` : compute the median of values for points within each bin.
+            * `count` : compute the count of points within each bin.
+            * `sum` : compute the sum of values for points within each bin.
+            * `min` : compute the minimum of values for points within each bin.
+            * `max` : compute the maximum of values for point within each bin.
+            * `p_#` : compute half the width where a percentile of data is found. Number must be
+              between 0-100 (ex: `p_68`, `p_95`, `p_99`).
+
     add_err: bool
         Add errorbars
     mask1, mask2: array, None

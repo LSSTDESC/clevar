@@ -3,6 +3,7 @@
 Main scaling functions for mass and redshift plots,
 wrapper of catalog_funcs functions
 """
+from ...utils import deep_update
 from . import catalog_funcs
 
 ############################################################################################
@@ -350,11 +351,27 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     bins1, bins2: array, None
         Bins for redshift of catalog 1 and 2.
-    mode: str
-        Mode to run (default=redshit). Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+    metrics_mode: str
+        Mode to run metrics (default=`diff_z`). Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
+    metrics: list
+        List of mettrics to be plotted (default=[`std.fill`, `mean`]). Possibilities are:
+
+            * `mean` : compute the mean of values for points within each bin.
+            * `std` : compute the standard deviation within each bin.
+            * `median` : compute the median of values for points within each bin.
+            * `count` : compute the count of points within each bin.
+            * `sum` : compute the sum of values for points within each bin.
+            * `min` : compute the minimum of values for points within each bin.
+            * `max` : compute the maximum of values for point within each bin.
+            * `p_#` : compute half the width where a percentile of data is found. Number must be
+              between 0-100 (ex: `p_68`, `p_95`, `p_99`).
     mask1, mask2: array, None
         Masks for clusters 1(2), must have size=cat1(2).size
 
@@ -379,9 +396,11 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    mode = kwargs.pop('mode', 'diff_z')
-    return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='z', mode=mode,
-                                       **kwargs)
+    kwargs['mode'] = kwargs.get('mode', 'diff_z')
+    kwargs['metrics_kwargs'] = deep_update(
+        {'std':{'label': '$\sigma_z$'}, 'mean':{'label': '$bias_z$'}},
+        kwargs.get('metrics_kwargs', {}))
+    return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='z', **kwargs)
 
 
 def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
@@ -399,10 +418,27 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     bins1, bins2: array, None
         Bins for redshift of catalog 1 and 2.
     metrics_mode: str
-        Mode to run (default=redshit). Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+        Mode to run metrics (default=`diff_z`). Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
+    metrics: list
+        List of mettrics to be plotted (default=[`std.fill`, `mean`]). Possibilities are:
+
+            * `mean` : compute the mean of values for points within each bin.
+            * `std` : compute the standard deviation within each bin.
+            * `median` : compute the median of values for points within each bin.
+            * `count` : compute the count of points within each bin.
+            * `sum` : compute the sum of values for points within each bin.
+            * `min` : compute the minimum of values for points within each bin.
+            * `max` : compute the maximum of values for point within each bin.
+            * `p_#` : compute half the width where a percentile of data is found. Number must be
+              between 0-100 (ex: `p_68`, `p_95`, `p_99`).
+
     add_err: bool
         Add errorbars
     mask1, mask2: array, None
@@ -445,8 +481,15 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
     """
-    kwargs['metrics_mode'] = kwargs.get('metrics_mode', 'diff_z')
     kwargs['metrics'] = kwargs.get('metrics', ['std.fill', 'mean'])
+    kwargs['metrics_mode'] = kwargs.get('metrics_mode', 'diff_z')
+    kwargs['metrics_kwargs'] = deep_update(
+        {
+            'std.fill': {'label':'$\sigma_z$'},
+            'std': {'label':'$\sigma_z$'},
+            'mean': {'label':'$bias_z$'},
+        },
+        kwargs.get('metrics_kwargs', {}))
     return catalog_funcs.plot_density_metrics(cat1, cat2, matching_type, col='z', **kwargs)
 
 
@@ -1019,11 +1062,28 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Log scale for mass
     bins1, bins2: array, None
         Bins for mass of catalogs 1 and 2.
-    mode: str
-        Mode to run (default=log). Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+    metrics_mode: str
+        Mode to run metrics (default=`log`). Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
+    metrics: list
+        List of mettrics to be plotted (default=[`std`]). Possibilities are:
+
+            * `mean` : compute the mean of values for points within each bin.
+            * `std` : compute the standard deviation within each bin.
+            * `median` : compute the median of values for points within each bin.
+            * `count` : compute the count of points within each bin.
+            * `sum` : compute the sum of values for points within each bin.
+            * `min` : compute the minimum of values for points within each bin.
+            * `max` : compute the maximum of values for point within each bin.
+            * `p_#` : compute half the width where a percentile of data is found. Number must be
+              between 0-100 (ex: `p_68`, `p_95`, `p_99`).
+
     mask1, mask2: array, None
         Masks for clusters 1(2), must have size=cat1(2).size
 
@@ -1048,8 +1108,12 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    mode = kwargs.pop('mode', 'log')
-    return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='mass', mode=mode,
+    kwargs['mode'] = kwargs.get('mode', 'log')
+    kwargs['metrics'] = kwargs.get('metrics', ['std'])
+    kwargs['metrics_kwargs'] = deep_update(
+        {'std':{'label': r'$\sigma_{\log(M)}$'}},
+        kwargs.get('metrics_kwargs', {}))
+    return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='mass',
                                       xscale='log' if log_mass else 'linear',
                                       yscale='log' if log_mass else 'linear',
                                       **kwargs)
@@ -1070,10 +1134,27 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     bins1, bins2: array, None
         Bins for mass of catalogs 1 and 2.
     metrics_mode: str
-        Mode to run (default=log). Options are:
-        simple - used simple difference
-        redshift - metrics for (values2-values1)/(1+values1)
-        log - metrics for log of values
+        Mode to run metrics (default=`log`). Options are:
+
+            * `simple` : metrics for `values2`.
+            * `log` : metrics for `log10(values2)`.
+            * `diff` : metrics for `values2-values1`.
+            * `diff_log` : metrics for `log10(values2)-log10(values1)`.
+            * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
+
+    metrics: list
+        List of mettrics to be plotted (default=[`std`]). Possibilities are:
+
+            * `mean` : compute the mean of values for points within each bin.
+            * `std` : compute the standard deviation within each bin.
+            * `median` : compute the median of values for points within each bin.
+            * `count` : compute the count of points within each bin.
+            * `sum` : compute the sum of values for points within each bin.
+            * `min` : compute the minimum of values for points within each bin.
+            * `max` : compute the maximum of values for point within each bin.
+            * `p_#` : compute half the width where a percentile of data is found. Number must be
+              between 0-100 (ex: `p_68`, `p_95`, `p_99`).
+
     add_err: bool
         Add errorbars
     mask1, mask2: array, None
@@ -1114,12 +1195,16 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
     """
-    metrics_mode = kwargs.pop('metrics_mode', 'log')
+    kwargs['metrics_mode'] = kwargs.get('mode', 'log')
+    kwargs['metrics'] = kwargs.get('metrics', ['std'])
+    kwargs['metrics_kwargs'] = deep_update(
+        {'std':{'label': r'$\sigma_{\log(M)}$'}},
+        kwargs.get('metrics_kwargs', {}))
     kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
     return catalog_funcs.plot_density_metrics(cat1, cat2, matching_type, col='mass',
                                               xscale='log' if log_mass else 'linear',
                                               yscale='log' if log_mass else 'linear',
-                                              metrics_mode=metrics_mode, **kwargs)
+                                              **kwargs)
 
 
 def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
