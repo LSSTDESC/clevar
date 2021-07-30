@@ -81,6 +81,28 @@ def str2dataunit(input_str, units_bank, err_msg=''):
             except:
                 pass
     raise ValueError(f"Unknown unit of '{input_str}', must be in {units_bank}. {err_msg}")
+def deep_update(dict_base, dict_update):
+    """
+    Update a multi-layer dictionary.
+
+    Parameters
+    ----------
+    dict_base: dict
+        Dictionary to be updated
+    dict_update: dict
+        Dictionary with the updates
+
+    Returns
+    -------
+    dict_base: dict
+        Updated dictionary (the input dict is also updated)
+    """
+    for k, v in dict_update.items():
+        if isinstance(v, dict) and k in dict_base:
+            deep_update(dict_base[k], v)
+        else:
+            dict_base[k] = dict_update[k]
+    return dict_base
 ########################################################################
 ########## Monkeypatching healpy #######################################
 ########################################################################
