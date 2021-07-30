@@ -866,6 +866,10 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.catalog_funcs.plot` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.catalog_funcs.plot` for more info).
     """
     fig_kwargs_ = dict(figsize=(8, 6))
     fig_kwargs_.update(fig_kwargs)
@@ -885,11 +889,15 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     # Main plot
     cb_kwargs_ = {'cax': info['axes']['colorbar'], 'orientation': 'horizontal'}
     cb_kwargs_.update(cb_kwargs)
-    plot_density(values1, values2, bins1=bins1, bins2=bins2,
+    main_info = plot_density(
+        values1, values2, bins1=bins1, bins2=bins2,
         ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
         xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=info['axes']['main'],
         plt_kwargs=plt_kwargs, add_cb=add_cb, cb_kwargs=cb_kwargs_,
         err_kwargs=err_kwargs, **kwargs)
+    main_info.pop('ax')
+    main_info.pop('ax_cb', None)
+    info.update(main_info)
     if add_cb:
         info['axes']['colorbar'].xaxis.tick_top()
         info['axes']['colorbar'].xaxis.set_label_position('top')

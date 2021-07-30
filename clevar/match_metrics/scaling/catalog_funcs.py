@@ -621,6 +621,10 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.catalog_funcs.plot` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
     f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
