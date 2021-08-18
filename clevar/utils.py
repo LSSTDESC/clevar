@@ -37,12 +37,15 @@ def autobins(values, bins, log=False):
         Bins based on values
     """
     if hasattr(bins, '__len__'):
-        return np.array(bins)
-    if log:
+        bins = np.array(bins)
+    elif log:
         logvals = np.log10(values)
-        return np.logspace(logvals.min(), logvals.max(), bins+1)
+        bins = np.logspace(logvals.min(), logvals.max(), bins+1)
+        bins[-1] *= 1.0001
     else:
-        return np.linspace(values.min(), values.max(), bins+1)
+        bins = np.linspace(values.min(), values.max(), bins+1)
+        bins[-1] *= 1.0001
+    return bins
 def binmasks(values, bins):
     """
     Get corresponding masks for each bin. Last bin is inclusive.
