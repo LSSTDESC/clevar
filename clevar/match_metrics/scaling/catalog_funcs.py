@@ -152,6 +152,12 @@ def plot(cat1, cat2, matching_type, col, col_color=None,
         Information of data in the plots, it contains the sections:
 
             * `ax`: ax used in the plot.
+            * `binned_data` (optional): input data for fitting, with values:
+
+                * `x`: x values in fit (log of values if log=True).
+                * `y`: y values in fit (log of values if log=True).
+                * `y_err`: errorbar on y values (error_log if log=True).
+
             * `fit` (optional): fitting output dictionary, with values:
 
                 * `pars`: fitted parameter.
@@ -230,6 +236,8 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
 
             * `ax`: ax used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.catalog_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.catalog_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
@@ -360,6 +368,8 @@ def plot_panel(
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.catalog_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.catalog_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
@@ -449,6 +459,8 @@ def plot_density_panel(cat1, cat2, matching_type, col,
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.catalog_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.catalog_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
@@ -621,6 +633,8 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.catalog_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.catalog_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
@@ -859,6 +873,8 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
 
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.catalog_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.catalog_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \

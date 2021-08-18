@@ -98,6 +98,12 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     info: dict
         Information of data in the plots, it contains the sections:
 
+            * binned_data (optional): input data for fitting, with values:
+
+                * x: x values in fit (log of values1 if log=True).
+                * y: y values in fit (log of values2 if log=True).
+                * y_err: errorbar on y values (error_log if log=True).
+
             * fit (optional): fitting output dictionary, with values:
 
                 * pars: fitted parameter.
@@ -140,11 +146,12 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     if len(data)==0:
         return info
     vbin_1, vbin_2, vbin_err2 = data
+    info['binned_data'] = {'x': vbin_1, 'y': vbin_2, 'yerr': vbin_err2}
     # fit
     if add_fit:
         pw_func = lambda x, a, b: a*x+b
         fit, cov = curve_fit(pw_func, vbin_1, vbin_2,
-            sigma=vbin_err2*2, absolute_sigma=True)
+            sigma=vbin_err2, absolute_sigma=True)
         # Functions with fit values
         fit_func = lambda x: pw_func(tfunc(x), *fit)
         scat_func = np.vectorize(
@@ -257,6 +264,12 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
 
             * `ax`: ax used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting, with values:
+
+                * `x`: x values in fit (log of values if log=True).
+                * `y`: y values in fit (log of values if log=True).
+                * `y_err`: errorbar on y values (error_log if log=True).
+
             * `fit` (optional): fitting output dictionary, with values:
 
                 * `pars`: fitted parameter.
@@ -357,7 +370,7 @@ def plot_density(values1, values2, bins1=30, bins2=30,
     add_fit: bool
         Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.array_funcs.plot` for more info).
 
     Returns
     -------
@@ -366,10 +379,12 @@ def plot_density(values1, values2, bins1=30, bins2=30,
 
             * `ax`: ax used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.array_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
     """
     values_color = ph.get_density_colors(values1, values2, bins1, bins2,
         ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
@@ -416,7 +431,7 @@ def _plot_panel(plot_function, values_panel, bins_panel,
     add_fit: bool
         Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.array_funcs.plot` for more info).
 
     Returns
     -------
@@ -509,7 +524,7 @@ def plot_panel(
     add_fit: bool
         Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.array_funcs.plot` for more info).
 
     Returns
     -------
@@ -519,10 +534,12 @@ def plot_panel(
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.array_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
     """
     return _plot_panel(
         # _plot_panel arguments
@@ -597,7 +614,7 @@ def plot_density_panel(values1, values2, values_panel, bins_panel,
     add_fit: bool
         Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.array_funcs.plot` for more info).
 
     Returns
     -------
@@ -607,10 +624,12 @@ def plot_density_panel(values1, values2, values_panel, bins_panel,
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.array_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
     """
     return _plot_panel(
         # _plot_panel arguments
@@ -857,7 +876,7 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     add_fit: bool
         Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.array_funcs.plot` for more info).
 
     Returns
     -------
@@ -867,10 +886,12 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.array_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
     """
     fig_kwargs_ = dict(figsize=(8, 6))
     fig_kwargs_.update(fig_kwargs)
@@ -1081,7 +1102,7 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
     add_fit: bool
         Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.array_funcs.plot` for more info).
     vline_kwargs: dict
         Arguments for vlines marking bins in main plot, used in plt.axvline.
 
@@ -1092,10 +1113,12 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
 
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.array_funcs.plot` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.array_funcs.plot` for more info).
     """
     # Fig
     fig_kwargs_ = dict(figsize=(8, 6))
