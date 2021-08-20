@@ -106,6 +106,25 @@ def deep_update(dict_base, dict_update):
         else:
             dict_base[k] = dict_update[k]
     return dict_base
+def gaussian(value, mean, std):
+    """
+    Gaussian function.
+
+    Parameters
+    ----------
+    value: float, array
+        Point(s) to compute the distribution.
+    mean: float, array
+        Mean ("centre") of the distribution.
+    std: float, array
+        Standard deviation (spread or "width") of the distribution. Must be non-negative.
+
+    Returns
+    -------
+    float, array
+        Value of the gaussian distribution at input `value`.
+    """
+    return np.exp(-0.5*(value-mean)**2/std**2)/np.sqrt(2*np.pi)/std
 ########################################################################
 ########## Monkeypatching healpy #######################################
 ########################################################################
