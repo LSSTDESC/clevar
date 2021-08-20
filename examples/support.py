@@ -99,7 +99,7 @@ def gen_cluster(N_clusters=1000, ra_min=0, ra_max=360,
     # Crop catalog 1 with logm>logm_min
     input1 = Data0[Data0['MASS']>=10**logm_min]
     # Crop catalog 2 with logm+noise>logm_min and add noise to other quantities
-    mass2 = np.exp(np.random.normal(loc=np.log(Data0['MASS']), scale=.2))
+    mass2 = np.exp(np.random.normal(loc=np.log(Data0['MASS']), scale=lnm_scatter))
     mask2 = mass2>=10**logm_min
     input2 = Table({
         'RA': np.random.normal(loc=Data0['RA'][mask2], scale=1/3600.),
