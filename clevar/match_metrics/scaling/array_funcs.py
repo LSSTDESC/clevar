@@ -6,7 +6,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 from scipy.stats import binned_statistic
 
-from ...utils import none_val, autobins, binmasks, deep_update
+from ...utils import none_val, autobins, binmasks, deep_update, gaussian
 from .. import plot_helper as ph
 from ..plot_helper import plt, NullFormatter
 
@@ -42,19 +42,22 @@ def _prep_fit_data(xvals, yvals, yerr=None, statistics='mean', bins_x=None, bins
     """
     if statistics=='individual':
         return xvals, yvals, yerr
-    elif statistics=='mode':
+    if statistics=='mode':
         bins_hist = autobins(yvals, bins_y)
         bins_hist_m = 0.5*(bins_hist[1:]+bins_hist[:-1])
-        stat_func = lambda vals: bins_hist_m[np.histogram(vals, bins=bins_hist)[0].argmax()]
+        statistic = lambda vals: bins_hist_m[np.histogram(vals, bins=bins_hist)[0].argmax()]
     elif statistics=='mean':
-        stat_func = lambda vals: np.mean(vals)
+        statistic = 'mean'
     else:
         raise ValueError(f'statistics ({statistics}) must be in (individual, mean, mode)')
-    point_masks = [m for m in binmasks(xvals, autobins(xvals, bins_x)) if m[m].size>1]
-    err = np.zeros(len(yvals)) if yerr is None else yerr
-    err_func = lambda vals, err: np.mean(np.sqrt(np.std(vals)**2+err**2))
-    return np.transpose([[np.mean(xvals[m]), stat_func(yvals[m]), err_func(yvals[m], err[m])]
-                            for m in point_masks])
+    xbins = autobins(xvals, bins_x)
+    xdata = binned_statistic(xvals, xvals, bins=xbins, statistic='mean')[0]
+    ydata = binned_statistic(xvals, yvals, bins=xbins, statistic=statistic)[0]
+    std = binned_statistic(xvals, yvals, bins=xbins, statistic='std')[0]
+    err = binned_statistic(xvals, none_val(yerr, np.zeros(len(yvals))),
+                           bins=xbins,statistic='mean')[0]
+    valid = xdata==xdata
+    return xdata[valid], ydata[valid], np.sqrt(std**2+err**2)[valid]
 
 
 def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
@@ -162,6 +165,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
             'func_plus': lambda x: ifunc(fit_func(x)+scat_func(x)),
             'func_minus': lambda x: ifunc(fit_func(x)-scat_func(x)),
             'func_scat': scat_func,
+            'dist': lambda x, y: gaussian(tfunc(y), fit_func(x), scat_func(x)),
             'func_chi': lambda x, y: (tfunc(y)-fit_func(x))/scat_func(x),
         }
         # labels
