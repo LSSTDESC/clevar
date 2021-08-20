@@ -5,6 +5,7 @@ Main scaling functions using arrays.
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.stats import binned_statistic
+from scipy.interpolate import UnivariateSpline as spline
 
 from ...utils import none_val, autobins, binmasks, deep_update, gaussian
 from .. import plot_helper as ph
@@ -114,8 +115,11 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
                 * func: fitting function with fitted parameter.
                 * func_plus: fitting function with fitted parameter plus 1x scatter.
                 * func_minus: fitting function with fitted parameter minus 1x scatter.
-                * func_scat: scatter of fited function.
-                * func_chi: sqrt of chi_square(x, y) for the fitted function.
+                * func_scat: scatter of fitted function.
+                * func_dist: P(y|x) - Probability of having y given a value for x, assumes \
+                normal distribution and uses scatter of the fitted function.
+                * func_scat_interp: interpolated scatter from data.
+                * func_dist_interp: P(y|x) using interpolated scatter.
 
             * plots (optional): additional plots:
 
@@ -144,7 +148,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     data = _prep_fit_data(tfunc(values1), tfunc(values2),
                           bins_x=tfunc(bins1) if hasattr(bins1, '__len__') else bins1,
                           bins_y=tfunc(bins2) if hasattr(bins2, '__len__') else bins2,
-                          yerr=None if (err2 is None or not log) else err2/(values2*np.log(10)),
+                          yerr=err2 if (err2 is None or not log) else err2/(values2*np.log(10)),
                           statistics=mode)
     if len(data)==0:
         return info
@@ -159,14 +163,17 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         fit_func = lambda x: pw_func(tfunc(x), *fit)
         scat_func = np.vectorize(
             lambda x: np.sqrt(np.dot([tfunc(x), 1], np.dot(cov, [tfunc(x), 1]))))
+        scat_spline = spline(vbin_1, vbin_err2, k=1)
+        scat_interp = lambda x: scat_spline(tfunc(x))
         info['fit'] = {
             'pars':fit, 'cov':cov,
             'func':lambda x: ifunc(fit_func(x)),
             'func_plus': lambda x: ifunc(fit_func(x)+scat_func(x)),
             'func_minus': lambda x: ifunc(fit_func(x)-scat_func(x)),
             'func_scat': scat_func,
-            'dist': lambda x, y: gaussian(tfunc(y), fit_func(x), scat_func(x)),
-            'func_chi': lambda x, y: (tfunc(y)-fit_func(x))/scat_func(x),
+            'func_dist': lambda y, x: gaussian(tfunc(y), fit_func(x), scat_func(x)),
+            'func_scat_interp': scat_interp,
+            'func_dist_interp': lambda y, x: gaussian(tfunc(y), fit_func(x), scat_interp(x)),
         }
         # labels
         sig = np.sqrt(np.diag(cov))
@@ -282,7 +289,10 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
                 * `func_plus`: fitting function with fitted parameter plus 1x scatter.
                 * `func_minus`: fitting function with fitted parameter minus 1x scatter.
                 * `func_scat`: scatter of fited function.
-                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+                * `func_dist`: `P(y|x)` - Probability of having y given a value for x, assumes \
+                normal distribution and uses scatter of the fitted function.
+                * `func_scat_interp`: interpolated scatter from data.
+                * `func_dist_interp`: P(y|x) using interpolated scatter.
 
             * `plots` (optional): additional plots:
 

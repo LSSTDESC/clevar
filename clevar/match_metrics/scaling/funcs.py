@@ -87,7 +87,10 @@ def redshift(cat1, cat2, matching_type, **kwargs):
                 * `func_plus`: fitting function with fitted parameter plus 1x scatter.
                 * `func_minus`: fitting function with fitted parameter minus 1x scatter.
                 * `func_scat`: scatter of fited function.
-                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+                * `func_dist`: `P(y|x)` - Probability of having y given a value for x, assumes \
+                normal distribution and uses scatter of the fitted function.
+                * `func_scat_interp`: interpolated scatter from data.
+                * `func_dist_interp`: P(y|x) using interpolated scatter.
 
             * `plots` (optional): additional plots:
 
@@ -798,7 +801,10 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
                 * `func_plus`: fitting function with fitted parameter plus 1x scatter.
                 * `func_minus`: fitting function with fitted parameter minus 1x scatter.
                 * `func_scat`: scatter of fited function.
-                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+                * `func_dist`: `P(y|x)` - Probability of having y given a value for x, assumes \
+                normal distribution and uses scatter of the fitted function.
+                * `func_scat_interp`: interpolated scatter from data.
+                * `func_dist_interp`: P(y|x) using interpolated scatter.
 
             * `plots` (optional): additional plots:
 
