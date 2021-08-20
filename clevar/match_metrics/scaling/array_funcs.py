@@ -292,7 +292,7 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
                 * `func_dist`: `P(y|x)` - Probability of having y given a value for x, assumes \
                 normal distribution and uses scatter of the fitted function.
                 * `func_scat_interp`: interpolated scatter from data.
-                * `func_dist_interp`: P(y|x) using interpolated scatter.
+                * `func_dist_interp`: `P(y|x)` using interpolated scatter.
 
             * `plots` (optional): additional plots:
 
