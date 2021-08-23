@@ -2,6 +2,7 @@
 import numpy as np
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
+from clevar.utils import gaussian
 from clevar.match import ProximityMatch
 from clevar.match_metrics import recovery as rc
 from numpy.testing import assert_raises
@@ -47,6 +48,10 @@ def test_plot():
     rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True)
     assert_raises(ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins,
                   shape='unknown')
+    rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True,
+            p_m1_m2=lambda  m1, m2: gaussian(np.log10(m2), np.log10(m1), 0.1))
+    rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True, transpose=True,
+            p_m1_m2=lambda  m1, m2: gaussian(np.log10(m2), np.log10(m1), 0.1))
 
 
 def test_plot_panel():
@@ -59,6 +64,10 @@ def test_plot_panel():
         redshift_label=None, mass_label=None, recovery_label=None,)
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, add_label=True, label_fmt='.2f')
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=True)
+    rc.plot_panel(cat, matching_type, redshift_bins, mass_bins,
+                  p_m1_m2=lambda  m1, m2: gaussian(np.log10(m2), np.log10(m1), 0.1))
+    rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=True,
+                  p_m1_m2=lambda  m1, m2: gaussian(np.log10(m2), np.log10(m1), 0.1))
 
 
 def test_plot2D():
