@@ -145,14 +145,14 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     # set log/lin funcs
     tfunc, ifunc = (np.log10, lambda x: 10**x) if log else (lambda x:x, lambda x:x)
     # data
-    data = _prep_fit_data(tfunc(values1), tfunc(values2),
-                          bins_x=tfunc(bins1) if hasattr(bins1, '__len__') else bins1,
-                          bins_y=tfunc(bins2) if hasattr(bins2, '__len__') else bins2,
-                          yerr=err2 if (err2 is None or not log) else err2/(values2*np.log(10)),
-                          statistics=mode)
-    if len(data)==0:
+    vbin_1, vbin_2, vbin_err2 = _prep_fit_data(
+        tfunc(values1), tfunc(values2),
+        bins_x=tfunc(bins1) if hasattr(bins1, '__len__') else bins1,
+        bins_y=tfunc(bins2) if hasattr(bins2, '__len__') else bins2,
+        yerr=err2 if (err2 is None or not log) else err2/(values2*np.log(10)),
+        statistics=mode)
+    if len(vbin_1)==0:
         return info
-    vbin_1, vbin_2, vbin_err2 = data
     info['binned_data'] = {'x': vbin_1, 'y': vbin_2, 'yerr': vbin_err2}
     # fit
     if add_fit:
