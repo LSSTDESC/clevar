@@ -255,9 +255,9 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
                       ylabel=recovery_label,
                       **kwargs)
     if p_m1_m2 is not None:
-        bins2_generator = zip(info['data']['edges2'], info['data']['edges2'][1:])
-        for ax in info['axes'].flatten():
-            bins2 = info['data']['edges2'] if transpose else next(bins2_generator)
+        for ax, bins2 in zip(info['axes'].flatten(),
+                             zip(info['data']['edges2'],
+                                 info['data']['edges2'][1:])):
             _intrinsic_comp(
                 p_m1_m2, min_mass2, ax, transpose,
                 info['data']['edges1'], bins2, max_mass2=1e16)
