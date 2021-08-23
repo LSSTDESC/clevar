@@ -73,6 +73,12 @@ def redshift(cat1, cat2, matching_type, **kwargs):
         Information of data in the plots, it contains the sections:
 
             * `ax`: ax used in the plot.
+            * `binned_data` (optional): input data for fitting, with values:
+
+                * `x`: x values in fit (log of values if log=True).
+                * `y`: y values in fit (log of values if log=True).
+                * `y_err`: errorbar on y values (error_log if log=True).
+
             * `fit` (optional): fitting output dictionary, with values:
 
                 * `pars`: fitted parameter.
@@ -81,7 +87,10 @@ def redshift(cat1, cat2, matching_type, **kwargs):
                 * `func_plus`: fitting function with fitted parameter plus 1x scatter.
                 * `func_minus`: fitting function with fitted parameter minus 1x scatter.
                 * `func_scat`: scatter of fited function.
-                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+                * `func_dist`: `P(y|x)` - Probability of having y given a value for x, assumes \
+                normal distribution and uses scatter of the fitted function.
+                * `func_scat_interp`: interpolated scatter from data.
+                * `func_dist_interp`: `P(y|x)` using interpolated scatter.
 
             * `plots` (optional): additional plots:
 
@@ -140,6 +149,8 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
 
             * `ax`: ax used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
@@ -191,6 +202,8 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
 
             * `ax`: ax used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
@@ -253,6 +266,8 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
 
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
@@ -330,6 +345,8 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
@@ -690,6 +707,8 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
 
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
@@ -768,6 +787,12 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Information of data in the plots, it contains the sections:
 
             * `ax`: ax used in the plot.
+            * `binned_data` (optional): input data for fitting, with values:
+
+                * `x`: x values in fit (log of values if log=True).
+                * `y`: y values in fit (log of values if log=True).
+                * `y_err`: errorbar on y values (error_log if log=True).
+
             * `fit` (optional): fitting output dictionary, with values:
 
                 * `pars`: fitted parameter.
@@ -776,7 +801,10 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
                 * `func_plus`: fitting function with fitted parameter plus 1x scatter.
                 * `func_minus`: fitting function with fitted parameter minus 1x scatter.
                 * `func_scat`: scatter of fited function.
-                * `func_chi`: sqrt of chi_square(x, y) for the fitted function.
+                * `func_dist`: `P(y|x)` - Probability of having y given a value for x, assumes \
+                normal distribution and uses scatter of the fitted function.
+                * `func_scat_interp`: interpolated scatter from data.
+                * `func_dist_interp`: `P(y|x)` using interpolated scatter.
 
             * `plots` (optional): additional plots:
 
@@ -834,6 +862,8 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.mass` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.mass` for more info).
             * `plots` (optional): fit and binning plots \
@@ -893,6 +923,8 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
             * `ax`: ax used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.mass` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.mass` for more info).
             * `plots` (optional): fit and binning plots \
@@ -958,6 +990,8 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
 
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.mass` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.mass` for more info).
             * `plots` (optional): fit and binning plots \
@@ -1039,6 +1073,8 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
             * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.mass` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.mass` for more info).
             * `plots` (optional): fit and binning plots \
@@ -1403,6 +1439,8 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.mass` for more info).
             * `fit` (optional): fitting output dictionary \
             (see `scaling.mass` for more info).
             * `plots` (optional): fit and binning plots \

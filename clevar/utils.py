@@ -37,12 +37,15 @@ def autobins(values, bins, log=False):
         Bins based on values
     """
     if hasattr(bins, '__len__'):
-        return np.array(bins)
-    if log:
+        bins = np.array(bins)
+    elif log:
         logvals = np.log10(values)
-        return np.logspace(logvals.min(), logvals.max(), bins+1)
+        bins = np.logspace(logvals.min(), logvals.max(), bins+1)
+        bins[-1] *= 1.0001
     else:
-        return np.linspace(values.min(), values.max(), bins+1)
+        bins = np.linspace(values.min(), values.max(), bins+1)
+        bins[-1] *= 1.0001
+    return bins
 def binmasks(values, bins):
     """
     Get corresponding masks for each bin. Last bin is inclusive.
@@ -103,6 +106,25 @@ def deep_update(dict_base, dict_update):
         else:
             dict_base[k] = dict_update[k]
     return dict_base
+def gaussian(value, mean, std):
+    """
+    Gaussian function.
+
+    Parameters
+    ----------
+    value: float, array
+        Point(s) to compute the distribution.
+    mean: float, array
+        Mean ("centre") of the distribution.
+    std: float, array
+        Standard deviation (spread or "width") of the distribution. Must be non-negative.
+
+    Returns
+    -------
+    float, array
+        Value of the gaussian distribution at input `value`.
+    """
+    return np.exp(-0.5*(value-mean)**2/std**2)/np.sqrt(2*np.pi)/std
 ########################################################################
 ########## Monkeypatching healpy #######################################
 ########################################################################

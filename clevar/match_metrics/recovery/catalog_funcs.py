@@ -107,8 +107,9 @@ def plot(cat, col1, col2, bins1, bins2, matching_type,
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
-    info = _plot_base(array_funcs.plot,
-            cat, col1, col2, bins1, bins2, matching_type, **kwargs)
+    info = _plot_base(
+        array_funcs.plot, cat, col1, col2, bins1, bins2, matching_type,
+        **kwargs)
     info['ax'].set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
     info['ax'].set_ylabel(ylabel if ylabel else 'recovery rate')
     info['ax'].set_xscale(scale1)
