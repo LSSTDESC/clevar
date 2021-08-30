@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; ClEvaR 0.5.0 documentation</title>
+  <title>Index &mdash; ClEvaR 0.7.1 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.7.1
               </div>
             
           
@@ -101,6 +101,8 @@
 <li class="toctree-l1"><a class="reference internal" href="compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compiled-examples/footprint.html">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -127,10 +129,24 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/clevar.match_metrics.distances.html">clevar.match_metrics.distances package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/clevar.match_metrics.scaling.array_funcs.html">clevar.match_metrics.scaling.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clevar.match_metrics.scaling.catalog_funcs.html">clevar.match_metrics.scaling.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/clevar.match_metrics.scaling.funcs.html">clevar.match_metrics.scaling.funcs module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="api/clevar.utils.html">clevar.utils module</a></li>
@@ -244,16 +260,10 @@
 </li>
       <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_grid">add_grid() (in module clevar.match_metrics.plot_helper)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_panel_bin_label">add_panel_bin_label() (in module clevar.match_metrics.plot_helper)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.ArrayFuncs">ArrayFuncs (class in clevar.match_metrics.recovery)</a>
-
-      <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs">(class in clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_panel_bin_label">add_panel_bin_label() (in module clevar.match_metrics.plot_helper)</a>
 </li>
-      </ul></li>
       <li><a href="api/clevar.yaml.footprint.html#clevar.yaml.footprint.artificial">artificial() (in module clevar.yaml.footprint)</a>
 </li>
       <li><a href="api/clevar.cosmology.astropy.html#clevar.cosmology.astropy.AstroPyCosmology">AstroPyCosmology (class in clevar.cosmology.astropy)</a>
@@ -278,24 +288,14 @@
 </li>
       <li><a href="api/clevar.cosmology.ccl.html#clevar.cosmology.ccl.CCLCosmology">CCLCosmology (class in clevar.cosmology.ccl)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.distances.html#clevar.match_metrics.distances.ClCatalogFuncs.central_position">central_position() (clevar.match_metrics.distances.ClCatalogFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.distances.catalog_funcs.html#clevar.match_metrics.distances.catalog_funcs.central_position">central_position() (in module clevar.match_metrics.distances.catalog_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.distances.html#clevar.match_metrics.distances.central_position">(in module clevar.match_metrics.distances)</a>
+        <li><a href="api/clevar.match_metrics.distances.funcs.html#clevar.match_metrics.distances.funcs.central_position">(in module clevar.match_metrics.distances.funcs)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.class_args">class_args (clevar.match_metrics.scaling.ClCatalogFuncs attribute)</a>
-</li>
       <li><a href="api/clevar.catalog.html#clevar.catalog.ClCatalog">ClCatalog (class in clevar.catalog)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.distances.html#clevar.match_metrics.distances.ClCatalogFuncs">ClCatalogFuncs (class in clevar.match_metrics.distances)</a>
-
-      <ul>
-        <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.ClCatalogFuncs">(class in clevar.match_metrics.recovery)</a>
-</li>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs">(class in clevar.match_metrics.scaling)</a>
-</li>
-      </ul></li>
       <li><a href="api/clevar.catalog.html#clevar.catalog.ClData">ClData (class in clevar.catalog)</a>
 </li>
       <li>
@@ -396,8 +396,6 @@
         <li><a href="api/clevar.match.parent.html#module-clevar.match.parent">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     clevar.match.proximity
 
@@ -420,6 +418,22 @@
 </li>
       </ul></li>
       <li>
+    clevar.match_metrics.distances.catalog_funcs
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.distances.catalog_funcs.html#module-clevar.match_metrics.distances.catalog_funcs">module</a>
+</li>
+      </ul></li>
+      <li>
+    clevar.match_metrics.distances.funcs
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.distances.funcs.html#module-clevar.match_metrics.distances.funcs">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
     clevar.match_metrics.plot_helper
 
       <ul>
@@ -434,10 +448,52 @@
 </li>
       </ul></li>
       <li>
+    clevar.match_metrics.recovery.array_funcs
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.recovery.array_funcs.html#module-clevar.match_metrics.recovery.array_funcs">module</a>
+</li>
+      </ul></li>
+      <li>
+    clevar.match_metrics.recovery.catalog_funcs
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.recovery.catalog_funcs.html#module-clevar.match_metrics.recovery.catalog_funcs">module</a>
+</li>
+      </ul></li>
+      <li>
+    clevar.match_metrics.recovery.funcs
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.recovery.funcs.html#module-clevar.match_metrics.recovery.funcs">module</a>
+</li>
+      </ul></li>
+      <li>
     clevar.match_metrics.scaling
 
       <ul>
         <li><a href="api/clevar.match_metrics.scaling.html#module-clevar.match_metrics.scaling">module</a>
+</li>
+      </ul></li>
+      <li>
+    clevar.match_metrics.scaling.array_funcs
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#module-clevar.match_metrics.scaling.array_funcs">module</a>
+</li>
+      </ul></li>
+      <li>
+    clevar.match_metrics.scaling.catalog_funcs
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#module-clevar.match_metrics.scaling.catalog_funcs">module</a>
+</li>
+      </ul></li>
+      <li>
+    clevar.match_metrics.scaling.funcs
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.scaling.funcs.html#module-clevar.match_metrics.scaling.funcs">module</a>
 </li>
       </ul></li>
       <li>
@@ -527,8 +583,12 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.deep_update">deep_update() (in module clevar.yaml.helper_funcs)</a>
+      <li><a href="api/clevar.utils.html#clevar.utils.deep_update">deep_update() (in module clevar.utils)</a>
+
+      <ul>
+        <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.deep_update">(in module clevar.yaml.helper_funcs)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -571,6 +631,8 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/clevar.utils.html#clevar.utils.gaussian">gaussian() (in module clevar.utils)</a>
+</li>
       <li><a href="api/clevar.catalog.html#clevar.catalog.Catalog.get">get() (clevar.catalog.Catalog method)</a>
 
       <ul>
@@ -617,7 +679,7 @@
         <li><a href="api/clevar.cosmology.parent_class.html#clevar.cosmology.parent_class.Cosmology.get_Omega_m">(clevar.cosmology.parent_class.Cosmology method)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.get_recovery_rate">get_recovery_rate() (in module clevar.match_metrics.recovery)</a>
+      <li><a href="api/clevar.match_metrics.recovery.array_funcs.html#clevar.match_metrics.recovery.array_funcs.get_recovery_rate">get_recovery_rate() (in module clevar.match_metrics.recovery.array_funcs)</a>
 </li>
       <li><a href="api/clevar.footprint.footprint.html#clevar.footprint.footprint.Footprint.get_values_in_pixels">get_values_in_pixels() (clevar.footprint.footprint.Footprint method)</a>
 </li>
@@ -669,25 +731,25 @@
 </li>
       <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.make_mem_catalog">make_mem_catalog() (in module clevar.yaml.helper_funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass">mass() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass">mass() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_density">mass_density() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_density">mass_density() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_density_dist">mass_density_dist() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_density_dist">mass_density_dist() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_density_metrics">mass_density_metrics() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_density_metrics">mass_density_metrics() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_density_zpanel">mass_density_zpanel() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_density_zpanel">mass_density_zpanel() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_dist">mass_dist() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_dist">mass_dist() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_dist_self">mass_dist_self() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_dist_self">mass_dist_self() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_metrics">mass_metrics() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_metrics">mass_metrics() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_zcolor">mass_zcolor() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_zcolor">mass_zcolor() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.mass_zpanel">mass_zpanel() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_zpanel">mass_zpanel() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
       <li><a href="api/clevar.match.parent.html#clevar.match.parent.Match">Match (class in clevar.match.parent)</a>
 </li>
@@ -747,11 +809,27 @@
 </li>
         <li><a href="api/clevar.match_metrics.distances.html#module-clevar.match_metrics.distances">clevar.match_metrics.distances</a>
 </li>
+        <li><a href="api/clevar.match_metrics.distances.catalog_funcs.html#module-clevar.match_metrics.distances.catalog_funcs">clevar.match_metrics.distances.catalog_funcs</a>
+</li>
+        <li><a href="api/clevar.match_metrics.distances.funcs.html#module-clevar.match_metrics.distances.funcs">clevar.match_metrics.distances.funcs</a>
+</li>
         <li><a href="api/clevar.match_metrics.plot_helper.html#module-clevar.match_metrics.plot_helper">clevar.match_metrics.plot_helper</a>
 </li>
         <li><a href="api/clevar.match_metrics.recovery.html#module-clevar.match_metrics.recovery">clevar.match_metrics.recovery</a>
 </li>
+        <li><a href="api/clevar.match_metrics.recovery.array_funcs.html#module-clevar.match_metrics.recovery.array_funcs">clevar.match_metrics.recovery.array_funcs</a>
+</li>
+        <li><a href="api/clevar.match_metrics.recovery.catalog_funcs.html#module-clevar.match_metrics.recovery.catalog_funcs">clevar.match_metrics.recovery.catalog_funcs</a>
+</li>
+        <li><a href="api/clevar.match_metrics.recovery.funcs.html#module-clevar.match_metrics.recovery.funcs">clevar.match_metrics.recovery.funcs</a>
+</li>
         <li><a href="api/clevar.match_metrics.scaling.html#module-clevar.match_metrics.scaling">clevar.match_metrics.scaling</a>
+</li>
+        <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#module-clevar.match_metrics.scaling.array_funcs">clevar.match_metrics.scaling.array_funcs</a>
+</li>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#module-clevar.match_metrics.scaling.catalog_funcs">clevar.match_metrics.scaling.catalog_funcs</a>
+</li>
+        <li><a href="api/clevar.match_metrics.scaling.funcs.html#module-clevar.match_metrics.scaling.funcs">clevar.match_metrics.scaling.funcs</a>
 </li>
         <li><a href="api/clevar.utils.html#module-clevar.utils">clevar.utils</a>
 </li>
@@ -826,90 +904,80 @@
 </li>
       <li><a href="api/clevar.utils.html#clevar.utils.pix2map">pix2map() (in module clevar.utils)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.ArrayFuncs.plot">plot() (clevar.match_metrics.recovery.ArrayFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.recovery.array_funcs.html#clevar.match_metrics.recovery.array_funcs.plot">plot() (in module clevar.match_metrics.recovery.array_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.ClCatalogFuncs.plot">(clevar.match_metrics.recovery.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.recovery.catalog_funcs.html#clevar.match_metrics.recovery.catalog_funcs.plot">(in module clevar.match_metrics.recovery.catalog_funcs)</a>
 </li>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot">(clevar.match_metrics.scaling.ArrayFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.plot">(in module clevar.match_metrics.recovery.funcs)</a>
 </li>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot">(in module clevar.match_metrics.scaling.array_funcs)</a>
 </li>
-        <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.plot">(in module clevar.match_metrics.recovery)</a>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.ArrayFuncs.plot2D">plot2D() (clevar.match_metrics.recovery.ArrayFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.recovery.array_funcs.html#clevar.match_metrics.recovery.array_funcs.plot2D">plot2D() (in module clevar.match_metrics.recovery.array_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.ClCatalogFuncs.plot2D">(clevar.match_metrics.recovery.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.recovery.catalog_funcs.html#clevar.match_metrics.recovery.catalog_funcs.plot2D">(in module clevar.match_metrics.recovery.catalog_funcs)</a>
 </li>
-        <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.plot2D">(in module clevar.match_metrics.recovery)</a>
-</li>
-      </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_color">plot_color() (clevar.match_metrics.scaling.ArrayFuncs method)</a>
-
-      <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_color">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.plot2D">(in module clevar.match_metrics.recovery.funcs)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_color_panel">plot_color_panel() (clevar.match_metrics.scaling.ArrayFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_density">plot_density() (in module clevar.match_metrics.scaling.array_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_color_panel">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_density">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_density">plot_density() (clevar.match_metrics.scaling.ArrayFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_density_dist">plot_density_dist() (in module clevar.match_metrics.scaling.array_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_density">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_density_dist">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_density_dist">plot_density_dist() (clevar.match_metrics.scaling.ArrayFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_density_metrics">plot_density_metrics() (in module clevar.match_metrics.scaling.array_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_density_dist">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_density_metrics">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
+</li>
+      </ul></li>
+      <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_density_panel">plot_density_panel() (in module clevar.match_metrics.scaling.array_funcs)</a>
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_density_panel">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_density_metrics">plot_density_metrics() (clevar.match_metrics.scaling.ArrayFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_dist">plot_dist() (in module clevar.match_metrics.scaling.array_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_density_metrics">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_dist">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_density_panel">plot_density_panel() (clevar.match_metrics.scaling.ArrayFuncs method)</a>
-
-      <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_density_panel">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
-</li>
-      </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_dist">plot_dist() (clevar.match_metrics.scaling.ArrayFuncs method)</a>
-
-      <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_dist">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
-</li>
-      </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_dist_self">plot_dist_self() (clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_dist_self">plot_dist_self() (in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.plot_hist_line">plot_hist_line() (in module clevar.match_metrics.plot_helper)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_metrics">plot_metrics() (clevar.match_metrics.scaling.ArrayFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.plot_histograms">plot_histograms() (in module clevar.match_metrics.plot_helper)</a>
+</li>
+      <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_metrics">plot_metrics() (in module clevar.match_metrics.scaling.array_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_metrics">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_metrics">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.ArrayFuncs.plot_panel">plot_panel() (clevar.match_metrics.recovery.ArrayFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.recovery.array_funcs.html#clevar.match_metrics.recovery.array_funcs.plot_panel">plot_panel() (in module clevar.match_metrics.recovery.array_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.ClCatalogFuncs.plot_panel">(clevar.match_metrics.recovery.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.recovery.catalog_funcs.html#clevar.match_metrics.recovery.catalog_funcs.plot_panel">(in module clevar.match_metrics.recovery.catalog_funcs)</a>
 </li>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ArrayFuncs.plot_panel">(clevar.match_metrics.scaling.ArrayFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.plot_panel">(in module clevar.match_metrics.recovery.funcs)</a>
 </li>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.ClCatalogFuncs.plot_panel">(clevar.match_metrics.scaling.ClCatalogFuncs method)</a>
+        <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_panel">(in module clevar.match_metrics.scaling.array_funcs)</a>
 </li>
-        <li><a href="api/clevar.match_metrics.recovery.html#clevar.match_metrics.recovery.plot_panel">(in module clevar.match_metrics.recovery)</a>
+        <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_panel">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
       <li><a href="api/clevar.match.parent.html#clevar.match.parent.Match.prep_cat_for_match">prep_cat_for_match() (clevar.match.parent.Match method)</a>
@@ -944,33 +1012,33 @@
 </li>
       <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.read_yaml">read_yaml() (in module clevar.yaml.helper_funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.distances.html#clevar.match_metrics.distances.ClCatalogFuncs.redshift">redshift() (clevar.match_metrics.distances.ClCatalogFuncs method)</a>
+      <li><a href="api/clevar.match_metrics.distances.catalog_funcs.html#clevar.match_metrics.distances.catalog_funcs.redshift">redshift() (in module clevar.match_metrics.distances.catalog_funcs)</a>
 
       <ul>
-        <li><a href="api/clevar.match_metrics.distances.html#clevar.match_metrics.distances.redshift">(in module clevar.match_metrics.distances)</a>
+        <li><a href="api/clevar.match_metrics.distances.funcs.html#clevar.match_metrics.distances.funcs.redshift">(in module clevar.match_metrics.distances.funcs)</a>
 </li>
-        <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift">(in module clevar.match_metrics.scaling)</a>
+        <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift">(in module clevar.match_metrics.scaling.funcs)</a>
 </li>
       </ul></li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_density">redshift_density() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_density">redshift_density() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_density_dist">redshift_density_dist() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_density_dist">redshift_density_dist() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_density_masspanel">redshift_density_masspanel() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_density_masspanel">redshift_density_masspanel() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_density_metrics">redshift_density_metrics() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_density_metrics">redshift_density_metrics() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_dist">redshift_dist() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_dist">redshift_dist() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_dist_self">redshift_dist_self() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_dist_self">redshift_dist_self() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_masscolor">redshift_masscolor() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_masscolor">redshift_masscolor() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_masspanel">redshift_masspanel() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_masspanel">redshift_masspanel() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
-      <li><a href="api/clevar.match_metrics.scaling.html#clevar.match_metrics.scaling.redshift_metrics">redshift_metrics() (in module clevar.match_metrics.scaling)</a>
+      <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_metrics">redshift_metrics() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
       <li><a href="api/clevar.catalog.html#clevar.catalog.Catalog.remove_multiple_duplicates">remove_multiple_duplicates() (clevar.catalog.Catalog method)</a>
 </li>

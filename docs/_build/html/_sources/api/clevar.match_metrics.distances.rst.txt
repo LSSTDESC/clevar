@@ -1,7 +1,16 @@
-clevar.match\_metrics.distances module
-======================================
+clevar.match\_metrics.distances package
+=======================================
 
 .. automodule:: clevar.match_metrics.distances
    :members:
    :undoc-members:
    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   clevar.match_metrics.distances.catalog_funcs
+   clevar.match_metrics.distances.funcs

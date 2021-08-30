@@ -1,0 +1,7 @@
+clevar.match\_metrics.scaling.array\_funcs module
+=================================================
+
+.. automodule:: clevar.match_metrics.scaling.array_funcs
+   :members:
+   :undoc-members:
+   :show-inheritance:

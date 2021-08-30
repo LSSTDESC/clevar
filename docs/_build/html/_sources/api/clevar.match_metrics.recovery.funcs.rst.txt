@@ -1,0 +1,7 @@
+clevar.match\_metrics.recovery.funcs module
+===========================================
+
+.. automodule:: clevar.match_metrics.recovery.funcs
+   :members:
+   :undoc-members:
+   :show-inheritance:

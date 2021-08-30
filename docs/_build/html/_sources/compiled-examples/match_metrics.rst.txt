@@ -26,6 +26,14 @@ Generate random data and add to catalog
     from support import gen_cluster
     input1, input2 = gen_cluster()
 
+
+.. parsed-literal::
+
+    Initial number of clusters (logM>12.48): 2,740
+    Clusters in catalog1: 835
+    Clusters in catalog2: 928
+
+
 .. code:: ipython3
 
     from clevar import ClCatalog
@@ -81,23 +89,23 @@ Match catalogs
     
     ## Multiple match (catalog 1)
     Finding candidates (Cat1)
-    * 400/700 objects matched.
+    * 719/835 objects matched.
     
     ## Multiple match (catalog 2)
     Finding candidates (Cat2)
-    * 400/700 objects matched.
+    * 719/928 objects matched.
     
     ## Finding unique matches of catalog 1
     Unique Matches (Cat1)
-    * 400/700 objects matched.
+    * 719/835 objects matched.
     
     ## Finding unique matches of catalog 2
     Unique Matches (Cat2)
-    * 400/700 objects matched.
+    * 719/928 objects matched.
     Cross Matches (Cat1)
-    * 400/700 objects matched.
+    * 719/835 objects matched.
     Cross Matches (Cat2)
-    * 400/700 objects matched.
+    * 719/928 objects matched.
 
 
 Recovery rate
@@ -111,11 +119,6 @@ multiple lines - Multiple panels - 2D color map
 
     from clevar.match_metrics import recovery
 
-.. code:: ipython3
-
-    zbins = np.linspace(0, 2, 6)
-    mbins = np.logspace(13, 14, 5)
-
 Simple plot
 ~~~~~~~~~~~
 
@@ -124,18 +127,20 @@ They can be displayed as a continuous line or with steps:
 
 .. code:: ipython3
 
-    ax = recovery.plot(c1, 'cross', zbins, mbins)
+    zbins = np.linspace(0, 2, 21)
+    mbins = np.logspace(13, 14, 5)
+    info = recovery.plot(c1, 'cross', zbins, mbins)
     plt.show()
-    ax = recovery.plot(c1, 'cross', zbins, mbins, shape='line')
+    info = recovery.plot(c1, 'cross', zbins, mbins, shape='line')
     plt.show()
 
 
 
-.. image:: match_metrics_files/match_metrics_13_0.png
+.. image:: match_metrics_files/match_metrics_12_0.png
 
 
 
-.. image:: match_metrics_files/match_metrics_13_1.png
+.. image:: match_metrics_files/match_metrics_12_1.png
 
 
 They can also be transposed to be shown as a function of mass in
@@ -143,12 +148,39 @@ redshift bins.
 
 .. code:: ipython3
 
-    ax = recovery.plot(c1, 'cross', zbins, mbins,
-                  shape='line', transpose=True)
+    zbins = np.linspace(0, 2, 5)
+    mbins = np.logspace(13, 14, 20)
+    info = recovery.plot(c1, 'cross', zbins, mbins,
+                         shape='line', transpose=True)
 
 
 
-.. image:: match_metrics_files/match_metrics_15_0.png
+.. image:: match_metrics_files/match_metrics_14_0.png
+
+
+The full information of the recovery rate histogram in a dictionay
+containing:
+
+-  ``data``: Binned data used in the plot. It has the sections:
+
+   -  ``recovery``: Recovery rate binned with (bin1, bin2).
+      bins where no cluster was found have nan value.
+   -  ``edges1``: The bin edges along the first dimension.
+   -  ``edges2``: The bin edges along the second dimension.
+   -  ``counts``: Counts of all clusters in bins.
+   -  ``matched``: Counts of matched clusters in bins.
+
+.. code:: ipython3
+
+    info['data'].keys()
+
+
+
+
+.. parsed-literal::
+
+    dict_keys(['recovery', 'edges1', 'edges2', 'matched', 'counts'])
+
 
 
 Panels plots
@@ -158,16 +190,21 @@ You can also have a panel for each bin:
 
 .. code:: ipython3
 
-    f, axes = recovery.plot_panel(c1, 'cross', zbins, mbins)
-    f, axes = recovery.plot_panel(c1, 'cross', zbins, mbins, transpose=True)
+    zbins = np.linspace(0, 2, 21)
+    mbins = np.logspace(13, 14, 5)
+    info = recovery.plot_panel(c1, 'cross', zbins, mbins)
+    
+    zbins = np.linspace(0, 2, 5)
+    mbins = np.logspace(13, 14, 20)
+    info = recovery.plot_panel(c1, 'cross', zbins, mbins, transpose=True)
 
 
 
-.. image:: match_metrics_files/match_metrics_17_0.png
+.. image:: match_metrics_files/match_metrics_18_0.png
 
 
 
-.. image:: match_metrics_files/match_metrics_17_1.png
+.. image:: match_metrics_files/match_metrics_18_1.png
 
 
 2D plots
@@ -175,18 +212,21 @@ You can also have a panel for each bin:
 
 .. code:: ipython3
 
-    ax = recovery.plot2D(c1, 'cross', zbins, mbins)
+    zbins = np.linspace(0, 2, 10)
+    mbins = np.logspace(13, 14, 5)
+    
+    info = recovery.plot2D(c1, 'cross', zbins, mbins)
     plt.show()
-    ax = recovery.plot2D(c1, 'cross', zbins, mbins,
-                    add_num=True, num_kwargs={'fontsize':15})
+    info = recovery.plot2D(c1, 'cross', zbins, mbins,
+                           add_num=True, num_kwargs={'fontsize':15})
 
 
 
-.. image:: match_metrics_files/match_metrics_19_0.png
+.. image:: match_metrics_files/match_metrics_20_0.png
 
 
 
-.. image:: match_metrics_files/match_metrics_19_1.png
+.. image:: match_metrics_files/match_metrics_20_1.png
 
 
 Distances of matching
@@ -202,17 +242,8 @@ bins:
 
 .. code:: ipython3
 
-    ax = distances.central_position(c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees')
-
-
-
-.. image:: match_metrics_files/match_metrics_22_0.png
-
-
-.. code:: ipython3
-
-    ax = distances.central_position(c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees',
-                                    quantity_bins='mass', bins=mbins, log_quantity=True)
+    info = distances.central_position(
+        c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees')
 
 
 
@@ -221,8 +252,9 @@ bins:
 
 .. code:: ipython3
 
-    ax = distances.central_position(c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees',
-                                    quantity_bins='z', bins=zbins[::2], log_quantity=False)
+    info = distances.central_position(
+        c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees',                     
+        quantity_bins='mass', bins=mbins, log_quantity=True)
 
 
 
@@ -231,7 +263,9 @@ bins:
 
 .. code:: ipython3
 
-    ax = distances.redshift(c1, c2, 'cross', redshift_bins=20, normalize='cat1')
+    info = distances.central_position(
+        c1, c2, 'cross', radial_bins=20, radial_bin_units='degrees',
+        quantity_bins='z', bins=zbins[::2], log_quantity=False)
 
 
 
@@ -240,8 +274,7 @@ bins:
 
 .. code:: ipython3
 
-    ax = distances.redshift(c1, c2, 'cross', redshift_bins=20, normalize='cat1',
-                            quantity_bins='mass', bins=mbins, log_quantity=True)
+    info = distances.redshift(c1, c2, 'cross', redshift_bins=20, normalize='cat1')
 
 
 
@@ -250,12 +283,49 @@ bins:
 
 .. code:: ipython3
 
-    ax = distances.redshift(c1, c2, 'cross', redshift_bins=20, normalize='cat1',
-                            quantity_bins='z', bins=zbins[::2], log_quantity=False)
+    info = distances.redshift(
+        c1, c2, 'cross', redshift_bins=20, normalize='cat1',
+        quantity_bins='mass', bins=mbins, log_quantity=True)
 
 
 
 .. image:: match_metrics_files/match_metrics_27_0.png
+
+
+.. code:: ipython3
+
+    info = distances.redshift(
+        c1, c2, 'cross', redshift_bins=20, normalize='cat1',
+        quantity_bins='z', bins=zbins[::2], log_quantity=False)
+
+
+
+.. image:: match_metrics_files/match_metrics_28_0.png
+
+
+The full information of the distances is outputed in a dictionary
+containing:
+
+-  ``distances``: values of distances.
+
+-  ``data``: Binned data used in the plot. It has the sections:
+
+   -  ``hist``: Binned distances with (distance_bins, bin2). bins where
+      no cluster was found have nan value.
+   -  ``distance_bins``: The bin edges for distances.
+   -  ``bins2`` (optional): The bin edges along the second dimension.
+
+.. code:: ipython3
+
+    info.keys()
+
+
+
+
+.. parsed-literal::
+
+    dict_keys(['distances', 'data', 'ax'])
+
 
 
 Scaling Relations
@@ -273,11 +343,11 @@ Simple plot
 
 .. code:: ipython3
 
-    ax = scaling.redshift(c1, c2, 'cross')
+    info = scaling.redshift(c1, c2, 'cross')
 
 
 
-.. image:: match_metrics_files/match_metrics_32_0.png
+.. image:: match_metrics_files/match_metrics_35_0.png
 
 
 Color points by :math:`\log(M)` value
@@ -285,11 +355,11 @@ Color points by :math:`\log(M)` value
 
 .. code:: ipython3
 
-    ax, cb = scaling.redshift_masscolor(c1, c2, 'cross', add_err=True)
+    info = scaling.redshift_masscolor(c1, c2, 'cross', add_err=True)
 
 
 
-.. image:: match_metrics_files/match_metrics_34_0.png
+.. image:: match_metrics_files/match_metrics_37_0.png
 
 
 Color points by density at plot
@@ -297,28 +367,7 @@ Color points by density at plot
 
 .. code:: ipython3
 
-    ax, cb = scaling.redshift_density(c1, c2, 'cross', add_err=True)
-
-
-
-.. image:: match_metrics_files/match_metrics_36_0.png
-
-
-.. code:: ipython3
-
-    ax, cb = scaling.redshift_density(c1, c2, 'cross', ax_rotation=45)
-
-
-
-.. image:: match_metrics_files/match_metrics_37_0.png
-
-
-Evaluate metrics of the distribution
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code:: ipython3
-
-    fig, axes = scaling.redshift_metrics(c1, c2, 'cross')
+    info = scaling.redshift_density(c1, c2, 'cross', add_err=True)
 
 
 
@@ -327,7 +376,7 @@ Evaluate metrics of the distribution
 
 .. code:: ipython3
 
-    fig, axes = scaling.redshift_density_metrics(c1, c2, 'cross', ax_rotation=45)
+    info = scaling.redshift_density(c1, c2, 'cross', ax_rotation=45)
 
 
 
@@ -339,7 +388,7 @@ Split data into mass bins
 
 .. code:: ipython3
 
-    fig, axes = scaling.redshift_masspanel(c1, c2, 'cross', add_err=True)
+    info = scaling.redshift_masspanel(c1, c2, 'cross', add_err=True)
 
 
 
@@ -351,11 +400,98 @@ Split data into mass bins and color by density
 
 .. code:: ipython3
 
-    fig, axes = scaling.redshift_density_masspanel(c1, c2, 'cross', add_err=True)
+    info = scaling.redshift_density_masspanel(c1, c2, 'cross', add_err=True)
 
 
 
 .. image:: match_metrics_files/match_metrics_44_0.png
+
+
+Evaluate metrics of the distribution
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    info = scaling.redshift_metrics(c1, c2, 'cross')
+
+
+
+.. image:: match_metrics_files/match_metrics_46_0.png
+
+
+.. code:: ipython3
+
+    info = scaling.redshift_density_metrics(c1, c2, 'cross', ax_rotation=45)
+
+
+
+.. image:: match_metrics_files/match_metrics_47_0.png
+
+
+.. code:: ipython3
+
+    info = scaling.redshift_density_dist(c1, c2, 'cross', ax_rotation=45, add_err=False)
+
+
+
+.. image:: match_metrics_files/match_metrics_48_0.png
+
+
+All of these functions with scatter plot can also fit a relation:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    info = scaling.redshift_density_metrics(
+        c1, c2, 'cross', ax_rotation=45,
+        add_fit=True, fit_bins1=20)
+
+
+
+.. image:: match_metrics_files/match_metrics_50_0.png
+
+
+The full information of the scaling relation is outputed to a dictionay
+containing:
+
+-  ``binned_data`` (optional): input data for fitting, with values:
+
+   -  ``x``: x values in fit (log of values if log=True).
+   -  ``y``: y values in fit (log of values if log=True).
+   -  ``y_err``: errorbar on y values (error_log if log=True).
+
+-  ``fit`` (optional): fitting output dictionary, with values:
+
+   -  ``pars``: fitted parameter.
+   -  ``cov``: covariance of fitted parameters.
+   -  ``func``: fitting function with fitted parameter.
+   -  ``func_plus``: fitting function with fitted parameter plus 1x
+      scatter.
+   -  ``func_minus``: fitting function with fitted parameter minus 1x
+      scatter.
+   -  ``func_scat``: scatter of fited function.
+   -  ``func_dist``: ``P(y|x)`` - Probability of having y given a value
+      for x, assumes normal distribution and uses scatter of the fitted
+      function.
+   -  ``func_scat_interp``: interpolated scatter from data.
+   -  ``func_dist_interp``: ``P(y|x)`` using interpolated scatter.
+
+-  ``plots`` (optional): additional plots:
+
+   -  ``fit``: fitted data
+   -  ``errorbar``: binned data
+
+.. code:: ipython3
+
+    info['fit']['pars']
+
+
+
+
+.. parsed-literal::
+
+    array([ 1.00479763, -0.00409297])
+
 
 
 Evaluate the distribution
@@ -367,20 +503,21 @@ catalogs
 .. code:: ipython3
 
     %%time
-    fig, axes = scaling.redshift_dist_self(c2, redshift_bins_dist=21,
-                                  mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e15],
-                                  redshift_bins=4, shape='line',
-                                  fig_kwargs={'figsize':(15, 6)})
+    info = scaling.redshift_dist_self(
+        c2, redshift_bins_dist=21,
+        mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e15],
+        redshift_bins=4, shape='line',
+        fig_kwargs={'figsize':(15, 6)})
 
 
 .. parsed-literal::
 
-    CPU times: user 196 ms, sys: 212 ms, total: 408 ms
-    Wall time: 137 ms
+    CPU times: user 260 ms, sys: 186 ms, total: 447 ms
+    Wall time: 219 ms
 
 
 
-.. image:: match_metrics_files/match_metrics_46_1.png
+.. image:: match_metrics_files/match_metrics_54_1.png
 
 
 Compare with the distribution on the other catalog
@@ -388,20 +525,21 @@ Compare with the distribution on the other catalog
 .. code:: ipython3
 
     %%time
-    fig, axes = scaling.redshift_dist(c1, c2, 'cross', redshift_bins_dist=21,
-                                  mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e15],
-                                  redshift_bins=4, shape='line',
-                                  fig_kwargs={'figsize':(15, 6)})
+    info = scaling.redshift_dist(
+        c1, c2, 'cross', redshift_bins_dist=21,
+        mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e15],
+        redshift_bins=4, shape='line',
+        fig_kwargs={'figsize':(15, 6)})
 
 
 .. parsed-literal::
 
-    CPU times: user 430 ms, sys: 233 ms, total: 663 ms
-    Wall time: 399 ms
+    CPU times: user 185 ms, sys: 217 ms, total: 403 ms
+    Wall time: 138 ms
 
 
 
-.. image:: match_metrics_files/match_metrics_48_1.png
+.. image:: match_metrics_files/match_metrics_56_1.png
 
 
 Mass plots
@@ -412,11 +550,11 @@ Simple plot
 
 .. code:: ipython3
 
-    ax = scaling.mass(c1, c2, 'cross', add_err=True, add_fit=True, fit_bins1=30)
+    info = scaling.mass(c1, c2, 'cross', add_err=True)
 
 
 
-.. image:: match_metrics_files/match_metrics_51_0.png
+.. image:: match_metrics_files/match_metrics_59_0.png
 
 
 Color points by redshift value
@@ -424,11 +562,11 @@ Color points by redshift value
 
 .. code:: ipython3
 
-    ax, cb = scaling.mass_zcolor(c1, c2, 'cross', add_err=True)
+    info = scaling.mass_zcolor(c1, c2, 'cross', add_err=True)
 
 
 
-.. image:: match_metrics_files/match_metrics_53_0.png
+.. image:: match_metrics_files/match_metrics_61_0.png
 
 
 Color points by density at plot
@@ -436,11 +574,11 @@ Color points by density at plot
 
 .. code:: ipython3
 
-    ax, cb = scaling.mass_density(c1, c2, 'cross', add_err=True)
+    info = scaling.mass_density(c1, c2, 'cross', add_err=True)
 
 
 
-.. image:: match_metrics_files/match_metrics_55_0.png
+.. image:: match_metrics_files/match_metrics_63_0.png
 
 
 Split data into redshift bins
@@ -448,11 +586,11 @@ Split data into redshift bins
 
 .. code:: ipython3
 
-    fig, axes = scaling.mass_zpanel(c1, c2, 'cross', add_err=True)
+    info = scaling.mass_zpanel(c1, c2, 'cross', add_err=True)
 
 
 
-.. image:: match_metrics_files/match_metrics_57_0.png
+.. image:: match_metrics_files/match_metrics_65_0.png
 
 
 Split data into redshift bins and color by density
@@ -460,11 +598,11 @@ Split data into redshift bins and color by density
 
 .. code:: ipython3
 
-    fig, axes = scaling.mass_density_zpanel(c1, c2, 'cross', add_err=True)
+    info = scaling.mass_density_zpanel(c1, c2, 'cross', add_err=True)
 
 
 
-.. image:: match_metrics_files/match_metrics_59_0.png
+.. image:: match_metrics_files/match_metrics_67_0.png
 
 
 Evaluate metrics of the distribution
@@ -472,21 +610,65 @@ Evaluate metrics of the distribution
 
 .. code:: ipython3
 
-    fig, axes = scaling.mass_metrics(c1, c2, 'cross')
+    info = scaling.mass_metrics(c1, c2, 'cross')
 
 
 
-.. image:: match_metrics_files/match_metrics_61_0.png
+.. image:: match_metrics_files/match_metrics_69_0.png
 
 
 .. code:: ipython3
 
-    fig, axes = scaling.mass_density_metrics(c1, c2, 'cross', ax_rotation=45)
+    info = scaling.mass_density_metrics(c1, c2, 'cross', ax_rotation=45)
 
 
 
-.. image:: match_metrics_files/match_metrics_62_0.png
+.. image:: match_metrics_files/match_metrics_70_0.png
 
+
+.. code:: ipython3
+
+    info = scaling.mass_density_dist(c1, c2, 'cross', ax_rotation=45,
+                                     add_err=False, plt_kwargs={'s':5})
+
+
+
+.. image:: match_metrics_files/match_metrics_71_0.png
+
+
+All of these functions with scatter plot can also fit a relation:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    info = scaling.mass_density_metrics(
+        c1, c2, 'cross', ax_rotation=45,
+        add_fit=True, fit_bins1=8)
+
+
+
+.. image:: match_metrics_files/match_metrics_73_0.png
+
+
+The full information of the scaling relation is outputed to a dictionay
+containing:
+
+-  ``fit`` (optional): fitting output dictionary, with values:
+
+   -  ``pars``: fitted parameter.
+   -  ``cov``: covariance of fitted parameters.
+   -  ``func``: fitting function with fitted parameter.
+   -  ``func_plus``: fitting function with fitted parameter plus 1x
+      scatter.
+   -  ``func_minus``: fitting function with fitted parameter minus 1x
+      scatter.
+   -  ``func_scat``: scatter of fited function.
+   -  ``func_chi``: sqrt of chi_square(x, y) for the fitted function.
+
+-  ``plots`` (optional): additional plots:
+
+   -  ``fit``: fitted data
+   -  ``errorbar``: binned data
 
 Evaluate the distribution
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -497,20 +679,21 @@ catalogs
 .. code:: ipython3
 
     %%time
-    fig, axes = scaling.mass_dist_self(c2, mass_bins_dist=21,
-                                  mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e14, 1e15],
-                                  redshift_bins=4, shape='line',
-                                  fig_kwargs={'figsize':(15, 6)})
+    info = scaling.mass_dist_self(
+        c2, mass_bins_dist=21,
+        mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e14, 1e15],
+        redshift_bins=4, shape='line',
+        fig_kwargs={'figsize':(15, 6)})
 
 
 .. parsed-literal::
 
-    CPU times: user 196 ms, sys: 156 ms, total: 352 ms
-    Wall time: 134 ms
+    CPU times: user 175 ms, sys: 206 ms, total: 382 ms
+    Wall time: 131 ms
 
 
 
-.. image:: match_metrics_files/match_metrics_64_1.png
+.. image:: match_metrics_files/match_metrics_76_1.png
 
 
 Compare with the distribution on the other catalog
@@ -518,18 +701,20 @@ Compare with the distribution on the other catalog
 .. code:: ipython3
 
     %%time
-    fig, axes = scaling.mass_dist(c1, c2, 'cross', mass_bins_dist=21,
-                                  mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e14, 1e15],
-                                  redshift_bins=4, shape='line',
-                                  fig_kwargs={'figsize':(15, 6)})
+    info = scaling.mass_dist(
+        c1, c2, 'cross', mass_bins_dist=21,
+        mass_bins=[10**13.0, 10**13.2, 10**13.5, 1e14, 1e15],
+        redshift_bins=4, shape='line',
+        fig_kwargs={'figsize':(15, 6)})
 
 
 .. parsed-literal::
 
-    CPU times: user 219 ms, sys: 200 ms, total: 419 ms
-    Wall time: 154 ms
+    CPU times: user 201 ms, sys: 211 ms, total: 412 ms
+    Wall time: 150 ms
 
 
 
-.. image:: match_metrics_files/match_metrics_66_1.png
+.. image:: match_metrics_files/match_metrics_78_1.png
+
 
