@@ -1,0 +1,1517 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.match_metrics.scaling.funcs module &mdash; ClEvaR 0.7.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="clevar.match_metrics.plot_helper module" href="clevar.match_metrics.plot_helper.html" />
+    <link rel="prev" title="clevar.match_metrics.scaling.catalog_funcs module" href="clevar.match_metrics.scaling.catalog_funcs.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/footprint.html">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="clevar.match_metrics.html">clevar.match_metrics package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.array_funcs.html">clevar.match_metrics.scaling.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.catalog_funcs.html">clevar.match_metrics.scaling.catalog_funcs module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">clevar.match_metrics.scaling.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="clevar.match_metrics.html">clevar.match_metrics package</a> &raquo;</li>
+        
+          <li><a href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a> &raquo;</li>
+        
+      <li>clevar.match_metrics.scaling.funcs module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/clevar.match_metrics.scaling.funcs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-clevar.match_metrics.scaling.funcs">
+<span id="clevar-match-metrics-scaling-funcs-module"></span><h1>clevar.match_metrics.scaling.funcs module<a class="headerlink" href="#module-clevar.match_metrics.scaling.funcs" title="Permalink to this headline">¶</a></h1>
+<p>&#64;file clevar/match_metrics/scaling/funcs.py</p>
+<p>Main scaling functions for mass and redshift plots,
+wrapper of catalog_funcs functions</p>
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on input</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘mass’]/cat2.labels[‘mass’]).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Other Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>add_bindata</strong> (<em>bool</em>) – Plot binned data used for fit (default=False).</p></li>
+<li><p><strong>add_fit</strong> (<em>bool</em>) – Fit and plot binned dat (default=False).</p></li>
+<li><p><strong>add_fit_err</strong> (<em>bool</em>) – Use mass errors of catalog 2 in fit (default=True).</p></li>
+<li><p><strong>fit_log</strong> (<em>bool</em>) – Bin and fit in log values (default=True).</p></li>
+<li><p><strong>fit_statistics</strong> (<em>str</em>) –</p>
+<p>Statistics to be used in fit (default=mean). Options are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>individual</cite> - Use each point.</p></li>
+<li><p><cite>mode</cite> - Use mode of catalog 2 mass distribution in each catalog 1 mass bin,            requires fit_bins2.</p></li>
+<li><p><cite>mean</cite> - Use mean of catalog 2 mass distribution in each catalog 1 mass bin,            requires fit_bins2.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>fit_bins1</strong> (<em>array, None</em>) – Bins for mass of catalog 1 (default=10).</p></li>
+<li><p><strong>fit_bins2</strong> (<em>array, None</em>) – Bins for mass of catalog 2 (default=30).</p></li>
+<li><p><strong>fit_legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend.</p></li>
+<li><p><strong>fit_bindata_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar.</p></li>
+<li><p><strong>fit_plt_kwargs</strong> (<em>dict</em>) – Additional arguments for plot of fit pylab.scatter.</p></li>
+<li><p><strong>fit_label_components</strong> (<em>tuple (of strings)</em>) – Names of fitted components in fit line label, default=(xlabel, ylabel).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>ax</cite>: ax used in the plot.</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting, with values:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>x</cite>: x values in fit (log of values if log=True).</p></li>
+<li><p><cite>y</cite>: y values in fit (log of values if log=True).</p></li>
+<li><p><cite>y_err</cite>: errorbar on y values (error_log if log=True).</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary, with values:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>pars</cite>: fitted parameter.</p></li>
+<li><p><cite>cov</cite>: covariance of fitted parameters.</p></li>
+<li><p><cite>func</cite>: fitting function with fitted parameter.</p></li>
+<li><p><cite>func_plus</cite>: fitting function with fitted parameter plus 1x scatter.</p></li>
+<li><p><cite>func_minus</cite>: fitting function with fitted parameter minus 1x scatter.</p></li>
+<li><p><cite>func_scat</cite>: scatter of fited function.</p></li>
+<li><p><cite>func_dist</cite>: <cite>P(y|x)</cite> - Probability of having y given a value for x, assumes                 normal distribution and uses scatter of the fitted function.</p></li>
+<li><p><cite>func_scat_interp</cite>: interpolated scatter from data.</p></li>
+<li><p><cite>func_dist_interp</cite>: <cite>P(y|x)</cite> using interpolated scatter.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><cite>plots</cite> (optional): additional plots:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fit</cite>: fitted data</p></li>
+<li><p><cite>errorbar</cite>: binned data</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_density">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_density</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on point density</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘mass’]/cat2.labels[‘mass’]).</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>ax</cite>: ax used in the plot.</p></li>
+<li><p><cite>ax_cb</cite> (optional): ax of colorbar</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_density_dist">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_density_dist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_density_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_density_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on point density with scatter and bias panels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>col</strong> (<em>str</em>) – Name of column to be plotted</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
+<li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: dictionary with each ax of the plot.</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_density_metrics">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_density_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_density_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_density_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on point density with scatter and bias panels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2.</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2.</p></li>
+<li><p><strong>metrics_mode</strong> (<em>str</em>) – <p>Mode to run metrics (default=`log`). Options are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>simple</cite> : metrics for <cite>values2</cite>.</p></li>
+<li><p><cite>log</cite> : metrics for <cite>log10(values2)</cite>.</p></li>
+<li><p><cite>diff</cite> : metrics for <cite>values2-values1</cite>.</p></li>
+<li><p><cite>diff_log</cite> : metrics for <cite>log10(values2)-log10(values1)</cite>.</p></li>
+<li><p><cite>diff_z</cite> : metrics for <cite>(values2-values1)/(1+values1)</cite>.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>metrics</strong> (<em>list</em>) – <p>List of mettrics to be plotted (default=[<cite>std</cite>]). Possibilities are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>mean</cite> : compute the mean of values for points within each bin.</p></li>
+<li><p><cite>std</cite> : compute the standard deviation within each bin.</p></li>
+<li><p><cite>median</cite> : compute the median of values for points within each bin.</p></li>
+<li><p><cite>count</cite> : compute the count of points within each bin.</p></li>
+<li><p><cite>sum</cite> : compute the sum of values for points within each bin.</p></li>
+<li><p><cite>min</cite> : compute the minimum of values for points within each bin.</p></li>
+<li><p><cite>max</cite> : compute the maximum of values for point within each bin.</p></li>
+<li><p><cite>p_#</cite> : compute half the width where a percentile of data is found. Number must be
+between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
+<li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: dictionary with each ax of the plot.</p></li>
+<li><p><cite>metrics</cite>: dictionary with the plots for each metric.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_density_zpanel">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_density_zpanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_density_zpanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_density_zpanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on point density with panels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>redshift_bins</strong> (<em>int</em><em>, </em><em>array</em><em>, </em><em>int</em>) – Redshift bins to make panels</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>panel_cat1</strong> (<em>bool</em>) – Used catalog 1 for col_panel. If false uses catalog 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>panel_kwargs_errlist</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.errorbar).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
+<li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘mass’]/cat2.labels[‘mass’]).</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+<li><p><cite>ax_cb</cite> (optional): ax of colorbar</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_dist">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_dist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">mass_bins_dist</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">mass_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot distribution of a cat1 mass, binned by the cat2 mass (in panels),
+with option for cat2 redshift bins (in lines).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>mass_bins_dist</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for distribution of the cat1 mass</p></li>
+<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for cat2 mass</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for cat2 redshift</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em>) – Invert lines and panels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>line_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
+Must have same size as len(bins_aux)-1</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>add_panel_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
+<li><p><strong>panel_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>add_line_label</strong> (<em>bool</em>) – Add bin label to line</p></li>
+<li><p><strong>line_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_dist_self">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_dist_self</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">mass_bins_dist</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">mass_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mask</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_dist_self"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_dist_self" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot distribution of a cat mass, binned by mass (in panels),
+with option for redshift bins (in lines).
+Is is useful to compare with mass_dist results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – Input Catalog</p></li>
+<li><p><strong>mass_bins_dist</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for distribution of mass</p></li>
+<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for mass panels</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em>) – Invert lines and panels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>line_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
+Must have same size as len(bins_aux)-1</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>add_panel_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
+<li><p><strong>panel_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>add_line_label</strong> (<em>bool</em>) – Add bin label to line</p></li>
+<li><p><strong>line_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_metrics">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2.</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for mass of catalogs 1 and 2.</p></li>
+<li><p><strong>metrics_mode</strong> (<em>str</em>) – <p>Mode to run metrics (default=`log`). Options are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>simple</cite> : metrics for <cite>values2</cite>.</p></li>
+<li><p><cite>log</cite> : metrics for <cite>log10(values2)</cite>.</p></li>
+<li><p><cite>diff</cite> : metrics for <cite>values2-values1</cite>.</p></li>
+<li><p><cite>diff_log</cite> : metrics for <cite>log10(values2)-log10(values1)</cite>.</p></li>
+<li><p><cite>diff_z</cite> : metrics for <cite>(values2-values1)/(1+values1)</cite>.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>metrics</strong> (<em>list</em>) – <p>List of mettrics to be plotted (default=[<cite>std</cite>]). Possibilities are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>mean</cite> : compute the mean of values for points within each bin.</p></li>
+<li><p><cite>std</cite> : compute the standard deviation within each bin.</p></li>
+<li><p><cite>median</cite> : compute the median of values for points within each bin.</p></li>
+<li><p><cite>count</cite> : compute the count of points within each bin.</p></li>
+<li><p><cite>sum</cite> : compute the sum of values for points within each bin.</p></li>
+<li><p><cite>min</cite> : compute the minimum of values for points within each bin.</p></li>
+<li><p><cite>max</cite> : compute the maximum of values for point within each bin.</p></li>
+<li><p><cite>p_#</cite> : compute half the width where a percentile of data is found. Number must be
+between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>label1, label2</strong> (<em>str</em>) – Label for catalog 1/2 masses.</p></li>
+<li><p><strong>scale1, scale2</strong> (<em>str</em>) – Scale of catalog 1/2 masses.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_zcolor">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_zcolor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">color1</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_zcolor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_zcolor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>color1</strong> (<em>bool</em>) – Use catalog 1 for color. If false uses catalog 2</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘mass’]/cat2.labels[‘mass’]).</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+<li><p><cite>ax_cb</cite> (optional): ax of colorbar</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.mass_zpanel">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">mass_zpanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#mass_zpanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.mass_zpanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on input with panels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>redshift_bins</strong> (<em>int</em><em>, </em><em>array</em><em>, </em><em>int</em>) – Redshift bins to make panels</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>panel_cat1</strong> (<em>bool</em>) – Used catalog 1 for col_panel. If false uses catalog 2</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>panel_kwargs_errlist</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.errorbar).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
+<li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘mass’]/cat2.labels[‘mass’]).</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.mass</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.mass</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on input</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘z’]/cat2.labels[‘z’]).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Other Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>add_bindata</strong> (<em>bool</em>) – Plot binned data used for fit (default=False).</p></li>
+<li><p><strong>add_fit</strong> (<em>bool</em>) – Fit and plot binned dat (default=False).</p></li>
+<li><p><strong>add_fit_err</strong> (<em>bool</em>) – Use redshift errors of catalog 2 in fit (default=True).</p></li>
+<li><p><strong>fit_statistics</strong> (<em>str</em>) –</p>
+<p>Statistics to be used in fit (default=mean). Options are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>individual</cite> - Use each point.</p></li>
+<li><p><cite>mode</cite> - Use mode of catalog 2 redshift distribution in each catalog 1 redshift bin,            requires fit_bins2.</p></li>
+<li><p><cite>mean</cite> - Use mean of catalog 2 redshift distribution in each catalog 1 redshift bin,            requires fit_bins2.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>fit_bins1</strong> (<em>array, None</em>) – Bins for redshift of catalog 1 (default=10).</p></li>
+<li><p><strong>fit_bins2</strong> (<em>array, None</em>) – Bins for redshift of catalog 2 (default=30).</p></li>
+<li><p><strong>fit_legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend.</p></li>
+<li><p><strong>fit_bindata_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar.</p></li>
+<li><p><strong>fit_plt_kwargs</strong> (<em>dict</em>) – Additional arguments for plot of fit pylab.scatter.</p></li>
+<li><p><strong>fit_label_components</strong> (<em>tuple (of strings)</em>) – Names of fitted components in fit line label, default=(xlabel, ylabel).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>ax</cite>: ax used in the plot.</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting, with values:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>x</cite>: x values in fit (log of values if log=True).</p></li>
+<li><p><cite>y</cite>: y values in fit (log of values if log=True).</p></li>
+<li><p><cite>y_err</cite>: errorbar on y values (error_log if log=True).</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary, with values:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>pars</cite>: fitted parameter.</p></li>
+<li><p><cite>cov</cite>: covariance of fitted parameters.</p></li>
+<li><p><cite>func</cite>: fitting function with fitted parameter.</p></li>
+<li><p><cite>func_plus</cite>: fitting function with fitted parameter plus 1x scatter.</p></li>
+<li><p><cite>func_minus</cite>: fitting function with fitted parameter minus 1x scatter.</p></li>
+<li><p><cite>func_scat</cite>: scatter of fited function.</p></li>
+<li><p><cite>func_dist</cite>: <cite>P(y|x)</cite> - Probability of having y given a value for x, assumes                 normal distribution and uses scatter of the fitted function.</p></li>
+<li><p><cite>func_scat_interp</cite>: interpolated scatter from data.</p></li>
+<li><p><cite>func_dist_interp</cite>: <cite>P(y|x)</cite> using interpolated scatter.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><cite>plots</cite> (optional): additional plots:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fit</cite>: fitted data</p></li>
+<li><p><cite>errorbar</cite>: binned data</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_density">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_density</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on point density</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>col</strong> (<em>str</em>) – Name of column to be plotted</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘z’]/cat2.labels[‘z’]).</p></li>
+<li><p><strong>xscale, yscale</strong> (<em>str</em>) – Scale for x/y axis.</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>ax</cite>: ax used in the plot.</p></li>
+<li><p><cite>ax_cb</cite> (optional): ax of colorbar</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_density_dist">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_density_dist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_density_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_density_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on point density with scatter and bias panels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>col</strong> (<em>str</em>) – Name of column to be plotted</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>xscale, yscale</strong> (<em>str</em>) – Scale for x/y axis.</p></li>
+<li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
+<li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><strong>vline_kwargs</strong> (<em>dict</em>) – Arguments for vlines marking bins in main plot, used in plt.axvline.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: dictionary with each ax of the plot.</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_density_masspanel">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_density_masspanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">mass_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_density_masspanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_density_masspanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on point density with panels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>mass_bins</strong> (<em>int</em><em>, </em><em>array</em><em>, </em><em>int</em>) – Mass bins to make panels</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>panel_cat1</strong> (<em>bool</em>) – Used catalog 1 for col_panel. If false uses catalog 2</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalogs 1 and 2 (for density colors).</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>panel_kwargs_errlist</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.errorbar).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
+<li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘z’]/cat2.labels[‘z’]).</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+<li><p><cite>ax_cb</cite> (optional): ax of colorbar</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_density_metrics">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_density_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_density_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_density_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on point density with scatter and bias panels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>col</strong> (<em>str</em>) – Name of column to be plotted</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalog 1 and 2.</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalog 1 and 2.</p></li>
+<li><p><strong>metrics_mode</strong> (<em>str</em>) – <p>Mode to run metrics (default=`diff_z`). Options are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>simple</cite> : metrics for <cite>values2</cite>.</p></li>
+<li><p><cite>log</cite> : metrics for <cite>log10(values2)</cite>.</p></li>
+<li><p><cite>diff</cite> : metrics for <cite>values2-values1</cite>.</p></li>
+<li><p><cite>diff_log</cite> : metrics for <cite>log10(values2)-log10(values1)</cite>.</p></li>
+<li><p><cite>diff_z</cite> : metrics for <cite>(values2-values1)/(1+values1)</cite>.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>metrics</strong> (<em>list</em>) – <p>List of mettrics to be plotted (default=[<cite>std.fill</cite>, <cite>mean</cite>]). Possibilities are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>mean</cite> : compute the mean of values for points within each bin.</p></li>
+<li><p><cite>std</cite> : compute the standard deviation within each bin.</p></li>
+<li><p><cite>median</cite> : compute the median of values for points within each bin.</p></li>
+<li><p><cite>count</cite> : compute the count of points within each bin.</p></li>
+<li><p><cite>sum</cite> : compute the sum of values for points within each bin.</p></li>
+<li><p><cite>min</cite> : compute the minimum of values for points within each bin.</p></li>
+<li><p><cite>max</cite> : compute the maximum of values for point within each bin.</p></li>
+<li><p><cite>p_#</cite> : compute half the width where a percentile of data is found. Number must be
+between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.</p></li>
+<li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>xscale, yscale</strong> (<em>str</em>) – Scale for x/y axis.</p></li>
+<li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
+<li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
+and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: dictionary with each ax of the plot.</p></li>
+<li><p><cite>metrics</cite>: dictionary with the plots for each metric.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_dist">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_dist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins_dist</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">mass_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot distribution of a cat1 redshift, binned by the cat2 redshift (in panels),
+with option for cat2 mass bins (in lines).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>redshift_bins_dist</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for distribution of the cat1 redshift</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for cat2 redshift</p></li>
+<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for cat2 mass</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em>) – Invert lines and panels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>line_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
+Must have same size as len(bins_aux)-1</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>add_panel_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
+<li><p><strong>panel_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>add_line_label</strong> (<em>bool</em>) – Add bin label to line</p></li>
+<li><p><strong>line_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_dist_self">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_dist_self</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">redshift_bins_dist</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">mass_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mask</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_dist_self"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_dist_self" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot distribution of a cat redshift, binned by redshift (in panels),
+with option for mass bins (in lines).
+Is is useful to compare with redshift_dist results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – Input Catalog</p></li>
+<li><p><strong>redshift_bins_dist</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for distribution of redshift</p></li>
+<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift panels</p></li>
+<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for mass</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em>) – Invert lines and panels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>line_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
+Must have same size as len(bins_aux)-1</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>add_panel_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
+<li><p><strong>panel_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>add_line_label</strong> (<em>bool</em>) – Add bin label to line</p></li>
+<li><p><strong>line_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_masscolor">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_masscolor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">color1</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_masscolor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_masscolor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>color1</strong> (<em>bool</em>) – Use catalog 1 for color. If false uses catalog 2</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘z’]/cat2.labels[‘z’]).</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>ax</cite>: ax used in the plot.</p></li>
+<li><p><cite>ax_cb</cite> (optional): ax of colorbar</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_masspanel">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_masspanel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">mass_bins</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_masspanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_masspanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatter plot with errorbars and color based on input with panels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>mass_bins</strong> (<em>int</em><em>, </em><em>array</em><em>, </em><em>int</em>) – Mass bins to make panels</p></li>
+<li><p><strong>log_mass</strong> (<em>bool</em>) – Log scale for mass</p></li>
+<li><p><strong>panel_cat1</strong> (<em>bool</em>) – Used catalog 1 for col_panel. If false uses catalog 2</p></li>
+<li><p><strong>add_err</strong> (<em>bool</em>) – Add errorbars</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>panel_kwargs_errlist</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.errorbar).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
+<li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
+<li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
+<li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘z’]/cat2.labels[‘z’]).</p></li>
+<li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+<li><p><cite>binned_data</cite> (optional): input data for fitting             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>fit</cite> (optional): fitting output dictionary             (see <cite>scaling.redshift</cite> for more info).</p></li>
+<li><p><cite>plots</cite> (optional): fit and binning plots             (see <cite>scaling.redshift</cite> for more info).</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.scaling.funcs.redshift_metrics">
+<code class="sig-prename descclassname">clevar.match_metrics.scaling.funcs.</code><code class="sig-name descname">redshift_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/funcs.html#redshift_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.funcs.redshift_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot metrics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalogs with matching information.</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
+<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalog 1 and 2.</p></li>
+<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for redshift of catalog 1 and 2.</p></li>
+<li><p><strong>metrics_mode</strong> (<em>str</em>) – <p>Mode to run metrics (default=`diff_z`). Options are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>simple</cite> : metrics for <cite>values2</cite>.</p></li>
+<li><p><cite>log</cite> : metrics for <cite>log10(values2)</cite>.</p></li>
+<li><p><cite>diff</cite> : metrics for <cite>values2-values1</cite>.</p></li>
+<li><p><cite>diff_log</cite> : metrics for <cite>log10(values2)-log10(values1)</cite>.</p></li>
+<li><p><cite>diff_z</cite> : metrics for <cite>(values2-values1)/(1+values1)</cite>.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>metrics</strong> (<em>list</em>) – <p>List of mettrics to be plotted (default=[<cite>std.fill</cite>, <cite>mean</cite>]). Possibilities are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>mean</cite> : compute the mean of values for points within each bin.</p></li>
+<li><p><cite>std</cite> : compute the standard deviation within each bin.</p></li>
+<li><p><cite>median</cite> : compute the median of values for points within each bin.</p></li>
+<li><p><cite>count</cite> : compute the count of points within each bin.</p></li>
+<li><p><cite>sum</cite> : compute the sum of values for points within each bin.</p></li>
+<li><p><cite>min</cite> : compute the minimum of values for points within each bin.</p></li>
+<li><p><cite>max</cite> : compute the maximum of values for point within each bin.</p></li>
+<li><p><cite>p_#</cite> : compute half the width where a percentile of data is found. Number must be
+between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>label1, label2</strong> (<em>str</em>) – Label for catalog 1/2 redshifts.</p></li>
+<li><p><strong>scale1, scale2</strong> (<em>str</em>) – Scale of catalog 1/2 redshifts.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite>: <cite>matplotlib.figure.Figure</cite> object.</p></li>
+<li><p><cite>axes</cite>: <cite>matplotlib.axes</cite> used in the plot.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

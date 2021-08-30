@@ -1,0 +1,612 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clevar.match_metrics.recovery.funcs &mdash; ClEvaR 0.7.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> ClEvaR
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/overview.html">Rapid overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/citing.html">Citing ClEvaR</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/membership_matching_detailed.html">Matching catalogs based on membership (detailed)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/footprint.html">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.catalog.html">clevar.catalog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.constants.html">clevar.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.cosmology.html">clevar.cosmology package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.cosmology.astropy.html">clevar.cosmology.astropy module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.cosmology.ccl.html">clevar.cosmology.ccl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.cosmology.parent_class.html">clevar.cosmology.parent_class module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.footprint.html">clevar.footprint package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.footprint.artificial.html">clevar.footprint.artificial module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.footprint.footprint.html">clevar.footprint.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.footprint.nfw_funcs.html">clevar.footprint.nfw_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.geometry.html">clevar.geometry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.match.html">clevar.match package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.match.membership.html">clevar.match.membership module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.match.parent.html">clevar.match.parent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.match.proximity.html">clevar.match.proximity module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/clevar.match_metrics.scaling.array_funcs.html">clevar.match_metrics.scaling.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/clevar.match_metrics.scaling.catalog_funcs.html">clevar.match_metrics.scaling.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/clevar.match_metrics.scaling.funcs.html">clevar.match_metrics.scaling.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.utils.html">clevar.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">ClEvaR</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>clevar.match_metrics.recovery.funcs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for clevar.match_metrics.recovery.funcs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;@file clevar/match_metrics/recovery/funcs.py</span>
+
+<span class="sd">Main recovery functions for mass and redshift plots,</span>
+<span class="sd">wrapper of catalog_funcs functions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad_vec</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">plot_helper</span> <span class="k">as</span> <span class="n">ph</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">catalog_funcs</span>
+
+<span class="k">def</span> <span class="nf">_plot_base</span><span class="p">(</span><span class="n">pltfunc</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span>
+               <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adapts a ClCatalogFuncs function for main functions using mass and redshift.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pltfunc: function</span>
+<span class="sd">        ClCatalogFuncs function</span>
+<span class="sd">    cat: clevar.ClCatalog</span>
+<span class="sd">        ClCatalog with matching information</span>
+<span class="sd">    matching_type: str</span>
+<span class="sd">        Type of matching to be considered. Must be in:</span>
+<span class="sd">        &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;, &#39;multi_cat1&#39;, &#39;multi_cat2&#39;, &#39;multi_join&#39;</span>
+<span class="sd">    redshift_bins: array, int</span>
+<span class="sd">        Bins for redshift</span>
+<span class="sd">    mass_bins: array, int</span>
+<span class="sd">        Bins for mass</span>
+<span class="sd">    transpose: bool</span>
+<span class="sd">        Transpose mass and redshift in plots</span>
+<span class="sd">    **kwargs:</span>
+<span class="sd">        Additional arguments to be passed to pltfunc</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Same as pltfunc</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">)</span> <span class="k">if</span> <span class="n">transpose</span>\
+        <span class="k">else</span> <span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pltfunc</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_intrinsic_comp</span><span class="p">(</span><span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">bins1</span><span class="p">,</span> <span class="n">bins2</span><span class="p">,</span>
+                    <span class="n">max_mass2</span><span class="o">=</span><span class="mf">1e16</span><span class="p">,</span> <span class="n">min_mass2_norm</span><span class="o">=</span><span class="mf">1e12</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots instrinsic completeness given by a mass threshold on the other catalog.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p_m1_m2: function</span>
+<span class="sd">        `P(M1|M2)` - Probability of having a catalog 1 cluster with mass M1 given</span>
+<span class="sd">        a catalog 2 cluster with mass M2.</span>
+<span class="sd">    min_mass2: float</span>
+<span class="sd">        Threshold mass in integration.</span>
+<span class="sd">    ax: matplotlib.axes</span>
+<span class="sd">        Ax to add plot</span>
+<span class="sd">    transpose: bool</span>
+<span class="sd">        Transpose mass and redshift in plots</span>
+<span class="sd">    bins1: array</span>
+<span class="sd">        Redshift bins (or mass if transpose).</span>
+<span class="sd">    bins2: array</span>
+<span class="sd">        Mass bins (or redshift if transpose).</span>
+<span class="sd">    max_mass2: float</span>
+<span class="sd">        Maximum mass2 for integration.</span>
+<span class="sd">    max_mass2_norm: float</span>
+<span class="sd">        Minimum mass2 to be used in normalization integral.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">min_logmass2_norm</span><span class="p">,</span> <span class="n">max_logmass2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">min_mass2_norm</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">max_mass2</span><span class="p">)</span>
+    <span class="n">integ</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m1</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">:</span> <span class="n">quad_vec</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">logm2</span><span class="p">:</span> <span class="n">p_m1_m2</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="n">logm2</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">min_mass2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">max_mass2</span><span class="p">),</span>
+        <span class="n">epsabs</span><span class="o">=</span><span class="mf">1e-50</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m1</span><span class="p">,</span> <span class="n">m2_th</span><span class="p">:</span> <span class="n">integ</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2_th</span><span class="p">)</span><span class="o">/</span><span class="n">integ</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">min_mass2_norm</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+        <span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="s1">&#39;0.3&#39;</span><span class="p">,</span> <span class="s1">&#39;lw&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;zorder&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">bins1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comp</span><span class="p">(</span><span class="n">bins1</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">),</span> <span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">m_inf</span><span class="p">,</span> <span class="n">m_sup</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bins2</span><span class="p">,</span> <span class="n">bins2</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">):</span>
+            <span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="n">line</span><span class="o">.</span><span class="n">_color</span><span class="p">,</span> <span class="s1">&#39;lw&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">((</span><span class="n">bins1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">comp</span><span class="p">(</span><span class="n">m_inf</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">),</span>
+                            <span class="n">comp</span><span class="p">(</span><span class="n">m_sup</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">),</span> <span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../../../api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">log_mass</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">redshift_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mass_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recovery_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p_m1_m2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+         <span class="n">min_mass2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cat: clevar.ClCatalog</span>
+<span class="sd">        ClCatalog with matching information</span>
+<span class="sd">    matching_type: str</span>
+<span class="sd">        Type of matching to be considered. Must be in:</span>
+<span class="sd">        &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;, &#39;multi_cat1&#39;, &#39;multi_cat2&#39;, &#39;multi_join&#39;</span>
+<span class="sd">    redshift_bins: array, int</span>
+<span class="sd">        Bins for redshift</span>
+<span class="sd">    mass_bins: array, int</span>
+<span class="sd">        Bins for mass</span>
+<span class="sd">    transpose: bool</span>
+<span class="sd">        Transpose mass and redshift in plots</span>
+<span class="sd">    log_mass: bool</span>
+<span class="sd">        Plot mass in log scale</span>
+<span class="sd">    mask: array</span>
+<span class="sd">        Mask of unwanted clusters</span>
+<span class="sd">    mask_unmatched: array</span>
+<span class="sd">        Mask of unwanted unmatched clusters (ex: out of footprint)</span>
+<span class="sd">    p_m1_m2: function</span>
+<span class="sd">        `P(M1|M2)` - Probability of having a catalog 1 cluster with mass M1 given</span>
+<span class="sd">        a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.</span>
+<span class="sd">    min_mass2: float</span>
+<span class="sd">        Threshold mass for intrinsic completeness computation.</span>
+
+
+<span class="sd">    Other parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    shape: str</span>
+<span class="sd">        Shape of the lines. Can be steps or line.</span>
+<span class="sd">    mass_label: str</span>
+<span class="sd">        Label for mass.</span>
+<span class="sd">    redshift_label: str</span>
+<span class="sd">        Label for redshift.</span>
+<span class="sd">    recovery_label: str</span>
+<span class="sd">        Label for recovery rate.</span>
+<span class="sd">    ax: matplotlib.axes</span>
+<span class="sd">        Ax to add plot</span>
+<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">        Additional arguments for pylab.plot</span>
+<span class="sd">    lines_kwargs_list: list, None</span>
+<span class="sd">        List of additional arguments for plotting each line (using pylab.plot).</span>
+<span class="sd">        Must have same size as len(bins2)-1</span>
+<span class="sd">    add_legend: bool</span>
+<span class="sd">        Add legend of bins</span>
+<span class="sd">    legend_format: function</span>
+<span class="sd">        Function to format the values of the bins in legend</span>
+<span class="sd">    legend_fmt: str</span>
+<span class="sd">        Format the values of binedges (ex: &#39;.2f&#39;)</span>
+<span class="sd">    legend_kwargs: dict</span>
+<span class="sd">        Additional arguments for pylab.legend</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    info: dict</span>
+<span class="sd">        Information of data in the plots, it contains the sections:</span>
+
+<span class="sd">            * `ax`: ax used in the plot.</span>
+<span class="sd">            * `data`: Binned data used in the plot. It has the sections:</span>
+
+<span class="sd">                * `recovery`: Recovery rate binned with (bin1, bin2).\</span>
+<span class="sd">                bins where no cluster was found have nan value.</span>
+<span class="sd">                * `edges1`: The bin edges along the first dimension.</span>
+<span class="sd">                * `edges2`: The bin edges along the second dimension.</span>
+<span class="sd">                * `counts`: Counts of all clusters in bins.</span>
+<span class="sd">                * `matched`: Counts of matched clusters in bins.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">legend_fmt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;legend_fmt&quot;</span><span class="p">,</span> <span class="s2">&quot;.1f&quot;</span> <span class="k">if</span> <span class="n">log_mass</span><span class="o">*</span><span class="p">(</span><span class="ow">not</span> <span class="n">transpose</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;.2f&quot;</span><span class="p">)</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;legend_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;legend_format&#39;</span><span class="p">,</span>
+        <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;10^</span><span class="se">{{</span><span class="s1">%</span><span class="si">{</span><span class="n">legend_fmt</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">log_mass</span><span class="o">*</span><span class="p">(</span><span class="ow">not</span> <span class="n">transpose</span><span class="p">)</span>\
+             <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;%</span><span class="si">{</span><span class="n">legend_fmt</span><span class="si">}</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">_plot_base</span><span class="p">(</span><span class="n">catalog_funcs</span><span class="o">.</span><span class="n">plot</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span>
+                      <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span>
+                      <span class="n">scale1</span><span class="o">=</span><span class="s1">&#39;log&#39;</span> <span class="k">if</span> <span class="n">log_mass</span><span class="o">*</span><span class="n">transpose</span> <span class="k">else</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+                      <span class="n">xlabel</span><span class="o">=</span><span class="n">mass_label</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">redshift_label</span><span class="p">,</span>
+                      <span class="n">ylabel</span><span class="o">=</span><span class="n">recovery_label</span><span class="p">,</span>
+                      <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p_m1_m2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_intrinsic_comp</span><span class="p">(</span><span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;ax&#39;</span><span class="p">],</span> <span class="n">transpose</span><span class="p">,</span>
+                        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges1&#39;</span><span class="p">],</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges2&#39;</span><span class="p">],</span> <span class="n">max_mass2</span><span class="o">=</span><span class="mf">1e16</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="plot_panel"><a class="viewcode-back" href="../../../../api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.plot_panel">[docs]</a><span class="k">def</span> <span class="nf">plot_panel</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">log_mass</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">redshift_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mass_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recovery_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p_m1_m2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">min_mass2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot recovery rate as lines in panels, with each line binned by redshift</span>
+<span class="sd">    and each panel is based on the data inside a mass bin.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cat: clevar.ClCatalog</span>
+<span class="sd">        ClCatalog with matching information</span>
+<span class="sd">    matching_type: str</span>
+<span class="sd">        Type of matching to be considered. Must be in:</span>
+<span class="sd">        &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;, &#39;multi_cat1&#39;, &#39;multi_cat2&#39;, &#39;multi_join&#39;</span>
+<span class="sd">    redshift_bins: array, int</span>
+<span class="sd">        Bins for redshift</span>
+<span class="sd">    mass_bins: array, int</span>
+<span class="sd">        Bins for mass</span>
+<span class="sd">    transpose: bool</span>
+<span class="sd">        Transpose mass and redshift in plots</span>
+<span class="sd">    log_mass: bool</span>
+<span class="sd">        Plot mass in log scale</span>
+<span class="sd">    mask: array</span>
+<span class="sd">        Mask of unwanted clusters</span>
+<span class="sd">    mask_unmatched: array</span>
+<span class="sd">        Mask of unwanted unmatched clusters (ex: out of footprint)</span>
+
+<span class="sd">    Other parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    shape: str</span>
+<span class="sd">        Shape of the lines. Can be steps or line.</span>
+<span class="sd">    mass_label: str</span>
+<span class="sd">        Label for mass.</span>
+<span class="sd">    redshift_label: str</span>
+<span class="sd">        Label for redshift.</span>
+<span class="sd">    recovery_label: str</span>
+<span class="sd">        Label for recovery rate.</span>
+<span class="sd">    ax: matplotlib.axes</span>
+<span class="sd">        Ax to add plot</span>
+<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">        Additional arguments for pylab.plot</span>
+<span class="sd">    panel_kwargs_list: list, None</span>
+<span class="sd">        List of additional arguments for plotting each panel (using pylab.plot).</span>
+<span class="sd">        Must have same size as len(bins2)-1</span>
+<span class="sd">    fig_kwargs: dict</span>
+<span class="sd">        Additional arguments for plt.subplots</span>
+<span class="sd">    add_label: bool</span>
+<span class="sd">        Add bin label to panel</span>
+<span class="sd">    label_format: function</span>
+<span class="sd">        Function to format the values of the bins</span>
+<span class="sd">    label_fmt: str</span>
+<span class="sd">        Format the values of binedges (ex: &#39;.2f&#39;)</span>
+<span class="sd">    p_m1_m2: function</span>
+<span class="sd">        `P(M1|M2)` - Probability of having a catalog 1 cluster with mass M1 given</span>
+<span class="sd">        a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.</span>
+<span class="sd">    min_mass2: float</span>
+<span class="sd">        Threshold mass for intrinsic completeness computation.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    info: dict</span>
+<span class="sd">        Information of data in the plots, it contains the sections:</span>
+
+<span class="sd">            * `fig`: `matplotlib.figure.Figure` object.</span>
+<span class="sd">            * `axes`: `matplotlib.axes` used in the plot.</span>
+<span class="sd">            * `data`: Binned data used in the plot. It has the sections:</span>
+
+<span class="sd">                * `recovery`: Recovery rate binned with (bin1, bin2).\</span>
+<span class="sd">                bins where no cluster was found have nan value.</span>
+<span class="sd">                * `edges1`: The bin edges along the first dimension.</span>
+<span class="sd">                * `edges2`: The bin edges along the second dimension.</span>
+<span class="sd">                * `counts`: Counts of all clusters in bins.</span>
+<span class="sd">                * `matched`: Counts of matched clusters in bins.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">log_mass</span><span class="o">*</span><span class="p">(</span><span class="ow">not</span> <span class="n">transpose</span><span class="p">)</span>
+    <span class="n">ph</span><span class="o">.</span><span class="n">_set_label_format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="s1">&#39;label_format&#39;</span><span class="p">,</span> <span class="s1">&#39;label_fmt&#39;</span><span class="p">,</span>
+                         <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span> <span class="n">default_fmt</span><span class="o">=</span><span class="s2">&quot;.1f&quot;</span> <span class="k">if</span> <span class="n">log</span> <span class="k">else</span> <span class="s2">&quot;.2f&quot;</span><span class="p">)</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">_plot_base</span><span class="p">(</span><span class="n">catalog_funcs</span><span class="o">.</span><span class="n">plot_panel</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span>
+                      <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span>
+                      <span class="n">scale1</span><span class="o">=</span><span class="s1">&#39;log&#39;</span> <span class="k">if</span> <span class="n">log_mass</span><span class="o">*</span><span class="n">transpose</span> <span class="k">else</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+                      <span class="n">xlabel</span><span class="o">=</span><span class="n">mass_label</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">redshift_label</span><span class="p">,</span>
+                      <span class="n">ylabel</span><span class="o">=</span><span class="n">recovery_label</span><span class="p">,</span>
+                      <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p_m1_m2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;axes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+                             <span class="nb">zip</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges2&#39;</span><span class="p">],</span>
+                                 <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges2&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:])):</span>
+            <span class="n">_intrinsic_comp</span><span class="p">(</span>
+                <span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span>
+                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges1&#39;</span><span class="p">],</span> <span class="n">bins2</span><span class="p">,</span> <span class="n">max_mass2</span><span class="o">=</span><span class="mf">1e16</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="plot2D"><a class="viewcode-back" href="../../../../api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.plot2D">[docs]</a><span class="k">def</span> <span class="nf">plot2D</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">log_mass</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+           <span class="n">redshift_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mass_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recovery_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot recovery rate as in 2D (redshift, mass) bins.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cat: clevar.ClCatalog</span>
+<span class="sd">        ClCatalog with matching information</span>
+<span class="sd">    matching_type: str</span>
+<span class="sd">        Type of matching to be considered. Must be in:</span>
+<span class="sd">        &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;, &#39;multi_cat1&#39;, &#39;multi_cat2&#39;, &#39;multi_join&#39;</span>
+<span class="sd">    redshift_bins: array, int</span>
+<span class="sd">        Bins for redshift</span>
+<span class="sd">    mass_bins: array, int</span>
+<span class="sd">        Bins for mass</span>
+<span class="sd">    transpose: bool</span>
+<span class="sd">        Transpose mass and redshift in plots</span>
+<span class="sd">    log_mass: bool</span>
+<span class="sd">        Plot mass in log scale</span>
+<span class="sd">    mask: array</span>
+<span class="sd">        Mask of unwanted clusters</span>
+<span class="sd">    mask_unmatched: array</span>
+<span class="sd">        Mask of unwanted unmatched clusters (ex: out of footprint)</span>
+
+<span class="sd">    Other parameters</span>
+<span class="sd">    ----------------</span>
+<span class="sd">    mass_label: str</span>
+<span class="sd">        Label for mass.</span>
+<span class="sd">    redshift_label: str</span>
+<span class="sd">        Label for redshift.</span>
+<span class="sd">    recovery_label: str</span>
+<span class="sd">        Label for recovery rate.</span>
+<span class="sd">    ax: matplotlib.axes</span>
+<span class="sd">        Ax to add plot</span>
+<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">        Additional arguments for pylab.plot</span>
+<span class="sd">    add_cb: bool</span>
+<span class="sd">        Plot colorbar</span>
+<span class="sd">    cb_kwargs: dict</span>
+<span class="sd">        Colorbar arguments</span>
+<span class="sd">    add_num: int</span>
+<span class="sd">        Add numbers in each bin</span>
+<span class="sd">    num_kwargs: dict</span>
+<span class="sd">        Arguments for number plot (used in plt.text)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    info: dict</span>
+<span class="sd">        Information of data in the plots, it contains the sections:</span>
+
+<span class="sd">            * `ax`: ax used in the plot.</span>
+<span class="sd">            * `cb` (optional): colorbar.</span>
+<span class="sd">            * `data`: Binned data used in the plot. It has the sections:</span>
+
+<span class="sd">                * `recovery`: Recovery rate binned with (bin1, bin2).\</span>
+<span class="sd">                bins where no cluster was found have nan value.</span>
+<span class="sd">                * `edges1`: The bin edges along the first dimension.</span>
+<span class="sd">                * `edges2`: The bin edges along the second dimension.</span>
+<span class="sd">                * `counts`: Counts of all clusters in bins.</span>
+<span class="sd">                * `matched`: Counts of matched clusters in bins.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_plot_base</span><span class="p">(</span><span class="n">catalog_funcs</span><span class="o">.</span><span class="n">plot2D</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span>
+                      <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span>
+                      <span class="n">scale1</span><span class="o">=</span><span class="s1">&#39;log&#39;</span> <span class="k">if</span> <span class="n">log_mass</span><span class="o">*</span><span class="n">transpose</span> <span class="k">else</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+                      <span class="n">scale2</span><span class="o">=</span><span class="s1">&#39;log&#39;</span> <span class="k">if</span> <span class="n">log_mass</span><span class="o">*</span><span class="p">(</span><span class="ow">not</span> <span class="n">transpose</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+                      <span class="n">xlabel</span><span class="o">=</span><span class="n">mass_label</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">redshift_label</span><span class="p">,</span>
+                      <span class="n">ylabel</span><span class="o">=</span><span class="n">redshift_label</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">mass_label</span><span class="p">,</span>
+                      <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, LSST DESC ClEvaR Contributors
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

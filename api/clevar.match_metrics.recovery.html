@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery module &mdash; ClEvaR 0.5.0 documentation</title>
+  <title>clevar.match_metrics.recovery package &mdash; ClEvaR 0.7.1 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="clevar.match_metrics.scaling module" href="clevar.match_metrics.scaling.html" />
-    <link rel="prev" title="clevar.match_metrics.plot_helper module" href="clevar.match_metrics.plot_helper.html" /> 
+    <link rel="next" title="clevar.match_metrics.recovery.array_funcs module" href="clevar.match_metrics.recovery.array_funcs.html" />
+    <link rel="prev" title="clevar.match_metrics.distances.funcs module" href="clevar.match_metrics.distances.funcs.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.7.1
               </div>
             
           
@@ -103,6 +103,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/footprint.html">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -129,10 +131,24 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="clevar.match_metrics.html">clevar.match_metrics package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.match_metrics.recovery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.array_funcs.html">clevar.match_metrics.scaling.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.catalog_funcs.html">clevar.match_metrics.scaling.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.funcs.html">clevar.match_metrics.scaling.funcs module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.match_metrics.recovery module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
@@ -198,7 +214,7 @@
         
           <li><a href="clevar.match_metrics.html">clevar.match_metrics package</a> &raquo;</li>
         
-      <li>clevar.match_metrics.recovery module</li>
+      <li>clevar.match_metrics.recovery package</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -218,390 +234,17 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-clevar.match_metrics.recovery">
-<span id="clevar-match-metrics-recovery-module"></span><h1>clevar.match_metrics.recovery module<a class="headerlink" href="#module-clevar.match_metrics.recovery" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="clevar.match_metrics.recovery.ArrayFuncs">
-<em class="property">class </em><code class="sig-prename descclassname">clevar.match_metrics.recovery.</code><code class="sig-name descname">ArrayFuncs</code><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#ArrayFuncs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.ArrayFuncs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class of plot functions with arrays as inputs</p>
-<dl class="py method">
-<dt id="clevar.match_metrics.recovery.ArrayFuncs.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">values2</em>, <em class="sig-param">bins1</em>, <em class="sig-param">bins2</em>, <em class="sig-param">is_matched</em>, <em class="sig-param">shape='steps'</em>, <em class="sig-param">ax=None</em>, <em class="sig-param">plt_kwargs={}</em>, <em class="sig-param">lines_kwargs_list=None</em>, <em class="sig-param">add_legend=True</em>, <em class="sig-param">legend_format=&lt;function ArrayFuncs.&lt;lambda&gt;&gt;</em>, <em class="sig-param">legend_kwargs={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#ArrayFuncs.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.ArrayFuncs.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values1</strong> (<em>array</em>) – Component 1</p></li>
-<li><p><strong>values2</strong> (<em>array</em>) – Component 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
-<li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list</em><em>, </em><em>None</em>) – List of additional arguments for plotting each line (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-<li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
-<li><p><strong>legend_format</strong> (<em>function</em>) – Function to format the values of the bins in legend</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.legend</p></li>
+<span id="clevar-match-metrics-recovery-package"></span><h1>clevar.match_metrics.recovery package<a class="headerlink" href="#module-clevar.match_metrics.recovery" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>ax</strong> – Axis of the plot</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>matplotlib.axes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="clevar.match_metrics.recovery.ArrayFuncs.plot2D">
-<code class="sig-name descname">plot2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">bins1</span></em>, <em class="sig-param"><span class="n">bins2</span></em>, <em class="sig-param"><span class="n">is_matched</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plt_kwargs</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">add_cb</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cb_kwargs</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">add_num</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_kwargs</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#ArrayFuncs.plot2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.ArrayFuncs.plot2D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as in 2D bins.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values1</strong> (<em>array</em>) – Component 1</p></li>
-<li><p><strong>values2</strong> (<em>array</em>) – Component 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
-<li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>add_num</strong> (<em>int</em>) – Add numbers in each bin</p></li>
-<li><p><strong>num_kwargs</strong> (<em>dict</em>) – Arguments for number plot (used in plt.text)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Axis of the plot</p></li>
-<li><p><em>matplotlib.colorbar.Colorbar</em> – Colorbar of the recovey rates</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="clevar.match_metrics.recovery.ArrayFuncs.plot_panel">
-<code class="sig-name descname">plot_panel</code><span class="sig-paren">(</span><em class="sig-param">values2</em>, <em class="sig-param">bins1</em>, <em class="sig-param">bins2</em>, <em class="sig-param">is_matched</em>, <em class="sig-param">shape='steps'</em>, <em class="sig-param">plt_kwargs={}</em>, <em class="sig-param">panel_kwargs_list=None</em>, <em class="sig-param">fig_kwargs={}</em>, <em class="sig-param">add_label=True</em>, <em class="sig-param">label_format=&lt;function ArrayFuncs.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#ArrayFuncs.plot_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.ArrayFuncs.plot_panel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines in panels, with each line binned by bins1
-and each panel is based on the data inside a bins2 bin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values1</strong> (<em>array</em>) – Component 1</p></li>
-<li><p><strong>values2</strong> (<em>array</em>) – Component 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
-<li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>panel_kwargs_list</strong> (<em>list</em><em>, </em><em>None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
-<li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
-<li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>) – <cite>matplotlib.figure.Figure</cite> object</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Axes with the panels</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="clevar.match_metrics.recovery.ClCatalogFuncs">
-<em class="property">class </em><code class="sig-prename descclassname">clevar.match_metrics.recovery.</code><code class="sig-name descname">ClCatalogFuncs</code><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#ClCatalogFuncs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.ClCatalogFuncs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class of plot functions with clevar.ClCatalog as inputs</p>
-<dl class="py method">
-<dt id="clevar.match_metrics.recovery.ClCatalogFuncs.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">col1</span></em>, <em class="sig-param"><span class="n">col2</span></em>, <em class="sig-param"><span class="n">bins1</span></em>, <em class="sig-param"><span class="n">bins2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale1</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#ClCatalogFuncs.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.ClCatalogFuncs.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>col1</strong> (<em>str</em>) – Name of column 1</p></li>
-<li><p><strong>col2</strong> (<em>str</em>) – Name of column 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
-‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
-<li><p><strong>mask_unmatched</strong> (<em>array</em>) – Mask of unwanted unmatched clusters (ex: out of footprint)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>xlabel</strong> (<em>str</em>) – Label of component 1. Default is col1.</p></li>
-<li><p><strong>ylabel</strong> (<em>str</em>) – Label of recovery rate.</p></li>
-<li><p><strong>scale1</strong> (<em>str</em>) – Scale of col 1 component</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-<li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
-<li><p><strong>legend_format</strong> (<em>function</em>) – Function to format the values of the bins in legend</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.legend</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>ax</strong> – Axis of the plot</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>matplotlib.axes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="clevar.match_metrics.recovery.ClCatalogFuncs.plot2D">
-<code class="sig-name descname">plot2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">col1</span></em>, <em class="sig-param"><span class="n">col2</span></em>, <em class="sig-param"><span class="n">bins1</span></em>, <em class="sig-param"><span class="n">bins2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale1</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">scale2</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#ClCatalogFuncs.plot2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.ClCatalogFuncs.plot2D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as in 2D bins.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>col1</strong> (<em>str</em>) – Name of column 1</p></li>
-<li><p><strong>col2</strong> (<em>str</em>) – Name of column 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
-‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
-<li><p><strong>mask_unmatched</strong> (<em>array</em>) – Mask of unwanted unmatched clusters (ex: out of footprint)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>xlabel</strong> (<em>str</em>) – Label of component 1. Default is col1.</p></li>
-<li><p><strong>ylabel</strong> (<em>str</em>) – Label of component 2. Default is col2.</p></li>
-<li><p><strong>scale1</strong> (<em>str</em>) – Scale of col 1 component</p></li>
-<li><p><strong>scale2</strong> (<em>str</em>) – Scale of col 2 component</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>add_num</strong> (<em>int</em>) – Add numbers in each bin</p></li>
-<li><p><strong>num_kwargs</strong> (<em>dict</em>) – Arguments for number plot (used in plt.text)</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Axis of the plot</p></li>
-<li><p><em>matplotlib.colorbar.Colorbar</em> – Colorbar of the recovey rates</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="clevar.match_metrics.recovery.ClCatalogFuncs.plot_panel">
-<code class="sig-name descname">plot_panel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">col1</span></em>, <em class="sig-param"><span class="n">col2</span></em>, <em class="sig-param"><span class="n">bins1</span></em>, <em class="sig-param"><span class="n">bins2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale1</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#ClCatalogFuncs.plot_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.ClCatalogFuncs.plot_panel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines in panels, with each line binned by bins1
-and each panel is based on the data inside a bins2 bin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>col1</strong> (<em>str</em>) – Name of column 1</p></li>
-<li><p><strong>col2</strong> (<em>str</em>) – Name of column 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
-‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
-<li><p><strong>mask_unmatched</strong> (<em>array</em>) – Mask of unwanted unmatched clusters (ex: out of footprint)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>xlabel</strong> (<em>str</em>) – Label of component 1. Default is col1.</p></li>
-<li><p><strong>ylabel</strong> (<em>str</em>) – Label of recovery rate.</p></li>
-<li><p><strong>scale1</strong> (<em>str</em>) – Scale of col 1 component</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
-<li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
-<li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>) – <cite>matplotlib.figure.Figure</cite> object</p></li>
-<li><p><strong>axes</strong> (<em>array</em>) – Axes with the panels</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt id="clevar.match_metrics.recovery.get_recovery_rate">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.</code><code class="sig-name descname">get_recovery_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values1</span></em>, <em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">bins1</span></em>, <em class="sig-param"><span class="n">bins2</span></em>, <em class="sig-param"><span class="n">is_matched</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#get_recovery_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.get_recovery_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get recovery rate binned in 2 components</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values1</strong> (<em>array</em>) – Component 1</p></li>
-<li><p><strong>values2</strong> (<em>array</em>) – Component 2</p></li>
-<li><p><strong>bins1</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 1</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for component 2</p></li>
-<li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>recovery</strong> (<em>ndarray (2D)</em>) – Recovery rate binned with (bin1, bin2). bins where no cluster was found have nan value.</p></li>
-<li><p><strong>edges1</strong> (<em>ndarray</em>) – The bin edges along the first dimension.</p></li>
-<li><p><strong>edges2</strong> (<em>ndarray</em>) – The bin edges along the second dimension.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="clevar.match_metrics.recovery.plot">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span></em>, <em class="sig-param"><span class="n">mass_bins</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redshift_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
-‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift</p></li>
-<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for mass</p></li>
-<li><p><strong>transpose</strong> (<em>bool</em>) – Transpose mass and redshift in plots</p></li>
-<li><p><strong>log_mass</strong> (<em>bool</em>) – Plot mass in log scale</p></li>
-<li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
-<li><p><strong>mask_unmatched</strong> (<em>array</em>) – Mask of unwanted unmatched clusters (ex: out of footprint)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>mass_label</strong> (<em>str</em>) – Label for mass.</p></li>
-<li><p><strong>redshift_label</strong> (<em>str</em>) – Label for redshift.</p></li>
-<li><p><strong>recovery_label</strong> (<em>str</em>) – Label for recovery rate.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-<li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
-<li><p><strong>legend_format</strong> (<em>function</em>) – Function to format the values of the bins in legend</p></li>
-<li><p><strong>legend_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.legend</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="clevar.match_metrics.recovery.plot2D">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.</code><code class="sig-name descname">plot2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span></em>, <em class="sig-param"><span class="n">mass_bins</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redshift_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#plot2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.plot2D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as in 2D (redshift, mass) bins.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
-‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift</p></li>
-<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for mass</p></li>
-<li><p><strong>transpose</strong> (<em>bool</em>) – Transpose mass and redshift in plots</p></li>
-<li><p><strong>log_mass</strong> (<em>bool</em>) – Plot mass in log scale</p></li>
-<li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
-<li><p><strong>mask_unmatched</strong> (<em>array</em>) – Mask of unwanted unmatched clusters (ex: out of footprint)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>mass_label</strong> (<em>str</em>) – Label for mass.</p></li>
-<li><p><strong>redshift_label</strong> (<em>str</em>) – Label for redshift.</p></li>
-<li><p><strong>recovery_label</strong> (<em>str</em>) – Label for recovery rate.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>add_num</strong> (<em>int</em>) – Add numbers in each bin</p></li>
-<li><p><strong>num_kwargs</strong> (<em>dict</em>) – Arguments for number plot (used in plt.text)</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Colorbar of the recovey rates</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>matplotlib.colorbar.Colorbar</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="clevar.match_metrics.recovery.plot_panel">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.</code><code class="sig-name descname">plot_panel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span></em>, <em class="sig-param"><span class="n">mass_bins</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redshift_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery.html#plot_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.plot_panel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines in panels, with each line binned by redshift
-and each panel is based on the data inside a mass bin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
-‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift</p></li>
-<li><p><strong>mass_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for mass</p></li>
-<li><p><strong>transpose</strong> (<em>bool</em>) – Transpose mass and redshift in plots</p></li>
-<li><p><strong>log_mass</strong> (<em>bool</em>) – Plot mass in log scale</p></li>
-<li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
-<li><p><strong>mask_unmatched</strong> (<em>array</em>) – Mask of unwanted unmatched clusters (ex: out of footprint)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>mass_label</strong> (<em>str</em>) – Label for mass.</p></li>
-<li><p><strong>redshift_label</strong> (<em>str</em>) – Label for redshift.</p></li>
-<li><p><strong>recovery_label</strong> (<em>str</em>) – Label for recovery rate.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
-<li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
-<li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
-<li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>) – <cite>matplotlib.figure.Figure</cite> object</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Axes with the panels</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
+</div>
+</div>
 </div>
 
 

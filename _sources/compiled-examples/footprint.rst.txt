@@ -29,6 +29,14 @@ Generate random data and add to catalog
     from support import gen_cluster
     input1, input2 = gen_cluster(ra_max=30, dec_max=30)
 
+
+.. parsed-literal::
+
+    Initial number of clusters (logM>12.48): 2,740
+    Clusters in catalog1: 835
+    Clusters in catalog2: 928
+
+
 .. code:: ipython3
 
     from clevar import ClCatalog
@@ -53,7 +61,7 @@ Here we will get heapy pixels based on the positions of the clusters
 
 .. code:: ipython3
 
-    nside = 64
+    nside = 32
     pixels1 = hp.ang2pix(nside, c1['ra'], c1['dec'], lonlat=True)
     pixels2 = hp.ang2pix(nside, c2['ra'], c2['dec'], lonlat=True)
 
@@ -99,7 +107,7 @@ Check to see if selected pixels are correct
 
 .. parsed-literal::
 
-    <matplotlib.legend.Legend at 0x7fad2e9d1a00>
+    <matplotlib.legend.Legend at 0x7ff184340640>
 
 
 
@@ -138,8 +146,8 @@ Fixed ``NSIDE``:
 .. parsed-literal::
 
     Footprint NSIDE: 64
-    Pixels in footprint: 599
-    Pixels in footprint: 599
+    Pixels in footprint: 677
+    Pixels in footprint: 677
 
 
 ``NSIDE`` from density:
@@ -151,13 +159,14 @@ Fixed ``NSIDE``:
 
 .. parsed-literal::
 
-    NSIDE(2) -> 87.5 clusters per pixel
-    NSIDE(4) -> 36.8421052631579 clusters per pixel
-    NSIDE(8) -> 11.475409836065573 clusters per pixel
-    NSIDE(16) -> 3.5353535353535355 clusters per pixel
-    Footprint NSIDE: 16
-    Pixels in footprint: 198
-    Pixels in footprint: 198
+    NSIDE(2) -> 104.375 clusters per pixel
+    NSIDE(4) -> 43.94736842105263 clusters per pixel
+    NSIDE(8) -> 13.916666666666666 clusters per pixel
+    NSIDE(16) -> 4.175 clusters per pixel
+    NSIDE(32) -> 1.7040816326530612 clusters per pixel
+    Footprint NSIDE: 32
+    Pixels in footprint: 490
+    Pixels in footprint: 490
 
 
 fill holes
@@ -170,46 +179,38 @@ fill holes
 .. parsed-literal::
 
     Footprint NSIDE: 64
-    Pixels in footprint: 599
+    Pixels in footprint: 677
     ### filling holes ###
      - filling
-       size: 599 -> 636 (+37)
+       size: 677 -> 728 (+51)
      - filling
-       size: 636 -> 661 (+25)
+       size: 728 -> 763 (+35)
      - filling
-       size: 661 -> 681 (+20)
+       size: 763 -> 787 (+24)
      - filling
-       size: 681 -> 694 (+13)
+       size: 787 -> 798 (+11)
      - filling
-       size: 694 -> 705 (+11)
+       size: 798 -> 806 (+8)
      - filling
-       size: 705 -> 712 (+7)
+       size: 806 -> 813 (+7)
      - filling
-       size: 712 -> 719 (+7)
+       size: 813 -> 819 (+6)
      - filling
-       size: 719 -> 721 (+2)
+       size: 819 -> 826 (+7)
      - filling
-       size: 721 -> 724 (+3)
+       size: 826 -> 834 (+8)
      - filling
-       size: 724 -> 727 (+3)
+       size: 834 -> 839 (+5)
      - filling
-       size: 727 -> 729 (+2)
+       size: 839 -> 842 (+3)
      - filling
-       size: 729 -> 732 (+3)
+       size: 842 -> 843 (+1)
      - filling
-       size: 732 -> 737 (+5)
-     - filling
-       size: 737 -> 739 (+2)
-     - filling
-       size: 739 -> 741 (+2)
-     - filling
-       size: 741 -> 743 (+2)
-     - filling
-       size: 743 -> 743 (+0)
+       size: 843 -> 843 (+0)
      Total Change:
-       size: 599 -> 743 (+144)
+       size: 677 -> 843 (+166)
     ### filled! ###
-    Pixels in footprint: 743
+    Pixels in footprint: 843
 
 
 Footprint masks
@@ -234,8 +235,8 @@ weighted by a project NFW profile
     ## creating visibility mask ##
     ## creating visibility mask ##
     ## creating visibility mask ##
-    CPU times: user 3.1 ms, sys: 3.28 ms, total: 6.37 ms
-    Wall time: 5.92 ms
+    CPU times: user 5.26 ms, sys: 1.14 ms, total: 6.4 ms
+    Wall time: 6.29 ms
 
 
 .. code:: ipython3
@@ -248,13 +249,13 @@ weighted by a project NFW profile
 .. raw:: html
 
     <b>Cat1</b><br><i>ClData length=4</i>
-    <table id="table140381789787760" class="table-striped table-bordered table-condensed">
+    <table id="table140675280719392" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-    <tr><td>0</td><td>1.68</td><td>-6.91</td><td>1.00</td><td>1.22e+13</td><td>2.68e+12</td><td>0.06</td><td>0.37</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
-    <tr><td>1</td><td>0.56</td><td>8.49</td><td>0.43</td><td>1.66e+13</td><td>2.43e+12</td><td>0.05</td><td>0.01</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
-    <tr><td>2</td><td>6.75</td><td>-12.59</td><td>1.50</td><td>1.10e+13</td><td>2.84e+12</td><td>0.06</td><td>0.72</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
-    <tr><td>3</td><td>2.13</td><td>9.21</td><td>0.26</td><td>4.66e+13</td><td>6.69e+12</td><td>0.04</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>3</td><td>4.21</td><td>-56.98</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
     </table>
 
 
@@ -262,13 +263,13 @@ weighted by a project NFW profile
 .. raw:: html
 
     <b>Cat2</b><br><i>ClData length=4</i>
-    <table id="table140381787737296" class="table-striped table-bordered table-condensed">
+    <table id="table140675283140272" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-    <tr><td>0</td><td>25.50</td><td>-71.28</td><td>1.03</td><td>8.95e+12</td><td>2.06e+12</td><td>0.06</td><td>0.10</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>1</td><td>3.41</td><td>-58.63</td><td>1.36</td><td>1.51e+13</td><td>2.59e+12</td><td>0.07</td><td>0.47</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
-    <tr><td>2</td><td>13.47</td><td>-88.39</td><td>1.86</td><td>4.32e+13</td><td>4.22e+12</td><td>0.09</td><td>0.02</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>3</td><td>9.66</td><td>-1.85</td><td>1.40</td><td>1.22e+13</td><td>1.97e+12</td><td>0.07</td><td>0.87</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>3</td><td>4.21</td><td>-56.98</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
     </table>
 
 
@@ -290,8 +291,8 @@ object.
 
 .. parsed-literal::
 
-    CPU times: user 4.12 s, sys: 10 ms, total: 4.13 s
-    Wall time: 4.13 s
+    CPU times: user 5.29 s, sys: 0 ns, total: 5.29 s
+    Wall time: 5.29 s
 
 
 .. code:: ipython3
@@ -304,13 +305,13 @@ object.
 .. raw:: html
 
     <b>Cat1</b><br><i>ClData length=4</i>
-    <table id="table140381788780528" class="table-striped table-bordered table-condensed">
+    <table id="table140675281846816" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
-    <tr><td>0</td><td>1.68</td><td>-6.91</td><td>1.00</td><td>1.22e+13</td><td>2.68e+12</td><td>0.06</td><td>0.37</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
-    <tr><td>1</td><td>0.56</td><td>8.49</td><td>0.43</td><td>1.66e+13</td><td>2.43e+12</td><td>0.05</td><td>0.01</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
-    <tr><td>2</td><td>6.75</td><td>-12.59</td><td>1.50</td><td>1.10e+13</td><td>2.84e+12</td><td>0.06</td><td>0.72</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
-    <tr><td>3</td><td>2.13</td><td>9.21</td><td>0.26</td><td>4.66e+13</td><td>6.69e+12</td><td>0.04</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.3333333333333333</td><td>0.0013108102960734413</td></tr>
+    <tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
+    <tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.5</td><td>0.00042554579675994035</td></tr>
+    <tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.6666666666666666</td><td>0.00018019169298074748</td></tr>
+    <tr><td>3</td><td>4.21</td><td>-56.98</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
     </table>
 
 
@@ -318,13 +319,13 @@ object.
 .. raw:: html
 
     <b>Cat2</b><br><i>ClData length=4</i>
-    <table id="table140381787721344" class="table-striped table-bordered table-condensed">
+    <table id="table140675280627840" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
-    <tr><td>0</td><td>25.50</td><td>-71.28</td><td>1.03</td><td>8.95e+12</td><td>2.06e+12</td><td>0.06</td><td>0.10</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-    <tr><td>1</td><td>3.41</td><td>-58.63</td><td>1.36</td><td>1.51e+13</td><td>2.59e+12</td><td>0.07</td><td>0.47</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td></tr>
-    <tr><td>2</td><td>13.47</td><td>-88.39</td><td>1.86</td><td>4.32e+13</td><td>4.22e+12</td><td>0.09</td><td>0.02</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-    <tr><td>3</td><td>9.66</td><td>-1.85</td><td>1.40</td><td>1.22e+13</td><td>1.97e+12</td><td>0.07</td><td>0.87</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.0005566901119180372</td></tr>
+    <tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>3</td><td>4.21</td><td>-56.98</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
     </table>
 
 
@@ -380,25 +381,25 @@ Match catalogs
     
     ## Multiple match (catalog 1)
     Finding candidates (Cat1)
-    * 401/700 objects matched.
+    * 720/835 objects matched.
     
     ## Multiple match (catalog 2)
     Finding candidates (Cat2)
-    * 401/700 objects matched.
+    * 720/928 objects matched.
     
     ## Finding unique matches of catalog 1
     Unique Matches (Cat1)
-    * 400/700 objects matched.
+    * 720/835 objects matched.
     
     ## Finding unique matches of catalog 2
     Unique Matches (Cat2)
-    * 401/700 objects matched.
+    * 719/928 objects matched.
     Cross Matches (Cat1)
-    * 400/700 objects matched.
+    * 719/835 objects matched.
     Cross Matches (Cat2)
-    * 400/700 objects matched.
-    CPU times: user 9.53 s, sys: 204 ms, total: 9.73 s
-    Wall time: 9.5 s
+    * 719/928 objects matched.
+    CPU times: user 10.9 s, sys: 183 ms, total: 11.1 s
+    Wall time: 10.9 s
 
 
 Recovery rate
@@ -461,4 +462,5 @@ You can check the exact numbers used on the 2D plots
 
 
 .. image:: footprint_files/footprint_39_0.png
+
 

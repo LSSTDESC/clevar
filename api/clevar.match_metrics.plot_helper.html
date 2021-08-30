@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.plot_helper module &mdash; ClEvaR 0.5.0 documentation</title>
+  <title>clevar.match_metrics.plot_helper module &mdash; ClEvaR 0.7.1 documentation</title>
   
 
   
@@ -37,8 +37,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="clevar.match_metrics.recovery module" href="clevar.match_metrics.recovery.html" />
-    <link rel="prev" title="clevar.match_metrics.distances module" href="clevar.match_metrics.distances.html" /> 
+    <link rel="next" title="clevar.utils module" href="clevar.utils.html" />
+    <link rel="prev" title="clevar.match_metrics.scaling.funcs module" href="clevar.match_metrics.scaling.funcs.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.7.1
               </div>
             
           
@@ -103,6 +103,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/footprint.html">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -129,10 +131,24 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="clevar.match_metrics.html">clevar.match_metrics package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.distances.html">clevar.match_metrics.distances package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.array_funcs.html">clevar.match_metrics.scaling.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.catalog_funcs.html">clevar.match_metrics.scaling.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.funcs.html">clevar.match_metrics.scaling.funcs module</a></li>
+</ul>
+</li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.match_metrics.plot_helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
@@ -344,6 +360,35 @@
 <li><p><strong>rotate</strong> (<em>bool</em>) – Invert x-y axes in plot</p></li>
 <li><p><strong>kwargs</strong> (<em>parameters</em>) – Additional parameters for plt.plot</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.plot_helper.plot_histograms">
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">plot_histograms</code><span class="sig-paren">(</span><em class="sig-param">histogram</em>, <em class="sig-param">edges1</em>, <em class="sig-param">edges2</em>, <em class="sig-param">ax</em>, <em class="sig-param">shape='steps'</em>, <em class="sig-param">plt_kwargs={}</em>, <em class="sig-param">lines_kwargs_list=None</em>, <em class="sig-param">add_legend=True</em>, <em class="sig-param">legend_format=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">legend_kwargs={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#plot_histograms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.plot_histograms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>histogram</strong> (<em>array</em>) – Histogram 2D with dimention (edges2, edges1).</p></li>
+<li><p><strong>edges1</strong> (<em>array</em>) – Edges of histogram.</p></li>
+<li><p><strong>edges2</strong> (<em>array</em>) – Edges of histogram.</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
+<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>lines_kwargs_list</strong> (<em>list</em><em>, </em><em>None</em>) – List of additional arguments for plotting each line (using pylab.plot).
+Must have same size as len(bins2)-1</p></li>
+<li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
+<li><p><strong>legend_format</strong> (<em>function</em>) – Function to format the values of the bins in legend</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.legend</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ax</p>
 </dd>
 </dl>
 </dd></dl>

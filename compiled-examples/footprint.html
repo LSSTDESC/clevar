@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Footprint functionality &mdash; ClEvaR 0.5.0 documentation</title>
+  <title>Footprint functionality &mdash; ClEvaR 0.7.1 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API Documentation" href="../api.html" />
+    <link rel="next" title="Intrinsic Completeness" href="intrinsic_completeness.html" />
     <link rel="prev" title="Metrics of matching (advanced)" href="match_metrics_advanced.html" /> 
 </head>
 
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.7.1
               </div>
             
           
@@ -103,6 +103,8 @@
 <li class="toctree-l1"><a class="reference internal" href="match_metrics.html">Metrics of matching (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic_completeness.html">Intrinsic Completeness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -129,10 +131,24 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.scaling.array_funcs.html">clevar.match_metrics.scaling.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.scaling.catalog_funcs.html">clevar.match_metrics.scaling.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.scaling.funcs.html">clevar.match_metrics.scaling.funcs module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/clevar.utils.html">clevar.utils module</a></li>
@@ -237,6 +253,11 @@ computation</p>
 <span class="n">input1</span><span class="p">,</span> <span class="n">input2</span> <span class="o">=</span> <span class="n">gen_cluster</span><span class="p">(</span><span class="n">ra_max</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">dec_max</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Initial</span> <span class="n">number</span> <span class="n">of</span> <span class="n">clusters</span> <span class="p">(</span><span class="n">logM</span><span class="o">&gt;</span><span class="mf">12.48</span><span class="p">):</span> <span class="mi">2</span><span class="p">,</span><span class="mi">740</span>
+<span class="n">Clusters</span> <span class="ow">in</span> <span class="n">catalog1</span><span class="p">:</span> <span class="mi">835</span>
+<span class="n">Clusters</span> <span class="ow">in</span> <span class="n">catalog2</span><span class="p">:</span> <span class="mi">928</span>
+</pre></div>
+</div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar</span> <span class="kn">import</span> <span class="n">ClCatalog</span>
 <span class="n">c1</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat1&#39;</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">],</span>
             <span class="n">mass_err</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;MASS_ERR&#39;</span><span class="p">],</span> <span class="n">z_err</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;Z_ERR&#39;</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;RADIUS_ARCMIN&#39;</span><span class="p">],</span>
@@ -257,7 +278,7 @@ computation</p>
 <div class="section" id="add-an-external-footprint">
 <h2>Add an external footprint<a class="headerlink" href="#add-an-external-footprint" title="Permalink to this headline">¶</a></h2>
 <p>Here we will get heapy pixels based on the positions of the clusters</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nside</span> <span class="o">=</span> <span class="mi">64</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nside</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">pixels1</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ang2pix</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">c1</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="n">c1</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">pixels2</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ang2pix</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">c2</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="n">c2</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -295,7 +316,7 @@ computation</p>
   <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="o">-</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x7fad2e9d1a00</span><span class="o">&gt;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x7ff184340640</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <img alt="../_images/footprint_10_2.png" src="../_images/footprint_10_2.png" />
@@ -321,21 +342,22 @@ density per pixel. It also can fill holes in the footprint.</p>
 </pre></div>
 </div>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Footprint</span> <span class="n">NSIDE</span><span class="p">:</span> <span class="mi">64</span>
-<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">599</span>
-<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">599</span>
+<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">677</span>
+<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">677</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">NSIDE</span></code> from density:</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ftpt1</span> <span class="o">=</span> <span class="n">create_artificial_footprint</span><span class="p">(</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="n">c1</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span> <span class="n">nside</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_density</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">NSIDE</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">87.5</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
-<span class="n">NSIDE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">36.8421052631579</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
-<span class="n">NSIDE</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">11.475409836065573</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
-<span class="n">NSIDE</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">3.5353535353535355</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
-<span class="n">Footprint</span> <span class="n">NSIDE</span><span class="p">:</span> <span class="mi">16</span>
-<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">198</span>
-<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">198</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">NSIDE</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">104.375</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
+<span class="n">NSIDE</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">43.94736842105263</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
+<span class="n">NSIDE</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">13.916666666666666</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
+<span class="n">NSIDE</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">4.175</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
+<span class="n">NSIDE</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mf">1.7040816326530612</span> <span class="n">clusters</span> <span class="n">per</span> <span class="n">pixel</span>
+<span class="n">Footprint</span> <span class="n">NSIDE</span><span class="p">:</span> <span class="mi">32</span>
+<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">490</span>
+<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">490</span>
 </pre></div>
 </div>
 <p>fill holes</p>
@@ -343,46 +365,38 @@ density per pixel. It also can fill holes in the footprint.</p>
 </pre></div>
 </div>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Footprint</span> <span class="n">NSIDE</span><span class="p">:</span> <span class="mi">64</span>
-<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">599</span>
+<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">677</span>
 <span class="c1">### filling holes ###</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">599</span> <span class="o">-&gt;</span> <span class="mi">636</span> <span class="p">(</span><span class="o">+</span><span class="mi">37</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">677</span> <span class="o">-&gt;</span> <span class="mi">728</span> <span class="p">(</span><span class="o">+</span><span class="mi">51</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">636</span> <span class="o">-&gt;</span> <span class="mi">661</span> <span class="p">(</span><span class="o">+</span><span class="mi">25</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">728</span> <span class="o">-&gt;</span> <span class="mi">763</span> <span class="p">(</span><span class="o">+</span><span class="mi">35</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">661</span> <span class="o">-&gt;</span> <span class="mi">681</span> <span class="p">(</span><span class="o">+</span><span class="mi">20</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">763</span> <span class="o">-&gt;</span> <span class="mi">787</span> <span class="p">(</span><span class="o">+</span><span class="mi">24</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">681</span> <span class="o">-&gt;</span> <span class="mi">694</span> <span class="p">(</span><span class="o">+</span><span class="mi">13</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">787</span> <span class="o">-&gt;</span> <span class="mi">798</span> <span class="p">(</span><span class="o">+</span><span class="mi">11</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">694</span> <span class="o">-&gt;</span> <span class="mi">705</span> <span class="p">(</span><span class="o">+</span><span class="mi">11</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">798</span> <span class="o">-&gt;</span> <span class="mi">806</span> <span class="p">(</span><span class="o">+</span><span class="mi">8</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">705</span> <span class="o">-&gt;</span> <span class="mi">712</span> <span class="p">(</span><span class="o">+</span><span class="mi">7</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">806</span> <span class="o">-&gt;</span> <span class="mi">813</span> <span class="p">(</span><span class="o">+</span><span class="mi">7</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">712</span> <span class="o">-&gt;</span> <span class="mi">719</span> <span class="p">(</span><span class="o">+</span><span class="mi">7</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">813</span> <span class="o">-&gt;</span> <span class="mi">819</span> <span class="p">(</span><span class="o">+</span><span class="mi">6</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">719</span> <span class="o">-&gt;</span> <span class="mi">721</span> <span class="p">(</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">819</span> <span class="o">-&gt;</span> <span class="mi">826</span> <span class="p">(</span><span class="o">+</span><span class="mi">7</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">721</span> <span class="o">-&gt;</span> <span class="mi">724</span> <span class="p">(</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">826</span> <span class="o">-&gt;</span> <span class="mi">834</span> <span class="p">(</span><span class="o">+</span><span class="mi">8</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">724</span> <span class="o">-&gt;</span> <span class="mi">727</span> <span class="p">(</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">834</span> <span class="o">-&gt;</span> <span class="mi">839</span> <span class="p">(</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">727</span> <span class="o">-&gt;</span> <span class="mi">729</span> <span class="p">(</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">839</span> <span class="o">-&gt;</span> <span class="mi">842</span> <span class="p">(</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">729</span> <span class="o">-&gt;</span> <span class="mi">732</span> <span class="p">(</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">842</span> <span class="o">-&gt;</span> <span class="mi">843</span> <span class="p">(</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
  <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">732</span> <span class="o">-&gt;</span> <span class="mi">737</span> <span class="p">(</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span>
- <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">737</span> <span class="o">-&gt;</span> <span class="mi">739</span> <span class="p">(</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
- <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">739</span> <span class="o">-&gt;</span> <span class="mi">741</span> <span class="p">(</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
- <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">741</span> <span class="o">-&gt;</span> <span class="mi">743</span> <span class="p">(</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
- <span class="o">-</span> <span class="n">filling</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">743</span> <span class="o">-&gt;</span> <span class="mi">743</span> <span class="p">(</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">843</span> <span class="o">-&gt;</span> <span class="mi">843</span> <span class="p">(</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span>
  <span class="n">Total</span> <span class="n">Change</span><span class="p">:</span>
-   <span class="n">size</span><span class="p">:</span> <span class="mi">599</span> <span class="o">-&gt;</span> <span class="mi">743</span> <span class="p">(</span><span class="o">+</span><span class="mi">144</span><span class="p">)</span>
+   <span class="n">size</span><span class="p">:</span> <span class="mi">677</span> <span class="o">-&gt;</span> <span class="mi">843</span> <span class="p">(</span><span class="o">+</span><span class="mi">166</span><span class="p">)</span>
 <span class="c1">### filled! ###</span>
-<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">743</span>
+<span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">843</span>
 </pre></div>
 </div>
 </div>
@@ -402,8 +416,8 @@ weighted by a project NFW profile</p>
 <span class="c1">## creating visibility mask ##</span>
 <span class="c1">## creating visibility mask ##</span>
 <span class="c1">## creating visibility mask ##</span>
-<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">3.1</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mf">3.28</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">6.37</span> <span class="n">ms</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">5.92</span> <span class="n">ms</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">5.26</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mf">1.14</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">6.4</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">6.29</span> <span class="n">ms</span>
 </pre></div>
 </div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
@@ -411,21 +425,21 @@ weighted by a project NFW profile</p>
 </pre></div>
 </div>
 <b>Cat1</b><br><i>ClData length=4</i>
-<table id="table140381789787760" class="table-striped table-bordered table-condensed">
+<table id="table140675280719392" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
 <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-<tr><td>0</td><td>1.68</td><td>-6.91</td><td>1.00</td><td>1.22e+13</td><td>2.68e+12</td><td>0.06</td><td>0.37</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
-<tr><td>1</td><td>0.56</td><td>8.49</td><td>0.43</td><td>1.66e+13</td><td>2.43e+12</td><td>0.05</td><td>0.01</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
-<tr><td>2</td><td>6.75</td><td>-12.59</td><td>1.50</td><td>1.10e+13</td><td>2.84e+12</td><td>0.06</td><td>0.72</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
-<tr><td>3</td><td>2.13</td><td>9.21</td><td>0.26</td><td>4.66e+13</td><td>6.69e+12</td><td>0.04</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>3</td><td>4.21</td><td>-56.98</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
 </table><b>Cat2</b><br><i>ClData length=4</i>
-<table id="table140381787737296" class="table-striped table-bordered table-condensed">
+<table id="table140675283140272" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
 <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-<tr><td>0</td><td>25.50</td><td>-71.28</td><td>1.03</td><td>8.95e+12</td><td>2.06e+12</td><td>0.06</td><td>0.10</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-<tr><td>1</td><td>3.41</td><td>-58.63</td><td>1.36</td><td>1.51e+13</td><td>2.59e+12</td><td>0.07</td><td>0.47</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
-<tr><td>2</td><td>13.47</td><td>-88.39</td><td>1.86</td><td>4.32e+13</td><td>4.22e+12</td><td>0.09</td><td>0.02</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-<tr><td>3</td><td>9.66</td><td>-1.85</td><td>1.40</td><td>1.22e+13</td><td>1.97e+12</td><td>0.07</td><td>0.87</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>3</td><td>4.21</td><td>-56.98</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
 </table><p>Add coverfraction values based on the footprint. It needs a cosmology
 object.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.cosmology</span> <span class="kn">import</span> <span class="n">AstroPyCosmology</span>
@@ -438,8 +452,8 @@ object.</p>
 <span class="n">c2</span><span class="o">.</span><span class="n">add_ftpt_coverfrac</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;mpc&#39;</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;nfw2D&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">4.12</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">10</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">4.13</span> <span class="n">s</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">4.13</span> <span class="n">s</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">5.29</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">0</span> <span class="n">ns</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">5.29</span> <span class="n">s</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">5.29</span> <span class="n">s</span>
 </pre></div>
 </div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
@@ -447,21 +461,21 @@ object.</p>
 </pre></div>
 </div>
 <b>Cat1</b><br><i>ClData length=4</i>
-<table id="table140381788780528" class="table-striped table-bordered table-condensed">
+<table id="table140675281846816" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
 <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>0</td><td>1.68</td><td>-6.91</td><td>1.00</td><td>1.22e+13</td><td>2.68e+12</td><td>0.06</td><td>0.37</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
-<tr><td>1</td><td>0.56</td><td>8.49</td><td>0.43</td><td>1.66e+13</td><td>2.43e+12</td><td>0.05</td><td>0.01</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
-<tr><td>2</td><td>6.75</td><td>-12.59</td><td>1.50</td><td>1.10e+13</td><td>2.84e+12</td><td>0.06</td><td>0.72</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td><td>0.0</td></tr>
-<tr><td>3</td><td>2.13</td><td>9.21</td><td>0.26</td><td>4.66e+13</td><td>6.69e+12</td><td>0.04</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.3333333333333333</td><td>0.0013108102960734413</td></tr>
+<tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
+<tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.5</td><td>0.00042554579675994035</td></tr>
+<tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.6666666666666666</td><td>0.00018019169298074748</td></tr>
+<tr><td>3</td><td>4.21</td><td>-56.98</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
 </table><b>Cat2</b><br><i>ClData length=4</i>
-<table id="table140381787721344" class="table-striped table-bordered table-condensed">
+<table id="table140675280627840" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
 <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
-<tr><td>0</td><td>25.50</td><td>-71.28</td><td>1.03</td><td>8.95e+12</td><td>2.06e+12</td><td>0.06</td><td>0.10</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-<tr><td>1</td><td>3.41</td><td>-58.63</td><td>1.36</td><td>1.51e+13</td><td>2.59e+12</td><td>0.07</td><td>0.47</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td></tr>
-<tr><td>2</td><td>13.47</td><td>-88.39</td><td>1.86</td><td>4.32e+13</td><td>4.22e+12</td><td>0.09</td><td>0.02</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-<tr><td>3</td><td>9.66</td><td>-1.85</td><td>1.40</td><td>1.22e+13</td><td>1.97e+12</td><td>0.07</td><td>0.87</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+<tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+<tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.0005566901119180372</td></tr>
+<tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+<tr><td>3</td><td>4.21</td><td>-56.98</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
 </table></div>
 <div class="section" id="saving-and-loading-footprint-quantities">
 <h2>Saving and loading footprint quantities<a class="headerlink" href="#saving-and-loading-footprint-quantities" title="Permalink to this headline">¶</a></h2>
@@ -505,25 +519,25 @@ the catalog so you don’t have to compute them again:</p>
 
 <span class="c1">## Multiple match (catalog 1)</span>
 <span class="n">Finding</span> <span class="n">candidates</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
-<span class="o">*</span> <span class="mi">401</span><span class="o">/</span><span class="mi">700</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="o">*</span> <span class="mi">720</span><span class="o">/</span><span class="mi">835</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 
 <span class="c1">## Multiple match (catalog 2)</span>
 <span class="n">Finding</span> <span class="n">candidates</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
-<span class="o">*</span> <span class="mi">401</span><span class="o">/</span><span class="mi">700</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="o">*</span> <span class="mi">720</span><span class="o">/</span><span class="mi">928</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 
 <span class="c1">## Finding unique matches of catalog 1</span>
 <span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
-<span class="o">*</span> <span class="mi">400</span><span class="o">/</span><span class="mi">700</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="o">*</span> <span class="mi">720</span><span class="o">/</span><span class="mi">835</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 
 <span class="c1">## Finding unique matches of catalog 2</span>
 <span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
-<span class="o">*</span> <span class="mi">401</span><span class="o">/</span><span class="mi">700</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="o">*</span> <span class="mi">719</span><span class="o">/</span><span class="mi">928</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 <span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
-<span class="o">*</span> <span class="mi">400</span><span class="o">/</span><span class="mi">700</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="o">*</span> <span class="mi">719</span><span class="o">/</span><span class="mi">835</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 <span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
-<span class="o">*</span> <span class="mi">400</span><span class="o">/</span><span class="mi">700</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
-<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">9.53</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">204</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">9.73</span> <span class="n">s</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">9.5</span> <span class="n">s</span>
+<span class="o">*</span> <span class="mi">719</span><span class="o">/</span><span class="mi">928</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">10.9</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">183</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">11.1</span> <span class="n">s</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">10.9</span> <span class="n">s</span>
 </pre></div>
 </div>
 </div>

@@ -35,6 +35,7 @@ The source code is publically available at https://github.com/LSSTDESC/ClEvaR
    compiled-examples/match_metrics.rst
    compiled-examples/match_metrics_advanced.rst
    compiled-examples/footprint.rst
+   compiled-examples/intrinsic_completeness.rst
 .. toctree::
    :maxdepth: 1
    :caption: Mass Fitting Examples

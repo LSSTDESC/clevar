@@ -48,7 +48,7 @@ and the data for the table as keyword arguments:
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140047409494432" class="table-striped table-bordered table-condensed">
+    <table id="table140610466965248" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -60,7 +60,7 @@ and the data for the table as keyword arguments:
 .. raw:: html
 
     <b>members</b><br><i>ClData length=3</i>
-    <table id="table140047409493472" class="table-striped table-bordered table-condensed">
+    <table id="table140610466965296" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th></tr></thead>
     <thead><tr><th>str2</th><th>str2</th></tr></thead>
     <tr><td>m1</td><td>c1</td></tr>
@@ -107,7 +107,7 @@ a ``name`` argument:
 .. raw:: html
 
     <b>my cluster</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table140047409492032" class="table-striped table-bordered table-condensed">
+    <table id="table140610466967024" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>31622776601683.793</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -136,7 +136,7 @@ will be created:
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140047409672976" class="table-striped table-bordered table-condensed">
+    <table id="table140607632791248" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>0</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -160,7 +160,7 @@ exeptions in `Properties of ``ClCatalog`` <#clcat>`__ and `Properties of
 .. raw:: html
 
     <b>test name</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140047409674512" class="table-striped table-bordered table-condensed">
+    <table id="table140607632571888" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>test_column</th><th>other</th><th>third</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>int64</th><th>bool</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>0</td><td>1</td><td>True</td><td>None</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -249,7 +249,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table140047409757056" class="table-striped table-bordered table-condensed">
+    <table id="table140607632792160" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td></tr>
@@ -268,7 +268,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table140044550241872" class="table-striped table-bordered table-condensed">
+    <table id="table140607632789616" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -287,7 +287,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=1</i>
-    <table id="table140047409495824" class="table-striped table-bordered table-condensed">
+    <table id="table140607632572080" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -305,7 +305,7 @@ operations in the same way as ``astropy`` tables. The output is a new
 .. raw:: html
 
     <i>Row index=0</i>
-    <table id="table140044550097744">
+    <table id="table140607632512960">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -333,7 +333,7 @@ footprint.ipynb for information on those.
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140044550097600" class="table-striped table-bordered table-condensed">
+    <table id="table140607632571984" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -345,7 +345,7 @@ footprint.ipynb for information on those.
 .. raw:: html
 
     <b>cluster</b><br><i>ClData length=2</i>
-    <table id="table140044550097360" class="table-striped table-bordered table-condensed">
+    <table id="table140608483311424" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -507,3 +507,4 @@ be used for matching:
 
 The ``MemCatalog`` object also has a ``id_dict_list`` atribute when
 there is repeated member ``id``.
+

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Matching catalogs based on membership (simple) &mdash; ClEvaR 0.5.0 documentation</title>
+  <title>Matching catalogs based on membership (simple) &mdash; ClEvaR 0.7.1 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.7.1
               </div>
             
           
@@ -103,6 +103,8 @@
 <li class="toctree-l1"><a class="reference internal" href="match_metrics.html">Metrics of matching (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="footprint.html">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic_completeness.html">Intrinsic Completeness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul>
@@ -129,10 +131,24 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/clevar.match_metrics.html">clevar.match_metrics package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.distances.html">clevar.match_metrics.distances package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.scaling.array_funcs.html">clevar.match_metrics.scaling.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.scaling.catalog_funcs.html">clevar.match_metrics.scaling.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/clevar.match_metrics.scaling.funcs.html">clevar.match_metrics.scaling.funcs module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/clevar.utils.html">clevar.utils module</a></li>
@@ -265,7 +281,7 @@ dictionary</p>
 </pre></div>
 </div>
 <i>Table length=5</i>
-<table id="table139849645922096" class="table-striped table-bordered table-condensed">
+<table id="table140317058566128" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ID</th><th>MASS</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th></tr></thead>
 <tr><td>CL0a</td><td>1000000000000000.0</td></tr>
@@ -274,7 +290,7 @@ dictionary</p>
 <tr><td>CL3a</td><td>4000000000000000.0</td></tr>
 <tr><td>CL4a</td><td>5000000000000000.0</td></tr>
 </table><i>Table length=4</i>
-<table id="table139849645922144" class="table-striped table-bordered table-condensed">
+<table id="table140317058566176" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ID</th><th>MASS</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th></tr></thead>
 <tr><td>CL0b</td><td>1000000000000000.0</td></tr>
@@ -282,7 +298,7 @@ dictionary</p>
 <tr><td>CL2b</td><td>3000000000000000.0</td></tr>
 <tr><td>CL3b</td><td>4000000000000000.0</td></tr>
 </table><i>Table length=15</i>
-<table id="table139849645922336" class="table-striped table-bordered table-condensed">
+<table id="table140317058566368" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
 <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -301,7 +317,7 @@ dictionary</p>
 <tr><td>MEM13</td><td>CL3a</td><td>130.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 <tr><td>MEM14</td><td>CL4a</td><td>140.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
 </table><i>Table length=14</i>
-<table id="table139847640859360" class="table-striped table-bordered table-condensed">
+<table id="table140315066944624" class="table-striped table-bordered table-condensed">
 <thead><tr><th>ID</th><th>ID_CLUSTER</th><th>RA</th><th>DEC</th><th>Z</th><th>PMEM</th></tr></thead>
 <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>0.1</td><td>1.0</td></tr>
@@ -349,7 +365,7 @@ passing them as keys:</p>
 </pre></div>
 </div>
 <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-<table id="table139849645915440" class="table-striped table-bordered table-condensed">
+<table id="table140317058561504" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>CL0a</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -358,7 +374,7 @@ passing them as keys:</p>
 <tr><td>CL3a</td><td>4.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
 </table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-<table id="table139846778409888" class="table-striped table-bordered table-condensed">
+<table id="table140314207802512" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
 <tr><td>CL0b</td><td>1.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -385,7 +401,7 @@ all members.</p>
 </pre></div>
 </div>
 <b>Mem1</b><br><i>ClData length=15</i>
-<table id="table139846778410800" class="table-striped table-bordered table-condensed">
+<table id="table140317058737536" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
 <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>MEM0</td><td>CL0a</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
@@ -404,7 +420,7 @@ all members.</p>
 <tr><td>MEM13</td><td>CL3a</td><td>130.0</td><td>0.0</td><td>1.0</td></tr>
 <tr><td>MEM14</td><td>CL4a</td><td>140.0</td><td>0.0</td><td>1.0</td></tr>
 </table><b>Mem2</b><br><i>ClData length=14</i>
-<table id="table139849645893904" class="table-striped table-bordered table-condensed">
+<table id="table140317058555712" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>id_cluster</th><th>ra</th><th>dec</th><th>pmem</th></tr></thead>
 <thead><tr><th>str5</th><th>str4</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
 <tr><td>MEM0</td><td>CL3b</td><td>0.0</td><td>0.0</td><td>1.0</td></tr>
@@ -506,8 +522,8 @@ one call:</p>
 <span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">5</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 <span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
 <span class="o">*</span> <span class="mi">4</span><span class="o">/</span><span class="mi">4</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
-<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">13.2</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mf">1.98</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">15.2</span> <span class="n">ms</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">14.3</span> <span class="n">ms</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">11.1</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mf">2.82</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">13.9</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">13.3</span> <span class="n">ms</span>
 </pre></div>
 </div>
 <p>This will fill the matching columns in the catalogs: -
@@ -526,7 +542,7 @@ computed by:</p>
 </pre></div>
 </div>
 <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-<table id="table139846778411232" class="table-striped table-bordered table-condensed">
+<table id="table140314207803472" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
 <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
@@ -535,7 +551,7 @@ computed by:</p>
 <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
 <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td><td>None</td></tr>
 </table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-<table id="table139846778411376" class="table-striped table-bordered table-condensed">
+<table id="table140314207804096" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
 <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
@@ -573,7 +589,7 @@ computed by:</p>
 </pre></div>
 </div>
 <b>Cat1</b><br>Radius unit: None<br><i>ClData length=5</i>
-<table id="table139846778333360" class="table-striped table-bordered table-condensed">
+<table id="table140314234612560" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_self</th><th>mt_frac_other</th><th>mt_cross</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
 <tr><td>CL0a</td><td>1.00e+15</td><td>CL0b</td><td>CL0b</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>[&apos;CL0b&apos;, &apos;CL3b&apos;]</td><td>0.8</td><td>1.0</td><td>CL0b</td></tr>
@@ -582,7 +598,7 @@ computed by:</p>
 <tr><td>CL3a</td><td>4.00e+15</td><td>CL3b</td><td>CL3b</td><td>[&apos;CL3b&apos;]</td><td>[&apos;CL3b&apos;]</td><td>1.0</td><td>0.6666666666666666</td><td>CL3b</td></tr>
 <tr><td>CL4a</td><td>5.00e+15</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>0.0</td><td>0.0</td><td>None</td></tr>
 </table><b>Cat2</b><br>Radius unit: None<br><i>ClData length=4</i>
-<table id="table139849645892320" class="table-striped table-bordered table-condensed">
+<table id="table140317058799120" class="table-striped table-bordered table-condensed">
 <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>mt_frac_other</th><th>mt_frac_self</th><th>mt_cross</th></tr></thead>
 <thead><tr><th>str4</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>object</th></tr></thead>
 <tr><td>CL0b</td><td>1.00e+15</td><td>CL0a</td><td>CL0a</td><td>[&apos;CL0a&apos;]</td><td>[&apos;CL0a&apos;]</td><td>0.8</td><td>1.0</td><td>CL0a</td></tr>
@@ -608,7 +624,7 @@ pairs of clusters:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mt1</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span> <span class="n">mt2</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">PathCollection</span> <span class="n">at</span> <span class="mh">0x7f309d65f040</span><span class="o">&gt;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">PathCollection</span> <span class="n">at</span> <span class="mh">0x7f9d725d6190</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <img alt="../_images/membership_matching_23_1.png" src="../_images/membership_matching_23_1.png" />

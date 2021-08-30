@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.distances module &mdash; ClEvaR 0.5.0 documentation</title>
+  <title>clevar.match_metrics.distances package &mdash; ClEvaR 0.7.1 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="clevar.match_metrics.plot_helper module" href="clevar.match_metrics.plot_helper.html" />
+    <link rel="next" title="clevar.match_metrics.distances.catalog_funcs module" href="clevar.match_metrics.distances.catalog_funcs.html" />
     <link rel="prev" title="clevar.match_metrics package" href="clevar.match_metrics.html" /> 
 </head>
 
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.7.1
               </div>
             
           
@@ -103,6 +103,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics.html">Metrics of matching (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/match_metrics_advanced.html">Metrics of matching (advanced)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/footprint.html">Footprint functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Reference</span></p>
 <ul class="current">
@@ -129,10 +131,24 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="clevar.match_metrics.html">clevar.match_metrics package</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.match_metrics.distances module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">clevar.match_metrics.distances package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.array_funcs.html">clevar.match_metrics.recovery.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.catalog_funcs.html">clevar.match_metrics.recovery.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.recovery.funcs.html">clevar.match_metrics.recovery.funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.array_funcs.html">clevar.match_metrics.scaling.array_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.catalog_funcs.html">clevar.match_metrics.scaling.catalog_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="clevar.match_metrics.scaling.funcs.html">clevar.match_metrics.scaling.funcs module</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.plot_helper.html">clevar.match_metrics.plot_helper module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.recovery.html">clevar.match_metrics.recovery module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.match_metrics.scaling.html">clevar.match_metrics.scaling module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
@@ -198,7 +214,7 @@
         
           <li><a href="clevar.match_metrics.html">clevar.match_metrics package</a> &raquo;</li>
         
-      <li>clevar.match_metrics.distances module</li>
+      <li>clevar.match_metrics.distances package</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -218,172 +234,16 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-clevar.match_metrics.distances">
-<span id="clevar-match-metrics-distances-module"></span><h1>clevar.match_metrics.distances module<a class="headerlink" href="#module-clevar.match_metrics.distances" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="clevar.match_metrics.distances.ClCatalogFuncs">
-<em class="property">class </em><code class="sig-prename descclassname">clevar.match_metrics.distances.</code><code class="sig-name descname">ClCatalogFuncs</code><a class="reference internal" href="../_modules/clevar/match_metrics/distances.html#ClCatalogFuncs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.distances.ClCatalogFuncs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt id="clevar.match_metrics.distances.ClCatalogFuncs.central_position">
-<code class="sig-name descname">central_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">radial_bins</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">radial_bin_units</span><span class="o">=</span><span class="default_value">'degrees'</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">col2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bins2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/distances.html#ClCatalogFuncs.central_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.distances.ClCatalogFuncs.central_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
-<li><p><strong>radial_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for radial distances</p></li>
-<li><p><strong>radial_bin_units</strong> (<em>str</em>) – Units of radial bins</p></li>
-<li><p><strong>cosmo</strong> (<em>clevar.Cosmology</em>) – Cosmology (used if physical units required)</p></li>
-<li><p><strong>col2</strong> (<em>str</em>) – Name of quantity 2 (of cat1) to bin</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for quantity 2</p></li>
-<li><p><strong>log2</strong> (<em>bool</em>) – Log scale for quantity 2</p></li>
-<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 1 properties, must have size=cat1.size</p></li>
-<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 2 properties, must have size=cat2.size</p></li>
+<span id="clevar-match-metrics-distances-package"></span><h1>clevar.match_metrics.distances package<a class="headerlink" href="#module-clevar.match_metrics.distances" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="clevar.match_metrics.distances.catalog_funcs.html">clevar.match_metrics.distances.catalog_funcs module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clevar.match_metrics.distances.funcs.html">clevar.match_metrics.distances.funcs module</a></li>
 </ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>ax</strong> – Axis of the plot</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>matplotlib.axes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="clevar.match_metrics.distances.ClCatalogFuncs.redshift">
-<code class="sig-name descname">redshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">col2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bins2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/distances.html#ClCatalogFuncs.redshift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.distances.ClCatalogFuncs.redshift" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift distances</p></li>
-<li><p><strong>col2</strong> (<em>str</em>) – Name of quantity 2 to bin</p></li>
-<li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for quantity 2</p></li>
-<li><p><strong>normalize</strong> (<em>str</em><em>, </em><em>None</em>) – Normalize difference by (1+z). Can be ‘cat1’ for (1+z1), ‘cat2’ for (1+z2)
-or ‘mean’ for (1+(z1+z2)/2).</p></li>
-<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 1 properties, must have size=cat1.size</p></li>
-<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 2 properties, must have size=cat2.size</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>ax</strong> – Axis of the plot</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>matplotlib.axes</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt id="clevar.match_metrics.distances.central_position">
-<code class="sig-prename descclassname">clevar.match_metrics.distances.</code><code class="sig-name descname">central_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">radial_bins</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">radial_bin_units</span><span class="o">=</span><span class="default_value">'degrees'</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">quantity_bins</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bins</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">log_quantity</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/distances.html#central_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.distances.central_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
-<li><p><strong>radial_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for radial distances</p></li>
-<li><p><strong>radial_bin_units</strong> (<em>str</em>) – Units of radial bins</p></li>
-<li><p><strong>cosmo</strong> (<em>clevar.Cosmology</em>) – Cosmology (used if physical units required)</p></li>
-<li><p><strong>quantity_bins</strong> (<em>str</em>) – Column to bin the data</p></li>
-<li><p><strong>bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for quantity</p></li>
-<li><p><strong>log_quantity</strong> (<em>bool</em>) – Display label in log fmt</p></li>
-<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 1 properties, must have size=cat1.size</p></li>
-<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 2 properties, must have size=cat2.size</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-<li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
-<li><p><strong>legend_format</strong> (<em>function</em>) – Function to format the values of the bins in legend</p></li>
-<li><p><strong>legend_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.legend</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>ax</strong> – Axis of the plot</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>matplotlib.axes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="clevar.match_metrics.distances.redshift">
-<code class="sig-prename descclassname">clevar.match_metrics.distances.</code><code class="sig-name descname">redshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">quantity_bins</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bins</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">log_quantity</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/distances.html#redshift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.distances.redshift" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
-<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog matched to</p></li>
-<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in: ‘cross’, ‘cat1’, ‘cat2’</p></li>
-<li><p><strong>redshift_bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for redshift distances</p></li>
-<li><p><strong>normalize</strong> (<em>str</em><em>, </em><em>None</em>) – Normalize difference by (1+z). Can be ‘cat1’ for (1+z1), ‘cat2’ for (1+z2)
-or ‘mean’ for (1+(z1+z2)/2).</p></li>
-<li><p><strong>quantity_bins</strong> (<em>str</em>) – Column to bin the data</p></li>
-<li><p><strong>bins</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for quantity</p></li>
-<li><p><strong>log_quantity</strong> (<em>bool</em>) – Display label in log fmt</p></li>
-<li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 1 properties, must have size=cat1.size</p></li>
-<li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Mask for clusters 2 properties, must have size=cat2.size</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
-Must have same size as len(bins2)-1</p></li>
-<li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
-<li><p><strong>legend_format</strong> (<em>function</em>) – Function to format the values of the bins in legend</p></li>
-<li><p><strong>legend_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.legend</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>ax</strong> – Axis of the plot</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>matplotlib.axes</p>
-</dd>
-</dl>
-</dd></dl>
-
+</div>
+</div>
 </div>
 
 
