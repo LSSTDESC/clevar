@@ -134,6 +134,30 @@ for entry in config:
 
 
 # -- Compile the examples into rst----------------------------------------
+def fix_rst_equations(rst_file):
+    """
+    Fix equation, that are not converted well to rst.
+
+    Parameters
+    ----------
+    rst_file: str
+        Name of the rst file to be corrected.
+    """
+    data = open(rst_file).read().split('\n')
+    out, tab = [], False
+    for line in data:
+        if line==r':raw-latex:`\begin{equation}':
+            tab = True
+            out.append('.. math::\n')
+        elif line==r'\end{equation}`':
+            tab = False
+            out.append('')
+        else:
+            out.append('    '+line.strip() if tab else line)
+    f = open(rst_file, 'w')
+    print('\n'.join(out), file=f)
+    f.close()
+
 outdir = 'compiled-examples/'
 nbconvert_opts = ['--to rst',
                   '--ExecutePreprocessor.kernel_name=python3',
@@ -143,6 +167,9 @@ nbconvert_opts = ['--to rst',
 for demo in [*demofiles, *examplefiles]:
     com = ' '.join(['jupyter nbconvert']+nbconvert_opts+[demo])
     subprocess.run(com, shell=True)
+    rst_output = demo.split('/')[-1].replace('.ipynb', '.rst')
+    fix_rst_equations(f'{outdir}/{rst_output}')
+
 
 
 # -- Build index.html ----------------------------------------------------
