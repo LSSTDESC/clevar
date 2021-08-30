@@ -42,78 +42,79 @@ def test_z_simple():
     ax = scaling.redshift(c1, c2, 'cat1', add_err=True)
 def test_z_color():
     c1, c2 = _test_data.c1, _test_data.c2
-    ax, cb = scaling.redshift_masscolor(c1, c2, 'cat1', add_err=True)
+    info = scaling.redshift_masscolor(c1, c2, 'cat1', add_err=True)
     ax = scaling.redshift_masscolor(c1, c2, 'cat1', add_cb=False)
 def test_z_density():
     c1, c2 = _test_data.c1, _test_data.c2
-    ax, cb = scaling.redshift_density(c1, c2, 'cat1', add_err=True)
-    ax, cb = scaling.redshift_density(c1, c2, 'cat1', ax_rotation=45)
+    info = scaling.redshift_density(c1, c2, 'cat1', add_err=True)
+    info = scaling.redshift_density(c1, c2, 'cat1', ax_rotation=45)
 def test_z_panel():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.redshift_masspanel(c1, c2, 'cat1', add_err=True, mass_bins=4)
+    info = scaling.redshift_masspanel(c1, c2, 'cat1', add_err=True, mass_bins=4)
 def test_z_density_panel():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.redshift_density_masspanel(c1, c2, 'cat1', add_err=True)
+    info = scaling.redshift_density_masspanel(c1, c2, 'cat1', add_err=True)
 def test_z_metrics():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.redshift_metrics(c1, c2, 'cat1')
+    info = scaling.redshift_metrics(c1, c2, 'cat1')
 def test_z_density_metrics():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.redshift_density_metrics(c1, c2, 'cat1')
+    info = scaling.redshift_density_metrics(c1, c2, 'cat1')
 def test_z_dist():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.redshift_dist(c1, c2, 'cat1')
+    info = scaling.redshift_dist(c1, c2, 'cat1')
 def test_z_dist_self():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.redshift_dist_self(c1)
+    info = scaling.redshift_dist_self(c1)
 def test_z_density_dist():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.redshift_density_dist(c1, c2, 'cat1')
+    info = scaling.redshift_density_dist(c1, c2, 'cat1')
 def test_m_simple():
     c1, c2 = _test_data.c1, _test_data.c2
-    ax = scaling.mass(c1, c2, 'cat1', add_err=True)
+    info = scaling.mass(c1, c2, 'cat1', add_err=True)
 def test_m_color():
     c1, c2 = _test_data.c1, _test_data.c2
-    ax, cb = scaling.mass_zcolor(c1, c2, 'cat1', add_err=True)
+    info = scaling.mass_zcolor(c1, c2, 'cat1', add_err=True)
 def test_m_density():
     c1, c2 = _test_data.c1, _test_data.c2
-    ax, cb = scaling.mass_density(c1, c2, 'cat1', add_err=True)
+    info = scaling.mass_density(c1, c2, 'cat1', add_err=True)
+    scaling.mass_density(c1, c2, 'cat1', add_bindata=True, fit_bins1=[1, 2], fit_bins2=3)
 def test_m_panel():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.mass_zpanel(c1, c2, 'cat1', add_err=True)
+    info = scaling.mass_zpanel(c1, c2, 'cat1', add_err=True)
 def test_m_density_panel():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.mass_density_zpanel(c1, c2, 'cat1', add_err=True)
+    info = scaling.mass_density_zpanel(c1, c2, 'cat1', add_err=True)
 def test_color_panel():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.ClCatalogFuncs.plot_color_panel(c1, c2, 'cat1', 'mass',
-        col_color='z', col_panel='z', bins_panel=3)
-    fig, axes = scaling.ClCatalogFuncs.plot_color_panel(c1, c2, 'cat1', 'mass',
-        col_color='z', col_panel='z', bins_panel=[3, 4, 5])
+    info = scaling.ClCatalogFuncs.plot_panel(c1, c2, 'cat1', 'mass', col_color='z', col_panel='z',
+                                             bins_panel=3)
+    info = scaling.ClCatalogFuncs.plot_panel(c1, c2, 'cat1', 'mass', col_color='z', col_panel='z',
+                                             bins_panel=[3, 4, 5])
 def test_m_metrics():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.mass_metrics(c1, c2, 'cat1')
+    info = scaling.mass_metrics(c1, c2, 'cat1')
+    info = scaling.mass_metrics(c1, c2, 'cat1', metrics=['p_68'])
+    assert_raises(ValueError, scaling.mass_metrics, c1, c2, 'cat1', metrics=['xxx'])
 def test_m_density_metrics():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.mass_density_metrics(c1, c2, 'cat1',
-                    mask1=c1['mass']>0, mask2=c2['mass']>0)
+    info = scaling.mass_density_metrics(c1, c2, 'cat1', mask1=c1['mass']>0, mask2=c2['mass']>0)
 def test_m_dist():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.mass_dist(c1, c2, 'cat1', mass_bins=6)
+    info = scaling.mass_dist(c1, c2, 'cat1', mass_bins=6)
 def test_m_dist_self():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.mass_dist_self(c1)
+    info = scaling.mass_dist_self(c1)
     assert_raises(ValueError, scaling.ClCatalogFuncs.plot_dist_self,
                   c1, col='mass', transpose=True, col_aux=None)
 def test_m_density_dist():
     c1, c2 = _test_data.c1, _test_data.c2
-    fig, axes = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True,
-                    fit_bins1=5, fit_bins2=3)
-    fig, axes = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True,
-                    fit_bins1=5, fit_bins2=3, fit_statistics='mean')
-    fig, axes = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True,
-                    fit_bins1=5, fit_bins2=3, fit_statistics='individual')
-    assert_raises(ValueError, scaling.mass_density_dist, c1, c2, 'cat1',
-                    add_fit=True, fit_statistics='unknown')
-    fig, axes = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True,
-                    fit_bins1=[1, 2], fit_bins2=3, fit_statistics='mode')
+    info = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True, fit_bins1=5, fit_bins2=3)
+    info = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True, fit_bins1=5, fit_bins2=3,
+                                     fit_statistics='mean')
+    info = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True, fit_bins1=5, fit_bins2=3,
+                                     fit_statistics='individual')
+    assert_raises(ValueError, scaling.mass_density_dist, c1, c2, 'cat1', add_fit=True,
+                  fit_statistics='unknown')
+    info = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True, fit_bins1=2, fit_bins2=3,
+                                     fit_statistics='mode')

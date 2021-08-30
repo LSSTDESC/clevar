@@ -23,15 +23,15 @@ def run(config_file):
     if config is None:
         return
     print("\n# Reading Catalog 1")
-    c1 = make_catalog(config['catalog1'])
-    c1.load_match(f"{config['outpath']}/match1.fits")
+    cat1 = make_catalog(config['catalog1'])
+    cat1.load_match(f"{config['outpath']}/match1.fits")
     ftpt_qt_file1 = f"{config['outpath']}/ftpt_quantities1.fits"
-    _ = c1.load_footprint_quantities(ftpt_qt_file1) if os.path.isfile(ftpt_qt_file1) else None
+    _ = cat1.load_footprint_quantities(ftpt_qt_file1) if os.path.isfile(ftpt_qt_file1) else None
     print("\n# Reading Catalog 2")
-    c2 = make_catalog(config['catalog2'])
-    c2.load_match(f"{config['outpath']}/match2.fits")
+    cat2 = make_catalog(config['catalog2'])
+    cat2.load_match(f"{config['outpath']}/match2.fits")
     ftpt_qt_file2 = f"{config['outpath']}/ftpt_quantities2.fits"
-    _ = c2.load_footprint_quantities(ftpt_qt_file2) if os.path.isfile(ftpt_qt_file2) else None
+    _ = cat2.load_footprint_quantities(ftpt_qt_file2) if os.path.isfile(ftpt_qt_file2) else None
     print("\n# Creating Cosmology")
     cosmo = make_cosmology(config['cosmology'])
     # Print metrics
@@ -48,8 +48,8 @@ def run(config_file):
         rec_conf[cat]['mass_bins'] = make_bins(rec_conf[cat]['mass_bins'], rec_conf[cat]['log_mass'])
         rec_conf[cat] = {k: str_none(v) for k, v in rec_conf[cat].items()}
     ### Plots
-    for c, i in zip((c1, c2), ('1', '2')):
-        rec_conf_cat = rec_conf[f'catalog{i}']
+    for cat, ind in zip((cat1, cat2), ('1', '2')):
+        rec_conf_cat = rec_conf[f'catalog{ind}']
         kwargs = dict(
             matching_type=rec_conf['matching_type'],
             shape=rec_conf['line_type'],
@@ -58,17 +58,17 @@ def run(config_file):
             log_mass=rec_conf_cat['log_mass'],
             recovery_label=rec_conf_cat['recovery_label'],
             )
-        mask = np.zeros(c.size, dtype=bool)
+        mask = np.zeros(cat.size, dtype=bool)
         mask_case = rec_conf_cat['masks']['case'].lower()
         if mask_case is not None:
             for mtype, mconf in rec_conf_cat['masks'].items():
                 if mtype[:12]=='in_footprint' and mconf.get('use', False):
                     print(f"    # Adding footprint mask: {mconf}")
-                    mask += ~c[f"ft_{mconf['name']}"]
+                    mask += ~cat[f"ft_{mconf['name']}"]
                     print(f"      * {mask[mask].size:,} clusters masked in total")
                 if mtype[:13]=='coverfraction':
                     print(f"    # Adding coverfrac: {mconf}")
-                    mask += c[f"cf_{mconf['name']}"] <= float(mconf['min'])
+                    mask += cat[f"cf_{mconf['name']}"] <= float(mconf['min'])
                     print(f"      * {mask[mask].size:,} clusters masked in total")
             # Add mask to args
             kwargs[{'all': 'mask', 'unmatched': 'mask_unmatched'}[mask_case]] = mask
@@ -77,74 +77,74 @@ def run(config_file):
         # Simple plot
         if any(case in rec_conf['plot_case'] for case in ('simple', 'all')):
             # by redshift
-            print(f"\n# Simple recovery catalog {i} by redshift")
+            print(f"\n# Simple recovery catalog {ind} by redshift")
             fig = plt.figure(figsize=rec_conf['figsize'])
             ax = plt.axes()
-            recovery.plot(c, **kwargs, ax=ax,
+            recovery.plot(cat, **kwargs, ax=ax,
                 add_legend=rec_conf['add_mass_label'],
                 legend_fmt=rec_conf_cat['mass_num_fmt'],
                 )
             ax.set_xlim(rec_conf_cat['redshift_lim'])
             ax.set_ylim(rec_conf_cat['recovery_lim'])
-            plt.savefig(f'{rec_name}_cat{i}_simple_redshift{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.savefig(f'{rec_name}_cat{ind}_simple_redshift{rec_suf}.png', dpi=rec_conf['dpi'])
             plt.close(fig)
             # by mass
-            print(f"\n# Simple recovery catalog {i} by mass")
+            print(f"\n# Simple recovery catalog {ind} by mass")
             fig = plt.figure(figsize=rec_conf['figsize'])
             ax = plt.axes()
-            recovery.plot(c, **kwargs, transpose=True, ax=ax,
+            recovery.plot(
+                cat, **kwargs, transpose=True, ax=ax,
                 add_legend=rec_conf['add_redshift_label'],
                 legend_fmt=rec_conf_cat['redshift_num_fmt'],
                 )
             ax.set_xlim(rec_conf_cat['mass_lim'])
             ax.set_ylim(rec_conf_cat['recovery_lim'])
-            plt.savefig(f'{rec_name}_cat{i}_simple_mass{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.savefig(f'{rec_name}_cat{ind}_simple_mass{rec_suf}.png', dpi=rec_conf['dpi'])
             plt.close(fig)
         # Panels plots
         if any(case in rec_conf['plot_case'] for case in ('panel', 'all')):
             # by redshift
-            print(f"\n# Panel recovery catalog {i} by redshift")
-            fig, axes = recovery.plot_panel(c, **kwargs,
-                add_label=rec_conf['add_mass_label'],
+            print(f"\n# Panel recovery catalog {ind} by redshift")
+            info = recovery.plot_panel(
+                cat, **kwargs, add_label=rec_conf['add_mass_label'],
                 label_fmt=rec_conf_cat['mass_num_fmt'],
                 fig_kwargs={'figsize': rec_conf['figsize']},
                 )
-            ax = axes.flatten()[0]
+            ax = info['axes'].flatten()[0]
             ax.set_xlim(rec_conf_cat['redshift_lim'])
             ax.set_ylim(rec_conf_cat['recovery_lim'])
-            plt.savefig(f'{rec_name}_cat{i}_panel_redshift{rec_suf}.png', dpi=rec_conf['dpi'])
-            plt.close(fig)
+            plt.savefig(f'{rec_name}_cat{ind}_panel_redshift{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.close(info['fig'])
             # by mass
-            print(f"\n# Panel recovery catalog {i} by mass")
-            fig, axes = recovery.plot_panel(c, **kwargs, transpose=True,
-                add_label=rec_conf['add_redshift_label'],
-                label_fmt=rec_conf_cat['redshift_num_fmt'],
-                fig_kwargs={'figsize': rec_conf['figsize']},
-                )
-            ax = axes.flatten()[0]
+            print(f"\n# Panel recovery catalog {ind} by mass")
+            info = recovery.plot_panel(
+                cat, **kwargs, transpose=True, add_label=rec_conf['add_redshift_label'],
+                label_fmt=rec_conf_cat['redshift_num_fmt'], fig_kwargs={'figsize':
+                rec_conf['figsize']},)
+            ax = info['axes'].flatten()[0]
             ax.set_xlim(rec_conf_cat['mass_lim'])
             ax.set_ylim(rec_conf_cat['recovery_lim'])
-            plt.savefig(f'{rec_name}_cat{i}_panel_mass{rec_suf}.png', dpi=rec_conf['dpi'])
-            plt.close(fig)
+            plt.savefig(f'{rec_name}_cat{ind}_panel_mass{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.close(info['fig'])
         # 2D plots
         kwargs.pop('shape')
         kwargs['add_cb'] = rec_conf['add_cb']
         if any(case in rec_conf['plot_case'] for case in ('2D', 'all')):
             # basic
-            print(f"\n# 2D recovery catalog {i}")
+            print(f"\n# 2D recovery catalog {ind}")
             fig = plt.figure(figsize=rec_conf['figsize'])
             ax = plt.axes()
-            ax, cb = recovery.plot2D(c, **kwargs, ax=ax)
+            recovery.plot2D(cat, **kwargs, ax=ax)
             ax.set_xlim(rec_conf_cat['redshift_lim'])
             ax.set_ylim(rec_conf_cat['mass_lim'])
-            plt.savefig(f'{rec_name}_cat{i}_2D{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.savefig(f'{rec_name}_cat{ind}_2D{rec_suf}.png', dpi=rec_conf['dpi'])
             plt.close(fig)
             # with number
-            print(f"\n# 2D recovery catalog {i} with numbers")
+            print(f"\n# 2D recovery catalog {ind} with numbers")
             fig = plt.figure(figsize=rec_conf['figsize'])
             ax = plt.axes()
-            axes, cb = recovery.plot2D(c, **kwargs, ax=ax, add_num=True)
+            recovery.plot2D(cat, **kwargs, ax=ax, add_num=True)
             ax.set_xlim(rec_conf_cat['redshift_lim'])
             ax.set_ylim(rec_conf_cat['mass_lim'])
-            plt.savefig(f'{rec_name}_cat{i}_2D_num{rec_suf}.png', dpi=rec_conf['dpi'])
+            plt.savefig(f'{rec_name}_cat{ind}_2D_num{rec_suf}.png', dpi=rec_conf['dpi'])
             plt.close(fig)

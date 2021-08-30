@@ -54,7 +54,7 @@ def run(config_file):
     # Density Plot
     if any(case in mass_conf['plot_case'] for case in ('density', 'all')):
         print(f"\n# Mass density colors")
-        fig = plt.figure(figsize=mass_conf['figsize'])
+        conf = {'fig': plt.figure(figsize=mass_conf['figsize'])}
         ax = plt.axes()
         scaling.mass_density(c1, c2, **kwargs, ax=ax,
             bins1=mass_conf['catalog1']['mass_bins'],
@@ -64,20 +64,20 @@ def run(config_file):
             **fit_kwargs, **fit_kwargs_cat['1'],
             )
         plt.savefig(f'{mass_name}_density.png', dpi=mass_conf['dpi'])
-        plt.close(fig)
+        plt.close(conf['fig'])
     if any(case in mass_conf['plot_case'] for case in ('scaling_metrics', 'all')):
         print(f"\n# Mass metrics")
-        fig, axes = scaling.mass_metrics(c1, c2,
+        conf = scaling.mass_metrics(c1, c2,
             bins1=mass_conf['catalog1']['mass_bins'],
             bins2=mass_conf['catalog2']['mass_bins'],
             **{k:mass_conf[k] for k in ('matching_type', 'log_mass')},
             fig_kwargs={'figsize': mass_conf['figsize']},
             )
         plt.savefig(f'{mass_name}_metrics.png', dpi=mass_conf['dpi'])
-        plt.close(fig)
+        plt.close(conf['fig'])
     if any(case in mass_conf['plot_case'] for case in ('density_metrics', 'all')):
         print(f"\n# Mass density metrics")
-        fig, axes = scaling.mass_density_metrics(c1, c2, **kwargs,
+        conf = scaling.mass_density_metrics(c1, c2, **kwargs,
             bins1=mass_conf['catalog1']['mass_bins'],
             bins2=mass_conf['catalog2']['mass_bins'],
             ax_rotation=mass_conf['ax_rotation'],
@@ -86,23 +86,23 @@ def run(config_file):
             **fit_kwargs, **fit_kwargs_cat['1'],
             )
         plt.savefig(f'{mass_name}_density_metrics.png', dpi=mass_conf['dpi'])
-        plt.close(fig)
+        plt.close(conf['fig'])
     cats = {'1':c1, '2':c2}
     for i, j in ('12', '21'):
         mass_conf_cat = mass_conf[f'catalog{i}']
         # z Color Plot
         if any(case in mass_conf['plot_case'] for case in ('zcolor', 'all')):
             print(f"\n# Mass (catalog {i} z colors)")
-            fig = plt.figure(figsize=mass_conf['figsize'])
+            conf = {'fig': plt.figure(figsize=mass_conf['figsize'])}
             ax = plt.axes()
             scaling.mass_zcolor(c1, c2, **kwargs, ax=ax, color1=i=='1',
                                 **fit_kwargs, **fit_kwargs_cat['1'])
             plt.savefig(f'{mass_name}_cat{i}zcolor.png', dpi=mass_conf['dpi'])
-            plt.close(fig)
+            plt.close(conf['fig'])
         # Panel density Plot
         if any(case in mass_conf['plot_case'] for case in ('density_panel', 'all')):
             print(f"\n# Mass density (catalog {i} z panel)")
-            fig, axes = scaling.mass_density_zpanel(c1, c2, **kwargs, panel_cat1=i=='1',
+            conf = scaling.mass_density_zpanel(c1, c2, **kwargs, panel_cat1=i=='1',
                 bins1=mass_conf['catalog1']['mass_bins'],
                 bins2=mass_conf['catalog2']['mass_bins'],
                 ax_rotation=mass_conf['ax_rotation'],
@@ -113,11 +113,11 @@ def run(config_file):
                 **fit_kwargs, **fit_kwargs_cat['1'],
                 )
             plt.savefig(f'{mass_name}_density_cat{i}zpanel.png', dpi=mass_conf['dpi'])
-            plt.close(fig)
+            plt.close(conf['fig'])
         # distribution
         if any(case in mass_conf['plot_case'] for case in ('self_distribution', 'all')):
             print(f"\n# Mass density (catalog {i} m self dist)")
-            fig, axes = scaling.mass_dist_self(cats[i],
+            conf = scaling.mass_dist_self(cats[i],
                 **{k:mass_conf[f'catalog{i}'][k] for k in
                     ('mass_bins', 'redshift_bins', 'mass_bins_dist')},
                 log_mass=mass_conf['log_mass'],
@@ -127,10 +127,10 @@ def run(config_file):
                 shape='line',
                 )
             plt.savefig(f'{mass_name}_dist_self_cat{i}.png', dpi=mass_conf['dpi'])
-            plt.close(fig)
+            plt.close(conf['fig'])
         if any(case in mass_conf['plot_case'] for case in ('distribution', 'all')):
             print(f"\n# Mass density (catalog {i} m dist)")
-            fig, axes = scaling.mass_dist(cats[i], cats[j],
+            conf = scaling.mass_dist(cats[i], cats[j],
                 **{k:mass_conf[k] for k in ('matching_type', 'log_mass')},
                 **{k:mass_conf[f'catalog{j}'][k] for k in ('mass_bins', 'redshift_bins')},
                 mass_bins_dist=mass_conf[f'catalog{i}']['mass_bins_dist'],
@@ -140,11 +140,11 @@ def run(config_file):
                 shape='line',
                 )
             plt.savefig(f'{mass_name}_dist_cat{i}.png', dpi=mass_conf['dpi'])
-            plt.close(fig)
+            plt.close(conf['fig'])
         # Panel density distribution
         if any(case in mass_conf['plot_case'] for case in ('density_dist', 'all')):
             print(f"\n# Mass density (catalog {i} z panel)")
-            fig, axes = scaling.mass_density_dist(cats[i], cats[j], **kwargs,
+            conf = scaling.mass_density_dist(cats[i], cats[j], **kwargs,
                 **fit_kwargs, **fit_kwargs_cat[i],
                 bins1=mass_conf[f'catalog{i}']['mass_bins'],
                 bins2=mass_conf[f'catalog{j}']['mass_bins'],
@@ -153,4 +153,4 @@ def run(config_file):
                 fig_kwargs={'figsize': mass_conf['figsize']},
                 )
             plt.savefig(f'{mass_name}_density_cat{i}_dist.png', dpi=mass_conf['dpi'])
-            plt.close(fig)
+            plt.close(conf['fig'])

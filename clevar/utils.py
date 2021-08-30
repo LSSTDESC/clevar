@@ -37,12 +37,15 @@ def autobins(values, bins, log=False):
         Bins based on values
     """
     if hasattr(bins, '__len__'):
-        return np.array(bins)
-    if log:
+        bins = np.array(bins)
+    elif log:
         logvals = np.log10(values)
-        return np.logspace(logvals.min(), logvals.max(), bins+1)
+        bins = np.logspace(logvals.min(), logvals.max(), bins+1)
+        bins[-1] *= 1.0001
     else:
-        return np.linspace(values.min(), values.max(), bins+1)
+        bins = np.linspace(values.min(), values.max(), bins+1)
+        bins[-1] *= 1.0001
+    return bins
 def binmasks(values, bins):
     """
     Get corresponding masks for each bin. Last bin is inclusive.
@@ -81,6 +84,47 @@ def str2dataunit(input_str, units_bank, err_msg=''):
             except:
                 pass
     raise ValueError(f"Unknown unit of '{input_str}', must be in {units_bank}. {err_msg}")
+def deep_update(dict_base, dict_update):
+    """
+    Update a multi-layer dictionary.
+
+    Parameters
+    ----------
+    dict_base: dict
+        Dictionary to be updated
+    dict_update: dict
+        Dictionary with the updates
+
+    Returns
+    -------
+    dict_base: dict
+        Updated dictionary (the input dict is also updated)
+    """
+    for k, v in dict_update.items():
+        if isinstance(v, dict) and k in dict_base:
+            deep_update(dict_base[k], v)
+        else:
+            dict_base[k] = dict_update[k]
+    return dict_base
+def gaussian(value, mean, std):
+    """
+    Gaussian function.
+
+    Parameters
+    ----------
+    value: float, array
+        Point(s) to compute the distribution.
+    mean: float, array
+        Mean ("centre") of the distribution.
+    std: float, array
+        Standard deviation (spread or "width") of the distribution. Must be non-negative.
+
+    Returns
+    -------
+    float, array
+        Value of the gaussian distribution at input `value`.
+    """
+    return np.exp(-0.5*(value-mean)**2/std**2)/np.sqrt(2*np.pi)/std
 ########################################################################
 ########## Monkeypatching healpy #######################################
 ########################################################################
