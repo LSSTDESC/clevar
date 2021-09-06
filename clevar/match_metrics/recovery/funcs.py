@@ -62,11 +62,24 @@ def _intrinsic_comp(p_m1_m2, min_mass2, ax, transpose, mass_bins, redshift_bins=
     redshift_bins: array
         Redshift bins (required if transpose=False).
     max_mass2: float
-        Maximum mass2 for integration.
+        Maximum mass2 for integration. If none, estimated from p_m1_m2.
     min_mass2_norm: float
-        Minimum mass2 to be used in normalization integral.
+        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.
     """
-    min_logmass2_norm, max_logmass2 = np.log10(min_mass2_norm), np.log10(max_mass2)
+    # For detemining min/max mass
+    lim_mass_vals = np.logspace(-5, 20, 2501)
+    if min_mass2_norm is None:
+        p_vals = p_m1_m2(mass_bins[0], lim_mass_vals)
+        p_max, arg_max = p_vals.max(), p_vals.argmax()
+        p_vals = p_vals[:arg_max]
+        v_min = max(p_vals.min(), p_max*1e-10)
+        min_mass2_norm = lim_mass_vals[:arg_max][p_vals<v_min][-1]
+    if max_mass2 is None:
+        p_vals = p_m1_m2(mass_bins[-1], lim_mass_vals)
+        p_max, arg_max = p_vals.max(), p_vals.argmax()
+        p_vals = p_vals[arg_max+1:]
+        v_min = max(p_vals.min(), p_max*1e-10)
+        max_mass2 = lim_mass_vals[arg_max+1:][p_vals<v_min][0]
     integ = lambda m1, min_mass2: quad_vec(
         lambda logm2: p_m1_m2(m1, 10**logm2),
         np.log10(min_mass2), np.log10(max_mass2),
@@ -83,7 +96,7 @@ def _intrinsic_comp(p_m1_m2, min_mass2, ax, transpose, mass_bins, redshift_bins=
 
 def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
          redshift_label=None, mass_label=None, recovery_label=None, p_m1_m2=None,
-         min_mass2=1, **kwargs):
+         min_mass2=1, max_mass2=None, min_mass2_norm=None, **kwargs):
     """
     Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
 
@@ -111,6 +124,10 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.
     min_mass2: float
         Threshold mass for intrinsic completeness computation.
+    max_mass2: float
+        Maximum mass2 for integration. If none, estimated from p_m1_m2.
+    min_mass2_norm: float
+        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.
 
 
     Other parameters
@@ -168,13 +185,13 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         mass_bins = info['data']['edges1'] if transpose else info['data']['edges2']
         redshift_bins = info['data']['edges2'] if transpose else info['data']['edges1']
         _intrinsic_comp(p_m1_m2, min_mass2, info['ax'], transpose,
-                        mass_bins, redshift_bins, max_mass2=1e16)
+                        mass_bins, redshift_bins, max_mass2, min_mass2_norm)
     return info
 
 
 def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
                redshift_label=None, mass_label=None, recovery_label=None, p_m1_m2=None,
-               min_mass2=1, **kwargs):
+               min_mass2=1, max_mass2=None, min_mass2_norm=None, **kwargs):
 
     """
     Plot recovery rate as lines in panels, with each line binned by redshift
@@ -230,6 +247,10 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.
     min_mass2: float
         Threshold mass for intrinsic completeness computation.
+    max_mass2: float
+        Maximum mass2 for integration. If none, estimated from p_m1_m2.
+    min_mass2_norm: float
+        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.
 
     Returns
     -------
@@ -264,7 +285,7 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
             redshift_bins = bins2 if transpose else info['data']['edges1']
             _intrinsic_comp(
                 p_m1_m2, min_mass2, ax, transpose,
-                mass_bins, redshift_bins, max_mass2=1e16)
+                mass_bins, redshift_bins, max_mass2, min_mass2_norm)
     return info
 
 
