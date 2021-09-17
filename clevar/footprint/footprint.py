@@ -183,7 +183,7 @@ class Footprint():
             Cover fraction
         '''
         pix_list = hp.query_disc(
-            nside=self.nside, inclusive=True,
+            nside=self.nside, inclusive=True, nest=self.nest,
             vec=hp.pixelfunc.ang2vec(cl_sk.ra.value, cl_sk.dec.value, lonlat=True),
             radius=convert_units(aperture_radius, aperture_radius_unit, 'radians',
                                  redshift=cl_z, cosmo=cosmo)
