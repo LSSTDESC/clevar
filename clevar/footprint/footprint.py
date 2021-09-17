@@ -2,7 +2,7 @@
 import numpy as np
 
 from ..catalog import ClData
-from ..geometry import convert_units
+from ..geometry import convert_units, angular_bank, physical_bank
 from ..utils import none_val, hp
 from astropy.coordinates import SkyCoord
 from astropy import units as u
@@ -72,40 +72,50 @@ class Footprint():
         self.pixel_dict = {p:i for i, p in enumerate(self['pixel'])}
     def __getitem__(self, item):
         return self.data[item]
-    def get_map(self, data):
+    def get_map(self, data, bad_val=0):
         '''
         Transforms a internal quantity into a map
 
         Parameters
         ----------
-        values: array
-            Values in each pixel
+        data: str
+            Name of internal data to be used.
+        bad_val: float, None
+            Values for pixels outside footprint.
 
         Returns
         -------
         Map
             Healpix map with the given values, other pixels are zero
         '''
-        return hp.pix2map(self.nside, self['pixel'], data, 0)
-    def get_values_in_pixels(self, data, pixel_vals, bad_val, transform=lambda x:x):
+        return hp.pix2map(self.nside, self['pixel'], self[data], bad_val)
+    def get_values_in_pixels(self, data, pixels, bad_val, transform=lambda x:x):
         '''
         Transforms a internal quantity into a map
 
         Parameters
         ----------
         values: array
-            Values in each pixel
+            Values in each pixel.
+        data: str
+            Name of internal data to be used.
+        pixels: list
+            List of pixels
+        bad_val: float, None
+            Values for pixels outside footprint.
+        transform: function
+            Function to be applied to data for value in pixel. Default is f(data)=data.
 
         Returns
         -------
         Map
             Healpix map with the given values, other pixels are zero
         '''
-        return np.array([transform(self[data][self.pixel_dict[p]]) if p in self.pixel_dict else bad_val
-                    for p in pixel_vals])
+        return np.array([transform(self[data][self.pixel_dict[p]])
+                        if p in self.pixel_dict else bad_val for p in pixels])
     def zmax_masks_from_footprint(self, ra, dec, z):
         '''
-        Create a mask for a catalog based on a footprint
+        Create a zmax mask for a catalog based on a footprint
 
         Parameters
         ----------
@@ -173,17 +183,20 @@ class Footprint():
         aperture_radius_unit: str
             Unit of aperture radius
         cosmo: clevar.Cosmology object
-            Cosmology object for when radius has angular units
+            Cosmology object for when aperture has physical units.
         wtfunc: function
-            Window function
+            Window function, must take (pixels, SkyCoord) as input.
+            Default is flat window.
 
         Returns
         -------
         float
             Cover fraction
         '''
+        if aperture_radius_unit in physical_bank and cosmo is None:
+            raise TypeError('A cosmology is necessary if aperture in physical units.')
         pix_list = hp.query_disc(
-            nside=self.nside, inclusive=True,
+            nside=self.nside, inclusive=True, nest=self.nest,
             vec=hp.pixelfunc.ang2vec(cl_sk.ra.value, cl_sk.dec.value, lonlat=True),
             radius=convert_units(aperture_radius, aperture_radius_unit, 'radians',
                                  redshift=cl_z, cosmo=cosmo)
@@ -194,7 +207,7 @@ class Footprint():
         values = detfrac_vals*np.array(cl_z<=zmax_vals, dtype=float)
         return sum(weights*values)/sum(weights)
     def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
-                             aperture_radius, aperture_radius_unit, cosmo=None):
+                             aperture_radius, aperture_radius_unit, cosmo):
         '''
         Cover fraction with NFW 2D flatcore window. It is computed using:
 
@@ -213,17 +226,16 @@ class Footprint():
         aperture_radius_unit: str
             Unit of aperture radius
         cosmo: clevar.Cosmology object
-            Cosmology object for when radius has angular units
+            Cosmology object.
 
         Returns
         -------
         float
         '''
-        cl_radius_mpc = convert_units(cl_radius, cl_radius_unit, 'mpc',
-                                      redshift=cl_z, cosmo=cosmo)
+        cl_radius_mpc = convert_units(cl_radius, cl_radius_unit, 'mpc', redshift=cl_z, cosmo=cosmo)
         return self._get_coverfrac(cl_sk, cl_z, aperture_radius, aperture_radius_unit, cosmo=cosmo,
-            wtfunc=lambda pix_list, cl_sk: self._nfw_flatcore_window_func(pix_list, cl_sk, cl_z,
-                                                                       cl_radius_mpc, cosmo))
+            wtfunc=lambda pix_list, cl_sk: self._nfw_flatcore_window_func(
+                pix_list, cl_sk, cl_z, cl_radius_mpc, cosmo))
     def get_coverfrac(self, cl_ra, cl_dec, cl_z, aperture_radius, aperture_radius_unit,
                       cosmo=None, wtfunc=lambda pixels, sk: np.ones(len(pixels))):
         r'''
@@ -250,9 +262,10 @@ class Footprint():
         aperture_radius_unit: str
             Unit of aperture radius
         cosmo: clevar.Cosmology object
-            Cosmology object for when radius has angular units
+            Cosmology object for when aperture has physical units.
         wtfunc: function
-            Window function
+            Window function, must take (pixels, SkyCoord) as input.
+            Default is flat window.
 
         Returns
         -------
@@ -263,7 +276,7 @@ class Footprint():
                                    cl_z, aperture_radius, aperture_radius_unit,
                                    cosmo=cosmo, wtfunc=wtfunc)
     def get_coverfrac_nfw2D(self, cl_ra, cl_dec, cl_z, cl_radius, cl_radius_unit,
-                            aperture_radius, aperture_radius_unit, cosmo=None):
+                            aperture_radius, aperture_radius_unit, cosmo):
         r'''
         Cover fraction with NFW 2D flatcore window.
 
@@ -292,7 +305,7 @@ class Footprint():
         aperture_radius_unit: str
             Unit of aperture radius
         cosmo: clevar.Cosmology object
-            Cosmology object for when radius has angular units
+            Cosmology object.
 
         Returns
         -------
