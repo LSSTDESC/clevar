@@ -31,9 +31,7 @@ def test_footprint():
     ftpt2 = Footprint(nside=nside, pixels=list(set(pixels2)))
     # Footprint functions
     print(ftpt1)
-    ftpt1.get_map(ftpt1['zmax'])
-    assert(1>ftpt1.get_coverfrac(0, 0, 0.1, 1, 'arcsec', cosmo=cosmo))
-    assert(1>ftpt1.get_coverfrac_nfw2D(0, 0, 0.1, 1, 'arcsec', 1, 'arcsec', cosmo=cosmo))
+    ftpt1.get_map('zmax')
     # Load external
     ftpt1.data.write('ftpt1.fits', overwrite=True)
     ftpt1 = Footprint.read('ftpt1.fits', pixel_name='pixel', nside=nside)
