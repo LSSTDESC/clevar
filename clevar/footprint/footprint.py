@@ -72,21 +72,23 @@ class Footprint():
         self.pixel_dict = {p:i for i, p in enumerate(self['pixel'])}
     def __getitem__(self, item):
         return self.data[item]
-    def get_map(self, data):
+    def get_map(self, data, bad_val=0):
         '''
         Transforms a internal quantity into a map
 
         Parameters
         ----------
-        values: array
-            Values in each pixel
+        data: str
+            Name of internal data to be used.
+        bad_val: float, None
+            Values for pixels outside footprint.
 
         Returns
         -------
         Map
             Healpix map with the given values, other pixels are zero
         '''
-        return hp.pix2map(self.nside, self['pixel'], data, 0)
+        return hp.pix2map(self.nside, self['pixel'], self[data], bad_val)
     def get_values_in_pixels(self, data, pixel_vals, bad_val, transform=lambda x:x):
         '''
         Transforms a internal quantity into a map
