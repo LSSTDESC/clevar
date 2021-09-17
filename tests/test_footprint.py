@@ -48,6 +48,19 @@ def test_footprint():
     c1.load_footprint_quantities('cat1_ftq.fits')
     os.system('rm -f cat1_ftq.fits')
 
+def test_coverfrac():
+    nside = 4096
+    cosmo = AstroPyCosmology()
+    for nest in (False, True):
+        ft = Footprint(
+            nside, nest=nest,
+            pixels=hp.query_disc(
+                nside, vec=hp.ang2vec(0, 0, lonlat=True),
+                radius=np.radians(0.1), nest=nest))
+        assert_equal(ft.get_coverfrac(0, 0, 0, 5, 'arcmin'), 1)
+        assert_equal(ft.get_coverfrac_nfw2D(0, 0, .1, 1, 'mpc', 5, 'arcmin', cosmo), 1)
+        assert_raises(TypeError, ft.get_coverfrac, 0, 0, 0, 5, 'mpc')
+
 def test_artificial_footprint():
     c1, c2 = get_test_data()
     cosmo = AstroPyCosmology()
