@@ -127,7 +127,7 @@ class Catalog():
             return data
         else:
             return Catalog(name=self.name, labels=self.labels,
-                **{c:data[c] for c in data.colnames})
+                           **{c:data[c] for c in data.colnames})
     def __len__(self):
         return self.size
     def __delitem__(self, item):
@@ -487,6 +487,14 @@ class ClCatalog(Catalog):
         Catalog._add_values(self, **columns)
         self.radius_unit = columns.pop('radius_unit', None)
         self._init_match_vals()
+    def __getitem__(self, item):
+        data = self.data[item]
+        if isinstance(item, (str, int, np.int64)):
+            return data
+        else:
+            return ClCatalog(name=self.name, labels=self.labels,
+                             **{c:data[c] for c in data.colnames},
+                             radius_unit = self.radius_unit)
     @classmethod
     def read(self, filename, name=None, **kwargs):
         """Read catalog from fits file
@@ -508,15 +516,6 @@ class ClCatalog(Catalog):
         """
         data = ClData.read(filename)
         return self._read(data, name=name, **kwargs)
-    def __getitem__(self, item):
-        data = self.data[item]
-        if isinstance(item, (str, int, np.int64)):
-            return data
-        else:
-            return ClCatalog(name=self.name, labels=self.labels,
-                **{c:data[c] for c in data.colnames},
-                radius_unit = self.radius_unit
-                )
 
 class MemCatalog(Catalog):
     """
@@ -550,3 +549,10 @@ class MemCatalog(Catalog):
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
             self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]
+    def __getitem__(self, item):
+        data = self.data[item]
+        if isinstance(item, (str, int, np.int64)):
+            return data
+        else:
+            return MemCatalog(name=self.name, labels=self.labels,
+                              **{c:data[c] for c in data.colnames})
