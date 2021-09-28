@@ -508,6 +508,15 @@ class ClCatalog(Catalog):
         """
         data = ClData.read(filename)
         return self._read(data, name=name, **kwargs)
+    def __getitem__(self, item):
+        data = self.data[item]
+        if isinstance(item, (str, int, np.int64)):
+            return data
+        else:
+            return ClCatalog(name=self.name, labels=self.labels,
+                **{c:data[c] for c in data.colnames},
+                radius_unit = self.radius_unit
+                )
 
 class MemCatalog(Catalog):
     """
