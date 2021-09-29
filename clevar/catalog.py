@@ -160,15 +160,20 @@ class Catalog():
         if 'ra' in self.data.colnames and 'dec' in self.data.colnames:
             self['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
         self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
-    def _init_match_vals(self):
-        """Fills self.match with default values"""
-        self['mt_self'] = None
-        self['mt_other'] = None
-        self['mt_multi_self']  = None
-        self['mt_multi_other'] = None
-        for i in range(self.size):
-            self['mt_multi_self'][i] = []
-            self['mt_multi_other'][i] = []
+    def _init_match_vals(self, overwrite=False):
+        """Fills self.match with default values
+
+        Paramters
+        ---------
+        overwrite: bool
+            Overwrite values of pre-existing columns.
+        """
+        for col in ('mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other'):
+            if overwrite or col not in self.colnames:
+                self[col] = None
+                if col in ('mt_multi_self', 'mt_multi_other'):
+                    for i in range(self.size):
+                        self[col][i] = []
     def ids2inds(self, ids, missing=None):
         """Returns the indicies of objects given an id list.
 
