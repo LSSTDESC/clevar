@@ -456,13 +456,14 @@ class Footprint():
                     cl_kwargs.update(cluster_kwargs)
                     rad_deg = convert_units(cluster['radius'], cluster.radius_unit, 'degrees',
                                             redshift=cluster['z'], cosmo=cosmo)
-                    lims_mask = lambda ra, dec: (
+                    lims_mask = lambda ra, dec, rad_deg: (
                         (ra+rad_deg>=xlim[0])*(ra-rad_deg<xlim[1])
                         *(dec+rad_deg>=ylim[0])*(dec-rad_deg<ylim[1]))
                     plt_cl = lambda ra, dec, radius: [
                         ax.add_patch(plt.Circle((ra_, dec_), radius=radius_, **cl_kwargs))
                         for ra_, dec_, radius_ in
-                        np.transpose([ra, dec, radius])[lims_mask(ra, dec)]] if len(ra)>0 else []
+                        np.transpose([ra, dec, radius])[lims_mask(ra, dec, radius)]]\
+                        if len(ra)>0 else []
                 else:
                     warnings.warn("Column 'radius' or radius_unit of cluster not set up. "
                                   "Plotting clusters as points with plt.scatter.")
@@ -493,7 +494,7 @@ class Footprint():
                     ra2 += 360.
                     plt_cl(ra2, dec2, r2)
             else:
-                raise TypeError(f'clusters (={clusters}) must be a ClCatalog.')
+                raise TypeError(f'cluster argument (={cluster}) must be a ClCatalog.')
 
         ax.set_xlim(xlim)
         ax.set_ylim(ylim)
