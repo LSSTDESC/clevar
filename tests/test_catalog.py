@@ -7,6 +7,8 @@ import os
 def test_catalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
     c = Catalog(name='test', **quantities)
+    c['ra']
+    c[:1]
 def test_clcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
     c = ClCatalog(name='test', **quantities)
