@@ -27,7 +27,7 @@ Generate random data and add to catalog
 .. code:: ipython3
 
     from support import gen_cluster
-    input1, input2 = gen_cluster(ra_max=30, dec_max=30)
+    input1, input2 = gen_cluster(ra_min=0, ra_max=30, dec_min=9, dec_max=30)
 
 
 .. parsed-literal::
@@ -82,12 +82,11 @@ Check to see if selected pixels are correct
     map_[map_==0] = np.nan
     
     f = plt.figure(figsize=(10, 10))
-    hp.cartview(map_, hold=True, latra=[-10, 35], lonra=[-10, 40], cmap=cmap, cbar=False)
+    hp.cartview(map_, hold=True, latra=[5, 35], lonra=[-5, 40], cmap=cmap, cbar=False, flip='geo')
     ax = f.axes[0]
-    ax.set_xticklabels(-ax.get_xticks())
     ax.axis('on')
-    ax.scatter(-c1['ra'], c1['dec'], s=5, label='Cat 1 clusters')
-    ax.scatter(-c2['ra'], c2['dec'], s=5, label='Cat 2 clusters')
+    ax.scatter(c1['ra'], c1['dec'], s=5, label='Cat 1 clusters')
+    ax.scatter(c2['ra'], c2['dec'], s=5, label='Cat 2 clusters')
     
     ax.plot(0, 0, zorder=0, color=gcol(cmap, 0.0), label='Footptint - Cat1 only')
     ax.plot(0, 0, zorder=0, color=gcol(cmap, 0.5), label='Footptint - Cat2 only')
@@ -99,15 +98,13 @@ Check to see if selected pixels are correct
 
     /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:202: MatplotlibDeprecationWarning: Passing parameters norm and vmin/vmax simultaneously is deprecated since 3.3 and will become an error two minor releases later. Please pass vmin/vmax directly to the norm when creating it.
       aximg = self.imshow(
-    <ipython-input-1-3e98202e63e5>:16: UserWarning: FixedFormatter should only be used together with FixedLocator
-      ax.set_xticklabels(-ax.get_xticks())
 
 
 
 
 .. parsed-literal::
 
-    <matplotlib.legend.Legend at 0x7ff184340640>
+    <matplotlib.legend.Legend at 0x7fd86e0d8a60>
 
 
 
@@ -116,13 +113,84 @@ Check to see if selected pixels are correct
 
 
 Add them to the ``Footprint`` object. It also has an option of detection
-fraction and :math:`z_{max}` information.
+fraction and :math:`z_{max}` information. If not provided, a default
+value is set:
 
 .. code:: ipython3
 
     from clevar.footprint import Footprint
-    ftpt1 = Footprint(nside=nside, pixels=list(set(pixels1)))
+    # Random values for detfrac and zmax for ftpt1
+    detfrac_rand, z_rand = 0.9+.1*np.random.rand(len(set(pixels1))), 0.5+.5*np.random.rand(len(set(pixels1)))
+    ftpt1 = Footprint(nside=nside, pixels=list(set(pixels1)),
+                      detfrac=detfrac_rand, zmax=z_rand)
     ftpt2 = Footprint(nside=nside, pixels=list(set(pixels2)))
+
+.. code:: ipython3
+
+    f, axes = plt.subplots(1, 2)
+    
+    bins = np.linspace(0.85, 1.05, 41)
+    axes[0].hist(ftpt1['detfrac'], bins=bins, label='ftpt1')
+    axes[0].hist(ftpt2['detfrac'], bins=bins, histtype='step', label='ftpt2')
+    axes[0].legend()
+    axes[0].set_xlabel('detfrac')
+    axes[0].set_yscale('log')
+    
+    bins = np.append(np.linspace(0.5, 1.0, 11), [99, 100])
+    axes[1].hist(ftpt1['zmax'], bins=bins)
+    axes[1].hist(ftpt2['zmax'], bins=bins, histtype='step')
+    axes[1].set_xlabel('zmax')
+    axes[1].set_xscale('log')
+    axes[1].set_yscale('log')
+
+
+
+.. image:: footprint_files/footprint_13_0.png
+
+
+Plotting the footprint
+~~~~~~~~~~~~~~~~~~~~~~
+
+The footprints have an inbuilt function to plot their values
+
+.. code:: ipython3
+
+    f = ftpt1.plot('detfrac', bad_val=np.nan, auto_lim=True)
+    f = ftpt1.plot('zmax', bad_val=np.nan, auto_lim=True)
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:920: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_over(newcm(1.0))
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:921: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_under(bgcolor)
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:922: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_bad(badcolor)
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:202: MatplotlibDeprecationWarning: Passing parameters norm and vmin/vmax simultaneously is deprecated since 3.3 and will become an error two minor releases later. Please pass vmin/vmax directly to the norm when creating it.
+      aximg = self.imshow(
+
+
+
+.. image:: footprint_files/footprint_15_1.png
+
+
+
+.. image:: footprint_files/footprint_15_2.png
+
+
+Clusters can also be added to the plot with their actual angular size:
+
+.. code:: ipython3
+
+    f = ftpt1.plot('detfrac', bad_val=np.nan,
+                   ra_lim=[3, 8], dec_lim=[10, 15],
+                   cluster=c1)
+
+
+
+.. image:: footprint_files/footprint_17_0.png
+
 
 Use ClEvaR functions to create a footprint
 ------------------------------------------
@@ -146,8 +214,8 @@ Fixed ``NSIDE``:
 .. parsed-literal::
 
     Footprint NSIDE: 64
-    Pixels in footprint: 677
-    Pixels in footprint: 677
+    Pixels in footprint: 506
+    Pixels in footprint: 506
 
 
 ``NSIDE`` from density:
@@ -159,14 +227,15 @@ Fixed ``NSIDE``:
 
 .. parsed-literal::
 
-    NSIDE(2) -> 104.375 clusters per pixel
-    NSIDE(4) -> 43.94736842105263 clusters per pixel
-    NSIDE(8) -> 13.916666666666666 clusters per pixel
-    NSIDE(16) -> 4.175 clusters per pixel
-    NSIDE(32) -> 1.7040816326530612 clusters per pixel
-    Footprint NSIDE: 32
-    Pixels in footprint: 490
-    Pixels in footprint: 490
+    NSIDE(2) -> 208.75 clusters per pixel
+    NSIDE(4) -> 139.16666666666666 clusters per pixel
+    NSIDE(8) -> 46.388888888888886 clusters per pixel
+    NSIDE(16) -> 14.910714285714286 clusters per pixel
+    NSIDE(32) -> 4.417989417989418 clusters per pixel
+    NSIDE(64) -> 1.650197628458498 clusters per pixel
+    Footprint NSIDE: 64
+    Pixels in footprint: 506
+    Pixels in footprint: 506
 
 
 fill holes
@@ -179,38 +248,57 @@ fill holes
 .. parsed-literal::
 
     Footprint NSIDE: 64
-    Pixels in footprint: 677
+    Pixels in footprint: 506
     ### filling holes ###
      - filling
-       size: 677 -> 728 (+51)
+       size: 506 -> 673 (+167)
      - filling
-       size: 728 -> 763 (+35)
+       size: 673 -> 697 (+24)
      - filling
-       size: 763 -> 787 (+24)
+       size: 697 -> 699 (+2)
      - filling
-       size: 787 -> 798 (+11)
+       size: 699 -> 700 (+1)
      - filling
-       size: 798 -> 806 (+8)
-     - filling
-       size: 806 -> 813 (+7)
-     - filling
-       size: 813 -> 819 (+6)
-     - filling
-       size: 819 -> 826 (+7)
-     - filling
-       size: 826 -> 834 (+8)
-     - filling
-       size: 834 -> 839 (+5)
-     - filling
-       size: 839 -> 842 (+3)
-     - filling
-       size: 842 -> 843 (+1)
-     - filling
-       size: 843 -> 843 (+0)
+       size: 700 -> 700 (+0)
      Total Change:
-       size: 677 -> 843 (+166)
+       size: 506 -> 700 (+194)
     ### filled! ###
-    Pixels in footprint: 843
+    Pixels in footprint: 700
+
+
+.. code:: ipython3
+
+    f = ftpt1.plot('detfrac', np.nan,  latra=[5, 35], lonra=[-5, 40])
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:920: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_over(newcm(1.0))
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:921: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_under(bgcolor)
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:922: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_bad(badcolor)
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:202: MatplotlibDeprecationWarning: Passing parameters norm and vmin/vmax simultaneously is deprecated since 3.3 and will become an error two minor releases later. Please pass vmin/vmax directly to the norm when creating it.
+      aximg = self.imshow(
+
+
+
+.. image:: footprint_files/footprint_26_1.png
+
+
+.. code:: ipython3
+
+    ra, dec = hp.pix2ang(128, np.arange(hp.nside2npix(128)), lonlat=True)
+    ra.min(), ra.max(), dec.min(), dec.max()
+
+
+
+
+.. parsed-literal::
+
+    (0.0, 359.6484375, -89.63451650477154, 89.63451650477154)
+
 
 
 Footprint masks
@@ -235,8 +323,8 @@ weighted by a project NFW profile
     ## creating visibility mask ##
     ## creating visibility mask ##
     ## creating visibility mask ##
-    CPU times: user 5.26 ms, sys: 1.14 ms, total: 6.4 ms
-    Wall time: 6.29 ms
+    CPU times: user 6.83 ms, sys: 3.07 ms, total: 9.9 ms
+    Wall time: 9.54 ms
 
 
 .. code:: ipython3
@@ -248,28 +336,28 @@ weighted by a project NFW profile
 
 .. raw:: html
 
-    <b>Cat1</b><br><i>ClData length=4</i>
-    <table id="table140675280719392" class="table-striped table-bordered table-condensed">
+    <b>Cat1</b><br>Radius unit: arcmin<br><i>ClData length=4</i>
+    <table id="table140567529719552" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-    <tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>3</td><td>4.21</td><td>-56.98</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
     </table>
 
 
 
 .. raw:: html
 
-    <b>Cat2</b><br><i>ClData length=4</i>
-    <table id="table140675283140272" class="table-striped table-bordered table-condensed">
+    <b>Cat2</b><br>Radius unit: arcmin<br><i>ClData length=4</i>
+    <table id="table140567529720464" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-    <tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>3</td><td>4.21</td><td>-56.98</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
     </table>
 
 
@@ -291,8 +379,8 @@ object.
 
 .. parsed-literal::
 
-    CPU times: user 5.29 s, sys: 0 ns, total: 5.29 s
-    Wall time: 5.29 s
+    CPU times: user 5.76 s, sys: 10.3 ms, total: 5.77 s
+    Wall time: 5.77 s
 
 
 .. code:: ipython3
@@ -304,28 +392,28 @@ object.
 
 .. raw:: html
 
-    <b>Cat1</b><br><i>ClData length=4</i>
-    <table id="table140675281846816" class="table-striped table-bordered table-condensed">
+    <b>Cat1</b><br>Radius unit: arcmin<br><i>ClData length=4</i>
+    <table id="table140567529213568" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
-    <tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-    <tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.5</td><td>0.00042554579675994035</td></tr>
-    <tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.6666666666666666</td><td>0.00018019169298074748</td></tr>
-    <tr><td>3</td><td>4.21</td><td>-56.98</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
+    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
+    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
+    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
+    <tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
     </table>
 
 
 
 .. raw:: html
 
-    <b>Cat2</b><br><i>ClData length=4</i>
-    <table id="table140675280627840" class="table-striped table-bordered table-condensed">
+    <b>Cat2</b><br>Radius unit: arcmin<br><i>ClData length=4</i>
+    <table id="table140567530070656" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
-    <tr><td>0</td><td>12.58</td><td>-6.55</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-    <tr><td>1</td><td>6.13</td><td>-9.05</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.0005566901119180372</td></tr>
-    <tr><td>2</td><td>12.52</td><td>-79.60</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-    <tr><td>3</td><td>4.21</td><td>-56.98</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
+    <tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
     </table>
 
 
@@ -381,25 +469,25 @@ Match catalogs
     
     ## Multiple match (catalog 1)
     Finding candidates (Cat1)
-    * 720/835 objects matched.
+    * 719/835 objects matched.
     
     ## Multiple match (catalog 2)
     Finding candidates (Cat2)
-    * 720/928 objects matched.
+    * 721/928 objects matched.
     
     ## Finding unique matches of catalog 1
     Unique Matches (Cat1)
-    * 720/835 objects matched.
+    * 719/835 objects matched.
     
     ## Finding unique matches of catalog 2
     Unique Matches (Cat2)
-    * 719/928 objects matched.
+    * 720/928 objects matched.
     Cross Matches (Cat1)
     * 719/835 objects matched.
     Cross Matches (Cat2)
     * 719/928 objects matched.
-    CPU times: user 10.9 s, sys: 183 ms, total: 11.1 s
-    Wall time: 10.9 s
+    CPU times: user 10.6 s, sys: 258 ms, total: 10.9 s
+    Wall time: 10.6 s
 
 
 Recovery rate
@@ -435,7 +523,7 @@ specific clusters on the recovery rate.
 
 
 
-.. image:: footprint_files/footprint_37_0.png
+.. image:: footprint_files/footprint_44_0.png
 
 
 You can check the exact numbers used on the 2D plots
@@ -461,6 +549,6 @@ You can check the exact numbers used on the 2D plots
 
 
 
-.. image:: footprint_files/footprint_39_0.png
+.. image:: footprint_files/footprint_46_0.png
 
 
