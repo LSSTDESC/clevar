@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.funcs &mdash; ClEvaR 0.7.1 documentation</title>
+  <title>clevar.match_metrics.recovery.funcs &mdash; ClEvaR 0.8.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.7.1
+                0.8.0
               </div>
             
           
@@ -269,7 +269,7 @@
     <span class="k">return</span> <span class="n">pltfunc</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_intrinsic_comp</span><span class="p">(</span><span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">bins1</span><span class="p">,</span> <span class="n">bins2</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">_intrinsic_comp</span><span class="p">(</span><span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">max_mass2</span><span class="o">=</span><span class="mf">1e16</span><span class="p">,</span> <span class="n">min_mass2_norm</span><span class="o">=</span><span class="mf">1e12</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots instrinsic completeness given by a mass threshold on the other catalog.</span>
@@ -285,16 +285,29 @@
 <span class="sd">        Ax to add plot</span>
 <span class="sd">    transpose: bool</span>
 <span class="sd">        Transpose mass and redshift in plots</span>
-<span class="sd">    bins1: array</span>
-<span class="sd">        Redshift bins (or mass if transpose).</span>
-<span class="sd">    bins2: array</span>
-<span class="sd">        Mass bins (or redshift if transpose).</span>
+<span class="sd">    mass_bins: array</span>
+<span class="sd">        Mass bins.</span>
+<span class="sd">    redshift_bins: array</span>
+<span class="sd">        Redshift bins (required if transpose=False).</span>
 <span class="sd">    max_mass2: float</span>
-<span class="sd">        Maximum mass2 for integration.</span>
-<span class="sd">    max_mass2_norm: float</span>
-<span class="sd">        Minimum mass2 to be used in normalization integral.</span>
+<span class="sd">        Maximum mass2 for integration. If none, estimated from p_m1_m2.</span>
+<span class="sd">    min_mass2_norm: float</span>
+<span class="sd">        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">min_logmass2_norm</span><span class="p">,</span> <span class="n">max_logmass2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">min_mass2_norm</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">max_mass2</span><span class="p">)</span>
+    <span class="c1"># For detemining min/max mass</span>
+    <span class="n">lim_mass_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2501</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">min_mass2_norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">p_vals</span> <span class="o">=</span> <span class="n">p_m1_m2</span><span class="p">(</span><span class="n">mass_bins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lim_mass_vals</span><span class="p">)</span>
+        <span class="n">p_max</span><span class="p">,</span> <span class="n">arg_max</span> <span class="o">=</span> <span class="n">p_vals</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">p_vals</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="n">p_vals</span> <span class="o">=</span> <span class="n">p_vals</span><span class="p">[:</span><span class="n">arg_max</span><span class="p">]</span>
+        <span class="n">v_min</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">p_vals</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">p_max</span><span class="o">*</span><span class="mf">1e-10</span><span class="p">)</span>
+        <span class="n">min_mass2_norm</span> <span class="o">=</span> <span class="n">lim_mass_vals</span><span class="p">[:</span><span class="n">arg_max</span><span class="p">][</span><span class="n">p_vals</span><span class="o">&lt;</span><span class="n">v_min</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">max_mass2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">p_vals</span> <span class="o">=</span> <span class="n">p_m1_m2</span><span class="p">(</span><span class="n">mass_bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">lim_mass_vals</span><span class="p">)</span>
+        <span class="n">p_max</span><span class="p">,</span> <span class="n">arg_max</span> <span class="o">=</span> <span class="n">p_vals</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">p_vals</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="n">p_vals</span> <span class="o">=</span> <span class="n">p_vals</span><span class="p">[</span><span class="n">arg_max</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">v_min</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">p_vals</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">p_max</span><span class="o">*</span><span class="mf">1e-10</span><span class="p">)</span>
+        <span class="n">max_mass2</span> <span class="o">=</span> <span class="n">lim_mass_vals</span><span class="p">[</span><span class="n">arg_max</span><span class="o">+</span><span class="mi">1</span><span class="p">:][</span><span class="n">p_vals</span><span class="o">&lt;</span><span class="n">v_min</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">integ</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m1</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">:</span> <span class="n">quad_vec</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">logm2</span><span class="p">:</span> <span class="n">p_m1_m2</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="mi">10</span><span class="o">**</span><span class="n">logm2</span><span class="p">),</span>
         <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">min_mass2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">max_mass2</span><span class="p">),</span>
@@ -302,16 +315,16 @@
     <span class="n">comp</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m1</span><span class="p">,</span> <span class="n">m2_th</span><span class="p">:</span> <span class="n">integ</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2_th</span><span class="p">)</span><span class="o">/</span><span class="n">integ</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">min_mass2_norm</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
         <span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="s1">&#39;0.3&#39;</span><span class="p">,</span> <span class="s1">&#39;lw&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;zorder&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">bins1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comp</span><span class="p">(</span><span class="n">bins1</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">),</span> <span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">mass_bins</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">comp</span><span class="p">(</span><span class="n">mass_bins</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">),</span> <span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">m_inf</span><span class="p">,</span> <span class="n">m_sup</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bins2</span><span class="p">,</span> <span class="n">bins2</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">m_inf</span><span class="p">,</span> <span class="n">m_sup</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mass_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">):</span>
             <span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="n">line</span><span class="o">.</span><span class="n">_color</span><span class="p">,</span> <span class="s1">&#39;lw&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">((</span><span class="n">bins1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">comp</span><span class="p">(</span><span class="n">m_inf</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">),</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">((</span><span class="n">redshift_bins</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">redshift_bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">comp</span><span class="p">(</span><span class="n">m_inf</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">),</span>
                             <span class="n">comp</span><span class="p">(</span><span class="n">m_sup</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">),</span> <span class="o">**</span><span class="n">_kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../../../api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">log_mass</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
          <span class="n">redshift_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mass_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recovery_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p_m1_m2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-         <span class="n">min_mass2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+         <span class="n">min_mass2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_mass2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_mass2_norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</span>
 
@@ -339,6 +352,10 @@
 <span class="sd">        a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.</span>
 <span class="sd">    min_mass2: float</span>
 <span class="sd">        Threshold mass for intrinsic completeness computation.</span>
+<span class="sd">    max_mass2: float</span>
+<span class="sd">        Maximum mass2 for integration. If none, estimated from p_m1_m2.</span>
+<span class="sd">    min_mass2_norm: float</span>
+<span class="sd">        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.</span>
 
 
 <span class="sd">    Other parameters</span>
@@ -393,14 +410,16 @@
                       <span class="n">ylabel</span><span class="o">=</span><span class="n">recovery_label</span><span class="p">,</span>
                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">p_m1_m2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mass_bins</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges1&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges2&#39;</span><span class="p">]</span>
+        <span class="n">redshift_bins</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges2&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges1&#39;</span><span class="p">]</span>
         <span class="n">_intrinsic_comp</span><span class="p">(</span><span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">,</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;ax&#39;</span><span class="p">],</span> <span class="n">transpose</span><span class="p">,</span>
-                        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges1&#39;</span><span class="p">],</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges2&#39;</span><span class="p">],</span> <span class="n">max_mass2</span><span class="o">=</span><span class="mf">1e16</span><span class="p">)</span>
+                        <span class="n">mass_bins</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">max_mass2</span><span class="p">,</span> <span class="n">min_mass2_norm</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">info</span></div>
 
 
 <div class="viewcode-block" id="plot_panel"><a class="viewcode-back" href="../../../../api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.plot_panel">[docs]</a><span class="k">def</span> <span class="nf">plot_panel</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">mass_bins</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">log_mass</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                <span class="n">redshift_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mass_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recovery_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">p_m1_m2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-               <span class="n">min_mass2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+               <span class="n">min_mass2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_mass2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_mass2_norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot recovery rate as lines in panels, with each line binned by redshift</span>
@@ -456,6 +475,10 @@
 <span class="sd">        a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.</span>
 <span class="sd">    min_mass2: float</span>
 <span class="sd">        Threshold mass for intrinsic completeness computation.</span>
+<span class="sd">    max_mass2: float</span>
+<span class="sd">        Maximum mass2 for integration. If none, estimated from p_m1_m2.</span>
+<span class="sd">    min_mass2_norm: float</span>
+<span class="sd">        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -486,9 +509,11 @@
         <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;axes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
                              <span class="nb">zip</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges2&#39;</span><span class="p">],</span>
                                  <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges2&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:])):</span>
+            <span class="n">mass_bins</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges1&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">bins2</span>
+            <span class="n">redshift_bins</span> <span class="o">=</span> <span class="n">bins2</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges1&#39;</span><span class="p">]</span>
             <span class="n">_intrinsic_comp</span><span class="p">(</span>
                 <span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span>
-                <span class="n">info</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;edges1&#39;</span><span class="p">],</span> <span class="n">bins2</span><span class="p">,</span> <span class="n">max_mass2</span><span class="o">=</span><span class="mf">1e16</span><span class="p">)</span>
+                <span class="n">mass_bins</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="p">,</span> <span class="n">max_mass2</span><span class="p">,</span> <span class="n">min_mass2_norm</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">info</span></div>
 
 

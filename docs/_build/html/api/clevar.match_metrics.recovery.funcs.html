@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.funcs module &mdash; ClEvaR 0.7.1 documentation</title>
+  <title>clevar.match_metrics.recovery.funcs module &mdash; ClEvaR 0.8.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.7.1
+                0.8.0
               </div>
             
           
@@ -242,7 +242,7 @@
 wrapper of catalog_funcs functions</p>
 <dl class="py function">
 <dt id="clevar.match_metrics.recovery.funcs.plot">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.funcs.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span></em>, <em class="sig-param"><span class="n">mass_bins</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redshift_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p_m1_m2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_mass2</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/funcs.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.funcs.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.match_metrics.recovery.funcs.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span></em>, <em class="sig-param"><span class="n">mass_bins</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redshift_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p_m1_m2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_mass2</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">max_mass2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_mass2_norm</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/funcs.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.funcs.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -259,6 +259,8 @@ wrapper of catalog_funcs functions</p>
 <li><p><strong>p_m1_m2</strong> (<em>function</em>) – <cite>P(M1|M2)</cite> - Probability of having a catalog 1 cluster with mass M1 given
 a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.</p></li>
 <li><p><strong>min_mass2</strong> (<em>float</em>) – Threshold mass for intrinsic completeness computation.</p></li>
+<li><p><strong>max_mass2</strong> (<em>float</em>) – Maximum mass2 for integration. If none, estimated from p_m1_m2.</p></li>
+<li><p><strong>min_mass2_norm</strong> (<em>float</em>) – Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Other Parameters</dt>
@@ -365,7 +367,7 @@ Must have same size as len(bins2)-1</p></li>
 
 <dl class="py function">
 <dt id="clevar.match_metrics.recovery.funcs.plot_panel">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.funcs.</code><code class="sig-name descname">plot_panel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span></em>, <em class="sig-param"><span class="n">mass_bins</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redshift_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p_m1_m2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_mass2</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/funcs.html#plot_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.funcs.plot_panel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.match_metrics.recovery.funcs.</code><code class="sig-name descname">plot_panel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span></em>, <em class="sig-param"><span class="n">mass_bins</span></em>, <em class="sig-param"><span class="n">transpose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">log_mass</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">redshift_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p_m1_m2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_mass2</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">max_mass2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_mass2_norm</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/funcs.html#plot_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.funcs.plot_panel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate as lines in panels, with each line binned by redshift
 and each panel is based on the data inside a mass bin.</p>
 <dl class="field-list simple">
@@ -399,6 +401,8 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>p_m1_m2</strong> (<em>function</em>) – <cite>P(M1|M2)</cite> - Probability of having a catalog 1 cluster with mass M1 given
 a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.</p></li>
 <li><p><strong>min_mass2</strong> (<em>float</em>) – Threshold mass for intrinsic completeness computation.</p></li>
+<li><p><strong>max_mass2</strong> (<em>float</em>) – Maximum mass2 for integration. If none, estimated from p_m1_m2.</p></li>
+<li><p><strong>min_mass2_norm</strong> (<em>float</em>) – Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>

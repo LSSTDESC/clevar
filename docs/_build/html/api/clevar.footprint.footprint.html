@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.footprint.footprint module &mdash; ClEvaR 0.7.1 documentation</title>
+  <title>clevar.footprint.footprint module &mdash; ClEvaR 0.8.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.7.1
+                0.8.0
               </div>
             
           
@@ -268,8 +268,9 @@ and <span class="math notranslate nohighlight">\(w\)</span> is the window functi
 <li><p><strong>cl_z</strong> (<em>float</em>) – Cluster redshift</p></li>
 <li><p><strong>aperture_radius</strong> (<em>float</em>) – Radius of aperture</p></li>
 <li><p><strong>aperture_radius_unit</strong> (<em>str</em>) – Unit of aperture radius</p></li>
-<li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when radius has angular units</p></li>
-<li><p><strong>wtfunc</strong> (<em>function</em>) – Window function</p></li>
+<li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when aperture has physical units.</p></li>
+<li><p><strong>wtfunc</strong> (<em>function</em>) – Window function, must take (pixels, SkyCoord) as input.
+Default is flat window.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -283,7 +284,7 @@ and <span class="math notranslate nohighlight">\(w\)</span> is the window functi
 
 <dl class="py method">
 <dt id="clevar.footprint.footprint.Footprint.get_coverfrac_nfw2D">
-<code class="sig-name descname">get_coverfrac_nfw2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cl_ra</span></em>, <em class="sig-param"><span class="n">cl_dec</span></em>, <em class="sig-param"><span class="n">cl_z</span></em>, <em class="sig-param"><span class="n">cl_radius</span></em>, <em class="sig-param"><span class="n">cl_radius_unit</span></em>, <em class="sig-param"><span class="n">aperture_radius</span></em>, <em class="sig-param"><span class="n">aperture_radius_unit</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_coverfrac_nfw2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_coverfrac_nfw2D" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_coverfrac_nfw2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cl_ra</span></em>, <em class="sig-param"><span class="n">cl_dec</span></em>, <em class="sig-param"><span class="n">cl_z</span></em>, <em class="sig-param"><span class="n">cl_radius</span></em>, <em class="sig-param"><span class="n">cl_radius_unit</span></em>, <em class="sig-param"><span class="n">aperture_radius</span></em>, <em class="sig-param"><span class="n">aperture_radius_unit</span></em>, <em class="sig-param"><span class="n">cosmo</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_coverfrac_nfw2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_coverfrac_nfw2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cover fraction with NFW 2D flatcore window.</p>
 <div class="math notranslate nohighlight">
 \[CF(R) = \frac{\sum_{r_i&lt;R}w_{NFW}(r_i)df(r_i)}{\sum_{r_i&lt;R}w_{NFW}(r_i)}\]</div>
@@ -301,7 +302,7 @@ and <span class="math notranslate nohighlight">\(w_{nfw}\)</span> is the NFW 2D 
 <li><p><strong>cl_radius_unit</strong> (<em>str</em>) – Unit of cluster radius</p></li>
 <li><p><strong>aperture_radius</strong> (<em>float</em>) – Radius of aperture</p></li>
 <li><p><strong>aperture_radius_unit</strong> (<em>str</em>) – Unit of aperture radius</p></li>
-<li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when radius has angular units</p></li>
+<li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -318,11 +319,14 @@ validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).</p
 
 <dl class="py method">
 <dt id="clevar.footprint.footprint.Footprint.get_map">
-<code class="sig-name descname">get_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_map" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">bad_val</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transforms a internal quantity into a map</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>values</strong> (<em>array</em>) – Values in each pixel</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em>) – Name of internal data to be used.</p></li>
+<li><p><strong>bad_val</strong> (<em>float</em><em>, </em><em>None</em>) – Values for pixels outside footprint.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Healpix map with the given values, other pixels are zero</p>
@@ -335,17 +339,73 @@ validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).</p
 
 <dl class="py method">
 <dt id="clevar.footprint.footprint.Footprint.get_values_in_pixels">
-<code class="sig-name descname">get_values_in_pixels</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">pixel_vals</em>, <em class="sig-param">bad_val</em>, <em class="sig-param">transform=&lt;function Footprint.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_values_in_pixels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_values_in_pixels" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_values_in_pixels</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">pixels</em>, <em class="sig-param">bad_val</em>, <em class="sig-param">transform=&lt;function Footprint.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.get_values_in_pixels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.get_values_in_pixels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transforms a internal quantity into a map</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>values</strong> (<em>array</em>) – Values in each pixel</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>array</em>) – Values in each pixel.</p></li>
+<li><p><strong>data</strong> (<em>str</em>) – Name of internal data to be used.</p></li>
+<li><p><strong>pixels</strong> (<em>list</em>) – List of pixels</p></li>
+<li><p><strong>bad_val</strong> (<em>float</em><em>, </em><em>None</em>) – Values for pixels outside footprint.</p></li>
+<li><p><strong>transform</strong> (<em>function</em>) – Function to be applied to data for value in pixel. Default is f(data)=data.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Healpix map with the given values, other pixels are zero</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Map</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.footprint.footprint.Footprint.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">bad_val</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">auto_lim</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ra_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dec_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cluster</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cluster_kwargs</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot footprint. It can also overlay clusters with their radial sizes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em>) – Name of internal data to be used.</p></li>
+<li><p><strong>bad_val</strong> (<em>float</em><em>, </em><em>None</em>) – Values for pixels outside footprint.</p></li>
+<li><p><strong>auto_lim</strong> (<em>bool</em>) – Set automatic limits for ra/dec.</p></li>
+<li><p><strong>ra_lim</strong> (<em>list</em>) – RA limits in degrees.</p></li>
+<li><p><strong>dec_lim</strong> (<em>list</em>) – DEC limits in degrees.</p></li>
+<li><p><strong>cluster</strong> (<em>clevar.ClCatalog</em>) – Clusters to be overlayed on footprint.</p></li>
+<li><p><strong>cluster_kwargs</strong> (<em>dict</em>) – Keyword arguments to plot clusters. If cluster radius used, arguments
+for plt.Circle function, if not arguments for plt.scatter.</p></li>
+<li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when cluster radius has physical units.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em>) – Width, height in inches (float, float). Default value from hp.cartview.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Extra arguments for hp.cartview:</p>
+<blockquote>
+<div><ul>
+<li><p>xsize (int) : The size of the image. Default: 800</p></li>
+<li><p>title (str) : The title of the plot. Default: None</p></li>
+<li><p>min (float) : The minimum range value</p></li>
+<li><p>max (float) : The maximum range value</p></li>
+<li><p>remove_dip (bool) : If <code class="xref py py-const docutils literal notranslate"><span class="pre">True</span></code>, remove the dipole+monopole</p></li>
+<li><p>remove_mono (bool) : If <code class="xref py py-const docutils literal notranslate"><span class="pre">True</span></code>, remove the monopole</p></li>
+<li><p>gal_cut (float, scalar) : Symmetric galactic cut for                 the dipole/monopole fit. Removes points in latitude range                 [-gal_cut, +gal_cut]</p></li>
+<li><p>format (str) : The format of the scale label. Default: ‘%g’</p></li>
+<li><p>cbar (bool) : Display the colorbar. Default: True</p></li>
+<li><p>notext (bool) : If True, no text is printed around the map</p></li>
+<li><p>norm ({‘hist’, ‘log’, None}) : Color normalization,                 hist= histogram equalized color mapping, log= logarithmic color                 mapping, default: None (linear color mapping)</p></li>
+<li><p>cmap (a color map) :  The colormap to use (see matplotlib.cm)</p></li>
+<li><p>badcolor (str) : Color to use to plot bad values</p></li>
+<li><p>bgcolor (str) : Color to use for background</p></li>
+<li><p>margins (None or sequence) : Either None, or a                 sequence (left,bottom,right,top) giving the margins on                 left,bottom,right and top of the axes. Values are relative to                 figure (0-1). Default: None</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>fig</strong> – Figure of the plot. The main can be accessed at fig.axes[0], and the colorbar
+at fig.axes[1].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib.pyplot.figure</p>
 </dd>
 </dl>
 </dd></dl>
@@ -370,7 +430,7 @@ validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).</p
 <dl class="py method">
 <dt id="clevar.footprint.footprint.Footprint.zmax_masks_from_footprint">
 <code class="sig-name descname">zmax_masks_from_footprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ra</span></em>, <em class="sig-param"><span class="n">dec</span></em>, <em class="sig-param"><span class="n">z</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.zmax_masks_from_footprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.zmax_masks_from_footprint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a mask for a catalog based on a footprint</p>
+<dd><p>Create a zmax mask for a catalog based on a footprint</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
