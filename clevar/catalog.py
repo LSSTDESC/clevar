@@ -127,7 +127,7 @@ class Catalog():
             return data
         else:
             return Catalog(name=self.name, labels=self.labels,
-                **{c:data[c] for c in data.colnames})
+                           **{c:data[c] for c in data.colnames})
     def __len__(self):
         return self.size
     def __delitem__(self, item):
@@ -160,15 +160,20 @@ class Catalog():
         if 'ra' in self.data.colnames and 'dec' in self.data.colnames:
             self['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
         self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
-    def _init_match_vals(self):
-        """Fills self.match with default values"""
-        self['mt_self'] = None
-        self['mt_other'] = None
-        self['mt_multi_self']  = None
-        self['mt_multi_other'] = None
-        for i in range(self.size):
-            self['mt_multi_self'][i] = []
-            self['mt_multi_other'][i] = []
+    def _init_match_vals(self, overwrite=False):
+        """Fills self.match with default values
+
+        Paramters
+        ---------
+        overwrite: bool
+            Overwrite values of pre-existing columns.
+        """
+        for col in ('mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other'):
+            if overwrite or col not in self.colnames:
+                self[col] = None
+                if col in ('mt_multi_self', 'mt_multi_other'):
+                    for i in range(self.size):
+                        self[col][i] = []
     def ids2inds(self, ids, missing=None):
         """Returns the indicies of objects given an id list.
 
@@ -487,6 +492,14 @@ class ClCatalog(Catalog):
         Catalog._add_values(self, **columns)
         self.radius_unit = columns.pop('radius_unit', None)
         self._init_match_vals()
+    def __getitem__(self, item):
+        data = self.data[item]
+        if isinstance(item, (str, int, np.int64)):
+            return data
+        else:
+            return ClCatalog(name=self.name, labels=self.labels,
+                             **{c:data[c] for c in data.colnames},
+                             radius_unit = self.radius_unit)
     @classmethod
     def read(self, filename, name=None, **kwargs):
         """Read catalog from fits file
@@ -541,3 +554,10 @@ class MemCatalog(Catalog):
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
             self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]
+    def __getitem__(self, item):
+        data = self.data[item]
+        if isinstance(item, (str, int, np.int64)):
+            return data
+        else:
+            return MemCatalog(name=self.name, labels=self.labels,
+                              **{c:data[c] for c in data.colnames})

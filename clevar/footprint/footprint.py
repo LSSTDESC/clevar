@@ -1,12 +1,14 @@
 #!/usr/bin/env python
+import warnings
 import numpy as np
 
-from ..catalog import ClData
+from ..catalog import ClData, ClCatalog
 from ..geometry import convert_units, angular_bank, physical_bank
 from ..utils import none_val, hp
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 from .nfw_funcs import nfw2D_profile_flatcore
+from ..match_metrics.plot_helper import plt
 
 class Footprint():
     '''
@@ -346,3 +348,163 @@ class Footprint():
                                               'degrees', 'mpc', cl_z, cosmo)
             )
         return nfw2D_profile_flatcore(R, cl_radius, Rs, Rcore)
+    def plot(self, data, bad_val=np.nan, auto_lim=False, ra_lim=None, dec_lim=None,
+             cluster=None, cluster_kwargs={}, cosmo=None, **kwargs):
+        """
+        Plot footprint. It can also overlay clusters with their radial sizes.
+
+        Parameters
+        ----------
+        data: str
+            Name of internal data to be used.
+        bad_val: float, None
+            Values for pixels outside footprint.
+        auto_lim: bool
+            Set automatic limits for ra/dec.
+        ra_lim: list
+            RA limits in degrees.
+        dec_lim: list
+            DEC limits in degrees.
+        cluster: clevar.ClCatalog
+            Clusters to be overlayed on footprint.
+        cluster_kwargs: dict
+            Keyword arguments to plot clusters. If cluster radius used, arguments
+            for plt.Circle function, if not arguments for plt.scatter.
+        cosmo: clevar.Cosmology object
+            Cosmology object for when cluster radius has physical units.
+        figsize: tuple
+            Width, height in inches (float, float). Default value from hp.cartview.
+        **kwargs:
+            Extra arguments for hp.cartview:
+
+                * xsize (int) : The size of the image. Default: 800
+                * title (str) : The title of the plot. Default: None
+                * min (float) : The minimum range value
+                * max (float) : The maximum range value
+                * remove_dip (bool) : If :const:`True`, remove the dipole+monopole
+                * remove_mono (bool) : If :const:`True`, remove the monopole
+                * gal_cut (float, scalar) : Symmetric galactic cut for \
+                the dipole/monopole fit. Removes points in latitude range \
+                [-gal_cut, +gal_cut]
+                * format (str) : The format of the scale label. Default: '%g'
+                * cbar (bool) : Display the colorbar. Default: True
+                * notext (bool) : If True, no text is printed around the map
+                * norm ({'hist', 'log', None}) : Color normalization, \
+                hist= histogram equalized color mapping, log= logarithmic color \
+                mapping, default: None (linear color mapping)
+                * cmap (a color map) :  The colormap to use (see matplotlib.cm)
+                * badcolor (str) : Color to use to plot bad values
+                * bgcolor (str) : Color to use for background
+                * margins (None or sequence) : Either None, or a \
+                sequence (left,bottom,right,top) giving the margins on \
+                left,bottom,right and top of the axes. Values are relative to \
+                figure (0-1). Default: None
+
+        Returns
+        -------
+        fig: matplotlib.pyplot.figure
+            Figure of the plot. The main can be accessed at fig.axes[0], and the colorbar
+            at fig.axes[1].
+        """
+        kwargs_ = {'flip':'geo', 'title':None, 'cbar':True}
+        kwargs_.update(kwargs)
+        if auto_lim:
+            edge = 2*(hp.nside2resol(self.nside, arcmin=True)/60)
+            ra, dec = hp.pix2ang(
+                self.nside,
+                self.data['pixel'][self.data[data]!=bad_val],
+                nest=self.nest, lonlat=True)
+            if ra.min()<180. and ra.max()>180.:
+                gap_ra = 360.-(ra.max()-ra.min())
+                gap_ra2 = ra[ra>180.].min()-ra[ra<180.].max()
+                if gap_ra2>gap_ra:
+                    ra[ra>180.] -= 360.
+
+            kwargs_['lonra'] = [max(-360, ra.min()-edge), min(360, ra.max()+edge)]
+            kwargs_['latra'] = [max(-90, dec.min()-edge), min(90, dec.max()+edge)]
+
+        kwargs_['lonra'] = ra_lim if ra_lim else kwargs_.get('lonra')
+        kwargs_['latra'] = dec_lim if dec_lim else kwargs_.get('latra')
+
+        if (kwargs_['lonra'] is None)!=(kwargs_['latra'] is None):
+            raise ValueError('When auto_lim=False, ra_lim and dec_lim must be provided together.')
+
+        figsize = kwargs_.pop('figsize', None)
+        fig = plt.figure()
+        hp.cartview(self.get_map(data, bad_val), hold=True, **kwargs_)
+        ax = fig.axes[0]
+        ax.axis('on')
+        xlim, ylim = ax.get_xlim(), ax.get_ylim()
+
+        if figsize:
+            ax.set_aspect('auto')
+            fig.set_size_inches(figsize)
+
+        if kwargs_['cbar']:
+            cb = fig.axes[1]
+            cb.set_xlabel(data)
+
+        if cluster is not None:
+            if isinstance(cluster, ClCatalog):
+                if 'radius' in cluster.colnames and cluster.radius_unit is not None:
+                    if (cluster.radius_unit in physical_bank and
+                            (cosmo is None or 'z' not in cluster.colnames)):
+                        raise TypeError(
+                            'A cosmology and cluster redsift is necessary if '
+                            'cluster radius in physical units.')
+                    cl_kwargs = dict(color='b', fill=0, lw=1)
+                    cl_kwargs.update(cluster_kwargs)
+                    rad_deg = convert_units(cluster['radius'], cluster.radius_unit, 'degrees',
+                                            redshift=cluster['z'], cosmo=cosmo)
+                    lims_mask = lambda ra, dec, rad_deg: (
+                        (ra+rad_deg>=xlim[0])*(ra-rad_deg<xlim[1])
+                        *(dec+rad_deg>=ylim[0])*(dec-rad_deg<ylim[1]))
+                    plt_cl = lambda ra, dec, radius: [
+                        ax.add_patch(plt.Circle((ra_, dec_), radius=radius_, **cl_kwargs))
+                        for ra_, dec_, radius_ in
+                        np.transpose([ra, dec, radius])[lims_mask(ra, dec, radius)]]\
+                        if len(ra)>0 else []
+                else:
+                    warnings.warn("Column 'radius' or radius_unit of cluster not set up. "
+                                  "Plotting clusters as points with plt.scatter.")
+                    cl_kwargs = dict(color='b', s=5)
+                    cl_kwargs.update(cluster_kwargs)
+                    rad_deg = np.ones(cluster.size)
+                    lims_mask = lambda ra, dec: ((ra>=xlim[0])*(ra<xlim[1])*(dec>=ylim[0])*(dec<ylim[1]))
+                    plt_cl = lambda ra, dec, radius: \
+                        ax.scatter(*np.transpose([ra, dec])[lims_mask(ra, dec)].T, **cl_kwargs)
+                # Plot clusters in regular range
+                plt_cl(cluster['ra'], cluster['dec'], rad_deg)
+                # Plot clusters using -180<ra<0
+                if ax.get_xlim()[0]<=0.:
+                    ra2, dec2, r2 = np.transpose([cluster['ra'], cluster['dec'], rad_deg])[
+                        (cluster['ra']>=180)].T
+                    ra2 -= 360.
+                    plt_cl(ra2, dec2, r2)
+                # Plot clusters using 180<ra<360
+                if ax.get_xlim()[1]>=180.:
+                    ra2, dec2, r2 = np.transpose([cluster['ra'], cluster['dec'], rad_deg])[
+                        (cluster['ra']<=0)].T
+                    ra2 += 360.
+                    plt_cl(ra2, dec2, r2)
+                # Plot clusters using ra>360 (for xlim [360<, >0])
+                if ax.get_xlim()[1]>=360.:
+                    ra2, dec2, r2 = np.transpose([cluster['ra'], cluster['dec'], rad_deg])[
+                        (cluster['ra']>=0)].T
+                    ra2 += 360.
+                    plt_cl(ra2, dec2, r2)
+            else:
+                raise TypeError(f'cluster argument (={cluster}) must be a ClCatalog.')
+
+        ax.set_xlim(xlim)
+        ax.set_ylim(ylim)
+        xticks = ax.get_xticks()
+        xticks[xticks>=360] -= 360
+        if all(int(i)==i for i in xticks):
+            xticks = np.array(xticks, dtype=int)
+        ax.set_xticks(ax.get_xticks())
+        ax.set_xticklabels(xticks)
+        ax.set_xlim(xlim)
+        ax.set_ylim(ylim)
+
+        return fig

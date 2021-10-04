@@ -201,15 +201,15 @@ def test_proximity_cfg(CosmoClass):
     _test_mt_results(c2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
     ### test 1 ###
     mt_config['which_radius'] = 'cat1'
-    c1._init_match_vals()
-    c2._init_match_vals()
+    c1._init_match_vals(overwrite=True)
+    c2._init_match_vals(overwrite=True)
     mt.match_from_config(c1, c2, mt_config, cosmo=cosmo)
     _test_mt_results(c1, multi_self=mmt, self=smt, cross=smt)
     _test_mt_results(c2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
     ### test 2 ###
     mt_config['which_radius'] = 'cat2'
-    c1._init_match_vals()
-    c2._init_match_vals()
+    c1._init_match_vals(overwrite=True)
+    c2._init_match_vals(overwrite=True)
     mt.match_from_config(c1, c2, mt_config, cosmo=cosmo)
     _test_mt_results(c1, multi_self=mmt, self=smt, cross=smt)
     _test_mt_results(c2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
@@ -283,8 +283,8 @@ def test_membership():
     _test_mt_results(c1, multi_self=mmt1, self=smt, cross=smt)
     _test_mt_results(c2, multi_self=mmt2, self=smt[:-1], cross=smt[:-1])
     # Check with minimum_share_fraction
-    c1._init_match_vals()
-    c2._init_match_vals()
+    c1._init_match_vals(overwrite=True)
+    c2._init_match_vals(overwrite=True)
     mt.multiple(c1, c2)
     mt.multiple(c2, c1)
     mt.unique(c1, c2, 'shared_member_fraction', minimum_share_fraction=.7)
@@ -301,8 +301,8 @@ def test_membership():
     _test_mt_results(c1, multi_self=mmt1, self=smt, cross=cmt, other=cmt)
     _test_mt_results(c2, multi_self=mmt2, self=cmt[:-1], cross=cmt[:-1], other=smt[:-1])
     # Check with minimum_share_fraction
-    c1._init_match_vals()
-    c2._init_match_vals()
+    c1._init_match_vals(overwrite=True)
+    c2._init_match_vals(overwrite=True)
     mt.multiple(c1, c2)
     mt.multiple(c2, c1)
     mt.unique(c1, c2, 'shared_member_fraction', minimum_share_fraction=.9)
@@ -377,8 +377,8 @@ def test_membership_cfg(CosmoClass):
     _test_mt_results(c1, multi_self=mmt1, self=smt, cross=smt)
     _test_mt_results(c2, multi_self=mmt2, self=smt[:-1], cross=smt[:-1])
     # Check with minimum_share_fraction
-    c1._init_match_vals()
-    c2._init_match_vals()
+    c1._init_match_vals(overwrite=True)
+    c2._init_match_vals(overwrite=True)
     match_config_test['minimum_share_fraction'] = .7
     mt.match_from_config(c1, c2, mem1, mem2, match_config_test)
     smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
@@ -386,8 +386,8 @@ def test_membership_cfg(CosmoClass):
     _test_mt_results(c1, multi_self=mmt1, self=smt, cross=cmt, other=cmt)
     _test_mt_results(c2, multi_self=mmt2, self=cmt[:-1], cross=cmt[:-1], other=smt[:-1])
     # Check with minimum_share_fraction
-    c1._init_match_vals()
-    c2._init_match_vals()
+    c1._init_match_vals(overwrite=True)
+    c2._init_match_vals(overwrite=True)
     match_config_test['minimum_share_fraction'] = .9
     mt.match_from_config(c1, c2, mem1, mem2, match_config_test)
     smt = [None, 'CL1', 'CL2', 'CL3', None]
