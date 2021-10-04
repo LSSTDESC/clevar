@@ -41,7 +41,7 @@ def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins,
     return pltfunc(cat, *args, matching_type, **kwargs)
 
 
-def _intrinsic_comp(p_m1_m2, min_mass2, ax, transpose, bins1, bins2,
+def _intrinsic_comp(p_m1_m2, min_mass2, ax, transpose, mass_bins, redshift_bins=None,
                     max_mass2=1e16, min_mass2_norm=1e12):
     """
     Plots instrinsic completeness given by a mass threshold on the other catalog.
@@ -57,16 +57,29 @@ def _intrinsic_comp(p_m1_m2, min_mass2, ax, transpose, bins1, bins2,
         Ax to add plot
     transpose: bool
         Transpose mass and redshift in plots
-    bins1: array
-        Redshift bins (or mass if transpose).
-    bins2: array
-        Mass bins (or redshift if transpose).
+    mass_bins: array
+        Mass bins.
+    redshift_bins: array
+        Redshift bins (required if transpose=False).
     max_mass2: float
-        Maximum mass2 for integration.
-    max_mass2_norm: float
-        Minimum mass2 to be used in normalization integral.
+        Maximum mass2 for integration. If none, estimated from p_m1_m2.
+    min_mass2_norm: float
+        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.
     """
-    min_logmass2_norm, max_logmass2 = np.log10(min_mass2_norm), np.log10(max_mass2)
+    # For detemining min/max mass
+    lim_mass_vals = np.logspace(-5, 20, 2501)
+    if min_mass2_norm is None:
+        p_vals = p_m1_m2(mass_bins[0], lim_mass_vals)
+        p_max, arg_max = p_vals.max(), p_vals.argmax()
+        p_vals = p_vals[:arg_max]
+        v_min = max(p_vals.min(), p_max*1e-10)
+        min_mass2_norm = lim_mass_vals[:arg_max][p_vals<v_min][-1]
+    if max_mass2 is None:
+        p_vals = p_m1_m2(mass_bins[-1], lim_mass_vals)
+        p_max, arg_max = p_vals.max(), p_vals.argmax()
+        p_vals = p_vals[arg_max+1:]
+        v_min = max(p_vals.min(), p_max*1e-10)
+        max_mass2 = lim_mass_vals[arg_max+1:][p_vals<v_min][0]
     integ = lambda m1, min_mass2: quad_vec(
         lambda logm2: p_m1_m2(m1, 10**logm2),
         np.log10(min_mass2), np.log10(max_mass2),
@@ -74,16 +87,16 @@ def _intrinsic_comp(p_m1_m2, min_mass2, ax, transpose, bins1, bins2,
     comp = lambda m1, m2_th: integ(m1, m2_th)/integ(m1, min_mass2_norm)
     if transpose:
         _kwargs = {'alpha':.2, 'color':'0.3', 'lw':0, 'zorder':0}
-        ax.fill_between(bins1, 0, comp(bins1, min_mass2), **_kwargs)
+        ax.fill_between(mass_bins, 0, comp(mass_bins, min_mass2), **_kwargs)
     else:
-        for m_inf, m_sup, line in zip(bins2, bins2[1:], ax.lines):
+        for m_inf, m_sup, line in zip(mass_bins, mass_bins[1:], ax.lines):
             _kwargs = {'alpha':.2, 'color':line._color, 'lw':0}
-            ax.fill_between((bins1[0], bins1[-1]), comp(m_inf, min_mass2),
+            ax.fill_between((redshift_bins[0], redshift_bins[-1]), comp(m_inf, min_mass2),
                             comp(m_sup, min_mass2), **_kwargs)
 
 def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
          redshift_label=None, mass_label=None, recovery_label=None, p_m1_m2=None,
-         min_mass2=1, **kwargs):
+         min_mass2=1, max_mass2=None, min_mass2_norm=None, **kwargs):
     """
     Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
 
@@ -111,6 +124,10 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.
     min_mass2: float
         Threshold mass for intrinsic completeness computation.
+    max_mass2: float
+        Maximum mass2 for integration. If none, estimated from p_m1_m2.
+    min_mass2_norm: float
+        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.
 
 
     Other parameters
@@ -165,14 +182,16 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
                       ylabel=recovery_label,
                       **kwargs)
     if p_m1_m2 is not None:
+        mass_bins = info['data']['edges1'] if transpose else info['data']['edges2']
+        redshift_bins = info['data']['edges2'] if transpose else info['data']['edges1']
         _intrinsic_comp(p_m1_m2, min_mass2, info['ax'], transpose,
-                        info['data']['edges1'], info['data']['edges2'], max_mass2=1e16)
+                        mass_bins, redshift_bins, max_mass2, min_mass2_norm)
     return info
 
 
 def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
                redshift_label=None, mass_label=None, recovery_label=None, p_m1_m2=None,
-               min_mass2=1, **kwargs):
+               min_mass2=1, max_mass2=None, min_mass2_norm=None, **kwargs):
 
     """
     Plot recovery rate as lines in panels, with each line binned by redshift
@@ -228,6 +247,10 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         a catalog 2 cluster with mass M2. If provided, computes the intrinsic completeness.
     min_mass2: float
         Threshold mass for intrinsic completeness computation.
+    max_mass2: float
+        Maximum mass2 for integration. If none, estimated from p_m1_m2.
+    min_mass2_norm: float
+        Minimum mass2 to be used in normalization integral. If none, estimated from p_m1_m2.
 
     Returns
     -------
@@ -258,9 +281,11 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         for ax, bins2 in zip(info['axes'].flatten(),
                              zip(info['data']['edges2'],
                                  info['data']['edges2'][1:])):
+            mass_bins = info['data']['edges1'] if transpose else bins2
+            redshift_bins = bins2 if transpose else info['data']['edges1']
             _intrinsic_comp(
                 p_m1_m2, min_mass2, ax, transpose,
-                info['data']['edges1'], bins2, max_mass2=1e16)
+                mass_bins, redshift_bins, max_mass2, min_mass2_norm)
     return info
 
 
