@@ -298,11 +298,10 @@ def skyplot(ra, dec, is_matched, nside=256, nest=True,
     info: dict
         Information of data in the plots, it contains the sections:
 
-            * `fig` (matplotlib.pyplot.figure): Figure of the plot. The main can be accessed at
+            * `fig` (matplotlib.pyplot.figure): Figure of the plot. The main can be accessed at\
             `info['fig'].axes[0]`, and the colorbar at `info['fig'].axes[1]`.
             * `nc_pix`: Dictionary with the number of clusters in each pixel.
             * `nc_mt_pix`: Dictionary with the number of matched clusters in each pixel.
-
     """
     all_pix, mt_pix = {}, {}
     for pix, mt in zip(hp.ang2pix(nside, ra, dec, nest=nest, lonlat=True), is_matched):
