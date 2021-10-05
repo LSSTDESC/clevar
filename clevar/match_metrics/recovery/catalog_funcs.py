@@ -7,6 +7,38 @@ from ...utils import none_val
 from .. import plot_helper as ph
 from . import array_funcs
 
+
+def _rec_masks(cat, matching_type, mask=None, mask_unmatched=None):
+    """
+    Get masks to be used in recovery rate.
+
+    Parameters
+    ----------
+    cat: clevar.ClCatalog
+        ClCatalog with matching information
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
+
+    Returns
+    -------
+    use_mask: array
+        Mask of clusters to be used.
+    is_matched: array
+        Mask for matched clusters (use_mask has to be applied to it).
+    """
+    # convert matching type to the values expected by get_matching_mask
+    matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
+    is_matched = cat.get_matching_mask(matching_type_conv)
+    # mask_ to apply mask and mask_unmatched
+    use_mask = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
+    return use_mask, is_matched
+
+
 def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
                mask=None, mask_unmatched=None, **kwargs):
     """
@@ -36,11 +68,7 @@ def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
     -------
     Same as pltfunc
     """
-    # convert matching type to the values expected by get_matching_mask
-    matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
-    is_matched = cat.get_matching_mask(matching_type_conv)
-    # mask_ to apply mask and mask_unmatched
-    mask_ = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
+    mask_, is_matched = _rec_masks(cat, matching_type, mask, mask_unmatched)
     # make sure bins stay consistent regardless of mask
     edges1, edges2 = np.histogram2d(cat[col1], cat[col2], bins=(bins1, bins2))[1:]
     return pltfunc(cat[mask_][col1], cat[mask_][col2], edges1, edges2,
