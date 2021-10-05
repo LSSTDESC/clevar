@@ -506,5 +506,7 @@ class Footprint():
         ax.set_xticklabels(xticks)
         ax.set_xlim(xlim)
         ax.set_ylim(ylim)
+        ax.set_xlabel('RA')
+        ax.set_ylabel('DEC')
 
         return fig
