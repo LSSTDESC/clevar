@@ -406,7 +406,7 @@ class Footprint():
             Figure of the plot. The main can be accessed at fig.axes[0], and the colorbar
             at fig.axes[1].
         """
-        kwargs_ = {'flip':'geo', 'title':None, 'cbar':True}
+        kwargs_ = {'flip':'geo', 'title':None, 'cbar':True, 'nest':self.nest}
         kwargs_.update(kwargs)
         if auto_lim:
             edge = 2*(hp.nside2resol(self.nside, arcmin=True)/60)
