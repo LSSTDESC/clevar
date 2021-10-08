@@ -203,11 +203,11 @@ class Footprint():
             radius=convert_units(aperture_radius, aperture_radius_unit, 'radians',
                                  redshift=cl_z, cosmo=cosmo)
             )
-        weights = wtfunc(pix_list, cl_sk)
+        weights = np.array(wtfunc(pix_list, cl_sk))
         detfrac_vals = self.get_values_in_pixels('detfrac', pix_list, 0)
         zmax_vals = self.get_values_in_pixels('zmax', pix_list, 0)
         values = detfrac_vals*np.array(cl_z<=zmax_vals, dtype=float)
-        return sum(weights*values)/sum(weights)
+        return (weights*values).sum()/weights.sum()
     def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
                              aperture_radius, aperture_radius_unit, cosmo):
         '''
