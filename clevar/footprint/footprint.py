@@ -69,7 +69,7 @@ class Footprint():
         self.data['pixel'] = np.array(pixels, dtype=int)
         self.data['detfrac'] = none_val(detfrac, 1)
         self.data['zmax'] = none_val(zmax, 99)
-        ra, dec = hp.pix2ang(nside, pixels, lonlat=True)
+        ra, dec = hp.pix2ang(nside, pixels, lonlat=True, nest=nest)
         self.data['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
         self.pixel_dict = {p:i for i, p in enumerate(self['pixel'])}
     def __getitem__(self, item):
