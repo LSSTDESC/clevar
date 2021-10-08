@@ -382,10 +382,16 @@ def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=
         Mask of unwanted unmatched clusters (ex: out of footprint)
     auto_lim: bool
         Set automatic limits for ra/dec.
-    figsize: tuple
-        Width, height in inches (float, float). Default value from hp.cartview.
+    ra_lim: None, list
+        Min/max RA for plot.
+    dec_lim: None, list
+        Min/max DEC for plot.
     recovery_label: str
         Lable for colorbar. Default: 'recovery rate'
+    fig: matplotlib.figure.Figure, None
+        Matplotlib figure object. If not provided a new one is created.
+    figsize: tuple
+        Width, height in inches (float, float). Default value from hp.cartview.
     **kwargs:
         Extra arguments for hp.cartview:
 

@@ -245,7 +245,7 @@ def plot2D(values1, values2, bins1, bins2, is_matched,
 
 def skyplot(ra, dec, is_matched, nside=256, nest=True,
             auto_lim=False, ra_lim=None, dec_lim=None,
-            recovery_label='Recovery Rate', **kwargs):
+            recovery_label='Recovery Rate', fig=None, **kwargs):
     """
     Plot recovery rate in healpix pixels.
 
@@ -263,10 +263,16 @@ def skyplot(ra, dec, is_matched, nside=256, nest=True,
         If ordering is nested
     auto_lim: bool
         Set automatic limits for ra/dec.
-    figsize: tuple
-        Width, height in inches (float, float). Default value from hp.cartview.
+    ra_lim: None, list
+        Min/max RA for plot.
+    dec_lim: None, list
+        Min/max DEC for plot.
     recovery_label: str
         Lable for colorbar. Default: 'recovery rate'
+    fig: matplotlib.figure.Figure, None
+        Matplotlib figure object. If not provided a new one is created.
+    figsize: tuple
+        Width, height in inches (float, float). Default value from hp.cartview.
     **kwargs:
         Extra arguments for hp.cartview:
 
@@ -331,9 +337,10 @@ def skyplot(ra, dec, is_matched, nside=256, nest=True,
         raise ValueError('When auto_lim=False, ra_lim and dec_lim must be provided together.')
 
     figsize = kwargs_.pop('figsize', None)
-    fig = plt.figure()
+    if fig is None:
+        fig = plt.figure()
     hp.cartview(map_, hold=True, **kwargs_)
-    ax = fig.axes[0]
+    ax = fig.axes[-2 if kwargs_['cbar'] else -1]
     ax.axis('on')
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
 
@@ -342,7 +349,7 @@ def skyplot(ra, dec, is_matched, nside=256, nest=True,
         fig.set_size_inches(figsize)
 
     if kwargs_['cbar']:
-        cb = fig.axes[1]
+        cb = fig.axes[-1]
         cb.set_xlabel(recovery_label)
 
     ax.set_xlim(xlim)
