@@ -315,9 +315,15 @@ def skyplot(ra, dec, is_matched, nside=256, nest=True, auto_lim=False, ra_lim=No
     map_ = np.full(hp.nside2npix(nside), np.nan)
     map_[list(all_pix.keys())] = np.divide(list(mt_pix.values()), list(all_pix.values()))
 
+    kwargs_ = {}
+    vmin, vmax = min(map_[list(all_pix.keys())]), max(map_[list(all_pix.keys())])
+    if vmin==vmax:
+        kwargs_['min'] = vmin-1e-10
+        kwargs_['max'] = vmax+1e-10
+    kwargs_.update(kwargs)
     fig, ax, cb = ph.plot_healpix_map(
         map_, nest=nest, auto_lim=auto_lim, bad_val=np.nan,
-        ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs)
+        ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs_)
 
     if cb:
         cb.set_xlabel(recovery_label)
