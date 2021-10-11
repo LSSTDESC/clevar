@@ -361,7 +361,8 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
 
 
 def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=None,
-            auto_lim=False, ra_lim=None, dec_lim=None, recovery_label='Recovery Rate', **kwargs):
+            auto_lim=False, ra_lim=None, dec_lim=None, recovery_label='Recovery Rate',
+            fig=None, figsize=None, **kwargs):
     """
     Plot recovery rate in healpix pixels.
 
@@ -429,7 +430,6 @@ def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=
             * `nc_mt_pix`: Dictionary with the number of matched clusters in each pixel.
     """
     return catalog_funcs.skyplot(
-        cat, matching_type, nside=nside, nest=nest,
-        mask=mask, mask_unmatched=mask_unmatched,
-        auto_lim=auto_lim, ra_lim=ra_lim, dec_lim=dec_lim,
-        recovery_label=recovery_label, **kwargs)
+        cat, matching_type, nside=nside, nest=nest, mask=mask, mask_unmatched=mask_unmatched,
+        auto_lim=auto_lim, ra_lim=ra_lim, dec_lim=dec_lim, recovery_label=recovery_label,
+        fig=fig, figsize=figsize, **kwargs)

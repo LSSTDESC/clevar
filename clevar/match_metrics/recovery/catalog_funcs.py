@@ -285,7 +285,8 @@ def plot2D(cat, col1, col2, bins1, bins2, matching_type,
 
 
 def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=None,
-            auto_lim=False, ra_lim=None, dec_lim=None, recovery_label='Recovery Rate', **kwargs):
+            auto_lim=False, ra_lim=None, dec_lim=None, recovery_label='Recovery Rate',
+            fig=None, figsize=None, **kwargs):
     """
     Plot recovery rate in healpix pixels.
 
@@ -355,6 +356,5 @@ def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=
     mask_, is_matched = _rec_masks(cat, matching_type, mask, mask_unmatched)
     return array_funcs.skyplot(
         cat['ra'][mask_], cat['dec'][mask_], is_matched[mask_],
-        nside=nside, nest=nest, auto_lim=auto_lim,
-        ra_lim=ra_lim, dec_lim=dec_lim,
-        recovery_label=recovery_label, **kwargs)
+        nside=nside, nest=nest, auto_lim=auto_lim, ra_lim=ra_lim, dec_lim=dec_lim,
+        recovery_label=recovery_label, fig=fig, figsize=figsize, **kwargs)

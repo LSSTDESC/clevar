@@ -243,9 +243,8 @@ def plot2D(values1, values2, bins1, bins2, is_matched,
     return info
 
 
-def skyplot(ra, dec, is_matched, nside=256, nest=True,
-            auto_lim=False, ra_lim=None, dec_lim=None,
-            recovery_label='Recovery Rate', fig=None, **kwargs):
+def skyplot(ra, dec, is_matched, nside=256, nest=True, auto_lim=False, ra_lim=None, dec_lim=None,
+            recovery_label='Recovery Rate', fig=None, figsize=None, **kwargs):
     """
     Plot recovery rate in healpix pixels.
 
@@ -314,56 +313,14 @@ def skyplot(ra, dec, is_matched, nside=256, nest=True,
         all_pix[pix] = all_pix.get(pix, 0)+1
         mt_pix[pix] = mt_pix.get(pix, 0)+mt
     map_ = np.full(hp.nside2npix(nside), np.nan)
-    map_[list(all_pix.keys())] = np.array(list(mt_pix.values()), dtype=float)/np.array(list(all_pix.values()), dtype=float)
+    map_[list(all_pix.keys())] = np.divide(list(mt_pix.values()), list(all_pix.values()))
 
-    kwargs_ = {'flip':'geo', 'title':None, 'cbar':True, 'nest':nest}
-    kwargs_.update(kwargs)
-    if auto_lim:
-        edge = 2*(hp.nside2resol(nside, arcmin=True)/60)
-        ra2 = np.array(ra, dtype=float)
-        if ra2.min()<180. and ra2.max()>180.:
-            gap_ra2 = 360.-(ra2.max()-ra2.min())
-            gap_ra2 = ra2[ra2>180.].min()-ra2[ra2<180.].max()
-            if gap_ra2>gap_ra2:
-                ra2[ra2>180.] -= 360.
+    fig, ax, cb = ph.plot_healpix_map(
+        map_, nest=nest, auto_lim=auto_lim, bad_val=np.nan,
+        ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs)
 
-        kwargs_['lonra'] = [max(-360, ra2.min()-edge), min(360, ra2.max()+edge)]
-        kwargs_['latra'] = [max(-90, dec.min()-edge), min(90, dec.max()+edge)]
-
-    kwargs_['lonra'] = ra_lim if ra_lim else kwargs_.get('lonra')
-    kwargs_['latra'] = dec_lim if dec_lim else kwargs_.get('latra')
-
-    if (kwargs_['lonra'] is None)!=(kwargs_['latra'] is None):
-        raise ValueError('When auto_lim=False, ra_lim and dec_lim must be provided together.')
-
-    figsize = kwargs_.pop('figsize', None)
-    if fig is None:
-        fig = plt.figure()
-    hp.cartview(map_, hold=True, **kwargs_)
-    ax = fig.axes[-2 if kwargs_['cbar'] else -1]
-    ax.axis('on')
-    xlim, ylim = ax.get_xlim(), ax.get_ylim()
-
-    if figsize:
-        ax.set_aspect('auto')
-        fig.set_size_inches(figsize)
-
-    if kwargs_['cbar']:
-        cb = fig.axes[-1]
+    if cb:
         cb.set_xlabel(recovery_label)
-
-    ax.set_xlim(xlim)
-    ax.set_ylim(ylim)
-    xticks = ax.get_xticks()
-    xticks[xticks>=360] -= 360
-    if all(int(i)==i for i in xticks):
-        xticks = np.array(xticks, dtype=int)
-    ax.set_xticks(ax.get_xticks())
-    ax.set_xticklabels(xticks)
-    ax.set_xlim(xlim)
-    ax.set_ylim(ylim)
-    ax.set_xlabel('RA')
-    ax.set_ylabel('DEC')
 
     info = {'fig':fig,  'nc_pix':all_pix, 'nc_mt_pix':mt_pix}
     return info
