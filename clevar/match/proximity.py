@@ -111,8 +111,8 @@ class ProximityMatch(Match):
         elif isinstance(delta_z, (int, float)):
             # zmin/zmax from sigma_z*(1+z)
             print('* zmin|zmax from config value')
-            cat.mt_input['zmin'] = cat['z']-delta_z*(1.0+cat['z'])
-            cat.mt_input['zmax'] = cat['z']+delta_z*(1.0+cat['z'])
+            cat.mt_input['zmin'] = cat['z']-delta_z*n_delta_z*(1.0+cat['z'])
+            cat.mt_input['zmax'] = cat['z']+delta_z*n_delta_z*(1.0+cat['z'])
 
         # Set angular radius
         if match_radius == 'cat':
