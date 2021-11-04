@@ -8,7 +8,7 @@ import pylab as plt
 import numpy as np
 from scipy.interpolate import interp2d
 from matplotlib.ticker import ScalarFormatter, NullFormatter
-from ..utils import none_val
+from ..utils import none_val, hp
 
 def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     """
@@ -295,3 +295,114 @@ def plot_histograms(
     if add_legend:
         ax.legend(**legend_kwargs)
     return ax
+
+
+def plot_healpix_map(healpix_map, nest=True, auto_lim=False, bad_val=None,
+                     ra_lim=None, dec_lim=None, fig=None, figsize=None, **kwargs):
+    """
+    Plot healpix map.
+
+    Parameters
+    ----------
+    healpix_map: numpy array
+        Healpix map (must be 12*(2*n)**2 size).
+    nest: bool
+        If ordering is nested
+    auto_lim: bool
+        Set automatic limits for ra/dec, requires bad_val.
+    bad_val: float, None
+        Values for pixels outside footprint.
+    ra_lim: None, list
+        Min/max RA for plot.
+    dec_lim: None, list
+        Min/max DEC for plot.
+    fig: matplotlib.figure.Figure, None
+        Matplotlib figure object. If not provided a new one is created.
+    figsize: tuple
+        Width, height in inches (float, float). Default value from hp.cartview.
+    **kwargs:
+        Extra arguments for hp.cartview:
+
+            * xsize (int) : The size of the image. Default: 800
+            * title (str) : The title of the plot. Default: None
+            * min (float) : The minimum range value
+            * max (float) : The maximum range value
+            * remove_dip (bool) : If :const:`True`, remove the dipole+monopole
+            * remove_mono (bool) : If :const:`True`, remove the monopole
+            * gal_cut (float, scalar) : Symmetric galactic cut for \
+            the dipole/monopole fit. Removes points in latitude range \
+            [-gal_cut, +gal_cut]
+            * format (str) : The format of the scale label. Default: '%g'
+            * cbar (bool) : Display the colorbar. Default: True
+            * notext (bool) : If True, no text is printed around the map
+            * norm ({'hist', 'log', None}) : Color normalization, \
+            hist= histogram equalized color mapping, log= logarithmic color \
+            mapping, default: None (linear color mapping)
+            * cmap (a color map) :  The colormap to use (see matplotlib.cm)
+            * badcolor (str) : Color to use to plot bad values
+            * bgcolor (str) : Color to use for background
+            * margins (None or sequence) : Either None, or a \
+            sequence (left,bottom,right,top) giving the margins on \
+            left,bottom,right and top of the axes. Values are relative to \
+            figure (0-1). Default: None
+
+    Returns
+    -------
+    fig: matplotlib.pyplot.figure
+        Figure of the plot.
+    ax: matplotlib.axes
+        Ax to add plot
+    cb: matplotlib.pyplot.colorbar, None
+        Colorbar
+    """
+    nside = hp.npix2nside(len(healpix_map))
+    kwargs_ = {'flip':'geo', 'title':None, 'cbar':True, 'nest':nest}
+    kwargs_.update(kwargs)
+    if auto_lim:
+        ra, dec = hp.pix2ang(nside, np.arange(len(healpix_map))[healpix_map!=bad_val],
+                             nest=nest, lonlat=True)
+        if ra.min()<180. and ra.max()>180.:
+            gap_ra = 360.-(ra.max()-ra.min())
+            gap_ra2 = ra[ra>180.].min()-ra[ra<180.].max()
+            if gap_ra2>gap_ra:
+                ra[ra>180.] -= 360.
+
+        edge = 2*(hp.nside2resol(nside, arcmin=True)/60)
+        kwargs_['lonra'] = [max(-360, ra.min()-edge), min(360, ra.max()+edge)]
+        kwargs_['latra'] = [max(-90, dec.min()-edge), min(90, dec.max()+edge)]
+
+    kwargs_['lonra'] = ra_lim if ra_lim else kwargs_.get('lonra')
+    kwargs_['latra'] = dec_lim if dec_lim else kwargs_.get('latra')
+
+    if (kwargs_['lonra'] is None)!=(kwargs_['latra'] is None):
+        raise ValueError('When auto_lim=False, ra_lim and dec_lim must be provided together.')
+
+    if fig is None:
+        fig = plt.figure()
+    hp.cartview(healpix_map, hold=True, **kwargs_)
+    ax = fig.axes[-2 if kwargs_['cbar'] else -1]
+    ax.axis('on')
+    xlim, ylim = ax.get_xlim(), ax.get_ylim()
+
+    if figsize:
+        ax.set_aspect('auto')
+        fig.set_size_inches(figsize)
+
+    cb = None
+    if kwargs_['cbar']:
+        cb = fig.axes[-1]
+
+    ax.set_xlim(xlim)
+    ax.set_ylim(ylim)
+    xticks = ax.get_xticks()
+    xticks[xticks>=360] -= 360
+    if all(int(i)==i for i in xticks):
+        xticks = np.array(xticks, dtype=int)
+    ax.set_xticks(ax.get_xticks())
+    ax.set_xticklabels(xticks)
+    ax.set_xlim(xlim)
+    ax.set_ylim(ylim)
+    ax.set_xlabel('RA')
+    ax.set_ylabel('DEC')
+
+    return fig, ax, cb

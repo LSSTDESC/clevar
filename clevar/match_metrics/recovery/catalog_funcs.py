@@ -7,6 +7,38 @@ from ...utils import none_val
 from .. import plot_helper as ph
 from . import array_funcs
 
+
+def _rec_masks(cat, matching_type, mask=None, mask_unmatched=None):
+    """
+    Get masks to be used in recovery rate.
+
+    Parameters
+    ----------
+    cat: clevar.ClCatalog
+        ClCatalog with matching information
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
+
+    Returns
+    -------
+    use_mask: array
+        Mask of clusters to be used.
+    is_matched: array
+        Mask for matched clusters (use_mask has to be applied to it).
+    """
+    # convert matching type to the values expected by get_matching_mask
+    matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
+    is_matched = cat.get_matching_mask(matching_type_conv)
+    # mask_ to apply mask and mask_unmatched
+    use_mask = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
+    return use_mask, is_matched
+
+
 def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
                mask=None, mask_unmatched=None, **kwargs):
     """
@@ -36,11 +68,7 @@ def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
     -------
     Same as pltfunc
     """
-    # convert matching type to the values expected by get_matching_mask
-    matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
-    is_matched = cat.get_matching_mask(matching_type_conv)
-    # mask_ to apply mask and mask_unmatched
-    mask_ = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
+    mask_, is_matched = _rec_masks(cat, matching_type, mask, mask_unmatched)
     # make sure bins stay consistent regardless of mask
     edges1, edges2 = np.histogram2d(cat[col1], cat[col2], bins=(bins1, bins2))[1:]
     return pltfunc(cat[mask_][col1], cat[mask_][col2], edges1, edges2,
@@ -254,3 +282,79 @@ def plot2D(cat, col1, col2, bins1, bins2, matching_type,
     info['ax'].set_xscale(scale1)
     info['ax'].set_yscale(scale2)
     return info
+
+
+def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=None,
+            auto_lim=False, ra_lim=None, dec_lim=None, recovery_label='Recovery Rate',
+            fig=None, figsize=None, **kwargs):
+    """
+    Plot recovery rate in healpix pixels.
+
+    Parameters
+    ----------
+    cat: clevar.ClCatalog
+        ClCatalog with matching information
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
+    nside: int
+        Healpix nside
+    nest: bool
+        If ordering is nested
+    mask: array
+        Mask of unwanted clusters
+    mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint)
+    auto_lim: bool
+        Set automatic limits for ra/dec.
+    ra_lim: None, list
+        Min/max RA for plot.
+    dec_lim: None, list
+        Min/max DEC for plot.
+    recovery_label: str
+        Lable for colorbar. Default: 'recovery rate'
+    fig: matplotlib.figure.Figure, None
+        Matplotlib figure object. If not provided a new one is created.
+    figsize: tuple
+        Width, height in inches (float, float). Default value from hp.cartview.
+    **kwargs:
+        Extra arguments for hp.cartview:
+
+            * xsize (int) : The size of the image. Default: 800
+            * title (str) : The title of the plot. Default: None
+            * min (float) : The minimum range value
+            * max (float) : The maximum range value
+            * remove_dip (bool) : If :const:`True`, remove the dipole+monopole
+            * remove_mono (bool) : If :const:`True`, remove the monopole
+            * gal_cut (float, scalar) : Symmetric galactic cut for \
+            the dipole/monopole fit. Removes points in latitude range \
+            [-gal_cut, +gal_cut]
+            * format (str) : The format of the scale label. Default: '%g'
+            * cbar (bool) : Display the colorbar. Default: True
+            * notext (bool) : If True, no text is printed around the map
+            * norm ({'hist', 'log', None}) : Color normalization, \
+            hist= histogram equalized color mapping, log= logarithmic color \
+            mapping, default: None (linear color mapping)
+            * cmap (a color map) :  The colormap to use (see matplotlib.cm)
+            * badcolor (str) : Color to use to plot bad values
+            * bgcolor (str) : Color to use for background
+            * margins (None or sequence) : Either None, or a \
+            sequence (left,bottom,right,top) giving the margins on \
+            left,bottom,right and top of the axes. Values are relative to \
+            figure (0-1). Default: None
+
+    Returns
+    -------
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig` (matplotlib.pyplot.figure): Figure of the plot. The main can be accessed at\
+            `info['fig'].axes[0]`, and the colorbar at `info['fig'].axes[1]`.
+            * `nc_pix`: Dictionary with the number of clusters in each pixel.
+            * `nc_mt_pix`: Dictionary with the number of matched clusters in each pixel.
+    """
+    mask_, is_matched = _rec_masks(cat, matching_type, mask, mask_unmatched)
+    return array_funcs.skyplot(
+        cat['ra'][mask_], cat['dec'][mask_], is_matched[mask_],
+        nside=nside, nest=nest, auto_lim=auto_lim, ra_lim=ra_lim, dec_lim=dec_lim,
+        recovery_label=recovery_label, fig=fig, figsize=figsize, **kwargs)
