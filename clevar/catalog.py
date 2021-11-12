@@ -486,7 +486,25 @@ class ClCatalog(Catalog):
         Catalog.__init__(self, name, **kwargs)
         self.radius_unit = radius_unit
     def _repr_html_(self):
-        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{self.data._repr_html_()}'
+        print_data = ClData()
+        show_data_cols = [c for c in self.colnames if c!='SkyCoord']
+        for col in show_data_cols:
+            print_data[col] = self.data[col]
+        table = print_data._repr_html_()
+        if self.mt_input is not None:
+            for col in self.mt_input.colnames:
+                print_data[col] = self.mt_input[col]
+            table = print_data._repr_html_()
+            table = table.split('<thead><tr><th')
+            style = 'text-align:left; background-color:grey; color:white'
+            table.insert(1, (
+                f''' colspan={len(show_data_cols)}></th>'''
+                f'''<th colspan={len(self.mt_input.colnames)} style='{style}'>mt_input</th>'''
+                '''</tr></thread>''')
+            )
+            table='<thead><tr><th'.join(table)
+
+        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{table}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
