@@ -1,6 +1,7 @@
 """@file catalog.py
 The ClCatalog and improved Astropy table classes
 """
+import warnings
 import numpy as np
 from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
@@ -482,9 +483,15 @@ class ClCatalog(Catalog):
         Labels of data columns for plots
     """
     def __init__(self, name, **kwargs):
+        self.members = None
+        self.leftover_members = None
+        members = kwargs.pop('members', None)
         radius_unit = kwargs.pop('radius_unit', None)
+        members_warning = kwargs.pop('members_warning', True)
         Catalog.__init__(self, name, **kwargs)
         self.radius_unit = radius_unit
+        if members is not None:
+            self.add_members(members, members_warning=members_warning)
     def _repr_html_(self):
         print_data = ClData()
         show_data_cols = [c for c in self.colnames if c!='SkyCoord']
@@ -517,7 +524,8 @@ class ClCatalog(Catalog):
         else:
             return ClCatalog(name=self.name, labels=self.labels,
                              **{c:data[c] for c in data.colnames},
-                             radius_unit = self.radius_unit)
+                             radius_unit=self.radius_unit,
+                             members=self.members, members_warning=False)
     @classmethod
     def read(self, filename, name=None, **kwargs):
         """Read catalog from fits file
@@ -539,6 +547,31 @@ class ClCatalog(Catalog):
         """
         data = ClData.read(filename)
         return self._read(data, name=name, **kwargs)
+
+    def add_members(self, members_catalog=None, members_consistency=True,
+                    members_warning=True, **kwargs):
+        self.leftover_members = None # clean any previous mem info
+        if members_catalog is None:
+            members = MemCatalog('members', **kwargs)
+        elif isinstance(members_catalog, MemCatalog):
+            members = members_catalog[:]
+            if len(kwargs)>0:
+                warnings.warn(f'leftover input arguments ignored: {kwargs.keys()}')
+        else:
+            raise TypeError(
+                f'members_catalog type is {type(members_catalog)},'
+                ' it must be a MemCatalog object.')
+        members['ind_cl'] = [self.id_dict.get(ID, -1) for ID in members['id_cluster']]
+        if members_consistency:
+            mem_in_cl = members['ind_cl']>=0
+            if not all(mem_in_cl):
+                if members_warning:
+                    warnings.warn(
+                        'Some galaxies were not members of the cluster catalog.'
+                        ' They are stored in leftover_members attribute.')
+                    self.leftover_members = members[~mem_in_cl]
+            members = members[mem_in_cl]
+        self.members = members
 
 class MemCatalog(Catalog):
     """
