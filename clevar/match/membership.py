@@ -20,9 +20,9 @@ class MembershipMatch(Match):
         Parameters
         ----------
         cat1: clevar.ClCatalog
-            Base catalog
+            Base catalog with members attribute.
         cat2: clevar.ClCatalog
-            Target catalog
+            Target catalog with members attribute.
         """
         self.cat1_mmt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         print(f'Finding candidates ({cat1.name})')
@@ -43,9 +43,9 @@ class MembershipMatch(Match):
         Parameters
         ----------
         cat1: clevar.ClCatalog
-            Base catalog
+            Cluster catalog with members attribute.
         cat2: clevar.ClCatalog
-            Target catalog
+            Cluster catalog with members attribute.
         """
         if self.matched_mems is None:
             raise ValueError('Members not matched, run match_members before.')
@@ -84,7 +84,7 @@ class MembershipMatch(Match):
         Parameters
         ----------
         cat: clevar.ClCatalog
-            Cluster catalog with members attribute
+            Cluster catalog with members attribute.
         """
         return [cat.members['pmem'][cat.members['ind_cl']==i].sum()
                 for i in range(cat.size)]
@@ -111,9 +111,9 @@ class MembershipMatch(Match):
         Parameters
         ----------
         cat1: clevar.ClCatalog
-            Base catalog
+            Cluster catalog with members attribute.
         cat2: clevar.ClCatalog
-            Target catalog
+            Cluster catalog with members attribute.
         fileprefix: str
             Prefix for name of files
         overwrite: bool
