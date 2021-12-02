@@ -485,11 +485,13 @@ class ClCatalog(Catalog):
     def __init__(self, name, **kwargs):
         self.members = None
         self.leftover_members = None
-        members = kwargs.pop('members', None)
         radius_unit = kwargs.pop('radius_unit', None)
+        mt_input = kwargs.pop('mt_input', None)
+        members = kwargs.pop('members', None)
         members_warning = kwargs.pop('members_warning', True)
         Catalog.__init__(self, name, **kwargs)
         self.radius_unit = radius_unit
+        self.mt_input = mt_input
         if members is not None:
             self.add_members(members, members_warning=members_warning)
     def _repr_html_(self):
@@ -522,10 +524,11 @@ class ClCatalog(Catalog):
         if isinstance(item, (str, int, np.int64)):
             return data
         else:
-            return ClCatalog(name=self.name, labels=self.labels,
-                             **{c:data[c] for c in data.colnames},
-                             radius_unit=self.radius_unit,
-                             members=self.members, members_warning=False)
+            return ClCatalog(
+                name=self.name, labels=self.labels, radius_unit=self.radius_unit,
+                **{c:data[c] for c in data.colnames},
+                mt_input=None if self.mt_input is None else self.mt_input[item],
+                members=self.members, members_warning=False)
     @classmethod
     def read(self, filename, name=None, **kwargs):
         """Read catalog from fits file
