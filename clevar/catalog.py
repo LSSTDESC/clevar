@@ -593,8 +593,33 @@ class ClCatalog(Catalog):
                         'Some galaxies were not members of the cluster catalog.'
                         ' They are stored in leftover_members attribute.')
                     self.leftover_members = members[~mem_in_cl]
+                    self.leftover_members.name = 'leftover members'
             members = members[mem_in_cl]
         self.members = members
+    def read_members(self, filename, members_consistency=True,
+                     members_warning=True, **kwargs):
+        """Read members catalog from fits file.
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        members_consistency: bool
+            Require that all input members belong to this cluster catalog.
+        members_warning: bool
+            Raise warning if members are do not belong to this cluster catalog,
+            and save them in leftover_members attribute.
+        labels: dict
+            Labels of data columns for plots (default vals from file header).
+        **kwargs: keyword argumens
+            All columns to be added must be passes with named argument,
+            the name is used in the Catalog data and the value must
+            be the column name in your input file (ex: z='REDSHIFT').
+        """
+        self.add_members(
+            members_catalog=MemCatalog.read(filename, 'members', **kwargs),
+            members_consistency=members_consistency, members_warning=members_warning)
+
 
 class MemCatalog(Catalog):
     """
