@@ -497,7 +497,8 @@ class ClCatalog(Catalog):
         self.radius_unit = radius_unit
         self.mt_input = mt_input
         if members is not None:
-            self.add_members(members, members_warning=members_warning)
+            self.add_members(members_catalog=members,
+                             members_warning=members_warning)
     def _repr_html_(self):
         print_data = ClData()
         show_data_cols = [c for c in self.colnames if c!='SkyCoord']
