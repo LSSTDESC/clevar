@@ -481,6 +481,10 @@ class ClCatalog(Catalog):
         Unit of the radius column
     labels: dict
         Labels of data columns for plots
+    members: MemCatalog
+        Catalog of members associated to the clusters
+    leftover_members: MemCatalog
+        Catalog of members not associated to the clusters
     """
     def __init__(self, name, **kwargs):
         self.members = None
@@ -551,8 +555,24 @@ class ClCatalog(Catalog):
         data = ClData.read(filename)
         return self._read(data, name=name, **kwargs)
 
-    def add_members(self, members_catalog=None, members_consistency=True,
-                    members_warning=True, **kwargs):
+    def add_members(self, members_consistency=True, members_warning=True,
+                    members_catalog=None, **kwargs):
+        """
+        Add members to clusters
+
+        Parameters
+        ----------
+        members_consistency: bool
+            Require that all input members belong to this cluster catalog.
+        members_warning: bool
+            Raise warning if members are do not belong to this cluster catalog,
+            and save them in leftover_members attribute.
+        members_catalog: clevar.MemCatalog, None
+            Members catalog if avaliable.
+        **kwargs: keyword arguments
+            Arguments to initialize member catalog if members_catalog=None. For details, see:
+            https://lsstdesc.org/clevar/compiled-examples/catalogs.html#properties-of-memcatalog
+        """
         self.leftover_members = None # clean any previous mem info
         if members_catalog is None:
             members = MemCatalog('members', **kwargs)
