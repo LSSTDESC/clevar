@@ -529,11 +529,16 @@ class ClCatalog(Catalog):
         if isinstance(item, (str, int, np.int64)):
             return data
         else:
+            mt_input = self.mt_input
+            if (mt_input is not None and not
+                    (isinstance(item, (tuple, list)) and item
+                    and all(isinstance(x, str) for x in item))):
+                # Check if item is not a tuple or list of strings
+                mt_input = mt_input[item]
             return ClCatalog(
                 name=self.name, labels=self.labels, radius_unit=self.radius_unit,
                 **{c:data[c] for c in data.colnames},
-                mt_input=None if self.mt_input is None else self.mt_input[item],
-                members=self.members, members_warning=False)
+                mt_input=mt_input, members=self.members, members_warning=False)
     @classmethod
     def read(self, filename, name=None, **kwargs):
         """Read catalog from fits file
