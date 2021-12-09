@@ -49,9 +49,9 @@ class MembershipMatch(Match):
         """
         if self.matched_mems is None:
             raise ValueError('Members not matched, run match_members before.')
-        if 'pmem' in cat1.members.data.colnames:
+        if 'pmem' not in cat1.members.data.colnames:
             cat1.members['pmem'] = 1.
-        if 'pmem' in cat2.members.data.colnames:
+        if 'pmem' not in cat2.members.data.colnames:
             cat2.members['pmem'] = 1.
         cat1.mt_input = ClData({'share_mems': [{} for i in range(cat1.size)],
                                 'nmem': self._comp_nmem(cat1)})
