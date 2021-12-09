@@ -577,7 +577,7 @@ class ClCatalog(Catalog):
             Members catalog if avaliable.
         **kwargs: keyword arguments
             Arguments to initialize member catalog if members_catalog=None. For details, see:
-            https://lsstdesc.org/clevar/compiled-examples/catalogs.html#properties-of-memcatalog
+            https://lsstdesc.org/clevar/compiled-examples/catalogs.html#adding-members-to-cluster-catalogs
         """
         self.leftover_members = None # clean any previous mem info
         if members_catalog is None:
