@@ -219,7 +219,7 @@ class Match():
         """
         print(f'Cross Matches ({cat1.name})')
         cat1.cross_match()
-        print(f'* {len(cat1[cat1["mt_cross"]!=None]):,}/{cat1.size:,} objects matched.')
+        print(f'* {(cat1["mt_cross"]!=None).sum():,}/{cat1.size:,} objects matched.')
     def save_matches(self, cat1, cat2, out_dir, overwrite=False):
         """
         Saves the matching results
