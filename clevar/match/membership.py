@@ -86,8 +86,10 @@ class MembershipMatch(Match):
         cat: clevar.ClCatalog
             Cluster catalog with members attribute.
         """
-        return [cat.members['pmem'][cat.members['ind_cl']==i].sum()
-                for i in range(cat.size)]
+        out = np.zeros(cat.size)
+        for ID, pmem in zip(cat.members['id_cluster'], cat.members['pmem']):
+            out[cat.id_dict[ID]] += pmem
+        return out
     def _add_pmem(self, cat1_share_mems, ind1, cat2_id, pmem1):
         """
         Adds pmem of specific cluster to mt_input['shared_mem'] of another cluster.
