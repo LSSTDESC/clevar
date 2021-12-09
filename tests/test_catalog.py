@@ -7,8 +7,13 @@ import os
 def test_catalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
     c = Catalog(name='test', **quantities)
-    c['ra']
-    c[:1]
+    for k, v in quantities.items():
+        assert_equal(c[k], v)
+        assert_equal(c[:1][k], v[:1])
+        assert_equal(c.get(k), v)
+    assert_equal(c.get('ra2'), None)
+    assert_equal(len(c), len(quantities['ra']))
+    del c['ra']
 def test_clcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
     c = ClCatalog(name='test', **quantities)
@@ -76,6 +81,7 @@ def test_memcatalog():
     assert_equal(c.name, 'test')
     for k, v in quantities.items():
         assert_equal(c[k], v)
+        assert_equal(c.get(k), v)
     assert_equal(c.size, len(quantities['ra']))
     c.__str__()
     c._repr_html_()
