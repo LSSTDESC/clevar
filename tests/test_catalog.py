@@ -72,6 +72,10 @@ def test_clcatalog():
     assert_raises(TypeError, c.add_members, members_catalog={})
     # Check read members
     c.read_members('demo/cat1_mem.fits', id='ID', id_cluster='ID_CLUSTER')
+    # Del members
+    c.remove_members()
+    assert_equal(c.members, None)
+    assert_equal(c.leftover_members, None)
 
 def test_memcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30],
