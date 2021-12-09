@@ -625,6 +625,12 @@ class ClCatalog(Catalog):
         self.add_members(
             members_catalog=MemCatalog.read(filename, 'members', **kwargs),
             members_consistency=members_consistency, members_warning=members_warning)
+    def remove_members(self):
+        """
+        Remove member catalogs.
+        """
+        self.members = None
+        self.leftover_members = None
 
 
 class MemCatalog(Catalog):

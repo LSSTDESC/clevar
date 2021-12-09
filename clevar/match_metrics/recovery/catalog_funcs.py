@@ -71,7 +71,7 @@ def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
     mask_, is_matched = _rec_masks(cat, matching_type, mask, mask_unmatched)
     # make sure bins stay consistent regardless of mask
     edges1, edges2 = np.histogram2d(cat[col1], cat[col2], bins=(bins1, bins2))[1:]
-    return pltfunc(cat[mask_][col1], cat[mask_][col2], edges1, edges2,
+    return pltfunc(cat[col1][mask_], cat[col2][mask_], edges1, edges2,
                    is_matched=is_matched[mask_], **kwargs)
 
 
