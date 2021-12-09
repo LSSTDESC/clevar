@@ -66,7 +66,7 @@ class Match():
             if cat1['mt_self'][i] is None:
                 self.cat1_mt[i] = set_unique(cat1, i, cat2)
         self.cat1_mt *= (cat1['mt_self']!=None) # In case ang pref removes a match
-        print(f'* {len(cat1[cat1["mt_self"]!=None]):,}/{cat1.size:,} objects matched.')
+        print(f'* {(cat1["mt_self"]!=None).sum():,}/{cat1.size:,} objects matched.')
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
