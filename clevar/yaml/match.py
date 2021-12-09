@@ -7,7 +7,7 @@ import os
 import warnings
 
 import clevar
-from .helper_funcs import yaml, loadconf, make_catalog, make_mem_catalog,\
+from .helper_funcs import yaml, loadconf, make_catalog, add_mem_catalog,\
 make_cosmology, get_input_loop
 
 def match_general(config_file, overwrite_config, overwrite_files):
@@ -96,9 +96,9 @@ def membership(config_file, overwrite_config, overwrite_files):
     print("\n# Reading Cluster Catalog 2")
     c2 = make_catalog(config['catalog2'])
     print("\n# Reading Members Catalog 1")
-    mem1 = make_mem_catalog(config['catalog1']['members'])
+    add_mem_catalog(c1, config['catalog1']['members'])
     print("\n# Reading Members Catalog 2")
-    mem2 = make_mem_catalog(config['catalog2']['members'])
+    add_mem_catalog(c2, config['catalog2']['members'])
     mem_mt_radius = match_config['match_members_kwargs'].get('radius', '').lower()
     if any(unit in mem_mt_radius for unit in clevar.geometry.physical_bank):
         print("\n# Creating Cosmology")
@@ -107,7 +107,7 @@ def membership(config_file, overwrite_config, overwrite_files):
     mt = clevar.match.MembershipMatch()
     prt_msg = '# Start membership matching'
     print(f'\n{"#"*len(prt_msg)}\n{prt_msg}\n{"#"*len(prt_msg)}')
-    mt.match_from_config(c1, c2, mem1, mem2,  match_config)
+    mt.match_from_config(c1, c2,  match_config)
     save_matching_files(config, mt, c1, c2, overwrite_files)
 
 def save_matching_files(config, mt, c1, c2, overwrite_files):
