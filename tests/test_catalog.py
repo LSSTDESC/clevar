@@ -1,4 +1,4 @@
-from clevar import ClCatalog, MemCatalog
+from clevar import ClCatalog, MemCatalog, ClData
 from clevar.catalog import Catalog
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
@@ -20,6 +20,8 @@ def test_clcatalog():
     c.__str__()
     c._repr_html_()
     assert_raises(KeyError, c.__getitem__, 'unknown')
+    c.mt_input = ClData({'test':[1, 1]})
+    c._repr_html_()
     # Check init match values
     empty_list = np.array([None for i in range(c.size)], dtype=np.ndarray)
     for i in range(c.size):
@@ -55,6 +57,16 @@ def test_clcatalog():
     c.write('cat1_with_header.fits', overwrite=True)
     c_read = ClCatalog.read('cat1_with_header.fits', id='ID')
     os.system('rm -f cat1_with_header.fits')
+    # Check add members
+    c = ClCatalog(name='test', **{'id': ['a', 'b'], 'ra': [10, 20],
+                                  'dec': [20, 30], 'z': [0.5, 0.6]})
+    mem_dat = {'id': ['m_a1', 'm_a2', 'm_b1', 'm_c1'], 'id_cluster': ['a', 'a', 'b', 'c']}
+    c.add_members(**mem_dat)
+    mem = MemCatalog('mem', **mem_dat)
+    c.add_members(members_catalog=mem, **mem_dat)
+    assert_raises(TypeError, c.add_members, members_catalog={})
+    # Check read members
+    c.read_members('demo/cat1_mem.fits', id='ID', id_cluster='ID_CLUSTER')
 
 def test_memcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30],
