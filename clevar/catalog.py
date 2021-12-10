@@ -539,6 +539,18 @@ class ClCatalog(Catalog):
                 name=self.name, labels=self.labels, radius_unit=self.radius_unit,
                 **{c:data[c] for c in data.colnames},
                 mt_input=mt_input, members=self.members, members_warning=False)
+    def raw(self):
+        """
+        Get a copy of the catalog without members.
+        """
+        if self.members is not None:
+            out = ClCatalog(
+                name=self.name, labels=self.labels, radius_unit=self.radius_unit,
+                **{c:self.data[c] for c in self.data.colnames},
+                mt_input=self.mt_input)
+        else:
+            out = self
+        return out
     @classmethod
     def read(self, filename, name=None, **kwargs):
         """Read catalog from fits file

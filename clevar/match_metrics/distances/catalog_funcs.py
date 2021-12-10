@@ -134,7 +134,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
                 * `distance_bins`: The bin edges for distances.
                 * `bins2` (optional): The bin edges along the second dimension.
     """
-    mt1, mt2 = get_matched_pairs(cat1, cat2, matching_type,
+    mt1, mt2 = get_matched_pairs(cat1.raw(), cat2.raw(), matching_type,
                                  mask1=kwargs.pop('mask1', None),
                                  mask2=kwargs.pop('mask2', None))
     info = {'distances': convert_units(mt1['SkyCoord'].separation(mt2['SkyCoord']).deg,
@@ -199,7 +199,7 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, col2=None, bins2=None,
                 * `distance_bins`: The bin edges for distances.
                 * `bins2` (optional): The bin edges along the second dimension.
     """
-    mt1, mt2 = get_matched_pairs(cat1, cat2, matching_type,
+    mt1, mt2 = get_matched_pairs(cat1.raw(), cat2.raw(), matching_type,
                                  mask1=kwargs.pop('mask1', None),
                                  mask2=kwargs.pop('mask2', None))
     norm = {

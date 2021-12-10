@@ -38,7 +38,7 @@ def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
         Matched catalogs
     """
     func_kwargs = {k:v for k, v in kwargs.items() if k not in _local_args}
-    mt1, mt2 = get_matched_pairs(cat1, cat2, matching_type,
+    mt1, mt2 = get_matched_pairs(cat1.raw(), cat2.raw(), matching_type,
                       mask1=kwargs.get('mask1', None),
                       mask2=kwargs.get('mask2', None))
     func_kwargs['values1'] = mt1[col]
