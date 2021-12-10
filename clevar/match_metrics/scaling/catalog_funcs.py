@@ -545,6 +545,9 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     f_kwargs.pop('err2', None)
     f_kwargs['bins1'] = bins1
     f_kwargs['bins2'] = bins2
+    for key in ['metrics_mode']:
+        if 'metrics_' in key:
+            f_kwargs[key.replace('metrics_', '')] = f_kwargs.pop(key)
     info = array_funcs.plot_metrics(**f_kwargs)
     info['axes'][0].set_ylabel(cat1.name)
     info['axes'][1].set_ylabel(cat2.name)
