@@ -49,7 +49,7 @@ class ProximityMatch(Match):
                         cat2['mt_multi_other'][i2].append(cat1['id'][i])
                         self.cat1_mmt[i] = True
             print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
-        print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
+        print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
     def prep_cat_for_match(self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1,
