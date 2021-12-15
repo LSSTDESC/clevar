@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.membership module &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.match.membership module &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -95,7 +95,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -241,15 +241,13 @@
 <dd><p>Bases: <a class="reference internal" href="clevar.match.parent.html#clevar.match.parent.Match" title="clevar.match.parent.Match"><code class="xref py py-class docutils literal notranslate"><span class="pre">clevar.match.parent.Match</span></code></a></p>
 <dl class="py method">
 <dt id="clevar.match.membership.MembershipMatch.fill_shared_members">
-<code class="sig-name descname">fill_shared_members</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">mem1</span></em>, <em class="sig-param"><span class="n">mem2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match/membership.html#MembershipMatch.fill_shared_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match.membership.MembershipMatch.fill_shared_members" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fill_shared_members</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match/membership.html#MembershipMatch.fill_shared_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match.membership.MembershipMatch.fill_shared_members" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds shared members dicts and nmem to mt_input in catalogs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – Base catalog</p></li>
-<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – Target catalog</p></li>
-<li><p><strong>mem1</strong> (<em>clevar.ClCatalog</em>) – Members of base catalog</p></li>
-<li><p><strong>mem2</strong> (<em>clevar.ClCatalog</em>) – Members of target catalog</p></li>
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – Cluster catalog with members attribute.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – Cluster catalog with members attribute.</p></li>
 </ul>
 </dd>
 </dl>
@@ -283,7 +281,7 @@
 
 <dl class="py method">
 <dt id="clevar.match.membership.MembershipMatch.match_from_config">
-<code class="sig-name descname">match_from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">mem1</span></em>, <em class="sig-param"><span class="n">mem2</span></em>, <em class="sig-param"><span class="n">match_config</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match/membership.html#MembershipMatch.match_from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match.membership.MembershipMatch.match_from_config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">match_from_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">match_config</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match/membership.html#MembershipMatch.match_from_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match.membership.MembershipMatch.match_from_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make matching of catalogs based on a configuration dictionary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -339,8 +337,8 @@ with format <cite>‘value unit’</cite> - used fixed value (ex: <cite>1 arcsec
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – Base catalog</p></li>
-<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – Target catalog</p></li>
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – Base catalog with members attribute.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – Target catalog with members attribute.</p></li>
 </ul>
 </dd>
 </dl>
@@ -367,8 +365,8 @@ with format <cite>‘value unit’</cite> - used fixed value (ex: <cite>1 arcsec
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – Base catalog</p></li>
-<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – Target catalog</p></li>
+<li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – Cluster catalog with members attribute.</p></li>
+<li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – Cluster catalog with members attribute.</p></li>
 <li><p><strong>fileprefix</strong> (<em>str</em>) – Prefix for name of files</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em>) – Overwrite saved files</p></li>
 </ul>

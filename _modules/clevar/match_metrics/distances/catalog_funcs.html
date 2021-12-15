@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.distances.catalog_funcs &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.match_metrics.distances.catalog_funcs &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -93,7 +93,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -362,7 +362,7 @@
 <span class="sd">                * `distance_bins`: The bin edges for distances.</span>
 <span class="sd">                * `bins2` (optional): The bin edges along the second dimension.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="n">get_matched_pairs</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span>
+    <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="n">get_matched_pairs</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">raw</span><span class="p">(),</span> <span class="n">cat2</span><span class="o">.</span><span class="n">raw</span><span class="p">(),</span> <span class="n">matching_type</span><span class="p">,</span>
                                  <span class="n">mask1</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mask1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                                  <span class="n">mask2</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mask2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
     <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;distances&#39;</span><span class="p">:</span> <span class="n">convert_units</span><span class="p">(</span><span class="n">mt1</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">separation</span><span class="p">(</span><span class="n">mt2</span><span class="p">[</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span>
@@ -427,7 +427,7 @@
 <span class="sd">                * `distance_bins`: The bin edges for distances.</span>
 <span class="sd">                * `bins2` (optional): The bin edges along the second dimension.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="n">get_matched_pairs</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span>
+    <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="n">get_matched_pairs</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">raw</span><span class="p">(),</span> <span class="n">cat2</span><span class="o">.</span><span class="n">raw</span><span class="p">(),</span> <span class="n">matching_type</span><span class="p">,</span>
                                  <span class="n">mask1</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mask1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                                  <span class="n">mask2</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mask2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
     <span class="n">norm</span> <span class="o">=</span> <span class="p">{</span>

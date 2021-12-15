@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.parent &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.match.parent &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -93,7 +93,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -296,7 +296,7 @@
             <span class="k">if</span> <span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">cat1_mt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">set_unique</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cat1_mt</span> <span class="o">*=</span> <span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">)</span> <span class="c1"># In case ang pref removes a match</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_self&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_self&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span></div>
 <div class="viewcode-block" id="Match.match_from_config"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.match_from_config">[docs]</a>    <span class="k">def</span> <span class="nf">match_from_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">match_config</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make matching of catalogs based on a configuration dictionary</span>
@@ -449,7 +449,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cross Matches (</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="n">cat1</span><span class="o">.</span><span class="n">cross_match</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_cross&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">])</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_cross&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span></div>
 <div class="viewcode-block" id="Match.save_matches"><a class="viewcode-back" href="../../../api/clevar.match.parent.html#clevar.match.parent.Match.save_matches">[docs]</a>    <span class="k">def</span> <span class="nf">save_matches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the matching results</span>

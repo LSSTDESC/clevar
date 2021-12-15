@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.funcs &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.match_metrics.recovery.funcs &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -93,7 +93,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -586,6 +586,81 @@
                       <span class="n">xlabel</span><span class="o">=</span><span class="n">mass_label</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">redshift_label</span><span class="p">,</span>
                       <span class="n">ylabel</span><span class="o">=</span><span class="n">redshift_label</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="n">mass_label</span><span class="p">,</span>
                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="skyplot"><a class="viewcode-back" href="../../../../api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.skyplot">[docs]</a><span class="k">def</span> <span class="nf">skyplot</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">nest</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask_unmatched</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">auto_lim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ra_lim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dec_lim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recovery_label</span><span class="o">=</span><span class="s1">&#39;Recovery Rate&#39;</span><span class="p">,</span>
+            <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot recovery rate in healpix pixels.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cat: clevar.ClCatalog</span>
+<span class="sd">        ClCatalog with matching information</span>
+<span class="sd">    matching_type: str</span>
+<span class="sd">        Type of matching to be considered. Must be in:</span>
+<span class="sd">        &#39;cross&#39;, &#39;cat1&#39;, &#39;cat2&#39;, &#39;multi_cat1&#39;, &#39;multi_cat2&#39;, &#39;multi_join&#39;</span>
+<span class="sd">    nside: int</span>
+<span class="sd">        Healpix nside</span>
+<span class="sd">    nest: bool</span>
+<span class="sd">        If ordering is nested</span>
+<span class="sd">    mask: array</span>
+<span class="sd">        Mask of unwanted clusters</span>
+<span class="sd">    mask_unmatched: array</span>
+<span class="sd">        Mask of unwanted unmatched clusters (ex: out of footprint)</span>
+<span class="sd">    auto_lim: bool</span>
+<span class="sd">        Set automatic limits for ra/dec.</span>
+<span class="sd">    ra_lim: None, list</span>
+<span class="sd">        Min/max RA for plot.</span>
+<span class="sd">    dec_lim: None, list</span>
+<span class="sd">        Min/max DEC for plot.</span>
+<span class="sd">    recovery_label: str</span>
+<span class="sd">        Lable for colorbar. Default: &#39;recovery rate&#39;</span>
+<span class="sd">    fig: matplotlib.figure.Figure, None</span>
+<span class="sd">        Matplotlib figure object. If not provided a new one is created.</span>
+<span class="sd">    figsize: tuple</span>
+<span class="sd">        Width, height in inches (float, float). Default value from hp.cartview.</span>
+<span class="sd">    **kwargs:</span>
+<span class="sd">        Extra arguments for hp.cartview:</span>
+
+<span class="sd">            * xsize (int) : The size of the image. Default: 800</span>
+<span class="sd">            * title (str) : The title of the plot. Default: None</span>
+<span class="sd">            * min (float) : The minimum range value</span>
+<span class="sd">            * max (float) : The maximum range value</span>
+<span class="sd">            * remove_dip (bool) : If :const:`True`, remove the dipole+monopole</span>
+<span class="sd">            * remove_mono (bool) : If :const:`True`, remove the monopole</span>
+<span class="sd">            * gal_cut (float, scalar) : Symmetric galactic cut for \</span>
+<span class="sd">            the dipole/monopole fit. Removes points in latitude range \</span>
+<span class="sd">            [-gal_cut, +gal_cut]</span>
+<span class="sd">            * format (str) : The format of the scale label. Default: &#39;%g&#39;</span>
+<span class="sd">            * cbar (bool) : Display the colorbar. Default: True</span>
+<span class="sd">            * notext (bool) : If True, no text is printed around the map</span>
+<span class="sd">            * norm ({&#39;hist&#39;, &#39;log&#39;, None}) : Color normalization, \</span>
+<span class="sd">            hist= histogram equalized color mapping, log= logarithmic color \</span>
+<span class="sd">            mapping, default: None (linear color mapping)</span>
+<span class="sd">            * cmap (a color map) :  The colormap to use (see matplotlib.cm)</span>
+<span class="sd">            * badcolor (str) : Color to use to plot bad values</span>
+<span class="sd">            * bgcolor (str) : Color to use for background</span>
+<span class="sd">            * margins (None or sequence) : Either None, or a \</span>
+<span class="sd">            sequence (left,bottom,right,top) giving the margins on \</span>
+<span class="sd">            left,bottom,right and top of the axes. Values are relative to \</span>
+<span class="sd">            figure (0-1). Default: None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    info: dict</span>
+<span class="sd">        Information of data in the plots, it contains the sections:</span>
+
+<span class="sd">            * `fig` (matplotlib.pyplot.figure): Figure of the plot. The main can be accessed at\</span>
+<span class="sd">            `info[&#39;fig&#39;].axes[0]`, and the colorbar at `info[&#39;fig&#39;].axes[1]`.</span>
+<span class="sd">            * `nc_pix`: Dictionary with the number of clusters in each pixel.</span>
+<span class="sd">            * `nc_mt_pix`: Dictionary with the number of matched clusters in each pixel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">catalog_funcs</span><span class="o">.</span><span class="n">skyplot</span><span class="p">(</span>
+        <span class="n">cat</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">nest</span><span class="o">=</span><span class="n">nest</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">mask_unmatched</span><span class="o">=</span><span class="n">mask_unmatched</span><span class="p">,</span>
+        <span class="n">auto_lim</span><span class="o">=</span><span class="n">auto_lim</span><span class="p">,</span> <span class="n">ra_lim</span><span class="o">=</span><span class="n">ra_lim</span><span class="p">,</span> <span class="n">dec_lim</span><span class="o">=</span><span class="n">dec_lim</span><span class="p">,</span> <span class="n">recovery_label</span><span class="o">=</span><span class="n">recovery_label</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

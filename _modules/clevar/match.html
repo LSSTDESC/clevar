@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.match &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -93,7 +93,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -251,7 +251,9 @@
     <span class="n">mt_mask1</span><span class="p">,</span> <span class="n">mt_mask2</span> <span class="o">=</span> <span class="n">get_matched_masks</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mt_mask2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span> <span class="k">if</span> <span class="n">mask1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mask1</span><span class="p">[</span><span class="n">mt_mask1</span><span class="p">]</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="k">if</span> <span class="n">mask2</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">mask</span><span class="o">*</span><span class="n">mask2</span><span class="p">[</span><span class="n">mt_mask2</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">cat1</span><span class="p">[</span><span class="n">mt_mask1</span><span class="p">][</span><span class="n">mask</span><span class="p">],</span> <span class="n">cat2</span><span class="p">[</span><span class="n">mt_mask2</span><span class="p">][</span><span class="n">mask</span><span class="p">]</span></div>
+    <span class="n">mt_mask1</span><span class="p">[</span><span class="n">mt_mask1</span><span class="p">]</span> <span class="o">*=</span> <span class="n">mask</span>
+    <span class="n">mt_mask2</span> <span class="o">=</span> <span class="n">mt_mask2</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cat1</span><span class="p">[</span><span class="n">mt_mask1</span><span class="p">],</span> <span class="n">cat2</span><span class="p">[</span><span class="n">mt_mask2</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="get_matched_masks"><a class="viewcode-back" href="../../api/clevar.match.html#clevar.match.get_matched_masks">[docs]</a><span class="k">def</span> <span class="nf">get_matched_masks</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -275,7 +277,7 @@
     <span class="c1"># convert matching type to the values expected by get_matching_mask</span>
     <span class="n">matching_type_conv</span> <span class="o">=</span> <span class="n">matching_type</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cat1&#39;</span><span class="p">,</span> <span class="s1">&#39;self&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;cat2&#39;</span><span class="p">,</span> <span class="s1">&#39;other&#39;</span><span class="p">)</span>
     <span class="n">mask1</span> <span class="o">=</span> <span class="n">cat1</span><span class="o">.</span><span class="n">get_matching_mask</span><span class="p">(</span><span class="n">matching_type_conv</span><span class="p">)</span>
-    <span class="n">mask2</span> <span class="o">=</span> <span class="n">cat2</span><span class="o">.</span><span class="n">ids2inds</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="n">mask1</span><span class="p">][</span><span class="sa">f</span><span class="s1">&#39;mt_</span><span class="si">{</span><span class="n">matching_type_conv</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">mask2</span> <span class="o">=</span> <span class="n">cat2</span><span class="o">.</span><span class="n">ids2inds</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;mt_</span><span class="si">{</span><span class="n">matching_type_conv</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">][</span><span class="n">mask1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">mask1</span><span class="p">,</span> <span class="n">mask2</span></div>
 
 <div class="viewcode-block" id="output_catalog_with_matching"><a class="viewcode-back" href="../../api/clevar.match.html#clevar.match.output_catalog_with_matching">[docs]</a><span class="k">def</span> <span class="nf">output_catalog_with_matching</span><span class="p">(</span><span class="n">file_in</span><span class="p">,</span> <span class="n">file_out</span><span class="p">,</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>

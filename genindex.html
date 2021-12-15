@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>Index &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -93,7 +93,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -260,8 +260,12 @@
 </li>
       <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_grid">add_grid() (in module clevar.match_metrics.plot_helper)</a>
 </li>
+      <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.add_mem_catalog">add_mem_catalog() (in module clevar.yaml.helper_funcs)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/clevar.catalog.html#clevar.catalog.ClCatalog.add_members">add_members() (clevar.catalog.ClCatalog method)</a>
+</li>
       <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_panel_bin_label">add_panel_bin_label() (in module clevar.match_metrics.plot_helper)</a>
 </li>
       <li><a href="api/clevar.yaml.footprint.html#clevar.yaml.footprint.artificial">artificial() (in module clevar.yaml.footprint)</a>
@@ -729,8 +733,6 @@
 </li>
       <li><a href="api/clevar.yaml.footprint.html#clevar.yaml.footprint.make_masks">make_masks() (in module clevar.yaml.footprint)</a>
 </li>
-      <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.make_mem_catalog">make_mem_catalog() (in module clevar.yaml.helper_funcs)</a>
-</li>
       <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass">mass() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
       <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.mass_density">mass_density() (in module clevar.match_metrics.scaling.funcs)</a>
@@ -944,14 +946,14 @@
         <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_density_metrics">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_density_panel">plot_density_panel() (in module clevar.match_metrics.scaling.array_funcs)</a>
 
       <ul>
         <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_density_panel">(in module clevar.match_metrics.scaling.catalog_funcs)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clevar.match_metrics.scaling.array_funcs.html#clevar.match_metrics.scaling.array_funcs.plot_dist">plot_dist() (in module clevar.match_metrics.scaling.array_funcs)</a>
 
       <ul>
@@ -959,6 +961,8 @@
 </li>
       </ul></li>
       <li><a href="api/clevar.match_metrics.scaling.catalog_funcs.html#clevar.match_metrics.scaling.catalog_funcs.plot_dist_self">plot_dist_self() (in module clevar.match_metrics.scaling.catalog_funcs)</a>
+</li>
+      <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.plot_healpix_map">plot_healpix_map() (in module clevar.match_metrics.plot_helper)</a>
 </li>
       <li><a href="api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.plot_hist_line">plot_hist_line() (in module clevar.match_metrics.plot_helper)</a>
 </li>
@@ -1000,6 +1004,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clevar.cosmology.parent_class.html#clevar.cosmology.parent_class.Cosmology.rad2mpc">rad2mpc() (clevar.cosmology.parent_class.Cosmology method)</a>
 </li>
+      <li><a href="api/clevar.catalog.html#clevar.catalog.ClCatalog.raw">raw() (clevar.catalog.ClCatalog method)</a>
+</li>
       <li><a href="api/clevar.catalog.html#clevar.catalog.Catalog.read">read() (clevar.catalog.Catalog class method)</a>
 
       <ul>
@@ -1011,6 +1017,8 @@
 </li>
       </ul></li>
       <li><a href="api/clevar.catalog.html#clevar.catalog.Catalog.read_full">read_full() (clevar.catalog.Catalog class method)</a>
+</li>
+      <li><a href="api/clevar.catalog.html#clevar.catalog.ClCatalog.read_members">read_members() (clevar.catalog.ClCatalog method)</a>
 </li>
       <li><a href="api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.read_yaml">read_yaml() (in module clevar.yaml.helper_funcs)</a>
 </li>
@@ -1042,6 +1050,8 @@
 </li>
       <li><a href="api/clevar.match_metrics.scaling.funcs.html#clevar.match_metrics.scaling.funcs.redshift_metrics">redshift_metrics() (in module clevar.match_metrics.scaling.funcs)</a>
 </li>
+      <li><a href="api/clevar.catalog.html#clevar.catalog.ClCatalog.remove_members">remove_members() (clevar.catalog.ClCatalog method)</a>
+</li>
       <li><a href="api/clevar.catalog.html#clevar.catalog.Catalog.remove_multiple_duplicates">remove_multiple_duplicates() (clevar.catalog.Catalog method)</a>
 </li>
       <li><a href="api/clevar.constants.html#clevar.constants.Constants.RHOCRIT">RHOCRIT (clevar.constants.Constants attribute)</a>
@@ -1070,14 +1080,22 @@
 </li>
       <li><a href="api/clevar.match.parent.html#clevar.match.parent.Match.save_matches">save_matches() (clevar.match.parent.Match method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clevar.yaml.match.html#clevar.yaml.match.save_matching_files">save_matching_files() (in module clevar.yaml.match)</a>
 </li>
       <li><a href="api/clevar.match.membership.html#clevar.match.membership.MembershipMatch.save_shared_members">save_shared_members() (clevar.match.membership.MembershipMatch method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/clevar.cosmology.parent_class.html#clevar.cosmology.parent_class.Cosmology.set_be_cosmo">set_be_cosmo() (clevar.cosmology.parent_class.Cosmology method)</a>
 </li>
+      <li><a href="api/clevar.match_metrics.recovery.array_funcs.html#clevar.match_metrics.recovery.array_funcs.skyplot">skyplot() (in module clevar.match_metrics.recovery.array_funcs)</a>
+
+      <ul>
+        <li><a href="api/clevar.match_metrics.recovery.catalog_funcs.html#clevar.match_metrics.recovery.catalog_funcs.skyplot">(in module clevar.match_metrics.recovery.catalog_funcs)</a>
+</li>
+        <li><a href="api/clevar.match_metrics.recovery.funcs.html#clevar.match_metrics.recovery.funcs.skyplot">(in module clevar.match_metrics.recovery.funcs)</a>
+</li>
+      </ul></li>
       <li><a href="api/clevar.constants.html#clevar.constants.Constants.SOLAR_MASS">SOLAR_MASS (clevar.constants.Constants attribute)</a>
 </li>
       <li><a href="api/clevar.utils.html#clevar.utils.str2dataunit">str2dataunit() (in module clevar.utils)</a>

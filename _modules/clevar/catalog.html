@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.catalog &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.catalog &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -93,7 +93,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -229,6 +229,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;@file catalog.py</span>
 <span class="sd">The ClCatalog and improved Astropy table classes</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span> <span class="k">as</span> <span class="n">APtable</span>
 <span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
@@ -708,13 +709,44 @@
 <span class="sd">        Unit of the radius column</span>
 <span class="sd">    labels: dict</span>
 <span class="sd">        Labels of data columns for plots</span>
+<span class="sd">    members: MemCatalog</span>
+<span class="sd">        Catalog of members associated to the clusters</span>
+<span class="sd">    leftover_members: MemCatalog</span>
+<span class="sd">        Catalog of members not associated to the clusters</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">members</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leftover_members</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">radius_unit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">mt_input</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;mt_input&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">members</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;members&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">members_warning</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;members_warning&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="n">Catalog</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span> <span class="o">=</span> <span class="n">radius_unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mt_input</span> <span class="o">=</span> <span class="n">mt_input</span>
+        <span class="k">if</span> <span class="n">members</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_members</span><span class="p">(</span><span class="n">members_catalog</span><span class="o">=</span><span class="n">members</span><span class="p">,</span>
+                             <span class="n">members_warning</span><span class="o">=</span><span class="n">members_warning</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_repr_html_</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;b&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&lt;/b&gt;&lt;br&gt;Radius unit: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span><span class="si">}</span><span class="s1">&lt;br&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">print_data</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">()</span>
+        <span class="n">show_data_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">colnames</span> <span class="k">if</span> <span class="n">c</span><span class="o">!=</span><span class="s1">&#39;SkyCoord&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">show_data_cols</span><span class="p">:</span>
+            <span class="n">print_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">print_data</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mt_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mt_input</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+                <span class="n">print_data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mt_input</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">print_data</span><span class="o">.</span><span class="n">_repr_html_</span><span class="p">()</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&lt;thead&gt;&lt;tr&gt;&lt;th&#39;</span><span class="p">)</span>
+            <span class="n">style</span> <span class="o">=</span> <span class="s1">&#39;text-align:left; background-color:grey; color:white&#39;</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;&#39;&#39; colspan=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">show_data_cols</span><span class="p">)</span><span class="si">}</span><span class="s1">&gt;&lt;/th&gt;&#39;&#39;&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;&#39;&#39;&lt;th colspan=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mt_input</span><span class="o">.</span><span class="n">colnames</span><span class="p">)</span><span class="si">}</span><span class="s1"> style=&#39;</span><span class="si">{</span><span class="n">style</span><span class="si">}</span><span class="s1">&#39;&gt;mt_input&lt;/th&gt;&#39;&#39;&#39;</span>
+                <span class="sd">&#39;&#39;&#39;&lt;/tr&gt;&lt;/thread&gt;&#39;&#39;&#39;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">table</span><span class="o">=</span><span class="s1">&#39;&lt;thead&gt;&lt;tr&gt;&lt;th&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;b&gt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&lt;/b&gt;&lt;br&gt;Radius unit: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span><span class="si">}</span><span class="s1">&lt;br&gt;</span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">def</span> <span class="nf">_add_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">columns</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add values for all attributes. If id is not provided, one is created&quot;&quot;&quot;</span>
         <span class="n">Catalog</span><span class="o">.</span><span class="n">_add_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">columns</span><span class="p">)</span>
@@ -725,9 +757,28 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
-                             <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">},</span>
-                             <span class="n">radius_unit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span><span class="p">)</span>
+            <span class="n">mt_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mt_input</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">mt_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span>
+                    <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="n">item</span>
+                    <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">item</span><span class="p">))):</span>
+                <span class="c1"># Check if item is not a tuple or list of strings</span>
+                <span class="n">mt_input</span> <span class="o">=</span> <span class="n">mt_input</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">ClCatalog</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">radius_unit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span><span class="p">,</span>
+                <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">},</span>
+                <span class="n">mt_input</span><span class="o">=</span><span class="n">mt_input</span><span class="p">,</span> <span class="n">members</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">,</span> <span class="n">members_warning</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="viewcode-block" id="ClCatalog.raw"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a copy of the catalog without members.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">radius_unit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_unit</span><span class="p">,</span>
+                <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">},</span>
+                <span class="n">mt_input</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mt_input</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="n">out</span></div>
 <div class="viewcode-block" id="ClCatalog.read"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog.read">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Read catalog from fits file</span>
@@ -748,7 +799,79 @@
 <span class="sd">            be the column name in your input file (ex: z=&#39;REDSHIFT&#39;).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClCatalog.add_members"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog.add_members">[docs]</a>    <span class="k">def</span> <span class="nf">add_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">members_consistency</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">members_warning</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">members_catalog</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add members to clusters</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        members_consistency: bool</span>
+<span class="sd">            Require that all input members belong to this cluster catalog.</span>
+<span class="sd">        members_warning: bool</span>
+<span class="sd">            Raise warning if members are do not belong to this cluster catalog,</span>
+<span class="sd">            and save them in leftover_members attribute.</span>
+<span class="sd">        members_catalog: clevar.MemCatalog, None</span>
+<span class="sd">            Members catalog if avaliable.</span>
+<span class="sd">        **kwargs: keyword arguments</span>
+<span class="sd">            Arguments to initialize member catalog if members_catalog=None. For details, see:</span>
+<span class="sd">            https://lsstdesc.org/clevar/compiled-examples/catalogs.html#adding-members-to-cluster-catalogs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leftover_members</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># clean any previous mem info</span>
+        <span class="k">if</span> <span class="n">members_catalog</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="n">MemCatalog</span><span class="p">(</span><span class="s1">&#39;members&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">members_catalog</span><span class="p">,</span> <span class="n">MemCatalog</span><span class="p">):</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="n">members_catalog</span><span class="p">[:]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;leftover input arguments ignored: </span><span class="si">{</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;members_catalog type is </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">members_catalog</span><span class="p">)</span><span class="si">}</span><span class="s1">,&#39;</span>
+                <span class="s1">&#39; it must be a MemCatalog object.&#39;</span><span class="p">)</span>
+        <span class="n">members</span><span class="p">[</span><span class="s1">&#39;ind_cl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ID</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">ID</span> <span class="ow">in</span> <span class="n">members</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="n">members_consistency</span><span class="p">:</span>
+            <span class="n">mem_in_cl</span> <span class="o">=</span> <span class="n">members</span><span class="p">[</span><span class="s1">&#39;ind_cl&#39;</span><span class="p">]</span><span class="o">&gt;=</span><span class="mi">0</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">mem_in_cl</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">members_warning</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s1">&#39;Some galaxies were not members of the cluster catalog.&#39;</span>
+                        <span class="s1">&#39; They are stored in leftover_members attribute.&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">leftover_members</span> <span class="o">=</span> <span class="n">members</span><span class="p">[</span><span class="o">~</span><span class="n">mem_in_cl</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">leftover_members</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;leftover members&#39;</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="n">members</span><span class="p">[</span><span class="n">mem_in_cl</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">members</span> <span class="o">=</span> <span class="n">members</span></div>
+<div class="viewcode-block" id="ClCatalog.read_members"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog.read_members">[docs]</a>    <span class="k">def</span> <span class="nf">read_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">members_consistency</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">members_warning</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read members catalog from fits file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename: str</span>
+<span class="sd">            Input file.</span>
+<span class="sd">        members_consistency: bool</span>
+<span class="sd">            Require that all input members belong to this cluster catalog.</span>
+<span class="sd">        members_warning: bool</span>
+<span class="sd">            Raise warning if members are do not belong to this cluster catalog,</span>
+<span class="sd">            and save them in leftover_members attribute.</span>
+<span class="sd">        labels: dict</span>
+<span class="sd">            Labels of data columns for plots (default vals from file header).</span>
+<span class="sd">        **kwargs: keyword argumens</span>
+<span class="sd">            All columns to be added must be passes with named argument,</span>
+<span class="sd">            the name is used in the Catalog data and the value must</span>
+<span class="sd">            be the column name in your input file (ex: z=&#39;REDSHIFT&#39;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_members</span><span class="p">(</span>
+            <span class="n">members_catalog</span><span class="o">=</span><span class="n">MemCatalog</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;members&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">members_consistency</span><span class="o">=</span><span class="n">members_consistency</span><span class="p">,</span> <span class="n">members_warning</span><span class="o">=</span><span class="n">members_warning</span><span class="p">)</span></div>
+<div class="viewcode-block" id="ClCatalog.remove_members"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.ClCatalog.remove_members">[docs]</a>    <span class="k">def</span> <span class="nf">remove_members</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove member catalogs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">members</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leftover_members</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+
 
 <div class="viewcode-block" id="MemCatalog"><a class="viewcode-back" href="../../api/clevar.catalog.html#clevar.catalog.MemCatalog">[docs]</a><span class="k">class</span> <span class="nc">MemCatalog</span><span class="p">(</span><span class="n">Catalog</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

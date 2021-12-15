@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.scaling.catalog_funcs &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.match_metrics.scaling.catalog_funcs &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -93,7 +93,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -266,7 +266,7 @@
 <span class="sd">        Matched catalogs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">func_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_local_args</span><span class="p">}</span>
-    <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="n">get_matched_pairs</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">,</span>
+    <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="n">get_matched_pairs</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">raw</span><span class="p">(),</span> <span class="n">cat2</span><span class="o">.</span><span class="n">raw</span><span class="p">(),</span> <span class="n">matching_type</span><span class="p">,</span>
                       <span class="n">mask1</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mask1&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                       <span class="n">mask2</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mask2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
     <span class="n">func_kwargs</span><span class="p">[</span><span class="s1">&#39;values1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mt1</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
@@ -773,6 +773,9 @@
     <span class="n">f_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;err2&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">f_kwargs</span><span class="p">[</span><span class="s1">&#39;bins1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bins1</span>
     <span class="n">f_kwargs</span><span class="p">[</span><span class="s1">&#39;bins2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bins2</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;metrics_mode&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s1">&#39;metrics_&#39;</span> <span class="ow">in</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">f_kwargs</span><span class="p">:</span>
+            <span class="n">f_kwargs</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;metrics_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">f_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
     <span class="n">info</span> <span class="o">=</span> <span class="n">array_funcs</span><span class="o">.</span><span class="n">plot_metrics</span><span class="p">(</span><span class="o">**</span><span class="n">f_kwargs</span><span class="p">)</span>
     <span class="n">info</span><span class="p">[</span><span class="s1">&#39;axes&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     <span class="n">info</span><span class="p">[</span><span class="s1">&#39;axes&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>

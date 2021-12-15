@@ -1,54 +1,69 @@
-Catalog Objects
-===============
+Galaxy Cluster Catalogs
+=======================
 
-There are two objects for catalogs, ``ClCatalogs`` for clusters and
-``MemCatalogs`` for cluster members. Both of them have the same
-properties of ``astropy`` tables with additional functionality.
+The main object for galaxy cluster catalogs is ``ClCatalog``, it has
+same properties of ``astropy`` tables, with additional functionality.
+
+-  `ClCatalog <#cat>`__
+-  `Creating a catalog <#creating>`__
+
+   -  `Create a catalog from fits files <#creating_fits>`__
+   -  `Important inputs of ClCatalog <#clcat_input>`__
+   -  `Reserved keyword arguments <#clcat_input_special>`__
+
+-  `Saving catalogs <#saving>`__
+-  `Accessing catalog data <#data>`__
+-  `Inbuilt function of catalogs <#funcs>`__
+-  `Adding members to cluster catalogs <#memcat>`__
+
+   -  `Read members from fits files <#memcat_fits>`__
+   -  `Important inputs of members catalog <#memcat_input>`__
+   -  `Reserved keyword arguments <#memcat_input_special>`__
+   -  `Saving members <#memcat_saving>`__
 
 .. code:: ipython3
 
     %load_ext autoreload
     %autoreload 2
 
-Common properties of ``ClCatalog`` and ``MemCatalog``
------------------------------------------------------
+ClCatalog
+---------
 
-Both catalog objects have the following attributes: - ``name``:
+The ``ClCatalog`` has the following internal attributes: - ``name``:
 ClCatalog name - ``data``: Table with main catalog data (ex: id, ra,
 dec, z) and matching data (mt_self, mt_other, mt_cross, mt_multi_self,
 mt_multi_other) - ``mt_input``: Table containing the necessary inputs
 for the match (added by Match objects) - ``size``: Number of objects in
 the catalog - ``id_dict``: Dictionary of indicies given the object id -
-``labels``: Labels of data columns for plots
+``labels``: Labels of data columns for plots - ``members``: Members of
+clusters (optional) - ``leftover_members``: Galaxies in the input
+members not hosted by the cluster catalog (optional)
 
 Creating a catalog
-~~~~~~~~~~~~~~~~~~
+------------------
 
 To create a catalog, you have to pass the name as the initial argument
-and the data for the table as keyword arguments:
+and the data columns for the table as keyword arguments:
 
 .. code:: ipython3
 
-    from clevar import ClCatalog, MemCatalog
+    from clevar import ClCatalog
     cat = ClCatalog('cluster', id=['c1', 'c2'], mass=[1e13, 1e14])
-    mem = MemCatalog('members', id=['m1', 'm2', 'm3'], id_cluster=['c1', 'c2', 'c1'])
-    # Format for nice display
-    cat['mass'].info.format = '.2e'
+    cat['mass'].info.format = '.2e' # Format for nice display
 
-``ClCatalog`` will always have the matching columns added, while
-``MemCatalog`` will add them when necessary:
+``ClCatalog`` will always have the matching columns (with prefix
+``mt_``) added:
 
 .. code:: ipython3
 
     display(cat)
-    display(mem)
 
 
 
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140304178264912" class="table-striped table-bordered table-condensed">
+    <table id="table140352437291712" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -56,78 +71,13 @@ and the data for the table as keyword arguments:
     </table>
 
 
-
-.. raw:: html
-
-    <b>members</b><br><i>ClData length=3</i>
-    <table id="table140304178263856" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>id_cluster</th></tr></thead>
-    <thead><tr><th>str2</th><th>str2</th></tr></thead>
-    <tr><td>m1</td><td>c1</td></tr>
-    <tr><td>m2</td><td>c2</td></tr>
-    <tr><td>m3</td><td>c1</td></tr>
-    </table>
-
-
-Create a catalog from ``fits`` files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The catalogs objects can also be read directly from file, by passing the
-fits file as the first argument, the catalog name as the second, and the
-names of the columns in the fits files as keyword arguments:
-
-.. code:: ipython3
-
-    cat = ClCatalog.read('../demo/cat1.fits', 'my cluster',
-                         id='ID', mass='MASS')
-    mem = MemCatalog.read('../demo/cat1_mem.fits', 'my cluster members',
-                         id='ID', id_cluster='ID_CLUSTER')
-
-Saving catalogs
-~~~~~~~~~~~~~~~
-
-Both Catalog objects have a ``write`` inbuilt function to save them to
-``.fits`` files. These functions also take the argument ``add_header``
-that add the name and labels informations to those files. If the file
-was saved with this argument, it can be read without the requirement of
-a ``name`` argument:
-
-.. code:: ipython3
-
-    cat.write('cat1_with_info.fits', overwrite=True)
-
-.. code:: ipython3
-
-    cat_temp = cat.read_full('cat1_with_info.fits')
-    cat_temp
-
-
-
-
-.. raw:: html
-
-    <b>my cluster</b><br>Radius unit: None<br><i>ClData length=5</i>
-    <table id="table140304178263808" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
-    <thead><tr><th>str3</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>CL0</td><td>31622776601683.793</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>CL1</td><td>25118864315095.82</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>CL2</td><td>19952623149688.83</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>CL3</td><td>63095734448019.43</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>CL4</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    </table>
-
-
-
-Catalog data
-~~~~~~~~~~~~
-
-All catalogs have an ``id`` column if not included in the input, one
-will be created:
+All catalogs have an ``id`` column. If it is not included in the input,
+one will be created:
 
 .. code:: ipython3
 
     cat = ClCatalog('cluster', mass=[1e13, 1e14])
+    cat['mass'].info.format = '.2e' # Format for nice display
     cat
 
 
@@ -136,22 +86,22 @@ will be created:
 .. raw:: html
 
     <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140304186775440" class="table-striped table-bordered table-condensed">
+    <table id="table140352437324000" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>0</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>1</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>0</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>1</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
     </table>
 
 
 
 Almost all keyword arguments will become columns of the catalog (see
-exeptions in `Properties of ``ClCatalog`` <#clcat>`__ and `Properties of
-``MemCatalog`` <#memcat>`__):
+exeptions in `Important inputs of ``ClCatalog`` <#clcat_input>`__):
 
 .. code:: ipython3
 
-    cat = ClCatalog('test name', test_column=[1, 2], other=[True, False], third=[None, []])
+    cat = ClCatalog('test name', test_column=[1, 2],
+                    other=[True, False], third=[None, []])
     cat
 
 
@@ -160,7 +110,7 @@ exeptions in `Properties of ``ClCatalog`` <#clcat>`__ and `Properties of
 .. raw:: html
 
     <b>test name</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140301342774320" class="table-striped table-bordered table-condensed">
+    <table id="table140349593239120" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>test_column</th><th>other</th><th>third</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>int64</th><th>bool</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>0</td><td>1</td><td>True</td><td>None</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -201,167 +151,27 @@ not provided as argument, a default value is assigned:
 
 
 
-The main data table of the catalog can be accessed with ``[]``
-operations in the same way as ``astropy`` tables. The output is a new
-``Catalog`` object, exept when only 1 row or column is required:
+Create a catalog from ``fits`` files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The catalogs objects can also be read directly from file, by passing the
+fits file as the first argument, the catalog name as the second, and the
+names of the columns in the fits files as keyword arguments:
 
 .. code:: ipython3
 
-    cat['id']
-
-
-
-
-.. raw:: html
-
-    &lt;Column name=&apos;id&apos; dtype=&apos;str2&apos; length=2&gt;
-    <table>
-    <tr><td>c1</td></tr>
-    <tr><td>c2</td></tr>
-    </table>
-
-
-
-.. code:: ipython3
-
-    cat['id']
-
-
-
-
-.. raw:: html
-
-    &lt;Column name=&apos;id&apos; dtype=&apos;str2&apos; length=2&gt;
-    <table>
-    <tr><td>c1</td></tr>
-    <tr><td>c2</td></tr>
-    </table>
-
-
-
-.. code:: ipython3
-
-    cat['id', 'mass']
-
-
-
-
-.. raw:: html
-
-    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140301342776912" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
-    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    </table>
-
-
-
-.. code:: ipython3
-
-    cat[[1, 0]]
-
-
-
-
-.. raw:: html
-
-    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140301342774128" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
-    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    </table>
-
-
-
-.. code:: ipython3
-
-    cat[:1]
-
-
-
-
-.. raw:: html
-
-    <b>cluster</b><br>Radius unit: None<br><i>ClData length=1</i>
-    <table id="table140301342776624" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
-    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    </table>
-
-
-
-.. code:: ipython3
-
-    cat[0]
-
-
-
-
-.. raw:: html
-
-    <i>Row index=0</i>
-    <table id="table140301342773312">
-    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
-    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    </table>
-
-
-
-Inbuilt function of catalogs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The catalog objects has some inbuilt functionality to facilitate the
-matching. ``ids2inds`` returns the indicies of objects given an id list.
-Other functions are related to footprint computations, see
-footprint.ipynb for information on those.
-
-.. code:: ipython3
-
-    cat = ClCatalog('cluster', id=['c1', 'c2'], mass=[1e13, 1e14])
-    inds = cat.ids2inds(['c2', 'c1'])
-    display(cat)
-    display(cat[inds])
-
-
-
-.. raw:: html
-
-    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140304178262224" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
-    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    </table>
-
-
-
-.. raw:: html
-
-    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
-    <table id="table140301342774368" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
-    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
-    <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
-    </table>
-
-
-Properties of ``ClCatalog``\ 
------------------------------
+    cat = ClCatalog.read('../demo/cat1.fits', 'my cluster',
+                         id='ID', mass='MASS')
+
+Important inputs of ``ClCatalog``\ 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As shown above, ``ClCatalog`` can have any column in its main data
-table, however there are a few key columns these catalogs must have to
+table. However there are a few key columns these catalogs must have to
 be used for matching:
 
--  ``id`` - necessary in membership matching and must correspond to
-   ``id_cluster`` in the cluster member catalog.
+-  ``id`` - necessary in membership matching (must correspond to
+   ``id_cluster`` in the cluster member catalog).
 -  ``ra`` (in degrees) - necessary for proxity matching.
 -  ``dec`` (in degrees) - necessary for proxity matching.
 -  ``z`` - necessary for proxity matching if used as matching criteria
@@ -372,11 +182,29 @@ be used for matching:
 -  ``radius`` - necessary for proxity matching if used as a criteria of
    matching (also requires ``radius_unit`` to be passed)
 
-``radius_unit`` can be in angular units (``radians``, ``degrees``,
-``arcmin``, ``arcsec``) or physical units (``Mpc``, ``kpc``, ``pc``) or
-can enven be given by mass overdensity units (``m200b``, ``m500c``) and
-are case insensitive. In the proximity matching the radius is converted
-to angular distances (degrees):
+Reserved keyword arguments
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There is some keyword arguments that have a fixed meaning and do not
+become columns in the cluster data table:
+
+-  ``radius_unit``: can be in angular units (``radians``, ``degrees``,
+   ``arcmin``, ``arcsec``) or physical units (``Mpc``, ``kpc``, ``pc``)
+   or can enven be given by mass overdensity units (``m200b``,
+   ``m500c``) and are case insensitive. In the proximity matching the
+   radius is converted to angular distances (degrees).
+-  ``labels``: Dictionary with labels of data columns to be used in
+   plots.
+-  ``members``: Members of clusters, see `cluster members <#memcat>`__
+   section for details.
+-  ``members_warning``: Warn if the members catalog contains galaxies
+   not hosted by the cluster catalog.
+-  ``mt_input``: Table containing the necessary inputs for the match.
+   This attribute is usually added during the matching process, but it
+   can be passed in the ``ClCatalog`` construction.
+
+Here are some examples of information being added to ``mt_input`` after
+the catalog creation:
 
 .. code:: ipython3
 
@@ -490,12 +318,313 @@ to angular distances (degrees):
 
 
 
-Properties of ``MemCatalog``\ 
-------------------------------
+Saving catalogs
+---------------
 
-As shown above, ``MemCatalog`` can have any column in its main data
-table, however there are a few key columns these catalogs must have to
-be used for matching:
+The ``ClCatalog`` object has a ``write`` inbuilt function to save them
+to ``.fits`` files. This function also take the argument ``add_header``
+that add the name and labels informations to those files. If the file
+was saved with this argument, it can be read without the requirement of
+a ``name`` argument:
+
+.. code:: ipython3
+
+    cat = ClCatalog('cluster', id=['c1', 'c2'], mass=[1e13, 1e14],
+                    labels={'id':'cluster ID', 'mass':'cluster M_200'})
+    cat.write('cat1_with_info.fits', overwrite=True)
+
+.. code:: ipython3
+
+    cat_temp = cat.read_full('cat1_with_info.fits')
+    cat_temp['mass'].info.format = '.2e' # Format for nice display
+    cat_temp
+
+
+
+
+.. raw:: html
+
+    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
+    <table id="table140352528227824" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>c2</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+Accessing catalog data
+----------------------
+
+The main data table of the catalog can be accessed with ``[]``
+operations in the same way as ``astropy`` tables. The output is a new
+``ClCatalog`` object, exept when only 1 row or column is required:
+
+.. code:: ipython3
+
+    cat['id']
+
+
+
+
+.. raw:: html
+
+    &lt;Column name=&apos;id&apos; dtype=&apos;str2&apos; length=2&gt;
+    <table>
+    <tr><td>c1</td></tr>
+    <tr><td>c2</td></tr>
+    </table>
+
+
+
+.. code:: ipython3
+
+    cat['id']
+
+
+
+
+.. raw:: html
+
+    &lt;Column name=&apos;id&apos; dtype=&apos;str2&apos; length=2&gt;
+    <table>
+    <tr><td>c1</td></tr>
+    <tr><td>c2</td></tr>
+    </table>
+
+
+
+.. code:: ipython3
+
+    cat['id', 'mass']
+
+
+
+
+.. raw:: html
+
+    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
+    <table id="table140352437292720" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. code:: ipython3
+
+    cat[[1, 0]]
+
+
+
+
+.. raw:: html
+
+    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
+    <table id="table140349592523920" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c2</td><td>100000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. code:: ipython3
+
+    cat[:1]
+
+
+
+
+.. raw:: html
+
+    <b>cluster</b><br>Radius unit: None<br><i>ClData length=1</i>
+    <table id="table140352437271568" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. code:: ipython3
+
+    cat[0]
+
+
+
+
+.. raw:: html
+
+    <i>Row index=0</i>
+    <table id="table140352437225216">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c1</td><td>10000000000000.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+Inbuilt function of catalogs
+----------------------------
+
+The ``ClCatalog`` object has some inbuilt functionality to facilitate
+the matching. ``ids2inds`` returns the indicies of objects given an id
+list. Other functions are related to footprint computations, see
+footprint.ipynb for information on those.
+
+.. code:: ipython3
+
+    cat = ClCatalog('cluster', id=['c1', 'c2'], mass=[1e13, 1e14])
+    cat['mass'].info.format = '.2e' # Format for nice display
+    inds = cat.ids2inds(['c2', 'c1'])
+    display(cat)
+    display(cat[inds])
+
+
+
+.. raw:: html
+
+    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
+    <table id="table140349592523008" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>c2</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
+    <table id="table140349592526368" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c2</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+Adding members to cluster catalogs
+----------------------------------
+
+The members are used as an internal table like object of ``ClCatalog``,
+accessed by ``.members``. This object have the following attributes: -
+``name``: ClCatalog name - ``data``: Table with main catalog data (ex:
+id, id_cluster, ra, dec, z) - ``size``: Number of objects in the catalog
+- ``id_dict``: Dictionary of indicies given the object id - ``labels``:
+Labels of data columns for plots - ``id_dict_list``: Dictionary of
+indicies given the object id, retiruning lists to account members with
+repeated ``id``.
+
+The members can be added to the cluster object using the ``add_members``
+function. It has a similar instanciating format of a ``ClCatalog``
+object, where the columns are added by keyword arguments (the key
+``id_cluster`` is always necessary and must correspond to ``id`` in the
+main cluster catalog):
+
+.. code:: ipython3
+
+    cat = ClCatalog('cluster', id=['c1', 'c2'], mass=[1e13, 1e14])
+    cat['mass'].info.format = '.2e' # Format for nice display
+    cat.add_members(id=['m1', 'm2', 'm3'], id_cluster=['c1', 'c2', 'c1'])
+    display(cat)
+    display(cat.members)
+
+
+
+.. raw:: html
+
+    <b>cluster</b><br>Radius unit: None<br><i>ClData length=2</i>
+    <table id="table140349592523584" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>c2</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>members</b><br><i>ClData length=3</i>
+    <table id="table140349592523776" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
+    <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
+    <tr><td>m1</td><td>c1</td><td>0</td></tr>
+    <tr><td>m2</td><td>c2</td><td>1</td></tr>
+    <tr><td>m3</td><td>c1</td><td>0</td></tr>
+    </table>
+
+
+Read members from ``fits`` files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The catalogs objects can also be read directly from file, by passing the
+fits file as the first argument, the catalog name as the second, and the
+names of the columns in the fits files as keyword arguments:
+
+.. code:: ipython3
+
+    cat = ClCatalog.read('../demo/cat1.fits', 'my cluster',
+                         id='ID', mass='MASS')
+    cat.read_members('../demo/cat1_mem.fits',
+                     id='ID', id_cluster='ID_CLUSTER')
+    cat['mass'].info.format = '.2e' # Format for nice display
+    display(cat)
+    display(cat.members)
+
+
+
+.. raw:: html
+
+    <b>my cluster</b><br>Radius unit: None<br><i>ClData length=5</i>
+    <table id="table140349592523440" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str3</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>CL0</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL1</td><td>2.51e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL2</td><td>2.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL3</td><td>6.31e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    <tr><td>CL4</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>members</b><br><i>ClData length=15</i>
+    <table id="table140349592650512" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
+    <thead><tr><th>str5</th><th>str3</th><th>int64</th></tr></thead>
+    <tr><td>MEM0</td><td>CL0</td><td>0</td></tr>
+    <tr><td>MEM1</td><td>CL0</td><td>0</td></tr>
+    <tr><td>MEM2</td><td>CL0</td><td>0</td></tr>
+    <tr><td>MEM3</td><td>CL0</td><td>0</td></tr>
+    <tr><td>MEM4</td><td>CL0</td><td>0</td></tr>
+    <tr><td>MEM5</td><td>CL1</td><td>1</td></tr>
+    <tr><td>MEM6</td><td>CL1</td><td>1</td></tr>
+    <tr><td>MEM7</td><td>CL1</td><td>1</td></tr>
+    <tr><td>MEM8</td><td>CL1</td><td>1</td></tr>
+    <tr><td>MEM9</td><td>CL2</td><td>2</td></tr>
+    <tr><td>MEM10</td><td>CL2</td><td>2</td></tr>
+    <tr><td>MEM11</td><td>CL2</td><td>2</td></tr>
+    <tr><td>MEM12</td><td>CL3</td><td>3</td></tr>
+    <tr><td>MEM13</td><td>CL3</td><td>3</td></tr>
+    <tr><td>MEM14</td><td>CL4</td><td>4</td></tr>
+    </table>
+
+
+Important inputs of members catalog
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are a few key columns these catalogs must have to be used for
+matching:
 
 -  ``id`` - necessary in membership matching of members.
 -  ``id_cluster`` - always necessary and must correspond to ``id`` in
@@ -505,6 +634,145 @@ be used for matching:
 -  ``pmem`` - Probability of the galaxy being a member, must be [0, 1].
    If not provided, it will assing 1 for all members.
 
-The ``MemCatalog`` object also has a ``id_dict_list`` atribute when
-there is repeated member ``id``.
+Reserved keyword arguments
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are three keyword arguments with specific uses:
+
+-  ``members_consistency``: Require that all input members belong to
+   this cluster catalog.
+-  ``members_warning``: Raise warning if members are do not belong to
+   this cluster catalog, and save them in leftover_members attribute.
+-  ``members_catalog``: Members catalog if avaliable, mostly for
+   internal use.
+
+When ``members_consistency=True``, only galaxies hosted by the cluster
+catalog is kept. If ``members_warning=True``, a warning is raised and
+the clusters not hosted are stored in ``leftover_members``:
+
+.. code:: ipython3
+
+    cat = ClCatalog('cluster', id=['c1'], mass=[1e13])
+    cat['mass'].info.format = '.2e' # Format for nice display
+    cat.add_members(id=['m1', 'm2', 'm3'], id_cluster=['c1', 'c2', 'c1'])
+    display(cat)
+    display(cat.members)
+    display(cat.leftover_members)
+
+
+.. parsed-literal::
+
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.9.0-py3.9.egg/clevar/catalog.py:610: UserWarning: Some galaxies were not members of the cluster catalog. They are stored in leftover_members attribute.
+      warnings.warn(
+
+
+
+.. raw:: html
+
+    <b>cluster</b><br>Radius unit: None<br><i>ClData length=1</i>
+    <table id="table140349592524160" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
+    <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
+    <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>members</b><br><i>ClData length=2</i>
+    <table id="table140349592523968" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
+    <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
+    <tr><td>m1</td><td>c1</td><td>0</td></tr>
+    <tr><td>m3</td><td>c1</td><td>0</td></tr>
+    </table>
+
+
+
+.. raw:: html
+
+    <b>leftover members</b><br><i>ClData length=1</i>
+    <table id="table140349592651424" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
+    <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
+    <tr><td>m2</td><td>c2</td><td>-1</td></tr>
+    </table>
+
+
+Saving members
+~~~~~~~~~~~~~~
+
+The ``member`` object has a ``write`` inbuilt function to save them to
+``.fits`` files. This function also take the argument ``add_header``
+that add the name and labels informations to those files. If the file
+was saved with this argument, it can be read without the requirement of
+a ``name`` argument:
+
+.. code:: ipython3
+
+    cat.members.write('mem1_with_info.fits', overwrite=True)
+
+Memory consuption
+~~~~~~~~~~~~~~~~~
+
+IMPORTANT! The member catalogs are usually hundreds of times larger than
+the cluster catalogs. Therefore it is advised not to add it unless you
+are using it for a specific goal (ex: membership matching). This catalog
+also can lead to memory overload and makes the other functions slower.
+
+There are two options to handle this, you can either pass a member free
+version of the catalog or remove the members altogether. To use the
+member free version of the catalog, use the ``raw`` function:
+
+.. code:: ipython3
+
+    cat_raw = cat.raw()
+    print("Original:")
+    display(cat.members)
+    print("Raw:")
+    display(cat.raw().members)
+
+
+.. parsed-literal::
+
+    Original:
+
+
+
+.. raw:: html
+
+    <b>members</b><br><i>ClData length=2</i>
+    <table id="table140349592653392" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
+    <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
+    <tr><td>m1</td><td>c1</td><td>0</td></tr>
+    <tr><td>m3</td><td>c1</td><td>0</td></tr>
+    </table>
+
+
+.. parsed-literal::
+
+    Raw:
+
+
+
+.. parsed-literal::
+
+    None
+
+
+To remove the members from the cluster catalog, use the
+``remove_members`` function:
+
+.. code:: ipython3
+
+    cat.remove_members()
+    print(cat.members, cat.leftover_members)
+
+
+.. parsed-literal::
+
+    None None
+
 

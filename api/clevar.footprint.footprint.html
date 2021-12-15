@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.footprint.footprint module &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.footprint.footprint module &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -95,7 +95,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -362,13 +362,13 @@ validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).</p
 
 <dl class="py method">
 <dt id="clevar.footprint.footprint.Footprint.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">bad_val</span><span class="o">=</span><span class="default_value">nan</span></em>, <em class="sig-param"><span class="n">auto_lim</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ra_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dec_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cluster</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cluster_kwargs</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">bad_val</span><span class="o">=</span><span class="default_value">- 1.6375e+30</span></em>, <em class="sig-param"><span class="n">auto_lim</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ra_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dec_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cluster</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cluster_kwargs</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/footprint.html#Footprint.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.footprint.Footprint.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot footprint. It can also overlay clusters with their radial sizes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>str</em>) – Name of internal data to be used.</p></li>
-<li><p><strong>bad_val</strong> (<em>float</em><em>, </em><em>None</em>) – Values for pixels outside footprint.</p></li>
+<li><p><strong>bad_val</strong> (<em>float</em>) – Values for pixels outside footprint.</p></li>
 <li><p><strong>auto_lim</strong> (<em>bool</em>) – Set automatic limits for ra/dec.</p></li>
 <li><p><strong>ra_lim</strong> (<em>list</em>) – RA limits in degrees.</p></li>
 <li><p><strong>dec_lim</strong> (<em>list</em>) – DEC limits in degrees.</p></li>
@@ -376,6 +376,7 @@ validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).</p
 <li><p><strong>cluster_kwargs</strong> (<em>dict</em>) – Keyword arguments to plot clusters. If cluster radius used, arguments
 for plt.Circle function, if not arguments for plt.scatter.</p></li>
 <li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when cluster radius has physical units.</p></li>
+<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em><em>, </em><em>None</em>) – Matplotlib figure object. If not provided a new one is created.</p></li>
 <li><p><strong>figsize</strong> (<em>tuple</em>) – Width, height in inches (float, float). Default value from hp.cartview.</p></li>
 <li><p><strong>**kwargs</strong> – <p>Extra arguments for hp.cartview:</p>
 <blockquote>
