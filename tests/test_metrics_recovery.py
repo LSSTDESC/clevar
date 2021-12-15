@@ -78,3 +78,11 @@ def test_plot2D():
     rc.plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
               redshift_label=None, mass_label=None, recovery_label=None,)
     rc.plot2D(cat, matching_type, redshift_bins, mass_bins, add_num=True)
+
+
+def test_skyplot():
+    cat = _test_data.c1
+    matching_type = 'cat1'
+    rc.skyplot(cat, matching_type, recovery_label=None,)
+    # for monocromatic map
+    rc.skyplot(cat[cat['mt_self']!=None], matching_type, recovery_label=None,)

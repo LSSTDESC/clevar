@@ -20,9 +20,9 @@ class MembershipMatch(Match):
         Parameters
         ----------
         cat1: clevar.ClCatalog
-            Base catalog
+            Base catalog with members attribute.
         cat2: clevar.ClCatalog
-            Target catalog
+            Target catalog with members attribute.
         """
         self.cat1_mmt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         print(f'Finding candidates ({cat1.name})')
@@ -33,33 +33,32 @@ class MembershipMatch(Match):
                 cat2['mt_multi_other'][i2].append(cat1['id'][i])
                 self.cat1_mmt[i] = True
             print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
-        print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
+        print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
-    def fill_shared_members(self, cat1, cat2, mem1, mem2):
+    def fill_shared_members(self, cat1, cat2):
         """
         Adds shared members dicts and nmem to mt_input in catalogs.
 
         Parameters
         ----------
         cat1: clevar.ClCatalog
-            Base catalog
+            Cluster catalog with members attribute.
         cat2: clevar.ClCatalog
-            Target catalog
-        mem1: clevar.ClCatalog
-            Members of base catalog
-        mem2: clevar.ClCatalog
-            Members of target catalog
+            Cluster catalog with members attribute.
         """
         if self.matched_mems is None:
             raise ValueError('Members not matched, run match_members before.')
-        mem1['pmem'] = mem1['pmem'] if 'pmem' in mem1.data.colnames else np.ones(mem1.size)
-        mem2['pmem'] = mem2['pmem'] if 'pmem' in mem2.data.colnames else np.ones(mem2.size)
+        if 'pmem' not in cat1.members.data.colnames:
+            cat1.members['pmem'] = 1.
+        if 'pmem' not in cat2.members.data.colnames:
+            cat2.members['pmem'] = 1.
         cat1.mt_input = ClData({'share_mems': [{} for i in range(cat1.size)],
-                         'nmem': self._comp_nmem(cat1, mem1)})
+                                'nmem': self._comp_nmem(cat1)})
         cat2.mt_input = ClData({'share_mems': [{} for i in range(cat2.size)],
-                         'nmem': self._comp_nmem(cat2, mem2)})
-        for mem1_, mem2_ in zip(mem1[self.matched_mems[:,0]], mem2[self.matched_mems[:,1]]):
+                                'nmem': self._comp_nmem(cat2)})
+        for mem1_, mem2_ in zip(cat1.members[self.matched_mems[:,0]],
+                                cat2.members[self.matched_mems[:,1]]):
             self._add_pmem(cat1.mt_input['share_mems'], cat1.id_dict[mem1_['id_cluster']],
                            mem2_['id_cluster'], mem1_['pmem'])
             self._add_pmem(cat2.mt_input['share_mems'], cat2.id_dict[mem2_['id_cluster']],
@@ -78,19 +77,17 @@ class MembershipMatch(Match):
         ids2 = np.array(list(share_mem1.keys()))
         mass2 = np.array(cat2['mass'][cat2.ids2inds(ids2)])
         return {id2:share_mem1[id2] for id2 in ids2[mass2.argsort()[::-1]]}
-    def _comp_nmem(self, cat, mem):
+    def _comp_nmem(self, cat):
         """
         Computes number of members for clusters (sum of pmem)
 
         Parameters
         ----------
         cat: clevar.ClCatalog
-            Cluster catalog
-        mem: clevar.ClCatalog
-            Members of cluster catalog
+            Cluster catalog with members attribute.
         """
         out = np.zeros(cat.size)
-        for ID, pmem in zip(mem['id_cluster'], mem['pmem']):
+        for ID, pmem in zip(cat.members['id_cluster'], cat.members['pmem']):
             out[cat.id_dict[ID]] += pmem
         return out
     def _add_pmem(self, cat1_share_mems, ind1, cat2_id, pmem1):
@@ -116,9 +113,9 @@ class MembershipMatch(Match):
         Parameters
         ----------
         cat1: clevar.ClCatalog
-            Base catalog
+            Cluster catalog with members attribute.
         cat2: clevar.ClCatalog
-            Target catalog
+            Cluster catalog with members attribute.
         fileprefix: str
             Prefix for name of files
         overwrite: bool
@@ -238,7 +235,7 @@ class MembershipMatch(Match):
             Name of file with matching results
         """
         self.matched_mems = np.loadtxt(filename, dtype=int)
-    def match_from_config(self, cat1, cat2, mem1, mem2, match_config, cosmo=None):
+    def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
 
@@ -272,7 +269,7 @@ class MembershipMatch(Match):
 
         load_mt_member = match_config.get('match_members_load', False)
         if match_config.get('match_members', True) and not load_mt_member:
-            self.match_members(mem1, mem2, **match_config['match_members_kwargs'])
+            self.match_members(cat1.members, cat2.members, **match_config['match_members_kwargs'])
         if match_config.get('match_members_save', False) and not load_mt_member:
             self.save_matched_members(match_config['match_members_file'], overwrite=True)
         if load_mt_member:
@@ -280,7 +277,7 @@ class MembershipMatch(Match):
 
         load_shared_member = match_config.get('shared_members_load', False)
         if match_config.get('shared_members_fill', True) and not load_shared_member:
-            self.fill_shared_members(cat1, cat2, mem1, mem2)
+            self.fill_shared_members(cat1, cat2)
         if match_config.get('shared_members_save', False) and not load_shared_member:
             self.save_shared_members(cat1, cat2, match_config['shared_members_file'], overwrite=True)
         if load_shared_member:

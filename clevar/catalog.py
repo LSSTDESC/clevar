@@ -1,6 +1,7 @@
 """@file catalog.py
 The ClCatalog and improved Astropy table classes
 """
+import warnings
 import numpy as np
 from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
@@ -480,13 +481,44 @@ class ClCatalog(Catalog):
         Unit of the radius column
     labels: dict
         Labels of data columns for plots
+    members: MemCatalog
+        Catalog of members associated to the clusters
+    leftover_members: MemCatalog
+        Catalog of members not associated to the clusters
     """
     def __init__(self, name, **kwargs):
+        self.members = None
+        self.leftover_members = None
         radius_unit = kwargs.pop('radius_unit', None)
+        mt_input = kwargs.pop('mt_input', None)
+        members = kwargs.pop('members', None)
+        members_warning = kwargs.pop('members_warning', True)
         Catalog.__init__(self, name, **kwargs)
         self.radius_unit = radius_unit
+        self.mt_input = mt_input
+        if members is not None:
+            self.add_members(members_catalog=members,
+                             members_warning=members_warning)
     def _repr_html_(self):
-        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{self.data._repr_html_()}'
+        print_data = ClData()
+        show_data_cols = [c for c in self.colnames if c!='SkyCoord']
+        for col in show_data_cols:
+            print_data[col] = self.data[col]
+        table = print_data._repr_html_()
+        if self.mt_input is not None:
+            for col in self.mt_input.colnames:
+                print_data[col] = self.mt_input[col]
+            table = print_data._repr_html_()
+            table = table.split('<thead><tr><th')
+            style = 'text-align:left; background-color:grey; color:white'
+            table.insert(1, (
+                f''' colspan={len(show_data_cols)}></th>'''
+                f'''<th colspan={len(self.mt_input.colnames)} style='{style}'>mt_input</th>'''
+                '''</tr></thread>''')
+            )
+            table='<thead><tr><th'.join(table)
+
+        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{table}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
@@ -497,9 +529,28 @@ class ClCatalog(Catalog):
         if isinstance(item, (str, int, np.int64)):
             return data
         else:
-            return ClCatalog(name=self.name, labels=self.labels,
-                             **{c:data[c] for c in data.colnames},
-                             radius_unit = self.radius_unit)
+            mt_input = self.mt_input
+            if (mt_input is not None and not
+                    (isinstance(item, (tuple, list)) and item
+                    and all(isinstance(x, str) for x in item))):
+                # Check if item is not a tuple or list of strings
+                mt_input = mt_input[item]
+            return ClCatalog(
+                name=self.name, labels=self.labels, radius_unit=self.radius_unit,
+                **{c:data[c] for c in data.colnames},
+                mt_input=mt_input, members=self.members, members_warning=False)
+    def raw(self):
+        """
+        Get a copy of the catalog without members.
+        """
+        if self.members is not None:
+            out = ClCatalog(
+                name=self.name, labels=self.labels, radius_unit=self.radius_unit,
+                **{c:self.data[c] for c in self.data.colnames},
+                mt_input=self.mt_input)
+        else:
+            out = self
+        return out
     @classmethod
     def read(self, filename, name=None, **kwargs):
         """Read catalog from fits file
@@ -521,6 +572,78 @@ class ClCatalog(Catalog):
         """
         data = ClData.read(filename)
         return self._read(data, name=name, **kwargs)
+
+    def add_members(self, members_consistency=True, members_warning=True,
+                    members_catalog=None, **kwargs):
+        """
+        Add members to clusters
+
+        Parameters
+        ----------
+        members_consistency: bool
+            Require that all input members belong to this cluster catalog.
+        members_warning: bool
+            Raise warning if members are do not belong to this cluster catalog,
+            and save them in leftover_members attribute.
+        members_catalog: clevar.MemCatalog, None
+            Members catalog if avaliable.
+        **kwargs: keyword arguments
+            Arguments to initialize member catalog if members_catalog=None. For details, see:
+            https://lsstdesc.org/clevar/compiled-examples/catalogs.html#adding-members-to-cluster-catalogs
+        """
+        self.leftover_members = None # clean any previous mem info
+        if members_catalog is None:
+            members = MemCatalog('members', **kwargs)
+        elif isinstance(members_catalog, MemCatalog):
+            members = members_catalog[:]
+            if len(kwargs)>0:
+                warnings.warn(f'leftover input arguments ignored: {kwargs.keys()}')
+        else:
+            raise TypeError(
+                f'members_catalog type is {type(members_catalog)},'
+                ' it must be a MemCatalog object.')
+        members['ind_cl'] = [self.id_dict.get(ID, -1) for ID in members['id_cluster']]
+        if members_consistency:
+            mem_in_cl = members['ind_cl']>=0
+            if not all(mem_in_cl):
+                if members_warning:
+                    warnings.warn(
+                        'Some galaxies were not members of the cluster catalog.'
+                        ' They are stored in leftover_members attribute.')
+                    self.leftover_members = members[~mem_in_cl]
+                    self.leftover_members.name = 'leftover members'
+            members = members[mem_in_cl]
+        self.members = members
+    def read_members(self, filename, members_consistency=True,
+                     members_warning=True, **kwargs):
+        """Read members catalog from fits file.
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        members_consistency: bool
+            Require that all input members belong to this cluster catalog.
+        members_warning: bool
+            Raise warning if members are do not belong to this cluster catalog,
+            and save them in leftover_members attribute.
+        labels: dict
+            Labels of data columns for plots (default vals from file header).
+        **kwargs: keyword argumens
+            All columns to be added must be passes with named argument,
+            the name is used in the Catalog data and the value must
+            be the column name in your input file (ex: z='REDSHIFT').
+        """
+        self.add_members(
+            members_catalog=MemCatalog.read(filename, 'members', **kwargs),
+            members_consistency=members_consistency, members_warning=members_warning)
+    def remove_members(self):
+        """
+        Remove member catalogs.
+        """
+        self.members = None
+        self.leftover_members = None
+
 
 class MemCatalog(Catalog):
     """

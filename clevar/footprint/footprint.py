@@ -8,6 +8,7 @@ from ..utils import none_val, hp
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 from .nfw_funcs import nfw2D_profile_flatcore
+from ..match_metrics import plot_helper as ph
 from ..match_metrics.plot_helper import plt
 
 class Footprint():
@@ -69,7 +70,7 @@ class Footprint():
         self.data['pixel'] = np.array(pixels, dtype=int)
         self.data['detfrac'] = none_val(detfrac, 1)
         self.data['zmax'] = none_val(zmax, 99)
-        ra, dec = hp.pix2ang(nside, pixels, lonlat=True)
+        ra, dec = hp.pix2ang(nside, pixels, lonlat=True, nest=nest)
         self.data['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
         self.pixel_dict = {p:i for i, p in enumerate(self['pixel'])}
     def __getitem__(self, item):
@@ -203,11 +204,11 @@ class Footprint():
             radius=convert_units(aperture_radius, aperture_radius_unit, 'radians',
                                  redshift=cl_z, cosmo=cosmo)
             )
-        weights = wtfunc(pix_list, cl_sk)
+        weights = np.array(wtfunc(pix_list, cl_sk))
         detfrac_vals = self.get_values_in_pixels('detfrac', pix_list, 0)
         zmax_vals = self.get_values_in_pixels('zmax', pix_list, 0)
         values = detfrac_vals*np.array(cl_z<=zmax_vals, dtype=float)
-        return sum(weights*values)/sum(weights)
+        return (weights*values).sum()/weights.sum()
     def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
                              aperture_radius, aperture_radius_unit, cosmo):
         '''
@@ -348,8 +349,8 @@ class Footprint():
                                               'degrees', 'mpc', cl_z, cosmo)
             )
         return nfw2D_profile_flatcore(R, cl_radius, Rs, Rcore)
-    def plot(self, data, bad_val=np.nan, auto_lim=False, ra_lim=None, dec_lim=None,
-             cluster=None, cluster_kwargs={}, cosmo=None, **kwargs):
+    def plot(self, data, bad_val=hp.UNSEEN, auto_lim=False, ra_lim=None, dec_lim=None,
+             cluster=None, cluster_kwargs={}, cosmo=None, fig=None, figsize=None, **kwargs):
         """
         Plot footprint. It can also overlay clusters with their radial sizes.
 
@@ -357,7 +358,7 @@ class Footprint():
         ----------
         data: str
             Name of internal data to be used.
-        bad_val: float, None
+        bad_val: float
             Values for pixels outside footprint.
         auto_lim: bool
             Set automatic limits for ra/dec.
@@ -372,6 +373,8 @@ class Footprint():
             for plt.Circle function, if not arguments for plt.scatter.
         cosmo: clevar.Cosmology object
             Cosmology object for when cluster radius has physical units.
+        fig: matplotlib.figure.Figure, None
+            Matplotlib figure object. If not provided a new one is created.
         figsize: tuple
             Width, height in inches (float, float). Default value from hp.cartview.
         **kwargs:
@@ -406,44 +409,13 @@ class Footprint():
             Figure of the plot. The main can be accessed at fig.axes[0], and the colorbar
             at fig.axes[1].
         """
-        kwargs_ = {'flip':'geo', 'title':None, 'cbar':True}
-        kwargs_.update(kwargs)
-        if auto_lim:
-            edge = 2*(hp.nside2resol(self.nside, arcmin=True)/60)
-            ra, dec = hp.pix2ang(
-                self.nside,
-                self.data['pixel'][self.data[data]!=bad_val],
-                nest=self.nest, lonlat=True)
-            if ra.min()<180. and ra.max()>180.:
-                gap_ra = 360.-(ra.max()-ra.min())
-                gap_ra2 = ra[ra>180.].min()-ra[ra<180.].max()
-                if gap_ra2>gap_ra:
-                    ra[ra>180.] -= 360.
-
-            kwargs_['lonra'] = [max(-360, ra.min()-edge), min(360, ra.max()+edge)]
-            kwargs_['latra'] = [max(-90, dec.min()-edge), min(90, dec.max()+edge)]
-
-        kwargs_['lonra'] = ra_lim if ra_lim else kwargs_.get('lonra')
-        kwargs_['latra'] = dec_lim if dec_lim else kwargs_.get('latra')
-
-        if (kwargs_['lonra'] is None)!=(kwargs_['latra'] is None):
-            raise ValueError('When auto_lim=False, ra_lim and dec_lim must be provided together.')
-
-        figsize = kwargs_.pop('figsize', None)
-        fig = plt.figure()
-        hp.cartview(self.get_map(data, bad_val), hold=True, **kwargs_)
-        ax = fig.axes[0]
-        ax.axis('on')
-        xlim, ylim = ax.get_xlim(), ax.get_ylim()
-
-        if figsize:
-            ax.set_aspect('auto')
-            fig.set_size_inches(figsize)
-
-        if kwargs_['cbar']:
-            cb = fig.axes[1]
+        fig, ax, cb = ph.plot_healpix_map(
+            self.get_map(data, bad_val), nest=self.nest, auto_lim=auto_lim, bad_val=bad_val,
+            ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs)
+        if cb:
             cb.set_xlabel(data)
 
+        xlim, ylim = ax.get_xlim(), ax.get_ylim()
         if cluster is not None:
             if isinstance(cluster, ClCatalog):
                 if 'radius' in cluster.colnames and cluster.radius_unit is not None:
@@ -495,16 +467,5 @@ class Footprint():
                     plt_cl(ra2, dec2, r2)
             else:
                 raise TypeError(f'cluster argument (={cluster}) must be a ClCatalog.')
-
-        ax.set_xlim(xlim)
-        ax.set_ylim(ylim)
-        xticks = ax.get_xticks()
-        xticks[xticks>=360] -= 360
-        if all(int(i)==i for i in xticks):
-            xticks = np.array(xticks, dtype=int)
-        ax.set_xticks(ax.get_xticks())
-        ax.set_xticklabels(xticks)
-        ax.set_xlim(xlim)
-        ax.set_ylim(ylim)
 
         return fig

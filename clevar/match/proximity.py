@@ -49,7 +49,7 @@ class ProximityMatch(Match):
                         cat2['mt_multi_other'][i2].append(cat1['id'][i])
                         self.cat1_mmt[i] = True
             print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
-        print(f'* {len(cat1[veclen(cat1["mt_multi_self"])>0]):,}/{cat1.size:,} objects matched.')
+        print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
     def prep_cat_for_match(self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1,
@@ -111,8 +111,8 @@ class ProximityMatch(Match):
         elif isinstance(delta_z, (int, float)):
             # zmin/zmax from sigma_z*(1+z)
             print('* zmin|zmax from config value')
-            cat.mt_input['zmin'] = cat['z']-delta_z*(1.0+cat['z'])
-            cat.mt_input['zmax'] = cat['z']+delta_z*(1.0+cat['z'])
+            cat.mt_input['zmin'] = cat['z']-delta_z*n_delta_z*(1.0+cat['z'])
+            cat.mt_input['zmax'] = cat['z']+delta_z*n_delta_z*(1.0+cat['z'])
 
         # Set angular radius
         if match_radius == 'cat':
@@ -131,9 +131,10 @@ class ProximityMatch(Match):
             in_rad, in_rad_unit = str2dataunit(match_radius, units_bank.keys())
             in_rad *= np.ones(cat.size)
         # convert to degrees
-        cat.mt_input['ang'] = convert_units(in_rad, in_rad_unit, 'degrees',
-                                redshift=cat['z'] if 'z' in cat.data.colnames else None,
-                                cosmo=cosmo)
+        cat.mt_input['ang'] = convert_units(
+            in_rad*n_match_radius, in_rad_unit, 'degrees',
+            redshift=cat['z'] if 'z' in cat.data.colnames else None,
+            cosmo=cosmo)
     def _rescale_z(self, z, zlim, n):
         """Rescale zmin/zmax by a factor n
 

@@ -3,6 +3,7 @@
 Main recovery functions using arrays.
 """
 import numpy as np
+import healpy as hp
 
 from ...utils import none_val
 from .. import plot_helper as ph
@@ -239,4 +240,93 @@ def plot2D(values1, values2, bins1, bins2, is_matched,
         cb_kwargs_ = {'ax': info['ax']}
         cb_kwargs_.update(cb_kwargs)
         info['cb'] = plt.colorbar(c, **cb_kwargs_)
+    return info
+
+
+def skyplot(ra, dec, is_matched, nside=256, nest=True, auto_lim=False, ra_lim=None, dec_lim=None,
+            recovery_label='Recovery Rate', fig=None, figsize=None, **kwargs):
+    """
+    Plot recovery rate in healpix pixels.
+
+    Parameters
+    ----------
+    ra: numpy array
+        Ra array in degrees
+    dec: numpy array
+        Dec array in degrees
+    is_matched: array (boolean)
+        Boolean array indicating matching status
+    nside: int
+        Healpix nside
+    nest: bool
+        If ordering is nested
+    auto_lim: bool
+        Set automatic limits for ra/dec.
+    ra_lim: None, list
+        Min/max RA for plot.
+    dec_lim: None, list
+        Min/max DEC for plot.
+    recovery_label: str
+        Lable for colorbar. Default: 'recovery rate'
+    fig: matplotlib.figure.Figure, None
+        Matplotlib figure object. If not provided a new one is created.
+    figsize: tuple
+        Width, height in inches (float, float). Default value from hp.cartview.
+    **kwargs:
+        Extra arguments for hp.cartview:
+
+            * xsize (int) : The size of the image. Default: 800
+            * title (str) : The title of the plot. Default: None
+            * min (float) : The minimum range value
+            * max (float) : The maximum range value
+            * remove_dip (bool) : If :const:`True`, remove the dipole+monopole
+            * remove_mono (bool) : If :const:`True`, remove the monopole
+            * gal_cut (float, scalar) : Symmetric galactic cut for \
+            the dipole/monopole fit. Removes points in latitude range \
+            [-gal_cut, +gal_cut]
+            * format (str) : The format of the scale label. Default: '%g'
+            * cbar (bool) : Display the colorbar. Default: True
+            * notext (bool) : If True, no text is printed around the map
+            * norm ({'hist', 'log', None}) : Color normalization, \
+            hist= histogram equalized color mapping, log= logarithmic color \
+            mapping, default: None (linear color mapping)
+            * cmap (a color map) :  The colormap to use (see matplotlib.cm)
+            * badcolor (str) : Color to use to plot bad values
+            * bgcolor (str) : Color to use for background
+            * margins (None or sequence) : Either None, or a \
+            sequence (left,bottom,right,top) giving the margins on \
+            left,bottom,right and top of the axes. Values are relative to \
+            figure (0-1). Default: None
+
+    Returns
+    -------
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig` (matplotlib.pyplot.figure): Figure of the plot. The main can be accessed at\
+            `info['fig'].axes[0]`, and the colorbar at `info['fig'].axes[1]`.
+            * `nc_pix`: Dictionary with the number of clusters in each pixel.
+            * `nc_mt_pix`: Dictionary with the number of matched clusters in each pixel.
+    """
+    all_pix, mt_pix = {}, {}
+    for pix, mt in zip(hp.ang2pix(nside, ra, dec, nest=nest, lonlat=True), is_matched):
+        all_pix[pix] = all_pix.get(pix, 0)+1
+        mt_pix[pix] = mt_pix.get(pix, 0)+mt
+    map_ = np.full(hp.nside2npix(nside), np.nan)
+    map_[list(all_pix.keys())] = np.divide(list(mt_pix.values()), list(all_pix.values()))
+
+    kwargs_ = {}
+    vmin, vmax = min(map_[list(all_pix.keys())]), max(map_[list(all_pix.keys())])
+    if vmin==vmax:
+        kwargs_['min'] = vmin-1e-10
+        kwargs_['max'] = vmax+1e-10
+    kwargs_.update(kwargs)
+    fig, ax, cb = ph.plot_healpix_map(
+        map_, nest=nest, auto_lim=auto_lim, bad_val=np.nan,
+        ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs_)
+
+    if cb:
+        cb.set_xlabel(recovery_label)
+
+    info = {'fig':fig,  'nc_pix':all_pix, 'nc_mt_pix':mt_pix}
     return info

@@ -38,7 +38,7 @@ def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
         Matched catalogs
     """
     func_kwargs = {k:v for k, v in kwargs.items() if k not in _local_args}
-    mt1, mt2 = get_matched_pairs(cat1, cat2, matching_type,
+    mt1, mt2 = get_matched_pairs(cat1.raw(), cat2.raw(), matching_type,
                       mask1=kwargs.get('mask1', None),
                       mask2=kwargs.get('mask2', None))
     func_kwargs['values1'] = mt1[col]
@@ -545,6 +545,9 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
     f_kwargs.pop('err2', None)
     f_kwargs['bins1'] = bins1
     f_kwargs['bins2'] = bins2
+    for key in ['metrics_mode']:
+        if 'metrics_' in key and key in f_kwargs:
+            f_kwargs[key.replace('metrics_', '')] = f_kwargs.pop(key)
     info = array_funcs.plot_metrics(**f_kwargs)
     info['axes'][0].set_ylabel(cat1.name)
     info['axes'][1].set_ylabel(cat2.name)
