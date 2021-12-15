@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Metrics of matching (advanced) &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>Metrics of matching (advanced) &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -95,7 +95,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -248,7 +248,7 @@ non-standard quantities of the catalogs</p>
 </pre></div>
 </div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">support</span> <span class="kn">import</span> <span class="n">gen_cluster</span>
-<span class="n">input1</span><span class="p">,</span> <span class="n">input2</span> <span class="o">=</span> <span class="n">gen_cluster</span><span class="p">()</span>
+<span class="n">input1</span><span class="p">,</span> <span class="n">input2</span> <span class="o">=</span> <span class="n">gen_cluster</span><span class="p">(</span><span class="n">ra_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ra_max</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">dec_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dec_max</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Initial</span> <span class="n">number</span> <span class="n">of</span> <span class="n">clusters</span> <span class="p">(</span><span class="n">logM</span><span class="o">&gt;</span><span class="mf">12.48</span><span class="p">):</span> <span class="mi">2</span><span class="p">,</span><span class="mi">740</span>
@@ -309,7 +309,7 @@ non-standard quantities of the catalogs</p>
 
 <span class="c1">## Multiple match (catalog 2)</span>
 <span class="n">Finding</span> <span class="n">candidates</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
-<span class="o">*</span> <span class="mi">719</span><span class="o">/</span><span class="mi">928</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="o">*</span> <span class="mi">721</span><span class="o">/</span><span class="mi">928</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 
 <span class="c1">## Finding unique matches of catalog 1</span>
 <span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
@@ -317,7 +317,7 @@ non-standard quantities of the catalogs</p>
 
 <span class="c1">## Finding unique matches of catalog 2</span>
 <span class="n">Unique</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
-<span class="o">*</span> <span class="mi">719</span><span class="o">/</span><span class="mi">928</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
+<span class="o">*</span> <span class="mi">720</span><span class="o">/</span><span class="mi">928</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 <span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat1</span><span class="p">)</span>
 <span class="o">*</span> <span class="mi">719</span><span class="o">/</span><span class="mi">835</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 <span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
@@ -342,9 +342,9 @@ use different columns available in the catalogs.</p>
 <span class="n">mbins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="simple-plot">
-<h3>Simple plot<a class="headerlink" href="#simple-plot" title="Permalink to this headline">¶</a></h3>
-<p>The recovery rates are shown as a function of redshift in mass bins.
+<div class="section" id="binned-plot">
+<h3>Binned plot<a class="headerlink" href="#binned-plot" title="Permalink to this headline">¶</a></h3>
+<p>The recovery rates are shown as a function of <code class="docutils literal notranslate"><span class="pre">col1</span></code> in <code class="docutils literal notranslate"><span class="pre">col2</span></code> bins.
 They can be displayed as a continuous line or with steps:</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">r_cf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">col1</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">col2</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">bins1</span><span class="o">=</span><span class="n">zbins</span><span class="p">,</span> <span class="n">bins2</span><span class="o">=</span><span class="n">mbins</span><span class="p">,</span>
         <span class="n">matching_type</span><span class="o">=</span><span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">legend_format</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;10^</span><span class="se">{{</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -364,6 +364,25 @@ redshift bins.</p>
 </div>
 <img alt="../_images/match_metrics_advanced_16_0.png" src="../_images/match_metrics_advanced_16_0.png" />
 </div>
+<div class="section" id="sky-plots">
+<h3>Sky plots<a class="headerlink" href="#sky-plots" title="Permalink to this headline">¶</a></h3>
+<p>It is possible to plot the recovery rate by positions in the sky. It is
+done based on healpix pixelizations:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">r_cf</span><span class="o">.</span><span class="n">skyplot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">matching_type</span><span class="o">=</span><span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">ra_lim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="n">dec_lim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">35</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">clmmenv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">healpy</span><span class="o">/</span><span class="n">projaxes</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">920</span><span class="p">:</span> <span class="n">MatplotlibDeprecationWarning</span><span class="p">:</span> <span class="n">You</span> <span class="n">are</span> <span class="n">modifying</span> <span class="n">the</span> <span class="n">state</span> <span class="n">of</span> <span class="n">a</span> <span class="n">globally</span> <span class="n">registered</span> <span class="n">colormap</span><span class="o">.</span> <span class="n">In</span> <span class="n">future</span> <span class="n">versions</span><span class="p">,</span> <span class="n">you</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">modify</span> <span class="n">a</span> <span class="n">registered</span> <span class="n">colormap</span> <span class="ow">in</span><span class="o">-</span><span class="n">place</span><span class="o">.</span> <span class="n">To</span> <span class="n">remove</span> <span class="n">this</span> <span class="n">warning</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">make</span> <span class="n">a</span> <span class="n">copy</span> <span class="n">of</span> <span class="n">the</span> <span class="n">colormap</span> <span class="n">first</span><span class="o">.</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">))</span>
+  <span class="n">newcm</span><span class="o">.</span><span class="n">set_over</span><span class="p">(</span><span class="n">newcm</span><span class="p">(</span><span class="mf">1.0</span><span class="p">))</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">clmmenv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">healpy</span><span class="o">/</span><span class="n">projaxes</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">921</span><span class="p">:</span> <span class="n">MatplotlibDeprecationWarning</span><span class="p">:</span> <span class="n">You</span> <span class="n">are</span> <span class="n">modifying</span> <span class="n">the</span> <span class="n">state</span> <span class="n">of</span> <span class="n">a</span> <span class="n">globally</span> <span class="n">registered</span> <span class="n">colormap</span><span class="o">.</span> <span class="n">In</span> <span class="n">future</span> <span class="n">versions</span><span class="p">,</span> <span class="n">you</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">modify</span> <span class="n">a</span> <span class="n">registered</span> <span class="n">colormap</span> <span class="ow">in</span><span class="o">-</span><span class="n">place</span><span class="o">.</span> <span class="n">To</span> <span class="n">remove</span> <span class="n">this</span> <span class="n">warning</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">make</span> <span class="n">a</span> <span class="n">copy</span> <span class="n">of</span> <span class="n">the</span> <span class="n">colormap</span> <span class="n">first</span><span class="o">.</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">))</span>
+  <span class="n">newcm</span><span class="o">.</span><span class="n">set_under</span><span class="p">(</span><span class="n">bgcolor</span><span class="p">)</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">clmmenv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">healpy</span><span class="o">/</span><span class="n">projaxes</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">922</span><span class="p">:</span> <span class="n">MatplotlibDeprecationWarning</span><span class="p">:</span> <span class="n">You</span> <span class="n">are</span> <span class="n">modifying</span> <span class="n">the</span> <span class="n">state</span> <span class="n">of</span> <span class="n">a</span> <span class="n">globally</span> <span class="n">registered</span> <span class="n">colormap</span><span class="o">.</span> <span class="n">In</span> <span class="n">future</span> <span class="n">versions</span><span class="p">,</span> <span class="n">you</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">modify</span> <span class="n">a</span> <span class="n">registered</span> <span class="n">colormap</span> <span class="ow">in</span><span class="o">-</span><span class="n">place</span><span class="o">.</span> <span class="n">To</span> <span class="n">remove</span> <span class="n">this</span> <span class="n">warning</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">make</span> <span class="n">a</span> <span class="n">copy</span> <span class="n">of</span> <span class="n">the</span> <span class="n">colormap</span> <span class="n">first</span><span class="o">.</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">))</span>
+  <span class="n">newcm</span><span class="o">.</span><span class="n">set_bad</span><span class="p">(</span><span class="n">badcolor</span><span class="p">)</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">clmmenv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">healpy</span><span class="o">/</span><span class="n">projaxes</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">202</span><span class="p">:</span> <span class="n">MatplotlibDeprecationWarning</span><span class="p">:</span> <span class="n">Passing</span> <span class="n">parameters</span> <span class="n">norm</span> <span class="ow">and</span> <span class="n">vmin</span><span class="o">/</span><span class="n">vmax</span> <span class="n">simultaneously</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="n">since</span> <span class="mf">3.3</span> <span class="ow">and</span> <span class="n">will</span> <span class="n">become</span> <span class="n">an</span> <span class="n">error</span> <span class="n">two</span> <span class="n">minor</span> <span class="n">releases</span> <span class="n">later</span><span class="o">.</span> <span class="n">Please</span> <span class="k">pass</span> <span class="n">vmin</span><span class="o">/</span><span class="n">vmax</span> <span class="n">directly</span> <span class="n">to</span> <span class="n">the</span> <span class="n">norm</span> <span class="n">when</span> <span class="n">creating</span> <span class="n">it</span><span class="o">.</span>
+  <span class="n">aximg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+</pre></div>
+</div>
+<img alt="../_images/match_metrics_advanced_18_1.png" src="../_images/match_metrics_advanced_18_1.png" />
+</div>
 </div>
 <div class="section" id="distances-of-matching">
 <h2>Distances of matching<a class="headerlink" href="#distances-of-matching" title="Permalink to this headline">¶</a></h2>
@@ -378,12 +397,12 @@ with the same formalism:</p>
                            <span class="n">col2</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">bins2</span><span class="o">=</span><span class="n">zbins</span><span class="p">[::</span><span class="mi">4</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_19_0.png" src="../_images/match_metrics_advanced_19_0.png" />
+<img alt="../_images/match_metrics_advanced_21_0.png" src="../_images/match_metrics_advanced_21_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">d_cf</span><span class="o">.</span><span class="n">redshift</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">redshift_bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                    <span class="n">col2</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">bins2</span><span class="o">=</span><span class="n">zbins</span><span class="p">[::</span><span class="mi">4</span><span class="p">],</span> <span class="n">normalize</span><span class="o">=</span><span class="s1">&#39;cat1&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_20_0.png" src="../_images/match_metrics_advanced_20_0.png" />
+<img alt="../_images/match_metrics_advanced_22_0.png" src="../_images/match_metrics_advanced_22_0.png" />
 </div>
 <div class="section" id="scaling-relations">
 <h2>Scaling Relations<a class="headerlink" href="#scaling-relations" title="Permalink to this headline">¶</a></h2>
@@ -413,58 +432,58 @@ plot_dist results.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_23_0.png" src="../_images/match_metrics_advanced_23_0.png" />
+<img alt="../_images/match_metrics_advanced_25_0.png" src="../_images/match_metrics_advanced_25_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
                  <span class="n">col_color</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_24_0.png" src="../_images/match_metrics_advanced_24_0.png" />
+<img alt="../_images/match_metrics_advanced_26_0.png" src="../_images/match_metrics_advanced_26_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot_density</span><span class="p">(</span>
     <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span>
     <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">add_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fit_bins1</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">fit_log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_25_0.png" src="../_images/match_metrics_advanced_25_0.png" />
+<img alt="../_images/match_metrics_advanced_27_0.png" src="../_images/match_metrics_advanced_27_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot_panel</span><span class="p">(</span>
     <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
     <span class="n">col_panel</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">bins_panel</span><span class="o">=</span><span class="n">zbins</span><span class="p">[::</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_26_0.png" src="../_images/match_metrics_advanced_26_0.png" />
+<img alt="../_images/match_metrics_advanced_28_0.png" src="../_images/match_metrics_advanced_28_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot_panel</span><span class="p">(</span>
     <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
     <span class="n">col_panel</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">bins_panel</span><span class="o">=</span><span class="n">zbins</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span>
     <span class="n">col_color</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_27_0.png" src="../_images/match_metrics_advanced_27_0.png" />
+<img alt="../_images/match_metrics_advanced_29_0.png" src="../_images/match_metrics_advanced_29_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot_density_panel</span><span class="p">(</span>
     <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">yscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
     <span class="n">col_panel</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">bins_panel</span><span class="o">=</span><span class="n">zbins</span><span class="p">[::</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_28_0.png" src="../_images/match_metrics_advanced_28_0.png" />
+<img alt="../_images/match_metrics_advanced_30_0.png" src="../_images/match_metrics_advanced_30_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot_metrics</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;diff_z&#39;</span><span class="p">,</span> <span class="n">label1</span><span class="o">=</span><span class="s1">&#39;z1&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_29_0.png" src="../_images/match_metrics_advanced_29_0.png" />
+<img alt="../_images/match_metrics_advanced_31_0.png" src="../_images/match_metrics_advanced_31_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot_density_metrics</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">metrics_mode</span><span class="o">=</span><span class="s1">&#39;diff_z&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_30_0.png" src="../_images/match_metrics_advanced_30_0.png" />
+<img alt="../_images/match_metrics_advanced_32_0.png" src="../_images/match_metrics_advanced_32_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot_density_metrics</span><span class="p">(</span>
     <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">metrics_mode</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
     <span class="n">scale1</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">scale2</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_31_0.png" src="../_images/match_metrics_advanced_31_0.png" />
+<img alt="../_images/match_metrics_advanced_33_0.png" src="../_images/match_metrics_advanced_33_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="n">s_cf</span><span class="o">.</span><span class="n">plot_density_dist</span><span class="p">(</span>
     <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">,</span> <span class="n">metrics_mode</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
     <span class="n">scale1</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">scale2</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">add_err</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_32_0.png" src="../_images/match_metrics_advanced_32_0.png" />
+<img alt="../_images/match_metrics_advanced_34_0.png" src="../_images/match_metrics_advanced_34_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zbins2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mi">7</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
 <span class="n">rbins2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">c2</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
 <span class="n">bins1</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">]),</span> <span class="mi">20</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
@@ -475,7 +494,7 @@ plot_dist results.</p>
     <span class="n">log_vals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">)})</span>
 </pre></div>
 </div>
-<img alt="../_images/match_metrics_advanced_33_0.png" src="../_images/match_metrics_advanced_33_0.png" />
+<img alt="../_images/match_metrics_advanced_35_0.png" src="../_images/match_metrics_advanced_35_0.png" />
 </div>
 </div>
 

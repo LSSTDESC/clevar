@@ -24,7 +24,7 @@ Generate random data and add to catalog
 .. code:: ipython3
 
     from support import gen_cluster
-    input1, input2 = gen_cluster()
+    input1, input2 = gen_cluster(ra_min=0, ra_max=30, dec_min=0, dec_max=30)
 
 
 .. parsed-literal::
@@ -93,7 +93,7 @@ Match catalogs
     
     ## Multiple match (catalog 2)
     Finding candidates (Cat2)
-    * 719/928 objects matched.
+    * 721/928 objects matched.
     
     ## Finding unique matches of catalog 1
     Unique Matches (Cat1)
@@ -101,7 +101,7 @@ Match catalogs
     
     ## Finding unique matches of catalog 2
     Unique Matches (Cat2)
-    * 719/928 objects matched.
+    * 720/928 objects matched.
     Cross Matches (Cat1)
     * 719/835 objects matched.
     Cross Matches (Cat2)
@@ -129,18 +129,12 @@ They can be displayed as a continuous line or with steps:
 
     zbins = np.linspace(0, 2, 21)
     mbins = np.logspace(13, 14, 5)
-    info = recovery.plot(c1, 'cross', zbins, mbins)
-    plt.show()
     info = recovery.plot(c1, 'cross', zbins, mbins, shape='line')
     plt.show()
 
 
 
 .. image:: match_metrics_files/match_metrics_12_0.png
-
-
-
-.. image:: match_metrics_files/match_metrics_12_1.png
 
 
 They can also be transposed to be shown as a function of mass in
@@ -229,6 +223,33 @@ You can also have a panel for each bin:
 .. image:: match_metrics_files/match_metrics_20_1.png
 
 
+Sky plots
+~~~~~~~~~
+
+It is possible to plot the recovery rate by positions in the sky. It is
+done based on healpix pixelizations:
+
+.. code:: ipython3
+
+    info = recovery.skyplot(c1, 'cross', nside=16, ra_lim=[-5, 35], dec_lim=[-5, 35])
+
+
+.. parsed-literal::
+
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:920: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_over(newcm(1.0))
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:921: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_under(bgcolor)
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:922: MatplotlibDeprecationWarning: You are modifying the state of a globally registered colormap. In future versions, you will not be able to modify a registered colormap in-place. To remove this warning, you can make a copy of the colormap first. cmap = copy.copy(mpl.cm.get_cmap("viridis"))
+      newcm.set_bad(badcolor)
+    /home/aguena/miniconda3/envs/clmmenv/lib/python3.9/site-packages/healpy/projaxes.py:202: MatplotlibDeprecationWarning: Passing parameters norm and vmin/vmax simultaneously is deprecated since 3.3 and will become an error two minor releases later. Please pass vmin/vmax directly to the norm when creating it.
+      aximg = self.imshow(
+
+
+
+.. image:: match_metrics_files/match_metrics_22_1.png
+
+
 Distances of matching
 ---------------------
 
@@ -247,7 +268,7 @@ bins:
 
 
 
-.. image:: match_metrics_files/match_metrics_23_0.png
+.. image:: match_metrics_files/match_metrics_25_0.png
 
 
 .. code:: ipython3
@@ -258,7 +279,7 @@ bins:
 
 
 
-.. image:: match_metrics_files/match_metrics_24_0.png
+.. image:: match_metrics_files/match_metrics_26_0.png
 
 
 .. code:: ipython3
@@ -269,7 +290,7 @@ bins:
 
 
 
-.. image:: match_metrics_files/match_metrics_25_0.png
+.. image:: match_metrics_files/match_metrics_27_0.png
 
 
 .. code:: ipython3
@@ -278,7 +299,7 @@ bins:
 
 
 
-.. image:: match_metrics_files/match_metrics_26_0.png
+.. image:: match_metrics_files/match_metrics_28_0.png
 
 
 .. code:: ipython3
@@ -289,7 +310,7 @@ bins:
 
 
 
-.. image:: match_metrics_files/match_metrics_27_0.png
+.. image:: match_metrics_files/match_metrics_29_0.png
 
 
 .. code:: ipython3
@@ -300,7 +321,7 @@ bins:
 
 
 
-.. image:: match_metrics_files/match_metrics_28_0.png
+.. image:: match_metrics_files/match_metrics_30_0.png
 
 
 The full information of the distances is outputed in a dictionary
@@ -347,7 +368,7 @@ Simple plot
 
 
 
-.. image:: match_metrics_files/match_metrics_35_0.png
+.. image:: match_metrics_files/match_metrics_37_0.png
 
 
 Color points by :math:`\log(M)` value
@@ -359,7 +380,7 @@ Color points by :math:`\log(M)` value
 
 
 
-.. image:: match_metrics_files/match_metrics_37_0.png
+.. image:: match_metrics_files/match_metrics_39_0.png
 
 
 Color points by density at plot
@@ -371,16 +392,7 @@ Color points by density at plot
 
 
 
-.. image:: match_metrics_files/match_metrics_39_0.png
-
-
-.. code:: ipython3
-
-    info = scaling.redshift_density(c1, c2, 'cross', ax_rotation=45)
-
-
-
-.. image:: match_metrics_files/match_metrics_40_0.png
+.. image:: match_metrics_files/match_metrics_41_0.png
 
 
 Split data into mass bins
@@ -392,7 +404,7 @@ Split data into mass bins
 
 
 
-.. image:: match_metrics_files/match_metrics_42_0.png
+.. image:: match_metrics_files/match_metrics_43_0.png
 
 
 Split data into mass bins and color by density
@@ -404,7 +416,7 @@ Split data into mass bins and color by density
 
 
 
-.. image:: match_metrics_files/match_metrics_44_0.png
+.. image:: match_metrics_files/match_metrics_45_0.png
 
 
 Evaluate metrics of the distribution
@@ -416,7 +428,7 @@ Evaluate metrics of the distribution
 
 
 
-.. image:: match_metrics_files/match_metrics_46_0.png
+.. image:: match_metrics_files/match_metrics_47_0.png
 
 
 .. code:: ipython3
@@ -425,7 +437,7 @@ Evaluate metrics of the distribution
 
 
 
-.. image:: match_metrics_files/match_metrics_47_0.png
+.. image:: match_metrics_files/match_metrics_48_0.png
 
 
 .. code:: ipython3
@@ -434,7 +446,7 @@ Evaluate metrics of the distribution
 
 
 
-.. image:: match_metrics_files/match_metrics_48_0.png
+.. image:: match_metrics_files/match_metrics_49_0.png
 
 
 All of these functions with scatter plot can also fit a relation:
@@ -448,7 +460,7 @@ All of these functions with scatter plot can also fit a relation:
 
 
 
-.. image:: match_metrics_files/match_metrics_50_0.png
+.. image:: match_metrics_files/match_metrics_51_0.png
 
 
 The full information of the scaling relation is outputed to a dictionay
@@ -512,12 +524,12 @@ catalogs
 
 .. parsed-literal::
 
-    CPU times: user 267 ms, sys: 180 ms, total: 447 ms
-    Wall time: 215 ms
+    CPU times: user 164 ms, sys: 192 ms, total: 356 ms
+    Wall time: 122 ms
 
 
 
-.. image:: match_metrics_files/match_metrics_54_1.png
+.. image:: match_metrics_files/match_metrics_55_1.png
 
 
 Compare with the distribution on the other catalog
@@ -534,12 +546,12 @@ Compare with the distribution on the other catalog
 
 .. parsed-literal::
 
-    CPU times: user 194 ms, sys: 206 ms, total: 400 ms
-    Wall time: 134 ms
+    CPU times: user 285 ms, sys: 192 ms, total: 477 ms
+    Wall time: 208 ms
 
 
 
-.. image:: match_metrics_files/match_metrics_56_1.png
+.. image:: match_metrics_files/match_metrics_57_1.png
 
 
 Mass plots
@@ -554,7 +566,7 @@ Simple plot
 
 
 
-.. image:: match_metrics_files/match_metrics_59_0.png
+.. image:: match_metrics_files/match_metrics_60_0.png
 
 
 Color points by redshift value
@@ -566,7 +578,7 @@ Color points by redshift value
 
 
 
-.. image:: match_metrics_files/match_metrics_61_0.png
+.. image:: match_metrics_files/match_metrics_62_0.png
 
 
 Color points by density at plot
@@ -578,7 +590,7 @@ Color points by density at plot
 
 
 
-.. image:: match_metrics_files/match_metrics_63_0.png
+.. image:: match_metrics_files/match_metrics_64_0.png
 
 
 Split data into redshift bins
@@ -587,10 +599,12 @@ Split data into redshift bins
 .. code:: ipython3
 
     info = scaling.mass_zpanel(c1, c2, 'cross', add_err=True)
+    for ax in info['axes'].flatten():
+        ax.set_ylim(.8e13, 2.2e15)
 
 
 
-.. image:: match_metrics_files/match_metrics_65_0.png
+.. image:: match_metrics_files/match_metrics_66_0.png
 
 
 Split data into redshift bins and color by density
@@ -599,10 +613,12 @@ Split data into redshift bins and color by density
 .. code:: ipython3
 
     info = scaling.mass_density_zpanel(c1, c2, 'cross', add_err=True)
+    for ax in info['axes'].flatten():
+        ax.set_ylim(.8e13, 2.2e15)
 
 
 
-.. image:: match_metrics_files/match_metrics_67_0.png
+.. image:: match_metrics_files/match_metrics_68_0.png
 
 
 Evaluate metrics of the distribution
@@ -614,7 +630,7 @@ Evaluate metrics of the distribution
 
 
 
-.. image:: match_metrics_files/match_metrics_69_0.png
+.. image:: match_metrics_files/match_metrics_70_0.png
 
 
 .. code:: ipython3
@@ -623,7 +639,7 @@ Evaluate metrics of the distribution
 
 
 
-.. image:: match_metrics_files/match_metrics_70_0.png
+.. image:: match_metrics_files/match_metrics_71_0.png
 
 
 .. code:: ipython3
@@ -633,7 +649,7 @@ Evaluate metrics of the distribution
 
 
 
-.. image:: match_metrics_files/match_metrics_71_0.png
+.. image:: match_metrics_files/match_metrics_72_0.png
 
 
 All of these functions with scatter plot can also fit a relation:
@@ -647,7 +663,7 @@ All of these functions with scatter plot can also fit a relation:
 
 
 
-.. image:: match_metrics_files/match_metrics_73_0.png
+.. image:: match_metrics_files/match_metrics_74_0.png
 
 
 The full information of the scaling relation is outputed to a dictionay
@@ -688,12 +704,12 @@ catalogs
 
 .. parsed-literal::
 
-    CPU times: user 156 ms, sys: 227 ms, total: 383 ms
-    Wall time: 130 ms
+    CPU times: user 173 ms, sys: 215 ms, total: 388 ms
+    Wall time: 136 ms
 
 
 
-.. image:: match_metrics_files/match_metrics_76_1.png
+.. image:: match_metrics_files/match_metrics_77_1.png
 
 
 Compare with the distribution on the other catalog
@@ -710,11 +726,11 @@ Compare with the distribution on the other catalog
 
 .. parsed-literal::
 
-    CPU times: user 220 ms, sys: 196 ms, total: 417 ms
-    Wall time: 154 ms
+    CPU times: user 209 ms, sys: 201 ms, total: 410 ms
+    Wall time: 147 ms
 
 
 
-.. image:: match_metrics_files/match_metrics_78_1.png
+.. image:: match_metrics_files/match_metrics_79_1.png
 
 

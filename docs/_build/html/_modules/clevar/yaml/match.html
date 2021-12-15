@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.yaml.match &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.yaml.match &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -93,7 +93,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -235,7 +235,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">clevar</span>
-<span class="kn">from</span> <span class="nn">.helper_funcs</span> <span class="kn">import</span> <span class="n">yaml</span><span class="p">,</span> <span class="n">loadconf</span><span class="p">,</span> <span class="n">make_catalog</span><span class="p">,</span> <span class="n">make_mem_catalog</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">.helper_funcs</span> <span class="kn">import</span> <span class="n">yaml</span><span class="p">,</span> <span class="n">loadconf</span><span class="p">,</span> <span class="n">make_catalog</span><span class="p">,</span> <span class="n">add_mem_catalog</span><span class="p">,</span>\
 <span class="n">make_cosmology</span><span class="p">,</span> <span class="n">get_input_loop</span>
 
 <div class="viewcode-block" id="match_general"><a class="viewcode-back" href="../../../api/clevar.yaml.match.html#clevar.yaml.match.match_general">[docs]</a><span class="k">def</span> <span class="nf">match_general</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">overwrite_config</span><span class="p">,</span> <span class="n">overwrite_files</span><span class="p">):</span>
@@ -324,9 +324,9 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Reading Cluster Catalog 2&quot;</span><span class="p">)</span>
     <span class="n">c2</span> <span class="o">=</span> <span class="n">make_catalog</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">])</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Reading Members Catalog 1&quot;</span><span class="p">)</span>
-    <span class="n">mem1</span> <span class="o">=</span> <span class="n">make_mem_catalog</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">][</span><span class="s1">&#39;members&#39;</span><span class="p">])</span>
+    <span class="n">add_mem_catalog</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;catalog1&#39;</span><span class="p">][</span><span class="s1">&#39;members&#39;</span><span class="p">])</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Reading Members Catalog 2&quot;</span><span class="p">)</span>
-    <span class="n">mem2</span> <span class="o">=</span> <span class="n">make_mem_catalog</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">][</span><span class="s1">&#39;members&#39;</span><span class="p">])</span>
+    <span class="n">add_mem_catalog</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">][</span><span class="s1">&#39;members&#39;</span><span class="p">])</span>
     <span class="n">mem_mt_radius</span> <span class="o">=</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;match_members_kwargs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;radius&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">unit</span> <span class="ow">in</span> <span class="n">mem_mt_radius</span> <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">clevar</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">physical_bank</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Creating Cosmology&quot;</span><span class="p">)</span>
@@ -335,7 +335,7 @@
     <span class="n">mt</span> <span class="o">=</span> <span class="n">clevar</span><span class="o">.</span><span class="n">match</span><span class="o">.</span><span class="n">MembershipMatch</span><span class="p">()</span>
     <span class="n">prt_msg</span> <span class="o">=</span> <span class="s1">&#39;# Start membership matching&#39;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="s2">&quot;#&quot;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">prt_msg</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">prt_msg</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="s2">&quot;#&quot;</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">prt_msg</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">mt</span><span class="o">.</span><span class="n">match_from_config</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">mem1</span><span class="p">,</span> <span class="n">mem2</span><span class="p">,</span>  <span class="n">match_config</span><span class="p">)</span>
+    <span class="n">mt</span><span class="o">.</span><span class="n">match_from_config</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span>  <span class="n">match_config</span><span class="p">)</span>
     <span class="n">save_matching_files</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">overwrite_files</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="save_matching_files"><a class="viewcode-back" href="../../../api/clevar.yaml.match.html#clevar.yaml.match.save_matching_files">[docs]</a><span class="k">def</span> <span class="nf">save_matching_files</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">mt</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">overwrite_files</span><span class="p">):</span>

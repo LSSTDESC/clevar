@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.catalog_funcs module &mdash; ClEvaR 0.8.0 documentation</title>
+  <title>clevar.match_metrics.recovery.catalog_funcs module &mdash; ClEvaR 0.9.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.8.0
+                0.9.0
               </div>
             
           
@@ -95,7 +95,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Usage Demos</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Catalog Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching_detailed.html">Matching catalogs based on proximity (detailed)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/membership_matching.html">Matching catalogs based on membership (simple)</a></li>
@@ -415,6 +415,67 @@ Must have same size as len(bins2)-1</p></li>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="clevar.match_metrics.recovery.catalog_funcs.skyplot">
+<code class="sig-prename descclassname">clevar.match_metrics.recovery.catalog_funcs.</code><code class="sig-name descname">skyplot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">nside</span><span class="o">=</span><span class="default_value">256</span></em>, <em class="sig-param"><span class="n">nest</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">mask</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mask_unmatched</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auto_lim</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ra_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dec_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">'Recovery Rate'</span></em>, <em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/catalog_funcs.html#skyplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.catalog_funcs.skyplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot recovery rate in healpix pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – ClCatalog with matching information</p></li>
+<li><p><strong>matching_type</strong> (<em>str</em>) – Type of matching to be considered. Must be in:
+‘cross’, ‘cat1’, ‘cat2’, ‘multi_cat1’, ‘multi_cat2’, ‘multi_join’</p></li>
+<li><p><strong>nside</strong> (<em>int</em>) – Healpix nside</p></li>
+<li><p><strong>nest</strong> (<em>bool</em>) – If ordering is nested</p></li>
+<li><p><strong>mask</strong> (<em>array</em>) – Mask of unwanted clusters</p></li>
+<li><p><strong>mask_unmatched</strong> (<em>array</em>) – Mask of unwanted unmatched clusters (ex: out of footprint)</p></li>
+<li><p><strong>auto_lim</strong> (<em>bool</em>) – Set automatic limits for ra/dec.</p></li>
+<li><p><strong>ra_lim</strong> (<em>None</em><em>, </em><em>list</em>) – Min/max RA for plot.</p></li>
+<li><p><strong>dec_lim</strong> (<em>None</em><em>, </em><em>list</em>) – Min/max DEC for plot.</p></li>
+<li><p><strong>recovery_label</strong> (<em>str</em>) – Lable for colorbar. Default: ‘recovery rate’</p></li>
+<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em><em>, </em><em>None</em>) – Matplotlib figure object. If not provided a new one is created.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em>) – Width, height in inches (float, float). Default value from hp.cartview.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Extra arguments for hp.cartview:</p>
+<blockquote>
+<div><ul>
+<li><p>xsize (int) : The size of the image. Default: 800</p></li>
+<li><p>title (str) : The title of the plot. Default: None</p></li>
+<li><p>min (float) : The minimum range value</p></li>
+<li><p>max (float) : The maximum range value</p></li>
+<li><p>remove_dip (bool) : If <code class="xref py py-const docutils literal notranslate"><span class="pre">True</span></code>, remove the dipole+monopole</p></li>
+<li><p>remove_mono (bool) : If <code class="xref py py-const docutils literal notranslate"><span class="pre">True</span></code>, remove the monopole</p></li>
+<li><p>gal_cut (float, scalar) : Symmetric galactic cut for             the dipole/monopole fit. Removes points in latitude range             [-gal_cut, +gal_cut]</p></li>
+<li><p>format (str) : The format of the scale label. Default: ‘%g’</p></li>
+<li><p>cbar (bool) : Display the colorbar. Default: True</p></li>
+<li><p>notext (bool) : If True, no text is printed around the map</p></li>
+<li><p>norm ({‘hist’, ‘log’, None}) : Color normalization,             hist= histogram equalized color mapping, log= logarithmic color             mapping, default: None (linear color mapping)</p></li>
+<li><p>cmap (a color map) :  The colormap to use (see matplotlib.cm)</p></li>
+<li><p>badcolor (str) : Color to use to plot bad values</p></li>
+<li><p>bgcolor (str) : Color to use for background</p></li>
+<li><p>margins (None or sequence) : Either None, or a             sequence (left,bottom,right,top) giving the margins on             left,bottom,right and top of the axes. Values are relative to             figure (0-1). Default: None</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
+<p>Information of data in the plots, it contains the sections:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>fig</cite> (matplotlib.pyplot.figure): Figure of the plot. The main can be accessed at            <cite>info[‘fig’].axes[0]</cite>, and the colorbar at <cite>info[‘fig’].axes[1]</cite>.</p></li>
+<li><p><cite>nc_pix</cite>: Dictionary with the number of clusters in each pixel.</p></li>
+<li><p><cite>nc_mt_pix</cite>: Dictionary with the number of matched clusters in each pixel.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
