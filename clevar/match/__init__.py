@@ -23,7 +23,9 @@ def get_matched_pairs(cat1, cat2, matching_type, mask1=None, mask2=None):
     mt_mask1, mt_mask2 = get_matched_masks(cat1, cat2, matching_type)
     mask = np.ones(len(mt_mask2), dtype=bool) if mask1 is None else mask1[mt_mask1]
     mask = mask if mask2 is None else mask*mask2[mt_mask2]
-    return cat1[mt_mask1][mask], cat2[mt_mask2][mask]
+    mt_mask1[mt_mask1] *= mask
+    mt_mask2 = mt_mask2[mask]
+    return cat1[mt_mask1], cat2[mt_mask2]
 
 def get_matched_masks(cat1, cat2, matching_type):
     """
@@ -47,7 +49,7 @@ def get_matched_masks(cat1, cat2, matching_type):
     # convert matching type to the values expected by get_matching_mask
     matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
     mask1 = cat1.get_matching_mask(matching_type_conv)
-    mask2 = cat2.ids2inds(cat1[mask1][f'mt_{matching_type_conv}'])
+    mask2 = cat2.ids2inds(cat1[f'mt_{matching_type_conv}'][mask1])
     return mask1, mask2
 
 def output_catalog_with_matching(file_in, file_out, catalog, overwrite=False):

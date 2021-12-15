@@ -235,21 +235,21 @@ def get_test_data_mem():
     input2_mem['id_cluster'][0] = f'CL{ncl-2}'
     c1 = ClCatalog('Cat1', **input1)
     c2 = ClCatalog('Cat2', **input2)
-    mem1 = MemCatalog('Mem1', **input1_mem)
-    mem2 = MemCatalog('Mem2', **input2_mem)
-    return c1, c2, mem1, mem2
+    c1.add_members(**input1_mem)
+    c2.add_members(**input2_mem)
+    return c1, c2
 def test_membership():
-    c1, c2, mem1, mem2 = get_test_data_mem()
+    c1, c2 = get_test_data_mem()
     print(c1.data)
     print(c2.data)
     # init match
     mt = MembershipMatch()
-    # Try to use fill_shared_members before fill_shared_members 
-    assert_raises(ValueError, mt.fill_shared_members, c1, c2, mem1, mem2)
+    # Try to use fill_shared_members before match_mems
+    assert_raises(ValueError, mt.fill_shared_members, c1, c2)
     # Check both methods
-    mt.match_members(mem1, mem2, method='id')
+    mt.match_members(c1.members, c2.members, method='id')
     mt2 = MembershipMatch()
-    mt2.match_members(mem1, mem2, method='angular_distance', radius='1arcsec')
+    mt2.match_members(c1.members, c2.members, method='angular_distance', radius='1arcsec')
     assert_equal(mt.matched_mems, mt2.matched_mems)
     # Save and load matched members
     mt.save_matched_members('temp_mem.txt')
@@ -257,7 +257,7 @@ def test_membership():
     assert_equal(mt.matched_mems, mt2.matched_mems)
     os.system('rm temp_mem.txt')
     # Fill shared members
-    mt.fill_shared_members(c1, c2, mem1, mem2)
+    mt.fill_shared_members(c1, c2)
     # Save and load shared members
     mt.save_shared_members(c1, c2, 'temp')
     c1_test, c2_test = ClCatalog('test1'), ClCatalog('test2')
@@ -330,14 +330,14 @@ def test_membership():
     os.system('rm -rf temp')
 
 def test_membership_cfg(CosmoClass):
-    c1, c2, mem1, mem2 = get_test_data_mem()
+    c1, c2 = get_test_data_mem()
     print(c1.data)
     print(c2.data)
     # init match
     cosmo =  CosmoClass()
     mt = MembershipMatch()
     # test wrong matching config
-    assert_raises(ValueError, mt.match_from_config, c1, c2, mem1, mem2, {'type':'unknown'})
+    assert_raises(ValueError, mt.match_from_config, c1, c2, {'type':'unknown'})
     ### test 0 ###
     match_config = {
         'type': 'cross',
@@ -349,13 +349,13 @@ def test_membership_cfg(CosmoClass):
         'match_members_file': 'temp_mem.txt',
         'shared_members_file': 'temp',
     }
-    mt.match_from_config(c1, c2, mem1, mem2, match_config)
+    mt.match_from_config(c1, c2, match_config)
     # Test with loaded match members file
     c1_test, c2_test = get_test_data_mem()[:2]
     match_config_test = {}
     match_config_test.update(match_config)
     match_config_test['match_members_load'] = True
-    mt.match_from_config(c1_test, c2_test, mem1, mem2, match_config_test)
+    mt.match_from_config(c1_test, c2_test, match_config_test)
     for col in c1.data.colnames:
         if col[:3]=='mt_':
             assert_equal(c1[col], c1_test[col])
@@ -365,7 +365,7 @@ def test_membership_cfg(CosmoClass):
     match_config_test = {}
     match_config_test.update(match_config)
     match_config_test['shared_members_load'] = True
-    mt.match_from_config(c1_test, c2_test, mem1, mem2, match_config_test)
+    mt.match_from_config(c1_test, c2_test, match_config_test)
     for col in c1.data.colnames:
         if col[:3]=='mt_':
             assert_equal(c1[col], c1_test[col])
@@ -380,7 +380,7 @@ def test_membership_cfg(CosmoClass):
     c1._init_match_vals(overwrite=True)
     c2._init_match_vals(overwrite=True)
     match_config_test['minimum_share_fraction'] = .7
-    mt.match_from_config(c1, c2, mem1, mem2, match_config_test)
+    mt.match_from_config(c1, c2, match_config_test)
     smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
     cmt = ['CL0', 'CL1', 'CL2', None, None]
     _test_mt_results(c1, multi_self=mmt1, self=smt, cross=cmt, other=cmt)
@@ -389,7 +389,7 @@ def test_membership_cfg(CosmoClass):
     c1._init_match_vals(overwrite=True)
     c2._init_match_vals(overwrite=True)
     match_config_test['minimum_share_fraction'] = .9
-    mt.match_from_config(c1, c2, mem1, mem2, match_config_test)
+    mt.match_from_config(c1, c2, match_config_test)
     smt = [None, 'CL1', 'CL2', 'CL3', None]
     omt = ['CL0', 'CL1', 'CL2', None, None]
     cmt = [None, 'CL1', 'CL2', None, None]
@@ -397,7 +397,7 @@ def test_membership_cfg(CosmoClass):
     _test_mt_results(c2, multi_self=mmt2, self=omt[:-1], cross=cmt[:-1], other=smt[:-1])
 def test_output_catalog_with_matching():
     # input data
-    c1, c2, mem1, mem2 = get_test_data_mem()
+    c1, c2 = get_test_data_mem()
     mt = MembershipMatch()
     match_config = {
         'type': 'cross',
@@ -407,7 +407,7 @@ def test_output_catalog_with_matching():
         'match_members_save': False,
         'shared_members_save': False,
     }
-    mt.match_from_config(c1, c2, mem1, mem2, match_config)
+    mt.match_from_config(c1, c2, match_config)
     # test
     file_in, file_out = "temp_init_cat.fits", "temp_out_cat.fits"
     c1.data['id', 'mass'].write(file_in)
@@ -418,7 +418,7 @@ def test_output_catalog_with_matching():
     os.system(f'rm -f {file_in} {file_out}')
 def test_output_matched_catalog():
     # input data
-    c1, c2, mem1, mem2 = get_test_data_mem()
+    c1, c2 = get_test_data_mem()
     mt = MembershipMatch()
     match_config = {
         'type': 'cross',
@@ -428,7 +428,7 @@ def test_output_matched_catalog():
         'match_members_save': False,
         'shared_members_save': False,
     }
-    mt.match_from_config(c1, c2, mem1, mem2, match_config)
+    mt.match_from_config(c1, c2, match_config)
     # test
     file_in1, file_in2 = "temp_init1_cat.fits", "temp_init2_cat.fits"
     file_out = "temp_out_cat.fits"

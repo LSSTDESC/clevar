@@ -96,6 +96,7 @@ def test_m_metrics():
     info = scaling.mass_metrics(c1, c2, 'cat1')
     info = scaling.mass_metrics(c1, c2, 'cat1', metrics=['p_68'])
     assert_raises(ValueError, scaling.mass_metrics, c1, c2, 'cat1', metrics=['xxx'])
+    info = scaling.mass_metrics(c1, c2, 'cat1', metrics_mode='diff_log')
 def test_m_density_metrics():
     c1, c2 = _test_data.c1, _test_data.c2
     info = scaling.mass_density_metrics(c1, c2, 'cat1', mask1=c1['mass']>0, mask2=c2['mass']>0)
