@@ -343,16 +343,17 @@ class Catalog():
         mt_cols = ('mt_self', 'mt_other', 'mt_cross', 'mt_multi_self', 'mt_multi_other')
         out = self(name, **kwargs_info,
             **{k:data[v] for k, v in columns.items()
-                if k not in mt_cols})
+                if k.lower() not in mt_cols})
         # matching cols
         for k, v in columns.items():
-            if k in mt_cols: # matching cols
+            kl = k.lower()
+            if kl in mt_cols: # matching cols
                 col = np.array(data[v], dtype=str)
-                if k in ('mt_self', 'mt_other', 'mt_cross'):
-                    out[k] = np.array(col, dtype=np.ndarray)
-                    out[k][out[k]==''] = None
-                if k in ('mt_multi_self', 'mt_multi_other'):
-                    out[k] = [c.split(',') if len(c)>0 else [] for c in col]
+                if kl in ('mt_self', 'mt_other', 'mt_cross'):
+                    out[kl] = np.array(col, dtype=np.ndarray)
+                    out[kl][out[kl]==''] = None
+                if kl in ('mt_multi_self', 'mt_multi_other'):
+                    out[kl] = [c.split(',') if len(c)>0 else [] for c in col]
         return out
     @classmethod
     def read(self, filename, name=None, **kwargs):
