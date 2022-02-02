@@ -302,22 +302,6 @@ class Catalog():
             else:
                 out[col] = self[col]
         out.write(filename, overwrite=overwrite)
-    def _fmt_loaded_mt(self):
-        """
-        Format matching columns read from file.
-        """
-        for col in self.colnames:
-            if col in ('mt_self', 'mt_other'):
-                self[col] = np.array(self[col], dtype=np.ndarray)
-                in_vals = np.array(self[col], dtype=str)
-                none_vals = in_vals==''
-                self[col][none_vals] = None
-                self[col][~none_vals] = in_vals[~none_vals]
-            if col in ('mt_multi_self', 'mt_multi_other'):
-                self[col] = np.array(self[col], dtype=np.ndarray)
-                for i, c in enumerate(self[col]):
-                    self[col][i] = c.split(',') if len(c)>0 else []
-
     @classmethod
     def _read(self, data, name=None, **kwargs):
         """Does the main execution for reading catalog.
@@ -356,14 +340,20 @@ class Catalog():
         # Missing cols
         data._check_cols(columns.values())
         # out data
-        mt_cols = ('mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other')
+        mt_cols = ('mt_self', 'mt_other', 'mt_cross', 'mt_multi_self', 'mt_multi_other')
         out = self(name, **kwargs_info,
             **{k:data[v] for k, v in columns.items()
-                if k not in mt_cols})
+                if k.lower() not in mt_cols})
+        # matching cols
         for k, v in columns.items():
-            if k in mt_cols: # matching cols
-                out[k] = np.array(data[v], dtype=str)
-        out._fmt_loaded_mt()
+            kl = k.lower()
+            if kl in mt_cols: # matching cols
+                col = np.array(data[v], dtype=str)
+                if kl in ('mt_self', 'mt_other', 'mt_cross'):
+                    out[kl] = np.array(col, dtype=np.ndarray)
+                    out[kl][out[kl]==''] = None
+                if kl in ('mt_multi_self', 'mt_multi_other'):
+                    out[kl] = [c.split(',') if len(c)>0 else [] for c in col]
         return out
     @classmethod
     def read(self, filename, name=None, **kwargs):
