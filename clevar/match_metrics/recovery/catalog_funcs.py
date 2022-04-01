@@ -410,9 +410,9 @@ def _plot_fscore_base(pltfunc, cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins
 
 def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
                 cat2, cat2_col1, cat2_col2, cat2_bins1, cat2_bins2,
-                matching_type, beta=1, pref='cat1',
+                matching_type, beta=1, pref='cat1', par_order=(0, 1, 2, 3),
                 cat1_mask=None, cat1_mask_unmatched=None, cat2_mask=None, cat2_mask_unmatched=None,
-                xlabel=None, ylabel=None, scale1='linear', **kwargs):
+                xlabel=None, ylabel=None, xscale='linear', **kwargs):
     """
     Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
 
@@ -433,6 +433,12 @@ def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
+    beta: float
+        Additional recall weight in f-score
+    pref: str
+        Peference to which recovery rate beta is applied, must be cat1 or cat2.
+    par_order: list, bool
+        It transposes quantities used, must be a percolation of (0, 1, 2, 3).
     cat1_mask: array
         Mask of unwanted clusters of catalog 1.
     cat1_mask_unmatched: array
@@ -450,8 +456,8 @@ def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
         Label of component 1. Default is col1.
     ylabel: str
         Label of recovery rate.
-    scale1: str
-        Scale of col 1 component
+    xscale: str
+        Scale of x axis.
     plt_kwargs: dict
         Additional arguments for pylab.plot
     fig_kwargs: dict
@@ -488,12 +494,17 @@ def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
         'cat1_val2_label':cat1.labels[cat1_col2],
         'cat2_val1_label':cat2.labels[cat2_col1],
         'cat2_val2_label':cat2.labels[cat2_col2],
+        'cat1_mask':cat1_mask,
+        'cat1_mask_unmatched':cat1_mask_unmatched,
+        'cat2_mask':cat2_mask,
+        'cat2_mask_unmatched':cat2_mask_unmatched,
     }
     kwargs_.update(kwargs)
     info = _plot_fscore_base(array_funcs.plot_fscore,
                              cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
                              cat2, cat2_col1, cat2_col2, cat2_bins1, cat2_bins2,
-                             matching_type, beta=beta, pref=pref, **kwargs_)
+                             matching_type, beta=beta, pref=pref, par_order=par_order,
+                             **kwargs_)
     if xlabel:
         for ax in info['axes'][-1]:
             ax.set_xlabel(xlabel)
@@ -501,6 +512,6 @@ def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
         for ax in info['axes'][:, 0]:
             ax.set_ylabel(ylabel)
     for ax in info['axes'].flatten():
-        ax.set_xscale(scale1)
+        ax.set_xscale(xscale)
         ax.set_ylim(-.01, 1.05)
     return info
