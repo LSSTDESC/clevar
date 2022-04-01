@@ -362,8 +362,8 @@ def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=
 
 def _plot_fscore_base(pltfunc, cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
                       cat2, cat2_col1, cat2_col2, cat2_bins1, cat2_bins2, matching_type,
-                      mask1=None, mask2=None, mask_unmatched1=None, mask_unmatched2=None,
-                      **kwargs):
+                      cat1_mask=None, cat1_mask_unmatched=None, cat2_mask=None,
+                      cat2_mask_unmatched=None, **kwargs):
     """
     Adapts local function to use a ArrayFuncs function.
 
@@ -380,10 +380,14 @@ def _plot_fscore_base(pltfunc, cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
-    mask: array
-        Mask of unwanted clusters
-    mask_unmatched: array
-        Mask of unwanted unmatched clusters (ex: out of footprint)
+    cat1_mask: array
+        Mask of unwanted clusters of catalog 1.
+    cat1_mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint) of catalog 1.
+    cat2_mask: array
+        Mask of unwanted clusters of catalog 2.
+    cat2_mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint) of catalog 2.
     **kwargs:
         Additional arguments to be passed to pltfunc
 
@@ -391,8 +395,8 @@ def _plot_fscore_base(pltfunc, cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins
     -------
     Same as pltfunc
     """
-    c1_mask, c1_is_matched = _rec_masks(cat1, matching_type, mask1, mask_unmatched1)
-    c2_mask, c2_is_matched = _rec_masks(cat2, matching_type, mask2, mask_unmatched2)
+    c1_mask, c1_is_matched = _rec_masks(cat1, matching_type, cat1_mask, cat1_mask_unmatched)
+    c2_mask, c2_is_matched = _rec_masks(cat2, matching_type, cat2_mask, cat2_mask_unmatched)
     # make sure bins stay consistent regardless of mask
     c1_edges1, c1_edges2 = np.histogram2d(cat1[cat1_col1], cat1[cat1_col2],
                                           bins=(cat1_bins1, cat1_bins2))[1:]
@@ -406,33 +410,42 @@ def _plot_fscore_base(pltfunc, cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins
 
 def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
                 cat2, cat2_col1, cat2_col2, cat2_bins1, cat2_bins2,
-                matching_type, beta=1, pref='cat1', xlabel=None, ylabel=None,
-                scale1='linear', **kwargs):
+                matching_type, beta=1, pref='cat1',
+                cat1_mask=None, cat1_mask_unmatched=None, cat2_mask=None, cat2_mask_unmatched=None,
+                xlabel=None, ylabel=None, scale1='linear', **kwargs):
     """
     Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
 
     Parameters
     ----------
-    cat: clevar.ClCatalog
+    cat1: clevar.ClCatalog
         ClCatalog with matching information
-    col1, col2: str
-        Names of columns 1 and 2.
-    bins1, bins2: array, int
-        Bins for components 1 and 2.
+    cat1_col1, cat1_col2: str
+        Names of columns 1 and 2 of catalog 1.
+    cat1_bins1, cat1_bins2: array, int
+        Bins for components 1 and 2 of catalog 1.
+    cat2: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2_col1, cat2_col2: str
+        Names of columns 1 and 2 of catalog 2.
+    cat2_bins1, cat2_bins2: array, int
+        Bins for components 1 and 2 of catalog 2.
     matching_type: str
         Type of matching to be considered. Must be in:
         'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
-    mask: array
-        Mask of unwanted clusters
-    mask_unmatched: array
-        Mask of unwanted unmatched clusters (ex: out of footprint)
+    cat1_mask: array
+        Mask of unwanted clusters of catalog 1.
+    cat1_mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint) of catalog 1.
+    cat2_mask: array
+        Mask of unwanted clusters of catalog 2.
+    cat2_mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint) of catalog 2.
 
     Other parameters
     ----------------
     shape: str
         Shape of the lines. Can be steps or line.
-    ax: matplotlib.axes
-        Ax to add plot
     xlabel: str
         Label of component 1. Default is col1.
     ylabel: str
@@ -441,39 +454,52 @@ def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
         Scale of col 1 component
     plt_kwargs: dict
         Additional arguments for pylab.plot
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
-    add_legend: bool
-        Add legend of bins
-    legend_format: function
-        Function to format the values of the bins in legend
     legend_kwargs: dict
         Additional arguments for pylab.legend
+    cat1_val1_label, cat1_val2_label: str
+        Labels for quantities 1 and 2 of catalog 1.
+    cat2_val1_label, cat2_val2_label: str
+        Labels for quantities 1 and 2 of catalog 2.
+    cat1_datalabel1_format, cat1_datalabel2_format: function
+        Function to format the values of labels for catalog 1.
+    cat2_datalabel1_format, cat2_datalabel2_format: function
+        Function to format the values of labels for catalog 2.
 
     Returns
     -------
     info: dict
         Information of data in the plots, it contains the sections:
 
-            * `ax`: ax used in the plot.
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
             * `data`: Binned data used in the plot. It has the sections:
 
-                * `recovery`: Recovery rate binned with (bin1, bin2).\
-                bins where no cluster was found have nan value.
-                * `edges1`: The bin edges along the first dimension.
-                * `edges2`: The bin edges along the second dimension.
-                * `counts`: Counts of all clusters in bins.
-                * `matched`: Counts of matched clusters in bins.
+                * `fscore`: F-n score binned with (cat2_bins1, cat2_bins2, cat1_bins1, cat1_bins2).
+                * `cat1`: Dictionary with recovery rate of catalog 1, see get_recovery_rate.
+                * `cat2`: Dictionary with recovery rate of catalog 2, see get_recovery_rate.
     """
+    kwargs_ = {
+        'cat1_val1_label':cat1.labels[cat1_col1],
+        'cat1_val2_label':cat1.labels[cat1_col2],
+        'cat2_val1_label':cat2.labels[cat2_col1],
+        'cat2_val2_label':cat2.labels[cat2_col2],
+    }
+    kwargs_.update(kwargs)
     info = _plot_fscore_base(array_funcs.plot_fscore,
                              cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
                              cat2, cat2_col1, cat2_col2, cat2_bins1, cat2_bins2,
-                             matching_type, beta=beta, pref=pref, **kwargs)
-    for ax in info['axes'][-1]:
-        ax.set_xlabel(xlabel if xlabel else f'${cat1.labels[cat1_col1]}$')
-    for ax in info['axes'][:, 0]:
-        ax.set_ylabel(ylabel if ylabel else f'$F_{beta}$ score')
+                             matching_type, beta=beta, pref=pref, **kwargs_)
+    if xlabel:
+        for ax in info['axes'][-1]:
+            ax.set_xlabel(xlabel)
+    if ylabel:
+        for ax in info['axes'][:, 0]:
+            ax.set_ylabel(ylabel)
     for ax in info['axes'].flatten():
         ax.set_xscale(scale1)
         ax.set_ylim(-.01, 1.05)
