@@ -485,7 +485,9 @@ def plot_fscore(cat1_val1, cat1_val2, cat1_bins1, cat1_bins2, cat1_is_matched,
                                legend_kwargs=legend_kwargs)
             add_legend = False
     for ax in info['axes'][:,0]:
-        ax.set_ylabel('$F_{1}$ score')
+        ax.set_ylabel(f'$F_{{{beta}}}$ score')
+    for ax in info['axes'][-1,:]:
+        ax.set_xlabel(f'${labels[0]}$')
     ph.add_panel_bin_label(
         info['axes'], edges[3][:-1], edges[3][1:],
         prefix='' if labels[3] is None else f'{labels[3]}: ',
