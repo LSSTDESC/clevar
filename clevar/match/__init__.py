@@ -25,7 +25,18 @@ def get_matched_pairs(cat1, cat2, matching_type, mask1=None, mask2=None):
     mask = mask if mask2 is None else mask*mask2[mt_mask2]
     mt_mask1[mt_mask1] *= mask
     mt_mask2 = mt_mask2[mask]
-    return cat1[mt_mask1], cat2[mt_mask2]
+    mt1, mt2 = cat1[mt_mask1], cat2[mt_mask2]
+    if mt1.members is not None:
+        if 'match' in mt1.members.colnames:
+            mt1.members['in_mt_sample'] = [
+                any(id2 in mt2.id_dict for id2 in mem1['match'])
+                for mem1 in mt1.members]
+    if mt2.members is not None:
+        if 'match' in mt2.members.colnames:
+            mt2.members['in_mt_sample'] = [
+                any(id1 in mt1.id_dict for id1 in mem2['match'])
+                for mem2 in mt2.members]
+    return mt1, mt2
 
 def get_matched_masks(cat1, cat2, matching_type):
     """

@@ -163,6 +163,17 @@ class MembershipMatch(Match):
             self._match_members_by_id(mem1, mem2)
         elif method=='angular_distance':
             self._match_members_by_ang(mem1, mem2, radius, cosmo)
+        # Add id_cluster if found in other catalog
+        mem1['match'] = None
+        mem2['match'] = None
+        for i in range(mem1.size):
+            mem1['match'][i] = []
+        for i in range(mem2.size):
+            mem2['match'][i] = []
+        for ind1, ind2 in self.matched_mems:
+            mem1['match'][ind1].append(mem2['id_cluster'][ind2])
+            mem2['match'][ind2].append(mem1['id_cluster'][ind1])
+
     def _match_members_by_id(self, mem1, mem2):
         """
         Match member catalogs by id.
