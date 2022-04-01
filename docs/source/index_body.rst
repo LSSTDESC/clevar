@@ -2,7 +2,7 @@
 ClEvaR Documentation
 ********************
 
-The Cluster Evalutaion Resources (ClEvaR) is a Python library
+The Cluster Evaluation Resources (ClEvaR) is a Python library
 to validate cluster detection from catalog comparisons.
 Its main goal is to provide a framework for easy matching of catalogs,
 and compute the main metrics and scaling relations.

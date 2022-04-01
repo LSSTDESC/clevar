@@ -7,7 +7,8 @@ from numpy.testing import assert_raises, assert_allclose, assert_equal
 from clevar.catalog import ClCatalog, MemCatalog
 from clevar.match.parent import Match
 from clevar.match import ProximityMatch, MembershipMatch, \
-    output_catalog_with_matching, output_matched_catalog
+    output_catalog_with_matching, output_matched_catalog, \
+    get_matched_pairs
 
 def test_parent():
     mt = Match()
@@ -319,6 +320,10 @@ def test_membership():
     cmt = [None, 'CL1', 'CL2', None, None]
     _test_mt_results(c1, multi_self=mmt1, self=smt, cross=cmt, other=omt)
     _test_mt_results(c2, multi_self=mmt2, self=omt[:-1], cross=cmt[:-1], other=smt[:-1])
+    # Test in_mt_sample col
+    mt1, mt2 = get_matched_pairs(c1, c2, 'cross')
+    assert_equal(mt1.members['in_mt_sample'].all(), True)
+    assert_equal(mt2.members['in_mt_sample'].all(), True)
     # Check save and load matching
     mt.save_matches(c1, c2, out_dir='temp', overwrite=True)
     c1_test, c2_test = get_test_data_mem()[:2]
