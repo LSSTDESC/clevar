@@ -335,16 +335,27 @@ def get_fscore(cat1_values1, cat1_values2, cat1_bins1, cat1_bins2, cat1_is_match
                cat2_values1, cat2_values2, cat2_bins1, cat2_bins2, cat2_is_matched,
                beta=1, pref='cat1'):
     """
-    Get recovery rate binned in 2 components
+    Computes fscore
 
     Parameters
     ----------
-    values1, values2: array
-        Component 1 and 2.
-    bins1, bins2: array, int
-        Bins for components 1 and 2.
-    is_matched: array (boolean)
-        Boolean array indicating matching status
+    cat1_values1, cat2_values2: array
+        Component 1 and 2 of catalog 1.
+    cat1_bins1, cat1_bins2: array, int
+        Bins for components 1 and 2 of catalog 1.
+    cat1_is_matched: array (boolean)
+        Boolean array indicating matching status of catalog 1.
+    cat2_values1, cat2_values2: array
+        Component 1 and 2 of catalog 2.
+    cat2_bins1, cat2_bins2: array, int
+        Bins for components 1 and 2 of catalog 2.
+    cat2_is_matched: array (boolean)
+        Boolean array indicating matching status of catalog 2.
+    beta: float
+        Additional recall weight in f-score
+    pref: str
+        Peference to which recovery rate beta is applied, must be cat1 or cat2.
+
 
     Returns
     -------
