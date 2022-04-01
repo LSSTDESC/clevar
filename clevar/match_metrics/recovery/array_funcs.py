@@ -5,7 +5,7 @@ Main recovery functions using arrays.
 import numpy as np
 import healpy as hp
 
-from ...utils import none_val
+from ...utils import none_val, index_list
 from .. import plot_helper as ph
 from ..plot_helper import plt
 
@@ -360,14 +360,11 @@ def get_fscore(cat1_values1, cat1_values2, cat1_bins1, cat1_bins2, cat1_is_match
     Returns
     -------
     dict
-        Binned recovery rate. Its sections are:
+        Binned fscore and recovery rate. Its sections are:
 
-            * `recovery`: Recovery rate binned with (bin1, bin2).\
-            bins where no cluster was found have nan value.
-            * `edges1`: The bin edges along the first dimension.
-            * `edges2`: The bin edges along the second dimension.
-            * `counts`: Counts of all clusters in bins.
-            * `matched`: Counts of matched clusters in bins.
+            * `fscore`: F-n score binned with (cat2_bins1, cat2_bins2, cat1_bins1, cat1_bins2).
+            * `cat1`: Dictionary with recovery rate of catalog 1, see get_recovery_rate for info.
+            * `cat2`: Dictionary with recovery rate of catalog 2, see get_recovery_rate for info.
     """
     rec1 = get_recovery_rate(
         cat1_values1, cat1_values2, cat1_bins1, cat1_bins2, cat1_is_matched)
@@ -385,46 +382,61 @@ def get_fscore(cat1_values1, cat1_values2, cat1_bins1, cat1_bins2, cat1_is_match
         fscore /= (r1_grid+beta2*r2_grid)
     else:
         raise ValueError(f'pref (={pref}) must be cat1 or cat2')
-    fscore = fscore.reshape(*rec2['recovery'].shape, *rec1['recovery'].shape)
+    return {'fscore': fscore.reshape(*rec2['recovery'].shape, *rec1['recovery'].shape),
+            'cat1':rec1, 'cat2':rec2}
 
-    out = {'fscore': fscore}
-    out.update({f'cat1_{k}':v for k, v in rec1.items()})
-    out.update({f'cat2_{k}':v for k, v in rec2.items()})
-    return out
-
-def plot_fscore(cat1_values1, cat1_values2, cat1_bins1, cat1_bins2, cat1_is_matched,
-                cat2_values1, cat2_values2, cat2_bins1, cat2_bins2, cat2_is_matched,
-                beta=1, pref='cat1', shape='steps', plt_kwargs={}, lines_kwargs_list=None,
-                fig_kwargs={}, add_label=True, add_legend=True, legend_format=lambda v: v,
-                legend_kwargs={}, label_format1=lambda v: v, label_format2=lambda v: v,
-                cat2_values1_label=None, cat2_values2_label=None):
+def plot_fscore(cat1_val1, cat1_val2, cat1_bins1, cat1_bins2, cat1_is_matched,
+                cat2_val1, cat2_val2, cat2_bins1, cat2_bins2, cat2_is_matched,
+                beta=1, pref='cat1', par_order=(0, 1, 2, 3), shape='steps', plt_kwargs={},
+                lines_kwargs_list=None, fig_kwargs={}, legend_kwargs={},
+                cat1_val1_label=None, cat1_val2_label=None,
+                cat2_val1_label=None, cat2_val2_label=None,
+                cat1_datalabel1_format=lambda v: v, cat1_datalabel2_format=lambda v: v,
+                cat2_datalabel1_format=lambda v: v, cat2_datalabel2_format=lambda v: v,
+                ):
     """
     Plot recovery rate as lines in panels, with each line binned by bins1
     and each panel is based on the data inside a bins2 bin.
 
     Parameters
     ----------
-    values1, values2: array
-        Component 1 and 2.
-    bins1, bins2: array, int
-        Bins for components 1 and 2.
-    is_matched: array (boolean)
-        Boolean array indicating matching status
+    cat1_values1, cat2_values2: array
+        Component 1 and 2 of catalog 1.
+    cat1_bins1, cat1_bins2: array, int
+        Bins for components 1 and 2 of catalog 1.
+    cat1_is_matched: array (boolean)
+        Boolean array indicating matching status of catalog 1.
+    cat2_values1, cat2_values2: array
+        Component 1 and 2 of catalog 2.
+    cat2_bins1, cat2_bins2: array, int
+        Bins for components 1 and 2 of catalog 2.
+    cat2_is_matched: array (boolean)
+        Boolean array indicating matching status of catalog 2.
+    beta: float
+        Additional recall weight in f-score
+    pref: str
+        Peference to which recovery rate beta is applied, must be cat1 or cat2.
+    par_order: list, bool
+        It transposes quantities used, must be a percolation of (0, 1, 2, 3).
     shape: str
         Shape of the lines. Can be steps or line.
-    ax: matplotlib.axes
-        Ax to add plot
     plt_kwargs: dict
         Additional arguments for pylab.plot
-    panel_kwargs_list: list, None
-        List of additional arguments for plotting each panel (using pylab.plot).
+    lines_kwargs_list: list, None
+        List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
     fig_kwargs: dict
         Additional arguments for plt.subplots
-    add_label: bool
-        Add bin label to panel
-    label_format: function
-        Function to format the values of the bins
+    legend_kwargs: dict
+        Additional arguments for pylab.legend
+    cat1_val1_label, cat1_val2_label: str
+        Labels for quantities 1 and 2 of catalog 1.
+    cat2_val1_label, cat2_val2_label: str
+        Labels for quantities 1 and 2 of catalog 2.
+    cat1_datalabel1_format, cat1_datalabel2_format: function
+        Function to format the values of labels for catalog 1.
+    cat2_datalabel1_format, cat2_datalabel2_format: function
+        Function to format the values of labels for catalog 2.
 
 
     Returns
@@ -436,45 +448,51 @@ def plot_fscore(cat1_values1, cat1_values2, cat1_bins1, cat1_bins2, cat1_is_matc
             * `axes`: `matplotlib.axes` used in the plot.
             * `data`: Binned data used in the plot. It has the sections:
 
-                * `recovery`: Recovery rate binned with (bin1, bin2).\
-                bins where no cluster was found have nan value.
-                * `edges1`: The bin edges along the first dimension.
-                * `edges2`: The bin edges along the second dimension.
-                * `counts`: Counts of all clusters in bins.
-                * `matched`: Counts of matched clusters in bins.
+                * `fscore`: F-n score binned with (cat2_bins1, cat2_bins2, cat1_bins1, cat1_bins2).
+                * `cat1`: Dictionary with recovery rate of catalog 1, see get_recovery_rate.
+                * `cat2`: Dictionary with recovery rate of catalog 2, see get_recovery_rate.
     """
     info = {'data': get_fscore(
-        cat1_values1, cat1_values2, cat1_bins1, cat1_bins2, cat1_is_matched,
-        cat2_values1, cat2_values2, cat2_bins1, cat2_bins2, cat2_is_matched,
+        cat1_val1, cat1_val2, cat1_bins1, cat1_bins2, cat1_is_matched,
+        cat2_val1, cat2_val2, cat2_bins1, cat2_bins2, cat2_is_matched,
         beta=beta, pref=pref)}
-    ni = info['data']['cat2_edges1'].size-1
-    nj = info['data']['cat2_edges2'].size-1
+
+    # Order of parameters
+    edges = index_list([info['data']['cat1']['edges1'], info['data']['cat1']['edges2'],
+                        info['data']['cat2']['edges1'], info['data']['cat2']['edges2']],
+                         par_order)
+    labels = index_list([cat1_val1_label, cat1_val2_label,
+                         cat2_val1_label, cat2_val2_label], par_order)
+    label_formats = index_list(
+        [cat1_datalabel1_format, cat1_datalabel2_format,
+         cat2_datalabel1_format, cat2_datalabel2_format], par_order)
+    tr_order = index_list([2, 3, 0, 1], index_list(par_order, [2, 3, 0, 1]))
+
+    ni = edges[2].size-1
+    nj = edges[3].size-1
     fig_kwargs_ = dict(sharex=True, sharey=True, figsize=(8, 6))
     fig_kwargs_.update(fig_kwargs)
     info.update({key: value for key, value in zip(
         ('fig', 'axes'), plt.subplots(ni, nj, **fig_kwargs_))})
-    add_legend_ = add_legend
-    for ax, fscore in zip(
-            info['axes'].flatten(),
-            info['data']['fscore'].reshape(ni*nj, *info['data']['cat1_recovery'].shape),
-        ):
-        ph.add_grid(ax)
-        ph.plot_histograms(fscore.T, info['data']['cat1_edges1'], info['data']['cat1_edges2'],
-                           ax=ax, shape=shape, plt_kwargs=plt_kwargs,
-                           lines_kwargs_list=lines_kwargs_list,
-                           add_legend=add_legend_, legend_format=legend_format,
-                           legend_kwargs=legend_kwargs)
-        add_legend_ = False
+    add_legend = True
+    for axl, fscl in zip(info['axes'], info['data']['fscore'].transpose(*tr_order)):
+        for ax, fsc in zip(axl, fscl):
+            ph.add_grid(ax)
+            ph.plot_histograms(fsc.T, edges[0], edges[1],
+                               ax=ax, shape=shape, plt_kwargs=plt_kwargs,
+                               lines_kwargs_list=lines_kwargs_list,
+                               add_legend=add_legend, legend_format=label_formats[1],
+                               legend_kwargs=legend_kwargs)
+            add_legend = False
     for ax in info['axes'][:,0]:
         ax.set_ylabel('$F_{1}$ score')
-    if add_label:
-        ph.add_panel_bin_label(
-            info['axes'], info['data']['cat2_edges2'][:-1], info['data']['cat2_edges2'][1:],
-            prefix='' if cat2_values2_label is None else f'{cat2_values2_label}: ',
-            format_func=label_format2)
-        ph.add_panel_bin_label(
-            info['axes'][:,-1], info['data']['cat2_edges1'][:-1], info['data']['cat2_edges1'][1:],
-            prefix='' if cat2_values1_label is None else f'{cat2_values1_label}: ',
-            format_func=label_format1, position='right')
+    ph.add_panel_bin_label(
+        info['axes'], edges[3][:-1], edges[3][1:],
+        prefix='' if labels[3] is None else f'{labels[3]}: ',
+        format_func=label_formats[3])
+    ph.add_panel_bin_label(
+        info['axes'][:,-1], edges[2][:-1], edges[2][1:],
+        prefix='' if labels[2] is None else f'{labels[2]}: ',
+        format_func=label_formats[2], position='right')
 
     return info
