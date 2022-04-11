@@ -419,11 +419,11 @@ class Catalog():
                 self[col] = mt[col]
         self.cross_match()
         print(f' * Total objects:    {self.size:,}')
-        print(f' * multiple (self):  {len(self[veclen(self["mt_multi_self"])>0]):,}')
-        print(f' * multiple (other): {len(self[veclen(self["mt_multi_other"])>0]):,}')
-        print(f' * unique (self):    {len(self[self["mt_self"]!=None]):,}')
-        print(f' * unique (other):   {len(self[self["mt_other"]!=None]):,}')
-        print(f' * cross:            {len(self[self["mt_cross"]!=None]):,}')
+        print(f' * multiple (self):  {(veclen(self["mt_multi_self"])>0).sum():,}')
+        print(f' * multiple (other): {(veclen(self["mt_multi_other"])>0).sum():,}')
+        print(f' * unique (self):    {(self["mt_self"]!=None).sum():,}')
+        print(f' * unique (other):   {(self["mt_other"]!=None).sum():,}')
+        print(f' * cross:            {(self["mt_cross"]!=None).sum():,}')
     def save_footprint_quantities(self, filename, overwrite=False):
         """
         Saves the matching results of one catalog
