@@ -520,12 +520,12 @@ class ClCatalog(Catalog):
         if isinstance(item, (str, int, np.int64)):
             return data
         else:
-            mt_input = self.mt_input
+            mt_input = None
             members = self.members
             # Check if item is not a  list of strings
             if not any(isinstance(x, str) for x in item):
-                if mt_input is not None:
-                    mt_input = mt_input[item]
+                if self.mt_input is not None:
+                    mt_input = self.mt_input[item]
                 if members is not None and isinstance(item, (list, np.ndarray)):
                     cl_mask = np.zeros(self.size, dtype=bool)
                     cl_mask[item] = True
