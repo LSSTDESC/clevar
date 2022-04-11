@@ -523,7 +523,7 @@ class ClCatalog(Catalog):
             mt_input = None
             members = self.members
             # Check if item is not a  list of strings
-            if not any(isinstance(x, str) for x in item):
+            if not (isinstance(item, (tuple, list)) and any(isinstance(x, str) for x in item)):
                 if self.mt_input is not None:
                     mt_input = self.mt_input[item]
                 if members is not None and isinstance(item, (list, np.ndarray)):
