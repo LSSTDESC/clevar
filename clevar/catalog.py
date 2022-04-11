@@ -158,7 +158,8 @@ class Catalog():
         for k, v in columns.items():
             if k!='id':
                 self[k] = v
-        if 'ra' in self.data.colnames and 'dec' in self.data.colnames:
+        if ('ra' in self.data.colnames and 'dec' in self.data.colnames) and \
+                not 'SkyCoord' in self.data.colnames:
             self['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
         self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
     def _init_match_vals(self, overwrite=False):
