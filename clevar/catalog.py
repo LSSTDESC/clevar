@@ -348,12 +348,14 @@ class Catalog():
         for k, v in columns.items():
             kl = k.lower()
             if kl in mt_cols: # matching cols
+                out[kl] = None
                 col = np.array(data[v], dtype=str)
                 if kl in ('mt_self', 'mt_other', 'mt_cross'):
                     out[kl] = np.array(col, dtype=np.ndarray)
                     out[kl][out[kl]==''] = None
                 if kl in ('mt_multi_self', 'mt_multi_other'):
-                    out[kl] = [c.split(',') if len(c)>0 else [] for c in col]
+                    for i, c in enumerate(col):
+                        out[kl][i] = c.split(',') if len(c)>0 else []
         return out
     @classmethod
     def read(self, filename, name=None, **kwargs):
