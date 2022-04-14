@@ -530,6 +530,9 @@ class ClCatalog(Catalog):
                     cl_mask = np.zeros(self.size, dtype=bool)
                     cl_mask[item] = True
                     members = members[cl_mask[members['ind_cl']]]
+            else:
+                mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item]
+                data = self.data[(*item, *mt_cols)]
             # generate catalog
             return ClCatalog(name=self.name, labels=self.labels, radius_unit=self.radius_unit,
                              mt_input=mt_input, members=members, members_warning=False,
@@ -667,7 +670,15 @@ class MemCatalog(Catalog):
         Catalog.__init__(self, name, **kwargs)
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
-        Catalog._add_values(self, **columns)
+        # always put id, id_cluster columns first
+        cols_use, cols_bkp = {}, {}
+        cols_bkp.update(columns)
+        if 'id' in cols_bkp:
+            cols_use['id'] = cols_bkp.pop('id')
+        cols_use['id_cluster'] = cols_bkp.pop('id_cluster')
+        cols_use.update(cols_bkp)
+        # create catalog
+        Catalog._add_values(self, **cols_use)
         self['id_cluster'] = np.array(columns['id_cluster'], dtype=str)
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
@@ -676,6 +687,9 @@ class MemCatalog(Catalog):
         data = self.data[item]
         if isinstance(item, (str, int, np.int64)):
             return data
-        else:
-            return MemCatalog(name=self.name, labels=self.labels,
-                              **{c:data[c] for c in data.colnames})
+        elif isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+            main_cols = [c for c in ('id', 'id_cluster') if c not in item]
+            mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item]
+            data = self.data[(*item, *main_cols, *mt_cols)]
+        return MemCatalog(name=self.name, labels=self.labels,
+                          **{c:data[c] for c in data.colnames})
