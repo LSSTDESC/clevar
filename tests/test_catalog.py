@@ -105,6 +105,10 @@ def test_memcatalog():
         assert all(c[f'mt_{n}']==None)
         assert_equal(c[f'mt_multi_{n}'], empty_list)
     c.cross_match()
+    # test mt col remains
+    mt_self = [0, 1]
+    c['mt_self'] = mt_self
+    assert_equal(c['dec', ]['mt_self'], mt_self)
     assert all(c['mt_cross']==None)
     # Check resolve multiple
     c['mt_multi_self'][0] = ['x', 'x']
