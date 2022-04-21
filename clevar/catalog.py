@@ -104,8 +104,14 @@ class Catalog():
         Dictionary of indicies given the object id
     labels: dict
         Labels of data columns for plots
+    colnames: list
+        List of column names
     """
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, labels={}, **kwargs):
+        if not isinstance(name, str):
+            raise ValueError('name must be str.')
+        if not isinstance(labels, dict):
+            raise ValueError('labels must be dict.')
         self.name = name
         self.data = ClData()
         self.mt_input = None
@@ -115,6 +121,7 @@ class Catalog():
         self.colnames = []
         if len(kwargs)>0:
             self._add_values(**kwargs)
+        self.labels.update(labels)
     def __setitem__(self, item, value):
         if isinstance(item, str):
             if item[:3]!='mt_':
@@ -139,7 +146,6 @@ class Catalog():
         return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
-        self.labels.update(columns.pop('labels', {}))
         # Check all columns have same size
         names = [n for n in columns]
         sizes = [len(v) for v in columns.values()]
@@ -472,19 +478,19 @@ class ClCatalog(Catalog):
         Unit of the radius column
     labels: dict
         Labels of data columns for plots
+    colnames: list
+        List of column names
     members: MemCatalog
         Catalog of members associated to the clusters
     leftover_members: MemCatalog
         Catalog of members not associated to the clusters
     """
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, labels={}, radius_unit=None, members=None, **kwargs):
         self.members = None
         self.leftover_members = None
-        radius_unit = kwargs.pop('radius_unit', None)
         mt_input = kwargs.pop('mt_input', None)
-        members = kwargs.pop('members', None)
         members_warning = kwargs.pop('members_warning', True)
-        Catalog.__init__(self, name, **kwargs)
+        Catalog.__init__(self, name, labels=labels, **kwargs)
         self.radius_unit = radius_unit
         self.mt_input = mt_input
         if members is not None:
@@ -508,8 +514,9 @@ class ClCatalog(Catalog):
                 '''</tr></thread>''')
             )
             table='<thead><tr><th'.join(table)
-
-        return f'<b>{self.name}</b><br>Radius unit: {self.radius_unit}<br>{table}'
+        return (f'<b>{self.name}</b>'
+                f'<br><b>Radius unit:</b> {self.radius_unit}'
+                f'<br>{table}')
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
@@ -663,11 +670,13 @@ class MemCatalog(Catalog):
         Dictionary of indicies given the member id, returns list allowing for repeated ids.
     labels: dict
         Labels of data columns for plots
+    colnames: list
+        List of column names
     """
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, labels={}, **kwargs):
         if all('id_cluster'!=n.lower() for n in kwargs):
             raise ValueError("Members catalog must have a 'id_cluster' column!")
-        Catalog.__init__(self, name, **kwargs)
+        Catalog.__init__(self, name, labels=labels, **kwargs)
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # always put id, id_cluster columns first
