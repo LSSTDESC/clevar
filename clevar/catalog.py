@@ -158,7 +158,8 @@ class Catalog():
         for k, v in columns.items():
             if k!='id':
                 self[k] = v
-        if 'ra' in self.data.colnames and 'dec' in self.data.colnames:
+        if ('ra' in self.data.colnames and 'dec' in self.data.colnames) and \
+                not 'SkyCoord' in self.data.colnames:
             self['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
         self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
     def _init_match_vals(self, overwrite=False):
@@ -418,11 +419,11 @@ class Catalog():
                 self[col] = mt[col]
         self.cross_match()
         print(f' * Total objects:    {self.size:,}')
-        print(f' * multiple (self):  {len(self[veclen(self["mt_multi_self"])>0]):,}')
-        print(f' * multiple (other): {len(self[veclen(self["mt_multi_other"])>0]):,}')
-        print(f' * unique (self):    {len(self[self["mt_self"]!=None]):,}')
-        print(f' * unique (other):   {len(self[self["mt_other"]!=None]):,}')
-        print(f' * cross:            {len(self[self["mt_cross"]!=None]):,}')
+        print(f' * multiple (self):  {(veclen(self["mt_multi_self"])>0).sum():,}')
+        print(f' * multiple (other): {(veclen(self["mt_multi_other"])>0).sum():,}')
+        print(f' * unique (self):    {(self["mt_self"]!=None).sum():,}')
+        print(f' * unique (other):   {(self["mt_other"]!=None).sum():,}')
+        print(f' * cross:            {(self["mt_cross"]!=None).sum():,}')
     def save_footprint_quantities(self, filename, overwrite=False):
         """
         Saves the matching results of one catalog
@@ -519,16 +520,23 @@ class ClCatalog(Catalog):
         if isinstance(item, (str, int, np.int64)):
             return data
         else:
-            mt_input = self.mt_input
-            if (mt_input is not None and not
-                    (isinstance(item, (tuple, list)) and item
-                    and all(isinstance(x, str) for x in item))):
-                # Check if item is not a tuple or list of strings
-                mt_input = mt_input[item]
-            return ClCatalog(
-                name=self.name, labels=self.labels, radius_unit=self.radius_unit,
-                **{c:data[c] for c in data.colnames},
-                mt_input=mt_input, members=self.members, members_warning=False)
+            mt_input = None
+            members = self.members
+            # Check if item is not a  list of strings
+            if not (isinstance(item, (tuple, list)) and any(isinstance(x, str) for x in item)):
+                if self.mt_input is not None:
+                    mt_input = self.mt_input[item]
+                if members is not None and isinstance(item, (list, np.ndarray)):
+                    cl_mask = np.zeros(self.size, dtype=bool)
+                    cl_mask[item] = True
+                    members = members[cl_mask[members['ind_cl']]]
+            else:
+                mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item]
+                data = self.data[(*item, *mt_cols)]
+            # generate catalog
+            return ClCatalog(name=self.name, labels=self.labels, radius_unit=self.radius_unit,
+                             mt_input=mt_input, members=members, members_warning=False,
+                             **{c:data[c] for c in data.colnames})
     def raw(self):
         """
         Get a copy of the catalog without members.
@@ -662,7 +670,15 @@ class MemCatalog(Catalog):
         Catalog.__init__(self, name, **kwargs)
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
-        Catalog._add_values(self, **columns)
+        # always put id, id_cluster columns first
+        cols_use, cols_bkp = {}, {}
+        cols_bkp.update(columns)
+        if 'id' in cols_bkp:
+            cols_use['id'] = cols_bkp.pop('id')
+        cols_use['id_cluster'] = cols_bkp.pop('id_cluster')
+        cols_use.update(cols_bkp)
+        # create catalog
+        Catalog._add_values(self, **cols_use)
         self['id_cluster'] = np.array(columns['id_cluster'], dtype=str)
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
@@ -671,6 +687,9 @@ class MemCatalog(Catalog):
         data = self.data[item]
         if isinstance(item, (str, int, np.int64)):
             return data
-        else:
-            return MemCatalog(name=self.name, labels=self.labels,
-                              **{c:data[c] for c in data.colnames})
+        elif isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+            main_cols = [c for c in ('id', 'id_cluster') if c not in item]
+            mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item]
+            data = self.data[(*item, *main_cols, *mt_cols)]
+        return MemCatalog(name=self.name, labels=self.labels,
+                          **{c:data[c] for c in data.colnames})
