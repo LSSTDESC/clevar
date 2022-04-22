@@ -432,7 +432,7 @@ class Catalog():
                     out[colname][i] = c.split(',') if len(c)>0 else []
         return out
     @classmethod
-    def read(self, filename, name=None, labels={}, tags={}, full=False):
+    def read(self, filename, name, labels={}, tags={}, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -453,7 +453,7 @@ class Catalog():
             if len(tags)==0:
                 raise KeyError('If full=False, tags must be provided.')
             data._check_cols(tags.values())
-            data = data[tags.values()]
+            data = data[list(tags.values())]
         return self._read(data, name=name, labels=labels, tags=tags)
     @classmethod
     def read_full(self, filename):
@@ -642,7 +642,7 @@ class ClCatalog(Catalog):
             out = self
         return out
     @classmethod
-    def read(self, filename, name=None, labels={}, tags={}, radius_unit=None, full=False):
+    def read(self, filename, name, labels={}, tags={}, radius_unit=None, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -665,7 +665,7 @@ class ClCatalog(Catalog):
             if len(tags)==0:
                 raise KeyError('If full=False, tags must be provided.')
             data._check_cols(tags.values())
-            data = data[tags.values()]
+            data = data[list(tags.values())]
         return self._read(data, name=name, labels=labels, tags=tags, radius_unit=radius_unit)
     def add_members(self, members_consistency=True, members_warning=True,
                     members_catalog=None, **kwargs):
