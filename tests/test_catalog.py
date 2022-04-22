@@ -44,6 +44,7 @@ def test_catalog():
     c_ = Catalog('null')
     assert_raises(TypeError, c_.__setitem__, 'mass', 1)
     assert_raises(TypeError, c_._add_values, data=1)
+    assert_raises(KeyError, c_._add_values, data=[1], mass=[1])
     # Check creation of id col
     with pytest.warns(None) as record:
         c_no_id = Catalog(name='no id', ra=[1, 2])

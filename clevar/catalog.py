@@ -182,8 +182,10 @@ class Catalog():
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         if 'data' in columns:
+            if len(columns)>1:
+                raise KeyError('When data and columns cannot be passed together.')
             if not hasattr(columns['data'], '__getitem__'):
-                raise ValueError('data must be interactable (i. e. have __getitem__ function.)')
+                raise TypeError('data must be interactable (i. e. have __getitem__ function.)')
             data = ClData(columns['data'])
         else:
             # Check all columns have same size
@@ -204,8 +206,9 @@ class Catalog():
         self._add_skycoord()
         self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
     def _create_id(self):
+        id_name = 'id' if self.tags['id']=='id' else f'id ({self.tags["id"]})'
         warnings.warn(
-            f'id({self.tags["id"]}) column missing, additional one is being created.')
+            f'{id_name} column missing, additional one is being created.')
         self[self.tags['id']] = range(self.size)
     def _add_skycoord(self):
         if ('ra' in self.tags and 'dec' in self.tags) and \
@@ -244,7 +247,7 @@ class Catalog():
         if coltag.lower() in [c.lower() for c in self.colnames if c.lower()!=colname.lower()]:
             warnings.warn(
                 f'There is a column with the same name as the tag setup.'
-                f' cat[\'{coltag}\'] calls cat[\'{colname}\'].'
+                f' cat[\'{coltag}\'] calls cat[\'{colname}\'] now.'
                 f' To get \'{coltag}\' column, use cat.data[\'{coltag}\'].'
                 )
         if coltag in self.tags and self.tags.get(coltag, None)!=colname and not skip_warn:
