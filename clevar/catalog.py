@@ -196,10 +196,17 @@ class Catalog():
         return f'{self.name}:\n{self.data.__str__()}'
     def _prt_tags(self):
         return ', '.join([f'{v}({k})' for k, v in self.tags.items()])
+    def _prt_table_tags(self, table):
+        tags_inv = {v:f' ({k})' for k, v in self.tags.items() if k!=v}
+        table_list = table._repr_html_().split('<tr>')
+        new_header = '</th>'.join([c+tags_inv.get(c[4:], '') if c[:4]=='<th>' else c
+                                    for c in table_list[1].split('</th>')])
+        table_list[1] = new_header
+        return '<tr>'.join(table_list)
     def _repr_html_(self):
         return (f'<b>{self.name}</b>'
                 f'<br></b><b>tags:</b> {self._prt_tags()}'
-                f'<br>{self.data._repr_html_()}')
+                f'<br>{self._prt_table_tags(self.data)}')
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # Check all columns have same size
@@ -558,23 +565,20 @@ class ClCatalog(Catalog):
             self.add_members(members_catalog=members,
                              members_warning=members_warning)
     def _repr_html_(self):
-        print_data = ClData()
         show_data_cols = [c for c in self.colnames if c!='SkyCoord']
-        for col in show_data_cols:
-            print_data[col] = self.data[col]
-        table = print_data._repr_html_()
+        print_data = self.data[show_data_cols]
+        table = self._prt_table_tags(print_data)
         if self.mt_input is not None:
             for col in self.mt_input.colnames:
                 print_data[col] = self.mt_input[col]
-            table = print_data._repr_html_()
-            table = table.split('<thead><tr><th')
+            table_list = self._prt_table_tags(print_data).split('<thead><tr><th')
             style = 'text-align:left; background-color:grey; color:white'
-            table.insert(1, (
+            table_list.insert(1, (
                 f''' colspan={len(show_data_cols)}></th>'''
                 f'''<th colspan={len(self.mt_input.colnames)} style='{style}'>mt_input</th>'''
                 '''</tr></thread>''')
             )
-            table='<thead><tr><th'.join(table)
+            table = '<thead><tr><th'.join(table_list)
         return (f'<b>{self.name}</b>'
                 f'<br></b><b>tags:</b> {self._prt_tags()}'
                 f'<br><b>Radius unit:</b> {self.radius_unit}'
