@@ -402,7 +402,7 @@ class Catalog():
                 out[col] = self[col]
         out.write(filename, overwrite=overwrite)
     @classmethod
-    def _read(self, data, name=None, **kwargs):
+    def _read(self, data, read_cols, **kwargs):
         """Does the main execution for reading catalog.
 
         Parameters
@@ -418,44 +418,22 @@ class Catalog():
             the name is used in the Catalog data and the value must
             be the column name in your input file (ex: z='REDSHIFT').
         """
-        columns = {k: v for k, v in kwargs.items()
-            if k not in ('labels', 'tags', 'radius_unit')}
-        if len(columns)==0:
-            raise ValueError('At least one column must be provided.')
-        # Catalog name
-        if name is None:
-            if 'NAME' not in data.meta:
-                raise ValueError('Name not found in file, please provide as argument.')
-            name = data.meta['NAME']
-        # labels and radius unit
-        kwargs_info = {}
-        kwargs_info['labels'] = {k[6:].lower():v for k, v in data.meta.items() if k[:6]=='LABEL_'}
-        kwargs_info['labels'].update(kwargs.get('labels', {}))
-        kwargs_info['tags'] = {k[4:].lower():v for k, v in data.meta.items() if k[:4]=='TAG_'}
-        kwargs_info['tags'].update(kwargs.get('tags', {}))
-        radius_unit = kwargs.get('radius_unit', data.meta.get('RADIUS_UNIT'))
-        kwargs_info.update({} if radius_unit is None else {'radius_unit': radius_unit})
-        # Missing cols
-        data._check_cols(columns.values())
         # out data
         mt_cols = ('mt_self', 'mt_other', 'mt_cross', 'mt_multi_self', 'mt_multi_other')
-        out = self(name, **kwargs_info,
-            **{k:data[v] for k, v in columns.items()
-                if k.lower() not in mt_cols})
+        non_mt_cols = [c for c in read_cols if c.lower() not in mt_cols]
+        out = self(data=data[non_mt_cols], **kwargs)
         # matching cols
-        for k, v in columns.items():
-            kl = k.lower()
-            if kl in mt_cols: # matching cols
-                col = np.array(data[v], dtype=str)
-                if kl in ('mt_self', 'mt_other', 'mt_cross'):
-                    out[kl] = np.array(col, dtype=np.ndarray)
-                    out[kl][out[kl]==''] = None
-                if kl in ('mt_multi_self', 'mt_multi_other'):
-                    out[kl] = [c.split(',') if len(c)>0 else [] for c in col]
+        for colname in [c.lower() for c in read_cols if c.lower() in mt_cols]:
+            col = np.array(data[colname], dtype=str)
+            if colname in ('mt_self', 'mt_other', 'mt_cross'):
+                out[colname] = np.array(col, dtype=np.ndarray)
+                out[colname][out[colname]==''] = None
+            if colname in ('mt_multi_self', 'mt_multi_other'):
+                out[colname] = [c.split(',') if len(c)>0 else [] for c in col]
         return out
     @classmethod
-    def read(self, filename, name=None, labels={}, tags={}, **kwargs):
-        """Read catalog from fits file.
+    def read(self, filename, name=None, labels={}, tags={}, full=False):
+        """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
         ----------
@@ -467,13 +445,18 @@ class Catalog():
             Labels of data columns for plots (default vals from file header).
         tags: dict
             Tags for table (default vals from file header).
-        **kwargs: keyword argumens
-            All columns to be added must be passes with named argument,
-            the name is used in the Catalog data and the value must
-            be the column name in your input file (ex: z='REDSHIFT').
+        full: boll
+            Reads all columns of the catalog
         """
         data = ClData.read(filename)
-        return self._read(data, name=name, labels=labels, tags=tags, **kwargs)
+        if full:
+            read_cols = data.colnames
+        else:
+            read_cols = tags.values()
+            if len(read_cols)==0:
+                raise KeyError('If full=False, tags must be provided.')
+            data._check_cols(read_cols)
+        return self._read(data, read_cols, name=name, labels=labels, tags=tags)
     @classmethod
     def read_full(self, filename):
         """Read fits file catalog saved by clevar with all information.
@@ -485,7 +468,15 @@ class Catalog():
             Input file.
         """
         data = ClData.read(filename)
-        out = self._read(data, **{c:c for c in data.colnames})
+        # read labels and radius unit from file
+        kwargs = {
+            'name': data.meta['NAME'],
+            'labels': {k[6:].lower():v for k, v in data.meta.items() if k[:6]=='LABEL_'},
+            'tags': {k[4:].lower():v for k, v in data.meta.items() if k[:4]=='TAG_'},
+        }
+        kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
+                        if 'RADIUS_UNIT' in data.meta else {})
+        out = self._read(data, data.colnames, kwargs)
         return out
     def save_match(self, filename, overwrite=False):
         """
