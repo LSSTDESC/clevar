@@ -183,7 +183,8 @@ class Catalog():
         """Add values for all attributes. If id is not provided, one is created"""
         if 'data' in columns:
             if len(columns)>1:
-                raise KeyError('When data and columns cannot be passed together.')
+                extra_cols = ', '.join([cols for cols in columns if cols!='data'])
+                raise KeyError(f'data and columns (={extra_cols}) cannot be passed together.')
             if not hasattr(columns['data'], '__getitem__'):
                 raise TypeError('data must be interactable (i. e. have __getitem__ function.)')
             data = ClData(columns['data'])
