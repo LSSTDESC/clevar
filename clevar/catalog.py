@@ -402,7 +402,7 @@ class Catalog():
                 out[col] = self[col]
         out.write(filename, overwrite=overwrite)
     @classmethod
-    def _read(self, data, read_cols, **kwargs):
+    def _read(self, data, **kwargs):
         """Does the main execution for reading catalog.
 
         Parameters
@@ -411,8 +411,6 @@ class Catalog():
             Input data.
         name: str, None
             Catalog name, if none reads from file.
-        labels: dict
-            Labels of data columns for plots (default vals from file header).
         **kwargs: keyword argumens
             All columns to be added must be passes with named argument,
             the name is used in the Catalog data and the value must
@@ -420,10 +418,10 @@ class Catalog():
         """
         # out data
         mt_cols = ('mt_self', 'mt_other', 'mt_cross', 'mt_multi_self', 'mt_multi_other')
-        non_mt_cols = [c for c in read_cols if c.lower() not in mt_cols]
+        non_mt_cols = [c for c in data.colnames if c.lower() not in mt_cols]
         out = self(data=data[non_mt_cols], **kwargs)
         # matching cols
-        for colname in [c.lower() for c in read_cols if c.lower() in mt_cols]:
+        for colname in [c.lower() for c in data.colnames if c.lower() in mt_cols]:
             col = np.array(data[colname], dtype=str)
             if colname in ('mt_self', 'mt_other', 'mt_cross'):
                 out[colname] = np.array(col, dtype=np.ndarray)
@@ -445,18 +443,16 @@ class Catalog():
             Labels of data columns for plots (default vals from file header).
         tags: dict
             Tags for table (default vals from file header).
-        full: boll
+        full: bool
             Reads all columns of the catalog
         """
         data = ClData.read(filename)
-        if full:
-            read_cols = data.colnames
-        else:
-            read_cols = tags.values()
-            if len(read_cols)==0:
+        if not full:
+            if len(tags)==0:
                 raise KeyError('If full=False, tags must be provided.')
-            data._check_cols(read_cols)
-        return self._read(data, read_cols, name=name, labels=labels, tags=tags)
+            data._check_cols(tags.values())
+            data = data[tags.values()]
+        return self._read(data, name=name, labels=labels, tags=tags)
     @classmethod
     def read_full(self, filename):
         """Read fits file catalog saved by clevar with all information.
@@ -476,7 +472,7 @@ class Catalog():
         }
         kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
                         if 'RADIUS_UNIT' in data.meta else {})
-        out = self._read(data, data.colnames, kwargs)
+        out = self._read(data, **kwargs)
         return out
     def save_match(self, filename, overwrite=False):
         """
@@ -644,8 +640,8 @@ class ClCatalog(Catalog):
             out = self
         return out
     @classmethod
-    def read(self, filename, name=None, labels={}, tags={}, radius_unit=None, **kwargs):
-        """Read catalog from fits file.
+    def read(self, filename, name=None, labels={}, tags={}, radius_unit=None, full=False):
+        """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
         ----------
@@ -659,14 +655,16 @@ class ClCatalog(Catalog):
             Tags for table (default vals from file header).
         radius_unit: str, None
             Unit of the radius column (default read from file).
-        **kwargs: keyword argumens
-            All columns to be added must be passes with named argument,
-            the name is used in the Catalog data and the value must
-            be the column name in your input file (ex: z='REDSHIFT').
+        full: bool
+            Reads all columns of the catalog
         """
         data = ClData.read(filename)
-        return self._read(data, name=name, labels=labels, tags=tags,
-                          radius_unit=radius_unit, **kwargs)
+        if not full:
+            if len(tags)==0:
+                raise KeyError('If full=False, tags must be provided.')
+            data._check_cols(tags.values())
+            data = data[tags.values()]
+        return self._read(data, name=name, labels=labels, tags=tags, radius_unit=radius_unit)
     def add_members(self, members_consistency=True, members_warning=True,
                     members_catalog=None, **kwargs):
         """
