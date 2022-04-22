@@ -118,64 +118,36 @@ class Catalog():
         if not isinstance(tags, dict):
             raise ValueError('tags must be dict.')
         self.name = name
-        self.data = ClData()
         self.size = None
+        self.data = ClData()
         self.id_dict = {}
-        self.labels = {}
         self.colnames = []
-        self.tags = {}
-        self.default_tags = kwargs.pop('default_tags', ['id'])
+        self.labels = labels
+        self.tags = {'id':'id'}
+        self.tags.update(tags)
+        self.default_tags = kwargs.pop('default_tags', ['id', 'ra', 'dec'])
         if len(kwargs)>0:
             self._add_values(**kwargs)
-        self.labels.update(labels)
+        # make sure columns don't overwrite tags
         for colname, coltag in tags.items():
             self.tag_column(coltag, colname, skip_warn=True)
     def __setitem__(self, item, value):
+        value_ = value
         if isinstance(item, str):
             if item[:3]!='mt_':
                 self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
             if item not in self.colnames:
                 self.colnames.append(item)
-            if item in self.default_tags:
-                self.tags[item] = item
-        self.data[item] = value
-    def tag_column(self, colname, coltag, skip_warn=False):
-        """
-        Tag column
-
-        Parameters
-        ----------
-        colname: str
-            Name of column
-        coltag: str
-            Tag for column
-        skip_warn: bool
-            Skip overwriting warning
-        """
-        if colname not in self.colnames:
-            warnings.warn(
-                f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
-        if coltag in self.tags and self.tags.get(coltag, None)!=colname and not skip_warn:
-            warnings.warn(
-                f'tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}')
-        self.tags[coltag] = colname
-        self.labels[coltag] = self.labels.get(coltag, f'{coltag}_{{{self.name}}}')
-    def tag_columns(self, colnames, coltags):
-        """
-        Tag columns
-
-        Parameters
-        ----------
-        colname: list
-            Name of columns
-        coltag: list
-            Tag for columns
-        """
-        if len(colnames)!=len(coltags):
-            raise ValueError(
-                f'Size of colnames ({len(colnames)} and coltags {len(coltags)} must be the same.')
-        for colname, coltag in zip(colnames, coltags):
-            self.tag_column(colname, coltag)
+            if item.lower() in self.default_tags:
+                self.tags[item.lower()] = self.tags.get(item, item)
+            if item==self.tags['id']:
+                value_ = np.array(value, dtype=str) # make id a string
+            elif len(self.data.colnames)==0:
+                if isinstance(value, (int, np.int64)):
+                    raise TypeError('Empty table cannot have column set to scalar value')
+                self.size = len(value)
+                self._create_id()
+        self.data[item] = value_
     def __getitem__(self, item):
         item_ = self.tags.get(item, item) if isinstance(item, str) else item
         data = self.data[item_]
@@ -209,28 +181,36 @@ class Catalog():
                 f'<br>{self._prt_table_tags(self.data)}')
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
-        # Check all columns have same size
-        names = [n for n in columns]
-        sizes = [len(v) for v in columns.values()]
-        if self.size is None:
-            self.size = sizes[0]
-        tab = " "*12
-        if any(self.size!=s for s in sizes):
-            raise ValueError(f"Column sizes inconsistent:\n"+
-                f"{tab}{'Catalog':10}: {self.size:,}\n"+
-                "\n".join([f"{tab}{k:10}: {l:,}" for k, l in zip(names, sizes)])
-                )
-        if 'id' not in columns:
-            self['id'] = np.array(range(self.size), dtype=str)
+        if 'data' in columns:
+            if not hasattr(columns['data'], '__getitem__'):
+                raise ValueError('data must be interactable (i. e. have __getitem__ function.)')
+            data = ClData(columns['data'])
         else:
-            self['id'] = np.array(columns['id'], dtype=str)
-        for k, v in columns.items():
-            if k!='id':
-                self[k] = v
-        if ('ra' in self.data.colnames and 'dec' in self.data.colnames) and \
+            # Check all columns have same size
+            names = [n for n in columns]
+            sizes = [len(v) for v in columns.values()]
+            if any(sizes[0]!=s for s in sizes):
+                raise ValueError(f"Column sizes inconsistent:\n"+
+                    "\n".join([f"{' '*12}{k:10}: {l:,}" for k, l in zip(names, sizes)])
+                    )
+            data = ClData(columns)
+        self.size = len(data)
+        if self.tags['id'] not in data.colnames:
+            self._create_id()
+        else:
+            self[self.tags['id']] = data[self.tags['id']]
+        for colname in [col for col in data.colnames if col!=self.tags['id']]:
+            self[colname] = data[colname]
+        self._add_skycoord()
+        self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
+    def _create_id(self):
+        warnings.warn(
+            f'id({self.tags["id"]}) column missing, additional one is being created.')
+        self[self.tags['id']] = range(self.size)
+    def _add_skycoord(self):
+        if ('ra' in self.tags and 'dec' in self.tags) and \
                 not 'SkyCoord' in self.data.colnames:
             self['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
-        self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
     def _init_match_vals(self, overwrite=False):
         """Fills self.match with default values
 
@@ -245,6 +225,49 @@ class Catalog():
                 if col in ('mt_multi_self', 'mt_multi_other'):
                     for i in range(self.size):
                         self[col][i] = []
+    def tag_column(self, colname, coltag, skip_warn=False):
+        """
+        Tag column
+
+        Parameters
+        ----------
+        colname: str
+            Name of column
+        coltag: str
+            Tag for column
+        skip_warn: bool
+            Skip overwriting warning
+        """
+        if colname not in self.colnames:
+            warnings.warn(
+                f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
+        if coltag.lower() in [c.lower() for c in self.colnames if c.lower()!=colname.lower()]:
+            warnings.warn(
+                f'There is a column with the same name as the tag setup.'
+                f' cat[\'{coltag}\'] calls cat[\'{colname}\'].'
+                f' To get \'{coltag}\' column, use cat.data[\'{coltag}\'].'
+                )
+        if coltag in self.tags and self.tags.get(coltag, None)!=colname and not skip_warn:
+            warnings.warn(
+                f'tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}')
+        self.tags[coltag.lower()] = colname
+        self.labels[coltag.lower()] = self.labels.get(coltag, f'{coltag}_{{{self.name}}}')
+    def tag_columns(self, colnames, coltags):
+        """
+        Tag columns
+
+        Parameters
+        ----------
+        colname: list
+            Name of columns
+        coltag: list
+            Tag for columns
+        """
+        if len(colnames)!=len(coltags):
+            raise ValueError(
+                f'Size of colnames ({len(colnames)} and coltags {len(coltags)} must be the same.')
+        for colname, coltag in zip(colnames, coltags):
+            self.tag_column(colname, coltag)
     def ids2inds(self, ids, missing=None):
         """Returns the indicies of objects given an id list.
 
@@ -346,7 +369,8 @@ class Catalog():
         """
         Return the column for key if key is in the dictionary, else default
         """
-        return ClData.get(self.data, key, default)
+        key_ = self.tags.get(key.lower(), key)
+        return ClData.get(self.data, key_, default)
     def write(self, filename, add_header=True, overwrite=False):
         """
         Write catalog.
@@ -751,21 +775,24 @@ class MemCatalog(Catalog):
         Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,...)
     """
     def __init__(self, name, labels={}, tags={}, **kwargs):
-        if all('id_cluster'!=n.lower() for n in kwargs):
+        if all('id_cluster'!=n.lower() for n in (*kwargs, *tags)):
             raise ValueError("Members catalog must have a 'id_cluster' column!")
-        Catalog.__init__(self, name, labels=labels, tags=tags, **kwargs)
+        tags_ = {'id_cluster':'id_cluster'}
+        tags_.update(tags)
+        Catalog.__init__(self, name, labels=labels, tags=tags_,
+                         default_tags=['id', 'id_cluster', 'ra', 'dec', 'z', 'radius'],
+                         **kwargs)
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
-        # always put id, id_cluster columns first
-        cols_use, cols_bkp = {}, {}
-        cols_bkp.update(columns)
-        if 'id' in cols_bkp:
-            cols_use['id'] = cols_bkp.pop('id')
-        cols_use['id_cluster'] = cols_bkp.pop('id_cluster')
-        cols_use.update(cols_bkp)
         # create catalog
-        Catalog._add_values(self, **cols_use)
-        self['id_cluster'] = np.array(columns['id_cluster'], dtype=str)
+        Catalog._add_values(self, **columns)
+        id_name, id_cl_name = self.tags['id'], self.tags['id_cluster']
+        self[id_cl_name] = np.array(self[id_cl_name], dtype=str)
+        # always put id, id_cluster columns first
+        self.colnames = [id_name, id_cl_name, *(c for c in self.colnames
+                            if c not in (id_name, id_cl_name))]
+        self.data = self.data[self.colnames]
+        # sort columns
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
             self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]
