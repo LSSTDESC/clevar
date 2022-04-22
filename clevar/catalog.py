@@ -36,7 +36,10 @@ class ClData(APtable):
         """
         if isinstance(item, str):
             item = self.namedict.get(item.lower(), item)
-        return APtable.__getitem__(self, item)
+        out = APtable.__getitem__(self, item)
+        if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+            out.namedict = {col.lower(): col for col in out.colnames}
+        return out
     def __setitem__(self, item, value):
         """
         To make case insensitive
@@ -96,8 +99,6 @@ class Catalog():
     data: ClData
         Main catalog data (ex: id, ra, dec, z). Fixed values.
         Matching data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)
-    mt_input: object
-        Contains the necessary inputs for the match (added by Match objects)
     size: int
         Number of objects in the catalog
     id_dict: dict
@@ -106,35 +107,86 @@ class Catalog():
         Labels of data columns for plots
     colnames: list
         List of column names
+    tags: dict
+        Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
     """
-    def __init__(self, name, labels={}, **kwargs):
+    def __init__(self, name, labels={}, tags={}, **kwargs):
         if not isinstance(name, str):
             raise ValueError('name must be str.')
         if not isinstance(labels, dict):
             raise ValueError('labels must be dict.')
+        if not isinstance(tags, dict):
+            raise ValueError('tags must be dict.')
         self.name = name
         self.data = ClData()
-        self.mt_input = None
         self.size = None
         self.id_dict = {}
         self.labels = {}
         self.colnames = []
+        self.tags = {}
+        self.default_tags = kwargs.pop('default_tags', ['id'])
         if len(kwargs)>0:
             self._add_values(**kwargs)
         self.labels.update(labels)
+        for colname, coltag in tags.items():
+            self.tag_column(coltag, colname, skip_warn=True)
     def __setitem__(self, item, value):
         if isinstance(item, str):
             if item[:3]!='mt_':
                 self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
             if item not in self.colnames:
                 self.colnames.append(item)
+            if item in self.default_tags:
+                self.tags[item] = item
         self.data[item] = value
+    def tag_column(self, colname, coltag, skip_warn=False):
+        """
+        Tag column
+
+        Parameters
+        ----------
+        colname: str
+            Name of column
+        coltag: str
+            Tag for column
+        skip_warn: bool
+            Skip overwriting warning
+        """
+        if colname not in self.colnames:
+            warnings.warn(
+                f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
+        if coltag in self.tags and self.tags.get(coltag, None)!=colname and not skip_warn:
+            warnings.warn(
+                f'tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}')
+        self.tags[coltag] = colname
+        self.labels[coltag] = self.labels.get(coltag, f'{coltag}_{{{self.name}}}')
+    def tag_columns(self, colnames, coltags):
+        """
+        Tag columns
+
+        Parameters
+        ----------
+        colname: list
+            Name of columns
+        coltag: list
+            Tag for columns
+        """
+        if len(colnames)!=len(coltags):
+            raise ValueError(
+                f'Size of colnames ({len(colnames)} and coltags {len(coltags)} must be the same.')
+        for colname, coltag in zip(colnames, coltags):
+            self.tag_column(colname, coltag)
     def __getitem__(self, item):
-        data = self.data[item]
-        if isinstance(item, (str, int, np.int64)):
+        item_ = self.tags.get(item, item) if isinstance(item, str) else item
+        data = self.data[item_]
+        if isinstance(item_, (str, int, np.int64)):
             return data
         else:
-            return Catalog(name=self.name, labels=self.labels,
+            if isinstance(item_, (tuple, list)) and all(isinstance(x, str) for x in item_):
+                tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
+            else:
+                tags = self.tags
+            return Catalog(name=self.name, labels=self.labels, tags=tags,
                            **{c:data[c] for c in data.colnames})
     def __len__(self):
         return self.size
@@ -142,8 +194,12 @@ class Catalog():
         del self.data[item]
     def __str__(self):
         return f'{self.name}:\n{self.data.__str__()}'
+    def _prt_tags(self):
+        return ', '.join([f'{v}({k})' for k, v in self.tags.items()])
     def _repr_html_(self):
-        return f'<b>{self.name}</b><br>{self.data._repr_html_()}'
+        return (f'<b>{self.name}</b>'
+                f'<br></b><b>tags:</b> {self._prt_tags()}'
+                f'<br>{self.data._repr_html_()}')
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # Check all columns have same size
@@ -301,6 +357,7 @@ class Catalog():
         if add_header:
             out.meta['name'] = self.name
             out.meta.update({f'hierarch label_{k}':v for k, v in self.labels.items()})
+            out.meta.update({f'hierarch tag_{k}':v for k, v in self.tags.items()})
         for col in self.colnames:
             if col in ('mt_self', 'mt_other', 'mt_cross'):
                 out[col] = [c if c else '' for c in self[col]]
@@ -327,7 +384,7 @@ class Catalog():
             be the column name in your input file (ex: z='REDSHIFT').
         """
         columns = {k: v for k, v in kwargs.items()
-            if k not in ('labels', 'radius_unit')}
+            if k not in ('labels', 'tags', 'radius_unit')}
         if len(columns)==0:
             raise ValueError('At least one column must be provided.')
         # Catalog name
@@ -336,12 +393,11 @@ class Catalog():
                 raise ValueError('Name not found in file, please provide as argument.')
             name = data.meta['NAME']
         # labels and radius unit
-        kwargs_info = {
-            'labels': {k[6:].lower():v
-                for k, v in data.meta.items()
-                if k[:6]=='LABEL_'},
-        }
+        kwargs_info = {}
+        kwargs_info['labels'] = {k[6:].lower():v for k, v in data.meta.items() if k[:6]=='LABEL_'}
         kwargs_info['labels'].update(kwargs.get('labels', {}))
+        kwargs_info['tags'] = {k[4:].lower():v for k, v in data.meta.items() if k[:4]=='TAG_'}
+        kwargs_info['tags'].update(kwargs.get('tags', {}))
         radius_unit = kwargs.get('radius_unit', data.meta.get('RADIUS_UNIT'))
         kwargs_info.update({} if radius_unit is None else {'radius_unit': radius_unit})
         # Missing cols
@@ -363,7 +419,7 @@ class Catalog():
                     out[kl] = [c.split(',') if len(c)>0 else [] for c in col]
         return out
     @classmethod
-    def read(self, filename, name=None, **kwargs):
+    def read(self, filename, name=None, labels={}, tags={}, **kwargs):
         """Read catalog from fits file.
 
         Parameters
@@ -374,13 +430,15 @@ class Catalog():
             Catalog name, if none reads from file.
         labels: dict
             Labels of data columns for plots (default vals from file header).
+        tags: dict
+            Tags for table (default vals from file header).
         **kwargs: keyword argumens
             All columns to be added must be passes with named argument,
             the name is used in the Catalog data and the value must
             be the column name in your input file (ex: z='REDSHIFT').
         """
         data = ClData.read(filename)
-        return self._read(data, name=name, **kwargs)
+        return self._read(data, name=name, labels=labels, tags=tags, **kwargs)
     @classmethod
     def read_full(self, filename):
         """Read fits file catalog saved by clevar with all information.
@@ -480,19 +538,22 @@ class ClCatalog(Catalog):
         Labels of data columns for plots
     colnames: list
         List of column names
+    tags: dict
+        Tag for main quantities used in matching and plots (ex: id, ra, dec, z, mass,...)
     members: MemCatalog
         Catalog of members associated to the clusters
     leftover_members: MemCatalog
         Catalog of members not associated to the clusters
     """
-    def __init__(self, name, labels={}, radius_unit=None, members=None, **kwargs):
+    def __init__(self, name, labels={}, tags={}, radius_unit=None, members=None, **kwargs):
         self.members = None
         self.leftover_members = None
-        mt_input = kwargs.pop('mt_input', None)
-        members_warning = kwargs.pop('members_warning', True)
-        Catalog.__init__(self, name, labels=labels, **kwargs)
         self.radius_unit = radius_unit
-        self.mt_input = mt_input
+        self.mt_input = kwargs.pop('mt_input', None)
+        members_warning = kwargs.pop('members_warning', True)
+        Catalog.__init__(self, name, labels=labels, tags=tags,
+                         default_tags=['id', 'ra', 'dec', 'mass', 'z', 'radius'],
+                         **kwargs)
         if members is not None:
             self.add_members(members_catalog=members,
                              members_warning=members_warning)
@@ -515,35 +576,38 @@ class ClCatalog(Catalog):
             )
             table='<thead><tr><th'.join(table)
         return (f'<b>{self.name}</b>'
+                f'<br></b><b>tags:</b> {self._prt_tags()}'
                 f'<br><b>Radius unit:</b> {self.radius_unit}'
                 f'<br>{table}')
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
-        self.radius_unit = columns.pop('radius_unit', None)
         self._init_match_vals()
     def __getitem__(self, item):
-        data = self.data[item]
-        if isinstance(item, (str, int, np.int64)):
+        item_ = self.tags.get(item, item) if isinstance(item, str) else item
+        data = self.data[item_]
+        if isinstance(item_, (str, int, np.int64)):
             return data
         else:
             mt_input = None
             members = self.members
-            # Check if item is not a  list of strings
-            if not (isinstance(item, (tuple, list)) and any(isinstance(x, str) for x in item)):
+            tags = self.tags
+            # Check if item_ is not a list of strings
+            if not (isinstance(item_, (tuple, list)) and any(isinstance(x, str) for x in item_)):
                 if self.mt_input is not None:
-                    mt_input = self.mt_input[item]
-                if members is not None and isinstance(item, (list, np.ndarray)):
+                    mt_input = self.mt_input[item_]
+                if members is not None and isinstance(item_, (list, np.ndarray)):
                     cl_mask = np.zeros(self.size, dtype=bool)
-                    cl_mask[item] = True
+                    cl_mask[item_] = True
                     members = members[cl_mask[members['ind_cl']]]
             else:
-                mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item]
-                data = self.data[(*item, *mt_cols)]
+                mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item_]
+                data = self.data[(*item_, *mt_cols)]
+                tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
             # generate catalog
             return ClCatalog(name=self.name, labels=self.labels, radius_unit=self.radius_unit,
                              mt_input=mt_input, members=members, members_warning=False,
-                             **{c:data[c] for c in data.colnames})
+                             tags=tags, **{c:data[c] for c in data.colnames})
     def raw(self):
         """
         Get a copy of the catalog without members.
@@ -557,27 +621,29 @@ class ClCatalog(Catalog):
             out = self
         return out
     @classmethod
-    def read(self, filename, name=None, **kwargs):
-        """Read catalog from fits file
+    def read(self, filename, name=None, labels={}, tags={}, radius_unit=None, **kwargs):
+        """Read catalog from fits file.
 
         Parameters
         ----------
         filename: str
             Input file.
         name: str, None
-            ClCatalog name, if none reads from file.
+            Catalog name, if none reads from file.
         labels: dict
             Labels of data columns for plots (default vals from file header).
+        tags: dict
+            Tags for table (default vals from file header).
         radius_unit: str, None
             Unit of the radius column (default read from file).
         **kwargs: keyword argumens
             All columns to be added must be passes with named argument,
-            the name is used in the ClCatalog data and the value must
+            the name is used in the Catalog data and the value must
             be the column name in your input file (ex: z='REDSHIFT').
         """
         data = ClData.read(filename)
-        return self._read(data, name=name, **kwargs)
-
+        return self._read(data, name=name, labels=labels, tags=tags,
+                          radius_unit=radius_unit, **kwargs)
     def add_members(self, members_consistency=True, members_warning=True,
                     members_catalog=None, **kwargs):
         """
@@ -619,7 +685,7 @@ class ClCatalog(Catalog):
                     self.leftover_members.name = 'leftover members'
             members = members[mem_in_cl]
         self.members = members
-    def read_members(self, filename, members_consistency=True,
+    def read_members(self, filename, labels={}, tags={}, members_consistency=True,
                      members_warning=True, **kwargs):
         """Read members catalog from fits file.
 
@@ -627,6 +693,10 @@ class ClCatalog(Catalog):
         ----------
         filename: str
             Input file.
+        labels: dict
+            Labels of data columns for plots (default vals from file header).
+        tags: dict
+            Tags for table (default vals from file header).
         members_consistency: bool
             Require that all input members belong to this cluster catalog.
         members_warning: bool
@@ -640,7 +710,8 @@ class ClCatalog(Catalog):
             be the column name in your input file (ex: z='REDSHIFT').
         """
         self.add_members(
-            members_catalog=MemCatalog.read(filename, 'members', **kwargs),
+            members_catalog=MemCatalog.read(
+                filename, 'members', labels=labels, tags=tags, **kwargs),
             members_consistency=members_consistency, members_warning=members_warning)
     def remove_members(self):
         """
@@ -672,11 +743,13 @@ class MemCatalog(Catalog):
         Labels of data columns for plots
     colnames: list
         List of column names
+    tags: dict
+        Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,...)
     """
-    def __init__(self, name, labels={}, **kwargs):
+    def __init__(self, name, labels={}, tags={}, **kwargs):
         if all('id_cluster'!=n.lower() for n in kwargs):
             raise ValueError("Members catalog must have a 'id_cluster' column!")
-        Catalog.__init__(self, name, labels=labels, **kwargs)
+        Catalog.__init__(self, name, labels=labels, tags=tags, **kwargs)
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # always put id, id_cluster columns first
@@ -693,12 +766,16 @@ class MemCatalog(Catalog):
         for ind, i in enumerate(self['id']):
             self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]
     def __getitem__(self, item):
-        data = self.data[item]
-        if isinstance(item, (str, int, np.int64)):
+        item_ = self.tags.get(item, item) if isinstance(item, str) else item
+        data = self.data[item_]
+        if isinstance(item_, (str, int, np.int64)):
             return data
-        elif isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
-            main_cols = [c for c in ('id', 'id_cluster') if c not in item]
-            mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item]
-            data = self.data[(*item, *main_cols, *mt_cols)]
-        return MemCatalog(name=self.name, labels=self.labels,
+        elif isinstance(item_, (tuple, list)) and all(isinstance(x, str) for x in item_):
+            main_cols = [c for c in ('id', 'id_cluster') if c not in item_]
+            mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item_]
+            data = self.data[(*item_, *main_cols, *mt_cols)]
+            tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
+        else:
+            tags = self.tags
+        return MemCatalog(name=self.name, labels=self.labels, tags=tags,
                           **{c:data[c] for c in data.colnames})
