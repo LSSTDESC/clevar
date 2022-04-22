@@ -96,12 +96,12 @@ def test_clcatalog():
     # Check inexistent mask
     assert_raises(ValueError, c.get_matching_mask, 'made up mask')
     # Reading function
-    assert_raises(ValueError, ClCatalog.read, 'demo/cat1.fits', id='ID')
-    assert_raises(ValueError, ClCatalog.read, 'demo/cat1.fits', 'test')
-    assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test', id='ID2')
-    c = ClCatalog.read('demo/cat1.fits', 'test', id='ID')
+    assert_raises(TypeError, ClCatalog.read, 'demo/cat1.fits', tags={'id': 'ID'})
+    assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test')
+    assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test', tags={'id': 'ID2'})
+    c = ClCatalog.read('demo/cat1.fits', 'test', tags={'id': 'ID'})
     c.write('cat1_with_header.fits', overwrite=True)
-    c_read = ClCatalog.read('cat1_with_header.fits', id='ID')
+    c_read = ClCatalog.read_full('cat1_with_header.fits')
     os.system('rm -f cat1_with_header.fits')
     # Check add members
     c = ClCatalog(name='test', **{'id': ['a', 'b'], 'ra': [10, 20],
@@ -112,7 +112,7 @@ def test_clcatalog():
     c.add_members(members_catalog=mem, **mem_dat)
     assert_raises(TypeError, c.add_members, members_catalog={})
     # Check read members
-    c.read_members('demo/cat1_mem.fits', id='ID', id_cluster='ID_CLUSTER')
+    c.read_members('demo/cat1_mem.fits', tags={'id':'ID', 'id_cluster':'ID_CLUSTER'})
     # Check raw function
     c_raw = c.raw()
     assert_equal(c_raw.members, None)
@@ -169,7 +169,7 @@ def test_memcatalog():
     # Check inexistent mask
     assert_raises(ValueError, c.get_matching_mask, 'made up mask')
     # Reading function
-    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test')
-    assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', id='ID2')
-    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', id='ID')
-    c = MemCatalog.read('demo/cat1_mem.fits', 'test', id='ID', id_cluster='ID_CLUSTER')
+    assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test')
+    assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', tags={'id':'ID2'})
+    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', tags={'id':'ID'})
+    c = MemCatalog.read('demo/cat1_mem.fits', 'test', tags={'id':'ID', 'id_cluster':'ID_CLUSTER'})
