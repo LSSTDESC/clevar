@@ -9,6 +9,44 @@ from astropy import units as u
 
 from .utils import veclen, none_val
 
+class NameList(list):
+    def __contains__(self, item): # implements `in`
+        if isinstance(item, str):
+            return item.lower() in (n.lower() for n in self)
+        else:
+            return list.__contains__(self, item)
+
+class LowerCaseDict(dict):
+    @classmethod
+    def _k(cls, key):
+        return key.lower() if isinstance(key, str) else key
+    def __init__(self, *args, **kwargs):
+        super(LowerCaseDict, self).__init__(*args, **kwargs)
+        self._convert_keys()
+    def __getitem__(self, key):
+        return super(LowerCaseDict, self).__getitem__(self.__class__._k(key))
+    def __setitem__(self, key, value):
+        super(LowerCaseDict, self).__setitem__(self.__class__._k(key), value)
+    def __delitem__(self, key):
+        return super(LowerCaseDict, self).__delitem__(self.__class__._k(key))
+    def __contains__(self, key):
+        return super(LowerCaseDict, self).__contains__(self.__class__._k(key))
+    def has_key(self, key):
+        return super(LowerCaseDict, self).has_key(self.__class__._k(key))
+    def pop(self, key, *args, **kwargs):
+        return super(LowerCaseDict, self).pop(self.__class__._k(key), *args, **kwargs)
+    def get(self, key, *args, **kwargs):
+        return super(LowerCaseDict, self).get(self.__class__._k(key), *args, **kwargs)
+    def setdefault(self, key, *args, **kwargs):
+        return super(LowerCaseDict, self).setdefault(self.__class__._k(key), *args, **kwargs)
+    def update(self, E={}, **F):
+        super(LowerCaseDict, self).update(self.__class__(E))
+        super(LowerCaseDict, self).update(self.__class__(**F))
+    def _convert_keys(self):
+        for k in list(self.keys()):
+            v = super(LowerCaseDict, self).pop(k)
+            self.__setitem__(k, v)
+
 class ClData(APtable):
     """
     ClData: A data object. It behaves as an astropy table but case independent.
@@ -28,31 +66,31 @@ class ClData(APtable):
         ----------
         *args, **kwargs: Same used for astropy tables
         """
-        self.namedict = {}
+        self.namedict = LowerCaseDict()
         APtable.__init__(self, *args, **kwargs)
     def __getitem__(self, item):
         """
         To make case insensitive
         """
         if isinstance(item, str):
-            item = self.namedict.get(item.lower(), item)
+            item = self.namedict.get(item, item)
         out = APtable.__getitem__(self, item)
         if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
-            out.namedict = {col.lower(): col for col in out.colnames}
+            out.namedict = LowerCaseDict({col: col for col in out.colnames})
         return out
     def __setitem__(self, item, value):
         """
         To make case insensitive
         """
         if isinstance(item, str):
-            item = self.namedict.get(item.lower(), item)
-            self.namedict[item.lower()] = item
+            item = self.namedict.get(item, item)
+            self.namedict[item] = item
         APtable.__setitem__(self, item, value)
     def get(self, key, default=None):
         """
         Return the column for key if key is in the dictionary, else default
         """
-        return self[key] if key.lower() in self.namedict else default
+        return self[key] if key in self.namedict else default
     def _repr_html_(self):
         return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
     @classmethod
@@ -71,8 +109,7 @@ class ClData(APtable):
         columns: list
             Names of columns to find.
         """
-        missing = [f"'{k}'" for k in columns
-                   if k.lower() not in self.namedict]
+        missing = [f"'{k}'" for k in columns if k not in self.namedict]
         if len(missing)>0:
             missing = ", ".join(missing)
             raise KeyError(
@@ -121,11 +158,11 @@ class Catalog():
         self.size = None
         self.data = ClData()
         self.id_dict = {}
-        self.colnames = []
+        self.colnames = NameList()
         self.labels = labels
-        self.tags = {'id':'id'}
+        self.tags = LowerCaseDict({'id':'id'})
         self.tags.update(tags)
-        self.default_tags = kwargs.pop('default_tags', ['id', 'ra', 'dec'])
+        self.default_tags = NameList(kwargs.pop('default_tags', ['id', 'ra', 'dec']))
         if len(kwargs)>0:
             self._add_values(**kwargs)
         # make sure columns don't overwrite tags
@@ -138,8 +175,8 @@ class Catalog():
                 self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
             if item not in self.colnames:
                 self.colnames.append(item)
-            if item.lower() in self.default_tags:
-                self.tags[item.lower()] = self.tags.get(item, item)
+            if item in self.default_tags:
+                self.tags[item] = self.tags.get(item, item)
             if item==self.tags['id']:
                 value_ = np.array(value, dtype=str) # make id a string
             elif len(self.data.colnames)==0:
@@ -149,17 +186,18 @@ class Catalog():
                 self._create_id()
         self.data[item] = value_
     def __getitem__(self, item):
-        item_ = self.tags.get(item, item) if isinstance(item, str) else item
-        data = self.data[item_]
-        if isinstance(item_, (str, int, np.int64)):
-            return data
+        if isinstance(item, (str, int, np.int64)):
+            item_ = self.tags.get(item, item) if isinstance(item, str) else item
+            return self.data[item_]
         else:
-            if isinstance(item_, (tuple, list)) and all(isinstance(x, str) for x in item_):
+            if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+                item_ = NameList([self.tags.get(i, i) for i in item])
                 tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
             else:
+                item_ = item
                 tags = self.tags
             return Catalog(name=self.name, labels=self.labels, tags=tags,
-                           **{c:data[c] for c in data.colnames})
+                           data=self.data[item_])
     def __len__(self):
         return self.size
     def __delitem__(self, item):
@@ -245,7 +283,7 @@ class Catalog():
         if colname not in self.colnames:
             warnings.warn(
                 f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
-        if coltag.lower() in [c.lower() for c in self.colnames if c.lower()!=colname.lower()]:
+        if coltag in NameList([c for c in self.colnames if c!=colname]):
             warnings.warn(
                 f'There is a column with the same name as the tag setup.'
                 f' cat[\'{coltag}\'] calls cat[\'{colname}\'] now.'
@@ -254,8 +292,8 @@ class Catalog():
         if coltag in self.tags and self.tags.get(coltag, None)!=colname and not skip_warn:
             warnings.warn(
                 f'tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}')
-        self.tags[coltag.lower()] = colname
-        self.labels[coltag.lower()] = self.labels.get(coltag, f'{coltag}_{{{self.name}}}')
+        self.tags[coltag] = colname
+        self.labels[coltag] = self.labels.get(coltag, f'{coltag}_{{{self.name}}}')
     def tag_columns(self, colnames, coltags):
         """
         Tag columns
@@ -373,7 +411,7 @@ class Catalog():
         """
         Return the column for key if key is in the dictionary, else default
         """
-        key_ = self.tags.get(key.lower(), key)
+        key_ = self.tags.get(key, key)
         return ClData.get(self.data, key_, default)
     def write(self, filename, add_header=True, overwrite=False):
         """
@@ -417,17 +455,17 @@ class Catalog():
             be the column name in your input file (ex: z='REDSHIFT').
         """
         # out data
-        mt_cols = ('mt_self', 'mt_other', 'mt_cross', 'mt_multi_self', 'mt_multi_other')
-        non_mt_cols = [c for c in data.colnames if c.lower() not in mt_cols]
+        mt_cols = NameList(('mt_self', 'mt_other', 'mt_cross', 'mt_multi_self', 'mt_multi_other'))
+        non_mt_cols = [c for c in data.colnames if c not in mt_cols]
         out = self(data=data[non_mt_cols], **kwargs)
         # matching cols
-        for colname in [c.lower() for c in data.colnames if c.lower() in mt_cols]:
+        for colname in [c for c in data.colnames if c in mt_cols]:
             out[colname] = None
             col = np.array(data[colname], dtype=str)
-            if colname in ('mt_self', 'mt_other', 'mt_cross'):
+            if colname in NameList(('mt_self', 'mt_other', 'mt_cross')):
                 out[colname] = np.array(col, dtype=np.ndarray)
                 out[colname][out[colname]==''] = None
-            if colname in ('mt_multi_self', 'mt_multi_other'):
+            if colname in NameList(('mt_multi_self', 'mt_multi_other')):
                 for i, c in enumerate(col):
                     out[colname][i] = c.split(',') if len(c)>0 else []
         return out
@@ -469,8 +507,8 @@ class Catalog():
         # read labels and radius unit from file
         kwargs = {
             'name': data.meta['NAME'],
-            'labels': {k[6:].lower():v for k, v in data.meta.items() if k[:6]=='LABEL_'},
-            'tags': {k[4:].lower():v for k, v in data.meta.items() if k[:4]=='TAG_'},
+            'labels': LowerCaseDict({k[6:]:v for k, v in data.meta.items() if k[:6]=='LABEL_'}),
+            'tags': LowerCaseDict({k[4:]:v for k, v in data.meta.items() if k[:4]=='TAG_'}),
         }
         kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
                         if 'RADIUS_UNIT' in data.meta else {})
@@ -605,30 +643,31 @@ class ClCatalog(Catalog):
         Catalog._add_values(self, **columns)
         self._init_match_vals()
     def __getitem__(self, item):
-        item_ = self.tags.get(item, item) if isinstance(item, str) else item
-        data = self.data[item_]
-        if isinstance(item_, (str, int, np.int64)):
-            return data
+        if isinstance(item, (str, int, np.int64)):
+            item_ = self.tags.get(item, item) if isinstance(item, str) else item
+            return self.data[item_]
         else:
             mt_input = None
             members = self.members
             tags = self.tags
             # Check if item_ is not a list of strings
-            if not (isinstance(item_, (tuple, list)) and any(isinstance(x, str) for x in item_)):
+            if (isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item)):
+                item_ = NameList([self.tags.get(i, i) for i in item])
+                tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
+                mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item_]
+                item_ = [*item_, *mt_cols]
+            else:
+                item_ = item
                 if self.mt_input is not None:
                     mt_input = self.mt_input[item_]
                 if members is not None and isinstance(item_, (list, np.ndarray)):
                     cl_mask = np.zeros(self.size, dtype=bool)
                     cl_mask[item_] = True
                     members = members[cl_mask[members['ind_cl']]]
-            else:
-                mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item_]
-                data = self.data[(*item_, *mt_cols)]
-                tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
             # generate catalog
             return ClCatalog(name=self.name, labels=self.labels, radius_unit=self.radius_unit,
                              mt_input=mt_input, members=members, members_warning=False,
-                             tags=tags, **{c:data[c] for c in data.colnames})
+                             tags=tags, data=self.data[item_])
     def raw(self):
         """
         Get a copy of the catalog without members.
@@ -770,9 +809,17 @@ class MemCatalog(Catalog):
         Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,...)
     """
     def __init__(self, name, labels={}, tags={}, **kwargs):
-        if all('id_cluster'!=n.lower() for n in (*kwargs, *tags)):
-            raise ValueError("Members catalog must have a 'id_cluster' column!")
-        tags_ = {'id_cluster':'id_cluster'}
+        missing_id_cl = False
+        if 'data' in kwargs:
+            if 'id_cluster' not in LowerCaseDict(tags):
+                raise ValueError("'id_cluster' tag must be provided with data argument!")
+            elif LowerCaseDict(tags)['id_cluster'] not in NameList(kwargs['data'].colnames):
+                raise ValueError(f"'id_cluster'(={LowerCaseDict(tags)['id_cluster']}) column"
+                                  "not found in data (cols:{kwargs['data'].colnames})!")
+        else:
+            if 'id_cluster' not in NameList(kwargs):
+                raise ValueError("Members catalog must have a 'id_cluster' column!")
+        tags_ = LowerCaseDict({'id_cluster':'id_cluster'})
         tags_.update(tags)
         Catalog.__init__(self, name, labels=labels, tags=tags_,
                          default_tags=['id', 'id_cluster', 'ra', 'dec', 'z', 'radius'],
@@ -784,24 +831,25 @@ class MemCatalog(Catalog):
         id_name, id_cl_name = self.tags['id'], self.tags['id_cluster']
         self[id_cl_name] = np.array(self[id_cl_name], dtype=str)
         # always put id, id_cluster columns first
-        self.colnames = [id_name, id_cl_name, *(c for c in self.colnames
-                            if c not in (id_name, id_cl_name))]
+        self.colnames = NameList([id_name, id_cl_name, *(c for c in self.colnames
+                                    if c not in (id_name, id_cl_name))])
         self.data = self.data[self.colnames]
         # sort columns
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
             self.id_dict_list[i] = self.id_dict_list.get(i, [])+[ind]
     def __getitem__(self, item):
-        item_ = self.tags.get(item, item) if isinstance(item, str) else item
-        data = self.data[item_]
-        if isinstance(item_, (str, int, np.int64)):
-            return data
-        elif isinstance(item_, (tuple, list)) and all(isinstance(x, str) for x in item_):
-            main_cols = [c for c in ('id', 'id_cluster') if c not in item_]
-            mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item_]
-            data = self.data[(*item_, *main_cols, *mt_cols)]
+        if isinstance(item, (str, int, np.int64)):
+            return self.data[self.tags.get(item, item)]
+        elif isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+            item_ = NameList([self.tags.get(i, i) for i in item])
+            # also pass main and mt cols
+            main_cols = [self.tags[c] for c in ('id', 'id_cluster') if self.tags[c] not in item_]
+            mt_cols = [c for c in self.colnames if c.lower()[:3]=='mt_' and c not in item_]
+            item_ = [*item_, *main_cols, *mt_cols]
             tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
         else:
+            item_ = item
             tags = self.tags
         return MemCatalog(name=self.name, labels=self.labels, tags=tags,
-                          **{c:data[c] for c in data.colnames})
+                          data=self.data[item_])
