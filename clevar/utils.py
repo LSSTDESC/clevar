@@ -33,8 +33,6 @@ class LowerCaseDict(dict):
         return super(LowerCaseDict, self).__delitem__(self.__class__._k(key))
     def __contains__(self, key):
         return super(LowerCaseDict, self).__contains__(self.__class__._k(key))
-    def has_key(self, key):
-        return super(LowerCaseDict, self).has_key(self.__class__._k(key))
     def pop(self, key, *args, **kwargs):
         return super(LowerCaseDict, self).pop(self.__class__._k(key), *args, **kwargs)
     def get(self, key, *args, **kwargs):
