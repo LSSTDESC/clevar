@@ -772,16 +772,6 @@ class MemCatalog(Catalog):
         Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,...)
     """
     def __init__(self, name, labels={}, tags={}, **kwargs):
-        missing_id_cl = False
-        if 'data' in kwargs:
-            if 'id_cluster' not in LowerCaseDict(tags):
-                raise ValueError("'id_cluster' tag must be provided with data argument!")
-            elif LowerCaseDict(tags)['id_cluster'] not in NameList(kwargs['data'].colnames):
-                raise ValueError(f"'id_cluster'(={LowerCaseDict(tags)['id_cluster']}) column"
-                                  "not found in data (cols:{kwargs['data'].colnames})!")
-        else:
-            if 'id_cluster' not in NameList(kwargs):
-                raise ValueError("Members catalog must have a 'id_cluster' column!")
         tags_ = LowerCaseDict({'id_cluster':'id_cluster'})
         tags_.update(tags)
         Catalog.__init__(self, name, labels=labels, tags=tags_,
@@ -791,6 +781,11 @@ class MemCatalog(Catalog):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
         Catalog._add_values(self, **columns)
+        if self.tags['id_cluster'] not in self.colnames:
+            idcl_name = ('id_cluster' if self.tags['id_cluster']=='id_cluster'
+                            else f'id_cluster ({self.tags["id_cluster"]})')
+            raise ValueError(f'Members catalog must have a {idcl_name} column!.')
+
         id_name, id_cl_name = self.tags['id'], self.tags['id_cluster']
         self[id_cl_name] = np.array(self[id_cl_name], dtype=str)
         # always put id, id_cluster columns first
