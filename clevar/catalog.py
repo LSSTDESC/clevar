@@ -7,45 +7,8 @@ from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 
-from .utils import veclen, none_val
+from .utils import veclen, none_val, NameList, LowerCaseDict
 
-class NameList(list):
-    def __contains__(self, item): # implements `in`
-        if isinstance(item, str):
-            return item.lower() in (n.lower() for n in self)
-        else:
-            return list.__contains__(self, item)
-
-class LowerCaseDict(dict):
-    @classmethod
-    def _k(cls, key):
-        return key.lower() if isinstance(key, str) else key
-    def __init__(self, *args, **kwargs):
-        super(LowerCaseDict, self).__init__(*args, **kwargs)
-        self._convert_keys()
-    def __getitem__(self, key):
-        return super(LowerCaseDict, self).__getitem__(self.__class__._k(key))
-    def __setitem__(self, key, value):
-        super(LowerCaseDict, self).__setitem__(self.__class__._k(key), value)
-    def __delitem__(self, key):
-        return super(LowerCaseDict, self).__delitem__(self.__class__._k(key))
-    def __contains__(self, key):
-        return super(LowerCaseDict, self).__contains__(self.__class__._k(key))
-    def has_key(self, key):
-        return super(LowerCaseDict, self).has_key(self.__class__._k(key))
-    def pop(self, key, *args, **kwargs):
-        return super(LowerCaseDict, self).pop(self.__class__._k(key), *args, **kwargs)
-    def get(self, key, *args, **kwargs):
-        return super(LowerCaseDict, self).get(self.__class__._k(key), *args, **kwargs)
-    def setdefault(self, key, *args, **kwargs):
-        return super(LowerCaseDict, self).setdefault(self.__class__._k(key), *args, **kwargs)
-    def update(self, E={}, **F):
-        super(LowerCaseDict, self).update(self.__class__(E))
-        super(LowerCaseDict, self).update(self.__class__(**F))
-    def _convert_keys(self):
-        for k in list(self.keys()):
-            v = super(LowerCaseDict, self).pop(k)
-            self.__setitem__(k, v)
 
 class ClData(APtable):
     """
