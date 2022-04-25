@@ -391,8 +391,8 @@ class Catalog():
         out = ClData()
         if add_header:
             out.meta['name'] = self.name
-            out.meta.update({f'hierarch label_{k}':v for k, v in self.labels.items()})
-            out.meta.update({f'hierarch tag_{k}':v for k, v in self.tags.items()})
+            out.meta.update({f'hierarch LABEL_{k}':v for k, v in self.labels.items()})
+            out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
         for col in self.colnames:
             if col in ('mt_self', 'mt_other', 'mt_cross'):
                 out[col] = [c if c else '' for c in self[col]]
