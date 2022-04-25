@@ -1,9 +1,23 @@
 from clevar import ClCatalog, MemCatalog, ClData
 from clevar.catalog import Catalog
+from clevar.utils import LowerCaseDict
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 import pytest
 import os
+
+def test_lowercasedict():
+    for key in ('Key', 'key', 'KEY', 'keY'):
+        d = LowerCaseDict()
+        for key2 in ('Key', 'key', 'KEY', 'keY'):
+            d.setdefault(key, 'value')
+            assert_equal(d[key2], 'value')
+            del d[key2]
+            assert key2 not in d
+            d[key] = 'value'
+            assert_equal(d[key2], 'value')
+            d.pop(key2)
+            assert key2 not in d
 
 def _base_cat_test(**quantities):
     c = Catalog(name='test', **quantities)
