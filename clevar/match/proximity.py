@@ -133,7 +133,7 @@ class ProximityMatch(Match):
         # convert to degrees
         cat.mt_input['ang'] = convert_units(
             in_rad*n_match_radius, in_rad_unit, 'degrees',
-            redshift=cat['z'] if 'z' in cat.data.colnames else None,
+            redshift=cat['z'] if 'z' in cat.colnames else None,
             cosmo=cosmo)
     def _rescale_z(self, z, zlim, n):
         """Rescale zmin/zmax by a factor n

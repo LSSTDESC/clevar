@@ -1,19 +1,74 @@
 from clevar import ClCatalog, MemCatalog, ClData
 from clevar.catalog import Catalog
+from clevar.utils import LowerCaseDict
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
+import pytest
 import os
 
-def test_catalog():
-    quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
+def test_lowercasedict():
+    for key in ('Key', 'key', 'KEY', 'keY'):
+        d = LowerCaseDict()
+        for key2 in ('Key', 'key', 'KEY', 'keY'):
+            d.setdefault(key, 'value')
+            assert_equal(d[key2], 'value')
+            del d[key2]
+            assert key2 not in d
+            d[key] = 'value'
+            assert_equal(d[key2], 'value')
+            d.pop(key2)
+            assert key2 not in d
+
+def _base_cat_test(**quantities):
     c = Catalog(name='test', **quantities)
-    for k, v in quantities.items():
+    test_vals = quantities.get('data', quantities)
+    for k, v in test_vals.items():
         assert_equal(c[k], v)
         assert_equal(c[:1][k], v[:1])
         assert_equal(c.get(k), v)
     assert_equal(c.get('ra2'), None)
-    assert_equal(len(c), len(quantities['ra']))
+    assert_equal(len(c), len(test_vals['ra']))
+    c['ra', 'dec']
+    # test removing column
     del c['ra']
+    assert_raises(KeyError, c.__getitem__, 'ra')
+    # test warnings
+    with pytest.warns(None) as record:
+        c.tag_column('XXX', 'newtag')
+    assert f'{record._list[0].message}'=='setting tag newtag:XXX to column (XXX) missing in catalog'
+    with pytest.warns(None) as record:
+        c.tag_column('z', 'newtag')
+    assert f'{record._list[0].message}'=='tag newtag:XXX being replaced by newtag:z'
+    with pytest.warns(None) as record:
+        c.tag_column('dec', 'z')
+    assert f'{record._list[0].message}'==("There is a column with the same name as the tag setup."
+                                          " cat['z'] calls cat['dec'] now."
+                                          " To get 'z' column, use cat.data['z'].")
+    # tag columns
+    assert_raises(ValueError, c.tag_columns, ['2', '3'], ['1'])
+    c.tag_columns(['id', 'dec'], ['id', 'dec'])
+def test_catalog():
+    quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
+    _base_cat_test(**quantities)
+    _base_cat_test(data=quantities)
+    # fail to instantiance object
+    assert_raises(ValueError, Catalog.__init__, None, name=None)
+    assert_raises(ValueError, Catalog.__init__, None, name='test', labels=None)
+    assert_raises(ValueError, Catalog.__init__, None, name='test', tags=None)
+    c_ = Catalog('null')
+    assert_raises(TypeError, c_.__setitem__, 'mass', 1)
+    assert_raises(TypeError, c_._add_values, data=1)
+    assert_raises(KeyError, c_._add_values, data=[1], mass=[1])
+    # Check creation of id col
+    with pytest.warns(None) as record:
+        c_no_id = Catalog(name='no id', ra=[1, 2])
+    assert f'{record._list[0].message}'=='id column missing, additional one is being created.'
+    assert_equal(c_no_id['id'], ['0', '1'])
+    with pytest.warns(None) as record:
+        c_no_id = Catalog(name='no id')
+        c_no_id['ra'] = [1, 2]
+    assert f'{record._list[0].message}'=='id column missing, additional one is being created.'
+    assert_equal(c_no_id['id'], ['0', '1'])
 def test_clcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
     c = ClCatalog(name='test', **quantities)
@@ -55,12 +110,12 @@ def test_clcatalog():
     # Check inexistent mask
     assert_raises(ValueError, c.get_matching_mask, 'made up mask')
     # Reading function
-    assert_raises(ValueError, ClCatalog.read, 'demo/cat1.fits', id='ID')
-    assert_raises(ValueError, ClCatalog.read, 'demo/cat1.fits', 'test')
-    assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test', id='ID2')
-    c = ClCatalog.read('demo/cat1.fits', 'test', id='ID')
+    assert_raises(TypeError, ClCatalog.read, 'demo/cat1.fits', tags={'id': 'ID'})
+    assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test')
+    assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test', tags={'id': 'ID2'})
+    c = ClCatalog.read('demo/cat1.fits', 'test', tags={'id': 'ID'})
     c.write('cat1_with_header.fits', overwrite=True)
-    c_read = ClCatalog.read('cat1_with_header.fits', id='ID')
+    c_read = ClCatalog.read_full('cat1_with_header.fits')
     os.system('rm -f cat1_with_header.fits')
     # Check add members
     c = ClCatalog(name='test', **{'id': ['a', 'b'], 'ra': [10, 20],
@@ -71,7 +126,7 @@ def test_clcatalog():
     c.add_members(members_catalog=mem, **mem_dat)
     assert_raises(TypeError, c.add_members, members_catalog={})
     # Check read members
-    c.read_members('demo/cat1_mem.fits', id='ID', id_cluster='ID_CLUSTER')
+    c.read_members('demo/cat1_mem.fits', tags={'id':'ID', 'id_cluster':'ID_CLUSTER'})
     # Check raw function
     c_raw = c.raw()
     assert_equal(c_raw.members, None)
@@ -128,7 +183,7 @@ def test_memcatalog():
     # Check inexistent mask
     assert_raises(ValueError, c.get_matching_mask, 'made up mask')
     # Reading function
-    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test')
-    assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', id='ID2')
-    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', id='ID')
-    c = MemCatalog.read('demo/cat1_mem.fits', 'test', id='ID', id_cluster='ID_CLUSTER')
+    assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test')
+    assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', tags={'id':'ID2'})
+    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', tags={'id':'ID'})
+    c = MemCatalog.read('demo/cat1_mem.fits', 'test', tags={'id':'ID', 'id_cluster':'ID_CLUSTER'})

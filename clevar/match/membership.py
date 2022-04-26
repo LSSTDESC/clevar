@@ -57,12 +57,11 @@ class MembershipMatch(Match):
                                 'nmem': self._comp_nmem(cat1)})
         cat2.mt_input = ClData({'share_mems': [{} for i in range(cat2.size)],
                                 'nmem': self._comp_nmem(cat2)})
-        for mem1_, mem2_ in zip(cat1.members[self.matched_mems[:,0]],
-                                cat2.members[self.matched_mems[:,1]]):
-            self._add_pmem(cat1.mt_input['share_mems'], cat1.id_dict[mem1_['id_cluster']],
-                           mem2_['id_cluster'], mem1_['pmem'])
-            self._add_pmem(cat2.mt_input['share_mems'], cat2.id_dict[mem2_['id_cluster']],
-                           mem1_['id_cluster'], mem2_['pmem'])
+        for i1, i2 in self.matched_mems:
+            idcl1, pmem1 = cat1.members['id_cluster'][i1], cat1.members['pmem'][i1]
+            idcl2, pmem2 = cat2.members['id_cluster'][i2], cat2.members['pmem'][i2]
+            self._add_pmem(cat1.mt_input['share_mems'], cat1.id_dict[idcl1], idcl2, pmem1)
+            self._add_pmem(cat2.mt_input['share_mems'], cat2.id_dict[idcl2], idcl1, pmem2)
         # sort order in dicts by mass
         cat1.mt_input['share_mems'] = [self._sort_share_mem_mass(share_mem1, cat2)
                                         for share_mem1 in cat1.mt_input['share_mems']]
