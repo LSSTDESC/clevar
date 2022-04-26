@@ -352,15 +352,16 @@ class Catalog():
         """
         num = f'{aperture}'
         num = f'{aperture:.2f}' if len(num)>6 else num
+        zcol, rcol = self.tags['z'], self.tags['radius']
         window_cfg = {
             'flat': {
                 'func': ftpt._get_coverfrac,
-                'get_args': lambda c: [c['SkyCoord'], c['z'], aperture, aperture_unit],
+                'get_args': lambda c: [c['SkyCoord'], c[zcol], aperture, aperture_unit],
                 'colname': f'{num}_{aperture_unit}',
             },
             'nfw2D': {
                 'func': ftpt._get_coverfrac_nfw2D,
-                'get_args': lambda c: [c['SkyCoord'], c['z'], c['radius'],
+                'get_args': lambda c: [c['SkyCoord'], c[zcol], c[rcol],
                                    self.radius_unit, aperture, aperture_unit],
                 'colname': f'nfw_{num}_{aperture_unit}',
             },
