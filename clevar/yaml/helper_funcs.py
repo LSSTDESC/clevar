@@ -229,12 +229,10 @@ def make_catalog(cat_config):
     clevar.ClCatalog
         ClCatalog based on input config
     """
-    c0 = ClData.read(cat_config['file'])
-    cat = ClCatalog(cat_config['name'],
-        **{k:c0[v] for k, v in cat_config['columns'].items()})
-    cat.radius_unit = cat_config.get('radius_unit', None)
-    cat.labels.update(cat_config.get('labels', {}))
-    return cat
+    return ClCatalog.read(
+        cat_config['file'], name=cat_config['name'], tags=cat_config['columns'],
+        radius_unit=cat_config.get('radius_unit', None),
+        labels=cat_config.get('labels', {}))
 def add_mem_catalog(cat, cat_config):
     """
     Make a clevar.MemCatalog object based on config
@@ -249,7 +247,7 @@ def add_mem_catalog(cat, cat_config):
     clevar.MemCatalog
         MemCatalog based on input config
     """
-    cat.read_members(cat_config['file'], **cat_config['columns'])
+    cat.read_members(cat_config['file'], tags=cat_config['columns'])
     cat.members.labels.update(cat_config.get('labels', {}))
 def make_cosmology(cosmo_config):
     """
