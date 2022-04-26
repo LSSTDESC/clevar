@@ -711,33 +711,29 @@ class ClCatalog(Catalog):
                     self.leftover_members.name = 'leftover members'
             members = members[mem_in_cl]
         self.members = members
-    def read_members(self, filename, labels={}, tags={}, members_consistency=True,
-                     members_warning=True, **kwargs):
+    def read_members(self, filename, tags={}, labels={}, members_consistency=True,
+                     members_warning=True, full=False):
         """Read members catalog from fits file.
 
         Parameters
         ----------
         filename: str
             Input file.
-        labels: dict
-            Labels of data columns for plots (default vals from file header).
         tags: dict
-            Tags for table (default vals from file header).
+            Tags for member table.
+        labels: dict
+            Labels of data columns for plots.
         members_consistency: bool
             Require that all input members belong to this cluster catalog.
         members_warning: bool
             Raise warning if members are do not belong to this cluster catalog,
             and save them in leftover_members attribute.
-        labels: dict
-            Labels of data columns for plots (default vals from file header).
-        **kwargs: keyword argumens
-            All columns to be added must be passes with named argument,
-            the name is used in the Catalog data and the value must
-            be the column name in your input file (ex: z='REDSHIFT').
+        full: bool
+            Reads all columns of the catalog
         """
         self.add_members(
             members_catalog=MemCatalog.read(
-                filename, 'members', labels=labels, tags=tags, **kwargs),
+                filename, 'members', labels=labels, tags=tags, full=full),
             members_consistency=members_consistency, members_warning=members_warning)
     def remove_members(self):
         """
