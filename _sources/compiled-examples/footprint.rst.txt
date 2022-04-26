@@ -5,6 +5,114 @@ Here we show how to use the footprint functionality. It is not used
 directly in the matching, but can be applied on the recovery rates
 computation
 
+.. raw:: html
+
+   <h1>
+
+Table of Contents
+
+.. raw:: html
+
+   </h1>
+
+.. container:: toc
+
+   .. raw:: html
+
+      <ul class="toc-item">
+
+   .. raw:: html
+
+      <li>
+
+   1  Generate random data and add to catalog
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   2  Add an external footprint
+
+   .. raw:: html
+
+      <ul class="toc-item">
+
+   .. raw:: html
+
+      <li>
+
+   2.1  Plotting the footprint
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      </ul>
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   3  Use ClEvaR functions to create a footprint
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   4  Footprint masks
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   5  Saving and loading footprint quantities
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   6  Match catalogs
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   7  Recovery rate
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      </ul>
+
 .. code:: ipython3
 
     %load_ext autoreload
@@ -53,6 +161,13 @@ Generate random data and add to catalog
     for c in ('mass', 'mass_err'):
         c1[c].info.format = '.2e'
         c2[c].info.format = '.2e'
+
+
+.. parsed-literal::
+
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.0-py3.9.egg/clevar/catalog.py:212: UserWarning: id column missing, additional one is being created.
+      warnings.warn(
+
 
 Add an external footprint
 -------------------------
@@ -104,12 +219,12 @@ Check to see if selected pixels are correct
 
 .. parsed-literal::
 
-    <matplotlib.legend.Legend at 0x7fb276cead90>
+    <matplotlib.legend.Legend at 0x7fa0a539e460>
 
 
 
 
-.. image:: footprint_files/footprint_10_2.png
+.. image:: footprint_files/footprint_11_2.png
 
 
 Add them to the ``Footprint`` object. It also has an option of detection
@@ -145,7 +260,7 @@ value is set:
 
 
 
-.. image:: footprint_files/footprint_13_0.png
+.. image:: footprint_files/footprint_14_0.png
 
 
 Plotting the footprint
@@ -172,20 +287,11 @@ The footprints have an inbuilt function to plot their values
 
 
 
-.. image:: footprint_files/footprint_15_1.png
+.. image:: footprint_files/footprint_16_1.png
 
 
 
-.. image:: footprint_files/footprint_15_2.png
-
-
-.. code:: ipython3
-
-    f = ftpt1.plot('detfrac', bad_val=np.nan, auto_lim=True, ra_lim=[330, 60])
-
-
-
-.. image:: footprint_files/footprint_16_0.png
+.. image:: footprint_files/footprint_16_2.png
 
 
 Clusters can also be added to the plot with their actual angular size:
@@ -332,8 +438,8 @@ weighted by a project NFW profile
     ## creating visibility mask ##
     ## creating visibility mask ##
     ## creating visibility mask ##
-    CPU times: user 13.7 ms, sys: 597 µs, total: 14.3 ms
-    Wall time: 14 ms
+    CPU times: user 10.8 ms, sys: 0 ns, total: 10.8 ms
+    Wall time: 10.3 ms
 
 
 .. code:: ipython3
@@ -345,8 +451,8 @@ weighted by a project NFW profile
 
 .. raw:: html
 
-    <b>Cat1</b><br>Radius unit: arcmin<br><i>ClData length=4</i>
-    <table id="table140404467354880" class="table-striped table-bordered table-condensed">
+    <b>Cat1</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
+    <table id="table140327937690640" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
     <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
@@ -359,8 +465,8 @@ weighted by a project NFW profile
 
 .. raw:: html
 
-    <b>Cat2</b><br>Radius unit: arcmin<br><i>ClData length=4</i>
-    <table id="table140404467353200" class="table-striped table-bordered table-condensed">
+    <b>Cat2</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
+    <table id="table140327937690064" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
     <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
@@ -388,8 +494,8 @@ object.
 
 .. parsed-literal::
 
-    CPU times: user 7.43 s, sys: 1.13 ms, total: 7.43 s
-    Wall time: 7.43 s
+    CPU times: user 6.37 s, sys: 4.91 ms, total: 6.37 s
+    Wall time: 6.38 s
 
 
 .. code:: ipython3
@@ -401,8 +507,8 @@ object.
 
 .. raw:: html
 
-    <b>Cat1</b><br>Radius unit: arcmin<br><i>ClData length=4</i>
-    <table id="table140404467354496" class="table-striped table-bordered table-condensed">
+    <b>Cat1</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
+    <table id="table140327937588912" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
@@ -415,8 +521,8 @@ object.
 
 .. raw:: html
 
-    <b>Cat2</b><br>Radius unit: arcmin<br><i>ClData length=4</i>
-    <table id="table140404467354688" class="table-striped table-bordered table-condensed">
+    <b>Cat2</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
+    <table id="table140327937587856" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
     <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
@@ -495,8 +601,8 @@ Match catalogs
     * 719/835 objects matched.
     Cross Matches (Cat2)
     * 719/928 objects matched.
-    CPU times: user 16.3 s, sys: 169 ms, total: 16.5 s
-    Wall time: 16.3 s
+    CPU times: user 13.3 s, sys: 219 ms, total: 13.5 s
+    Wall time: 13.3 s
 
 
 Recovery rate

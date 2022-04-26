@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.utils module &mdash; ClEvaR 0.9.0 documentation</title>
+  <title>clevar.utils module &mdash; ClEvaR 0.10.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.10.0
               </div>
             
           
@@ -233,6 +233,47 @@
             
   <div class="section" id="module-clevar.utils">
 <span id="clevar-utils-module"></span><h1>clevar.utils module<a class="headerlink" href="#module-clevar.utils" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="clevar.utils.LowerCaseDict">
+<em class="property">class </em><code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">LowerCaseDict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>Dictionary with lowercase keys</p>
+<dl class="py method">
+<dt id="clevar.utils.LowerCaseDict.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for key if key is in the dictionary, else default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.utils.LowerCaseDict.pop">
+<code class="sig-name descname">pop</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="optional">[</span>, <em class="sig-param">d</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; v, remove specified key and return the corresponding value.<a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>If key is not found, default is returned if given, otherwise KeyError is raised</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.utils.LowerCaseDict.setdefault">
+<code class="sig-name descname">setdefault</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.setdefault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert key with a value of default if key is not in the dictionary.</p>
+<p>Return the value for key if key is in the dictionary, else default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="clevar.utils.LowerCaseDict.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">E</em>, <span class="optional">]</span><em class="sig-param">**F</em><span class="sig-paren">)</span> &#x2192; None.  Update D from dict/iterable E and F.<a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>If E is present and has a .keys() method, then does:  for k in E: D[k] = E[k]
+If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v
+In either case, this is followed by: for k in F:  D[k] = F[k]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="clevar.utils.NameList">
+<em class="property">class </em><code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">NameList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iterable</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="o">/</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#NameList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.NameList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+<p>List without case consideration in <cite>in</cite> function</p>
+</dd></dl>
+
 <dl class="py function">
 <dt id="clevar.utils.autobins">
 <code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">autobins</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#autobins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.autobins" title="Permalink to this definition">¶</a></dt>
