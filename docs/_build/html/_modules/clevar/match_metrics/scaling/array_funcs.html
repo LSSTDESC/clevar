@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.scaling.array_funcs &mdash; ClEvaR 0.9.0 documentation</title>
+  <title>clevar.match_metrics.scaling.array_funcs &mdash; ClEvaR 0.10.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.10.0
               </div>
             
           
@@ -1260,8 +1260,8 @@
     <span class="n">masks2</span> <span class="o">=</span> <span class="n">binmasks</span><span class="p">(</span><span class="n">values2</span><span class="p">,</span> <span class="n">edges2</span><span class="p">)</span>
     <span class="n">masks_aux</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)]</span> <span class="k">if</span> <span class="n">values_aux</span> <span class="ow">is</span> <span class="kc">None</span>\
                 <span class="k">else</span> <span class="n">binmasks</span><span class="p">(</span><span class="n">values_aux</span><span class="p">,</span> <span class="n">edges_aux</span><span class="p">)</span>
-    <span class="n">steps1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">edges1_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">edges1_dist</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">log_vals</span>\
-            <span class="k">else</span> <span class="n">edges1_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="n">edges1_dist</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">steps1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">edges1_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">edges1_dist</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> \
+                <span class="k">if</span> <span class="n">log_vals</span> <span class="k">else</span> <span class="n">edges1_dist</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="n">edges1_dist</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="c1"># Use quantities relative to panel and lines:</span>
     <span class="n">panel_masks</span><span class="p">,</span> <span class="n">line_masks</span> <span class="o">=</span> <span class="p">(</span><span class="n">masks_aux</span><span class="p">,</span> <span class="n">masks2</span><span class="p">)</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="p">(</span><span class="n">masks2</span><span class="p">,</span> <span class="n">masks_aux</span><span class="p">)</span>
     <span class="n">panel_edges</span><span class="p">,</span> <span class="n">line_edges</span> <span class="o">=</span> <span class="p">(</span><span class="n">edges_aux</span><span class="p">,</span> <span class="n">edges2</span><span class="p">)</span> <span class="k">if</span> <span class="n">transpose</span> <span class="k">else</span> <span class="p">(</span><span class="n">edges2</span><span class="p">,</span> <span class="n">edges_aux</span><span class="p">)</span>

@@ -1,3 +1,101 @@
+.. raw:: html
+
+   <h1>
+
+Table of Contents
+
+.. raw:: html
+
+   </h1>
+
+.. container:: toc
+
+   .. raw:: html
+
+      <ul class="toc-item">
+
+   .. raw:: html
+
+      <li>
+
+   1  Generate random data and add to catalog
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   2  Match catalogs
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   3  Find the scaling relation between the masses of the two catalogs
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   4  Recovery rate
+
+   .. raw:: html
+
+      <ul class="toc-item">
+
+   .. raw:: html
+
+      <li>
+
+   4.1  Panels plots
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      </ul>
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   5  Difference with threshold mass
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      <li>
+
+   6  Difference catalog mass
+
+   .. raw:: html
+
+      </li>
+
+   .. raw:: html
+
+      </ul>
+
 Intrinsic Completeness
 ======================
 
@@ -103,6 +201,13 @@ Generate random data and add to catalog
         c1[c].info.format = '.2e'
         c2[c].info.format = '.2e'
 
+
+.. parsed-literal::
+
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.0-py3.9.egg/clevar/catalog.py:212: UserWarning: id column missing, additional one is being created.
+      warnings.warn(
+
+
 Match catalogs
 --------------
 
@@ -184,7 +289,7 @@ Find the scaling relation between the masses of the two catalogs
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_11_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_12_0.png
 
 
 The output of ``scaling.mass*`` functions contains a
@@ -219,7 +324,7 @@ shaded reagions corresponding to the completeness of each mass bin:
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_16_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_17_0.png
 
 
 When plotted as a function of mass with redshift bins, it will add a
@@ -237,7 +342,7 @@ mass:
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_18_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_19_0.png
 
 
 In this case specifically, we do know the true distribution
@@ -268,11 +373,11 @@ intrinsic completeness:
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_21_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_22_0.png
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_21_1.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_22_1.png
 
 
 .. code:: ipython3
@@ -294,11 +399,11 @@ intrinsic completeness:
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_22_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_23_0.png
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_22_1.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_23_1.png
 
 
 Panels plots
@@ -320,11 +425,11 @@ You can also have a panel for each bin:
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_24_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_25_0.png
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_24_1.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_25_1.png
 
 
 Appendix: Estimating deviation in completeness approximation 
@@ -436,7 +541,7 @@ difference of the arguments :math:`\frac{dn}{dM_2}P(M_1|M_2)` vs
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_32_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_33_0.png
 
 
 There is only a small shift in the argument to be integrated.
@@ -477,7 +582,7 @@ and checking the difference:
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_36_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_37_0.png
 
 
 .. code:: ipython3
@@ -548,7 +653,7 @@ the difference of the arguments :math:`\frac{dn}{dM_2}P(M_1|M_2)` vs
 
 
 
-.. image:: intrinsic_completeness_files/intrinsic_completeness_42_0.png
+.. image:: intrinsic_completeness_files/intrinsic_completeness_43_0.png
 
 
 .. code:: ipython3

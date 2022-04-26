@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Intrinsic Completeness &mdash; ClEvaR 0.9.0 documentation</title>
+  <title>Intrinsic Completeness &mdash; ClEvaR 0.10.0 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.10.0
               </div>
             
           
@@ -229,7 +229,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="intrinsic-completeness">
+  <h1><p>Table of Contents</p>
+</h1><div class="toc docutils container">
+<ul class="toc-item"><li><p>1  Generate random data and add to catalog</p>
+</li><li><p>2  Match catalogs</p>
+</li><li><p>3  Find the scaling relation between the masses of the two catalogs</p>
+</li><li><p>4  Recovery rate</p>
+<ul class="toc-item"><li><p>4.1  Panels plots</p>
+</li></ul></li><li><p>5  Difference with threshold mass</p>
+</li><li><p>6  Difference catalog mass</p>
+</li></ul></div>
+<div class="section" id="intrinsic-completeness">
 <h1>Intrinsic Completeness<a class="headerlink" href="#intrinsic-completeness" title="Permalink to this headline">¶</a></h1>
 <p>When two catalogs with different mass proxies and a threshold mass
 proxy, there is a intrinsic completeness limitaion on the relative
@@ -303,6 +313,10 @@ can estimate this completeness as:</p>
     <span class="n">c2</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2e&#39;</span>
 </pre></div>
 </div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/.</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">clevar</span><span class="o">-</span><span class="mf">0.10</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">py3</span><span class="o">.</span><span class="mf">9.</span><span class="n">egg</span><span class="o">/</span><span class="n">clevar</span><span class="o">/</span><span class="n">catalog</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">212</span><span class="p">:</span> <span class="ne">UserWarning</span><span class="p">:</span> <span class="nb">id</span> <span class="n">column</span> <span class="n">missing</span><span class="p">,</span> <span class="n">additional</span> <span class="n">one</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">created</span><span class="o">.</span>
+  <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="match-catalogs">
 <h2>Match catalogs<a class="headerlink" href="#match-catalogs" title="Permalink to this headline">¶</a></h2>
@@ -374,7 +388,7 @@ can estimate this completeness as:</p>
     <span class="n">bins1</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_11_0.png" src="../_images/intrinsic_completeness_11_0.png" />
+<img alt="../_images/intrinsic_completeness_12_0.png" src="../_images/intrinsic_completeness_12_0.png" />
 <p>The output of <code class="docutils literal notranslate"><span class="pre">scaling.mass*</span></code> functions contains a
 <code class="docutils literal notranslate"><span class="pre">['fit']['func_dist_interp']</span></code> element representing <span class="math notranslate nohighlight">\(P(M_1|M_2)\)</span>,
 which can be passed directly to the recovery rates to estimate the
@@ -400,7 +414,7 @@ shaded reagions corresponding to the completeness of each mass bin:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_16_0.png" src="../_images/intrinsic_completeness_16_0.png" />
+<img alt="../_images/intrinsic_completeness_17_0.png" src="../_images/intrinsic_completeness_17_0.png" />
 <p>When plotted as a function of mass with redshift bins, it will add a
 shaded region correspong to the intrinsic completeness as a function of
 mass:</p>
@@ -412,7 +426,7 @@ mass:</p>
     <span class="n">p_m1_m2</span><span class="o">=</span><span class="n">info2_mr</span><span class="p">[</span><span class="s1">&#39;fit&#39;</span><span class="p">][</span><span class="s1">&#39;func_dist_interp&#39;</span><span class="p">],</span> <span class="n">min_mass2</span><span class="o">=</span><span class="mf">1e13</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_18_0.png" src="../_images/intrinsic_completeness_18_0.png" />
+<img alt="../_images/intrinsic_completeness_19_0.png" src="../_images/intrinsic_completeness_19_0.png" />
 <p>In this case specifically, we do know the true distribution
 <span class="math notranslate nohighlight">\(P(M_2|M_1)\)</span> that was used by <code class="docutils literal notranslate"><span class="pre">gen_cluster</span></code> to generate the
 clusters. So we can compare these estimated results with the “true”
@@ -436,8 +450,8 @@ intrinsic completeness:</p>
     <span class="n">p_m1_m2</span><span class="o">=</span><span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="o">=</span><span class="mf">1e13</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_21_0.png" src="../_images/intrinsic_completeness_21_0.png" />
-<img alt="../_images/intrinsic_completeness_21_1.png" src="../_images/intrinsic_completeness_21_1.png" />
+<img alt="../_images/intrinsic_completeness_22_0.png" src="../_images/intrinsic_completeness_22_0.png" />
+<img alt="../_images/intrinsic_completeness_22_1.png" src="../_images/intrinsic_completeness_22_1.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># By redshift</span>
 <span class="n">zbins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="n">mbins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mf">13.4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mf">1e15</span><span class="p">)</span>
@@ -454,8 +468,8 @@ intrinsic completeness:</p>
     <span class="n">p_m1_m2</span><span class="o">=</span><span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="o">=</span><span class="mf">1e13</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_22_0.png" src="../_images/intrinsic_completeness_22_0.png" />
-<img alt="../_images/intrinsic_completeness_22_1.png" src="../_images/intrinsic_completeness_22_1.png" />
+<img alt="../_images/intrinsic_completeness_23_0.png" src="../_images/intrinsic_completeness_23_0.png" />
+<img alt="../_images/intrinsic_completeness_23_1.png" src="../_images/intrinsic_completeness_23_1.png" />
 <div class="section" id="panels-plots">
 <h3>Panels plots<a class="headerlink" href="#panels-plots" title="Permalink to this headline">¶</a></h3>
 <p>You can also have a panel for each bin:</p>
@@ -470,8 +484,8 @@ intrinsic completeness:</p>
                           <span class="n">p_m1_m2</span><span class="o">=</span><span class="n">p_m1_m2</span><span class="p">,</span> <span class="n">min_mass2</span><span class="o">=</span><span class="mf">1e13</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_24_0.png" src="../_images/intrinsic_completeness_24_0.png" />
-<img alt="../_images/intrinsic_completeness_24_1.png" src="../_images/intrinsic_completeness_24_1.png" />
+<img alt="../_images/intrinsic_completeness_25_0.png" src="../_images/intrinsic_completeness_25_0.png" />
+<img alt="../_images/intrinsic_completeness_25_1.png" src="../_images/intrinsic_completeness_25_1.png" />
 </div>
 </div>
 </div>
@@ -559,7 +573,7 @@ difference of the arguments <span class="math notranslate nohighlight">\(\frac{d
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_32_0.png" src="../_images/intrinsic_completeness_32_0.png" />
+<img alt="../_images/intrinsic_completeness_33_0.png" src="../_images/intrinsic_completeness_33_0.png" />
 <p>There is only a small shift in the argument to be integrated.</p>
 <p>When making the integrals:</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m2_th_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
@@ -591,7 +605,7 @@ difference of the arguments <span class="math notranslate nohighlight">\(\frac{d
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_36_0.png" src="../_images/intrinsic_completeness_36_0.png" />
+<img alt="../_images/intrinsic_completeness_37_0.png" src="../_images/intrinsic_completeness_37_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">md</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;the maximum difference is of </span><span class="si">{</span><span class="n">diff_m1fix</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">. &#39;</span>
    <span class="sa">f</span><span class="s1">&#39;Therefore the approximation only deviates by </span><span class="si">{</span><span class="n">diff_m1fix</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">%,&#39;</span>
    <span class="s1">&#39; and it occurs at $M_2^</span><span class="si">{th}</span><span class="s1">$=$M_1$&#39;</span><span class="p">)</span>
@@ -640,7 +654,7 @@ the difference of the arguments <span class="math notranslate nohighlight">\(\fr
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/intrinsic_completeness_42_0.png" src="../_images/intrinsic_completeness_42_0.png" />
+<img alt="../_images/intrinsic_completeness_43_0.png" src="../_images/intrinsic_completeness_43_0.png" />
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">md</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The maximum difference is of </span><span class="si">{</span><span class="n">diff_m2fix</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">. &#39;</span>
    <span class="sa">f</span><span class="s1">&#39;Therefore the approximation only deviates by </span><span class="si">{</span><span class="n">diff_m2fix</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">%,&#39;</span>
    <span class="s1">&#39; and it occurs at $M_1$=$M_2^</span><span class="si">{th}</span><span class="s1">$&#39;</span><span class="p">)</span>

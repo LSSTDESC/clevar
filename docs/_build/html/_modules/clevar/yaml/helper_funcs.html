@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.yaml.helper_funcs &mdash; ClEvaR 0.9.0 documentation</title>
+  <title>clevar.yaml.helper_funcs &mdash; ClEvaR 0.10.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.9.0
+                0.10.0
               </div>
             
           
@@ -457,12 +457,10 @@
 <span class="sd">    clevar.ClCatalog</span>
 <span class="sd">        ClCatalog based on input config</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">c0</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">])</span>
-    <span class="n">cat</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span>
-        <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">c0</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
-    <span class="n">cat</span><span class="o">.</span><span class="n">radius_unit</span> <span class="o">=</span> <span class="n">cat_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="n">cat</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cat_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{}))</span>
-    <span class="k">return</span> <span class="n">cat</span></div>
+    <span class="k">return</span> <span class="n">ClCatalog</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+        <span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">tags</span><span class="o">=</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">],</span>
+        <span class="n">radius_unit</span><span class="o">=</span><span class="n">cat_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;radius_unit&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">cat_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{}))</span></div>
 <div class="viewcode-block" id="add_mem_catalog"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.add_mem_catalog">[docs]</a><span class="k">def</span> <span class="nf">add_mem_catalog</span><span class="p">(</span><span class="n">cat</span><span class="p">,</span> <span class="n">cat_config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make a clevar.MemCatalog object based on config</span>
@@ -477,7 +475,7 @@
 <span class="sd">    clevar.MemCatalog</span>
 <span class="sd">        MemCatalog based on input config</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">cat</span><span class="o">.</span><span class="n">read_members</span><span class="p">(</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">])</span>
+    <span class="n">cat</span><span class="o">.</span><span class="n">read_members</span><span class="p">(</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">],</span> <span class="n">tags</span><span class="o">=</span><span class="n">cat_config</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">])</span>
     <span class="n">cat</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cat_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span> <span class="p">{}))</span></div>
 <div class="viewcode-block" id="make_cosmology"><a class="viewcode-back" href="../../../api/clevar.yaml.helper_funcs.html#clevar.yaml.helper_funcs.make_cosmology">[docs]</a><span class="k">def</span> <span class="nf">make_cosmology</span><span class="p">(</span><span class="n">cosmo_config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
