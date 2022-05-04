@@ -24,6 +24,10 @@ class MembershipMatch(Match):
         cat2: clevar.ClCatalog
             Target catalog with members attribute.
         """
+        if cat1.mt_input is None:
+            raise AttributeError('cat1.mt_input is None, run fill_shared_members first.')
+        if cat2.mt_input is None:
+            raise AttributeError('cat2.mt_input is None, run fill_shared_members first.')
         self.cat1_mmt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
         print(f'Finding candidates ({cat1.name})')
         for i, (share_mems1, nmem1) in enumerate(zip(cat1.mt_input['share_mems'], cat1.mt_input['nmem'])):
@@ -48,7 +52,7 @@ class MembershipMatch(Match):
             Cluster catalog with members attribute.
         """
         if self.matched_mems is None:
-            raise ValueError('Members not matched, run match_members before.')
+            raise AttributeError('Members not matched, run match_members before.')
         if 'pmem' not in cat1.members.data.colnames:
             cat1.members['pmem'] = 1.
         if 'pmem' not in cat2.members.data.colnames:
@@ -120,6 +124,10 @@ class MembershipMatch(Match):
         overwrite: bool
             Overwrite saved files
         """
+        if cat1.mt_input is None:
+            raise AttributeError('cat1.mt_input is None cannot save it.')
+        if cat2.mt_input is None:
+            raise AttributeError('cat2.mt_input is None cannot save it.')
         pickle.dump({c:cat1.mt_input[c] for c in cat1.mt_input.colnames},
                     open(f'{fileprefix}.1.p', 'wb'))
         pickle.dump({c:cat2.mt_input[c] for c in cat2.mt_input.colnames},
@@ -158,6 +166,10 @@ class MembershipMatch(Match):
         cosmo: clevar.Cosmology, None
             For `method='angular_distance'`. Cosmology object for when radius has physical units.
         """
+        if mem1 is None:
+            raise AttributeError('members of catalog 1 is None, add members to catalog 1 first.')
+        if mem2 is None:
+            raise AttributeError('members of catalog 2 is None, add members to catalog 2 first.')
         if method=='id':
             self._match_members_by_id(mem1, mem2)
         elif method=='angular_distance':
@@ -234,6 +246,8 @@ class MembershipMatch(Match):
         overwrite: bool
             Overwrite saved files
         """
+        if self.matched_mems is None:
+            raise AttributeError('self.matched_mems is None cannot save it.')
         np.savetxt(filename, self.matched_mems, fmt='%d')
     def load_matched_members(self, filename):
         """
