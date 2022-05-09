@@ -7,7 +7,7 @@ from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 
-from .utils import veclen, none_val, NameList, LowerCaseDict
+from .utils import veclen, none_val, NameList, LowerCaseDict, updated_dict
 
 
 class ClData(APtable):
@@ -110,27 +110,27 @@ class Catalog():
     tags: dict
         Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
     """
-    def __init__(self, name, labels={}, tags={}, **kwargs):
+    def __init__(self, name, labels=None, tags=None, **kwargs):
         if not isinstance(name, str):
             raise ValueError('name must be str.')
-        if not isinstance(labels, dict):
+        if labels is not None and not isinstance(labels, dict):
             raise ValueError('labels must be dict.')
-        if not isinstance(tags, dict):
+        if tags is not None and not isinstance(tags, dict):
             raise ValueError('tags must be dict.')
         self.name = name
         self.size = None
         self.data = ClData()
         self.id_dict = {}
         self.colnames = NameList()
-        self.labels = labels
-        self.tags = LowerCaseDict({'id':'id'})
-        self.tags.update(tags)
+        self.labels = LowerCaseDict(updated_dict(labels))
+        self.tags = LowerCaseDict(updated_dict({'id':'id'}, tags))
         self.default_tags = NameList(kwargs.pop('default_tags', ['id', 'ra', 'dec']))
         if len(kwargs)>0:
             self._add_values(**kwargs)
         # make sure columns don't overwrite tags
-        for colname, coltag in tags.items():
-            self.tag_column(coltag, colname, skip_warn=True)
+        if tags is not None:
+            for colname, coltag in tags.items():
+                self.tag_column(coltag, colname, skip_warn=True)
     def __setitem__(self, item, value):
         value_ = value
         if isinstance(item, str):
@@ -434,7 +434,7 @@ class Catalog():
                     out[colname][i] = c.split(',') if len(c)>0 else []
         return out
     @classmethod
-    def read(self, filename, name, labels={}, tags={}, full=False):
+    def read(self, filename, name, labels=None, tags=None, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -443,17 +443,19 @@ class Catalog():
             Input file.
         name: str, None
             Catalog name, if none reads from file.
-        labels: dict
-            Labels of data columns for plots (default vals from file header).
-        tags: dict
-            Tags for table (default vals from file header).
+        labels: dict, None
+            Labels of data columns for plots.
+        tags: dict, None
+            Tags for table (required if full=False).
         full: bool
             Reads all columns of the catalog
         """
         data = ClData.read(filename)
         if not full:
-            if len(tags)==0:
+            if tags is None:
                 raise KeyError('If full=False, tags must be provided.')
+            if not isinstance(tags, dict):
+                raise ValueError('tags must be dict.')
             data._check_cols(tags.values())
             data = data[list(tags.values())]
         return self._read(data, name=name, labels=labels, tags=tags)
@@ -571,7 +573,7 @@ class ClCatalog(Catalog):
     leftover_members: MemCatalog
         Catalog of members not associated to the clusters
     """
-    def __init__(self, name, labels={}, tags={}, radius_unit=None, members=None, **kwargs):
+    def __init__(self, name, labels=None, tags=None, radius_unit=None, members=None, **kwargs):
         self.members = None
         self.leftover_members = None
         self.radius_unit = radius_unit
@@ -645,7 +647,7 @@ class ClCatalog(Catalog):
             out = self
         return out
     @classmethod
-    def read(self, filename, name, labels={}, tags={}, radius_unit=None, full=False):
+    def read(self, filename, name, labels=None, tags=None, radius_unit=None, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -654,10 +656,10 @@ class ClCatalog(Catalog):
             Input file.
         name: str, None
             Catalog name, if none reads from file.
-        labels: dict
-            Labels of data columns for plots (default vals from file header).
-        tags: dict
-            Tags for table (default vals from file header).
+        labels: dict, None
+            Labels of data columns for plots.
+        tags: dict, None
+            Tags for table (required if full=False).
         radius_unit: str, None
             Unit of the radius column (default read from file).
         full: bool
@@ -665,8 +667,10 @@ class ClCatalog(Catalog):
         """
         data = ClData.read(filename)
         if not full:
-            if len(tags)==0:
+            if tags is None:
                 raise KeyError('If full=False, tags must be provided.')
+            if not isinstance(tags, dict):
+                raise ValueError('tags must be dict.')
             data._check_cols(tags.values())
             data = data[list(tags.values())]
         return self._read(data, name=name, labels=labels, tags=tags, radius_unit=radius_unit)
@@ -711,7 +715,7 @@ class ClCatalog(Catalog):
                     self.leftover_members.name = 'leftover members'
             members = members[mem_in_cl]
         self.members = members
-    def read_members(self, filename, tags={}, labels={}, members_consistency=True,
+    def read_members(self, filename, tags=None, labels=None, members_consistency=True,
                      members_warning=True, full=False):
         """Read members catalog from fits file.
 
@@ -719,9 +723,9 @@ class ClCatalog(Catalog):
         ----------
         filename: str
             Input file.
-        tags: dict
+        tags: dict, None
             Tags for member table.
-        labels: dict
+        labels: dict, None
             Labels of data columns for plots.
         members_consistency: bool
             Require that all input members belong to this cluster catalog.
@@ -768,10 +772,11 @@ class MemCatalog(Catalog):
     tags: dict
         Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,...)
     """
-    def __init__(self, name, labels={}, tags={}, **kwargs):
-        tags_ = LowerCaseDict({'id_cluster':'id_cluster'})
-        tags_.update(tags)
-        Catalog.__init__(self, name, labels=labels, tags=tags_,
+    def __init__(self, name, labels=None, tags=None, **kwargs):
+        if tags is not None and not isinstance(tags, dict):
+            raise ValueError('tags must be dict.')
+        Catalog.__init__(self, name, labels=labels,
+                         tags=LowerCaseDict(updated_dict({'id_cluster':'id_cluster'}, tags)),
                          default_tags=['id', 'id_cluster', 'ra', 'dec', 'z', 'radius'],
                          **kwargs)
     def _add_values(self, **columns):

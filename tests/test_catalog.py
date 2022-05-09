@@ -1,6 +1,6 @@
 from clevar import ClCatalog, MemCatalog, ClData
 from clevar.catalog import Catalog
-from clevar.utils import LowerCaseDict
+from clevar.utils import LowerCaseDict, updated_dict
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 import pytest
@@ -18,6 +18,7 @@ def test_lowercasedict():
             assert_equal(d[key2], 'value')
             d.pop(key2)
             assert key2 not in d
+    assert_raises(ValueError, updated_dict, 'temp')
 
 def _base_cat_test(**quantities):
     c = Catalog(name='test', **quantities)
@@ -29,6 +30,11 @@ def _base_cat_test(**quantities):
     assert_equal(c.get('ra2'), None)
     assert_equal(len(c), len(test_vals['ra']))
     c['ra', 'dec']
+    # test read
+    c.write('cat_with_header.fits', overwrite=True)
+    assert_raises(ValueError, Catalog.read, 'cat_with_header.fits', name='temp', tags='x')
+    c_read = Catalog.read_full('cat_with_header.fits')
+    os.system('rm -f cat_with_header.fits')
     # test removing column
     del c['ra']
     assert_raises(KeyError, c.__getitem__, 'ra')
@@ -47,14 +53,15 @@ def _base_cat_test(**quantities):
     # tag columns
     assert_raises(ValueError, c.tag_columns, ['2', '3'], ['1'])
     c.tag_columns(['id', 'dec'], ['id', 'dec'])
+
 def test_catalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
     _base_cat_test(**quantities)
     _base_cat_test(data=quantities)
     # fail to instantiance object
-    assert_raises(ValueError, Catalog.__init__, None, name=None)
-    assert_raises(ValueError, Catalog.__init__, None, name='test', labels=None)
-    assert_raises(ValueError, Catalog.__init__, None, name='test', tags=None)
+    assert_raises(ValueError, Catalog.__init__, Catalog, name=None)
+    assert_raises(ValueError, Catalog.__init__, Catalog, name='test', labels='x')
+    assert_raises(ValueError, Catalog.__init__, Catalog, name='test', tags='x')
     c_ = Catalog('null')
     assert_raises(TypeError, c_.__setitem__, 'mass', 1)
     assert_raises(TypeError, c_._add_values, data=1)
@@ -69,6 +76,7 @@ def test_catalog():
         c_no_id['ra'] = [1, 2]
     assert f'{record._list[0].message}'=='id column missing, additional one is being created.'
     assert_equal(c_no_id['id'], ['0', '1'])
+
 def test_clcatalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
     c = ClCatalog(name='test', **quantities)
@@ -113,6 +121,7 @@ def test_clcatalog():
     assert_raises(TypeError, ClCatalog.read, 'demo/cat1.fits', tags={'id': 'ID'})
     assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test')
     assert_raises(KeyError, ClCatalog.read, 'demo/cat1.fits', 'test', tags={'id': 'ID2'})
+    assert_raises(ValueError, ClCatalog.read, 'demo/cat1.fits', 'test', tags='x')
     c = ClCatalog.read('demo/cat1.fits', 'test', tags={'id': 'ID'})
     c.write('cat1_with_header.fits', overwrite=True)
     c_read = ClCatalog.read_full('cat1_with_header.fits')
@@ -177,6 +186,7 @@ def test_memcatalog():
     # Check fails
     assert_raises(ValueError, MemCatalog, name='test', id=[0, 0])
     assert_raises(ValueError, MemCatalog, name='test', id=[0, 0], id_cluster=[0])
+    assert_raises(ValueError, MemCatalog, name='test', id=[0, 0], id_cluster=[0], tags='x')
     # Check create ids
     c = MemCatalog('test', ra=[0, 0, 0], id_cluster=[0, 0, 0])
     assert_equal(c['id'], ['0', '1', '2'])

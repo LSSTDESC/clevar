@@ -108,7 +108,7 @@ def plot(cat, col1, col2, bins1, bins2, matching_type,
         Label of recovery rate.
     scale1: str
         Scale of col 1 component
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
@@ -117,7 +117,7 @@ def plot(cat, col1, col2, bins1, bins2, matching_type,
         Add legend of bins
     legend_format: function
         Function to format the values of the bins in legend
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
@@ -179,12 +179,12 @@ def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
         Label of recovery rate.
     scale1: str
         Scale of col 1 component
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -248,15 +248,15 @@ def plot2D(cat, col1, col2, bins1, bins2, matching_type,
         Labels of components 1 and 2. Default is col1, col2.
     scale1, scale2: str
         Scales of col 1, 2 components.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
     add_num: int
         Add numbers in each bin
-    num_kwargs: dict
+    num_kwargs: dict, None
         Arguments for number plot (used in plt.text)
 
     Returns

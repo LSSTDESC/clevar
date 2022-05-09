@@ -8,10 +8,11 @@ from ...geometry import convert_units
 from ...match import get_matched_pairs
 from .. import plot_helper as ph
 from ..plot_helper import plt
+from ...utils import none_val
 
 def _histograms(distances, distance_bins, quantity2=None, bins2=None, log2=False,
-                shape='steps', ax=None, plt_kwargs={}, lines_kwargs_list=None,
-                add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
+                shape='steps', ax=None, plt_kwargs=None, lines_kwargs_list=None,
+                add_legend=True, legend_format=lambda v: v, legend_kwargs=None):
     """
     Plot histograms for distances.
 
@@ -31,7 +32,7 @@ def _histograms(distances, distance_bins, quantity2=None, bins2=None, log2=False
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
@@ -40,7 +41,7 @@ def _histograms(distances, distance_bins, quantity2=None, bins2=None, log2=False
         Add legend of bins
     legend_format: function
         Function to format the values of the bins in legend
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
@@ -114,7 +115,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
@@ -179,7 +180,7 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, col2=None, bins2=None,
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).

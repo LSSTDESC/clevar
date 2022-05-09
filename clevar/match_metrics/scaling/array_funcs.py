@@ -7,7 +7,7 @@ from scipy.optimize import curve_fit
 from scipy.stats import binned_statistic
 from scipy.interpolate import UnivariateSpline as spline
 
-from ...utils import none_val, autobins, binmasks, deep_update, gaussian
+from ...utils import none_val, autobins, binmasks, deep_update, gaussian, updated_dict
 from .. import plot_helper as ph
 from ..plot_helper import plt, NullFormatter
 
@@ -88,11 +88,11 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         Plot binned data used for fit (default=False).
     add_fit: bool
         Fit and plot binned dat (default=False).
-    bindata_kwargs: dict
+    bindata_kwargs: dict, None
         Additional arguments for pylab.errorbar.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for plot of fit pylab.scatter.
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend.
     label_components: tuple (of strings)
         Names of fitted components in fit line label, default=('x', 'y').
@@ -185,37 +185,34 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
         fit_label = rf'${avg_label}=10^{{{fit1_lab}}}\;({xl})^{{{fit0_lab}}}$' if log\
             else rf"${avg_label}={fit0_lab}\;{xl}{'+'*(fit[1]>=0)}{fit1_lab}$"
         # plot fit
-        plot_kwargs_ = {'color': 'r', 'label': fit_label}
-        plot_kwargs_.update(plot_kwargs)
+        plot_kwargs_ = updated_dict({'color': 'r', 'label': fit_label}, plot_kwargs)
         sort = np.argsort(values1)
         xl = values1[sort]
         ax.plot(xl, info['fit']['func'](xl), **plot_kwargs_)
         deep_update(info,
-            {'plots': {'fit': ax.fill_between(
-                xl, info['fit']['func_plus'](xl), info['fit']['func_minus'](xl),
-                color=plot_kwargs_['color'], alpha=.2, lw=0)}}
+            {'plots': {'fit': ax.fill_between(xl, info['fit']['func_plus'](xl),
+                                              info['fit']['func_minus'](xl),
+                                              color=plot_kwargs_['color'], alpha=.2, lw=0)}}
         )
     if add_bindata and not mode=='individual':
-        eb_kwargs_ = {'elinewidth': 1, 'capsize': 2, 'fmt': '.',
-                      'ms': 10, 'ls': '', 'color': 'm'}
-        eb_kwargs_.update(bindata_kwargs)
         deep_update(info,
-            {'plots': {'errorbar': ax.errorbar(
-                ifunc(vbin_1), ifunc(vbin_2),
-                yerr=(ifunc(vbin_2)*np.array([1-1/ifunc(vbin_err2), ifunc(vbin_err2)-1])
-                    if log else vbin_err2),
-                **eb_kwargs_)}}
+            {'plots': {
+                'errorbar': ax.errorbar(
+                    ifunc(vbin_1), ifunc(vbin_2),
+                    yerr=(ifunc(vbin_2)*np.array([1-1/ifunc(vbin_err2), ifunc(vbin_err2)-1])
+                        if log else vbin_err2),
+                    **updated_dict({'elinewidth': 1, 'capsize': 2, 'fmt': '.',
+                                    'ms': 10, 'ls': '', 'color': 'm'}, bindata_kwargs))
+                }}
         )
     # legend
     if any(c.get_label()[0]!='_' for c in ax.collections+ax.lines):
-        legend_kwargs_ = {}
-        legend_kwargs_.update(legend_kwargs)
-        ax.legend(**legend_kwargs_)
+        ax.legend(**updated_dict(legend_kwargs))
     return info
 
 
-def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwargs={},
-         values_color=None, add_cb=True, cb_kwargs={}, **kwargs):
+def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs=None, err_kwargs=None,
+         values_color=None, add_cb=True, cb_kwargs=None, **kwargs):
     """
     Scatter plot with errorbars and color based on input
 
@@ -227,15 +224,15 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
         Errors of component x and y.
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     values_color: array, None
         Values for color (cmap scale).
     add_cb: bool
         Plot colorbar when values_color is not `None`.
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
 
     Other Parameters
@@ -259,11 +256,11 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
         Bins for component 1 (default=10).
     fit_bins2: array, None
         Bins for component 2 (default=30).
-    fit_legend_kwargs: dict
+    fit_legend_kwargs: dict, None
         Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
+    fit_bindata_kwargs: dict, None
         Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
+    fit_plt_kwargs: dict, None
         Additional arguments for plot of fit pylab.scatter.
     fit_label_components: tuple (of strings)
         Names of fitted components in fit line label, default=('x', 'y').
@@ -311,20 +308,19 @@ def plot(values1, values2, err1=None, err2=None, ax=None, plt_kwargs={}, err_kwa
         isort = np.argsort(values_color)
         xplot, yplot, zplot = [v[isort] for v in (values1, values2, values_color)]
         plt_kwargs_['c'] = zplot
-    plt_kwargs_.update(plt_kwargs)
-    sc = info['ax'].scatter(xplot, yplot, **plt_kwargs_)
+    sc = info['ax'].scatter(xplot, yplot, **updated_dict(plt_kwargs_, plt_kwargs))
     # Plot errorbar
-    err_kwargs_ = dict(elinewidth=.5, capsize=0, fmt='.', ms=0, ls='')
+    err_kwargs_ = {'elinewidth':.5, 'capsize':0, 'fmt':'.', 'ms':0, 'ls':''}
     if values_color is None:
         xerr, yerr = err1, err2
     else:
-        cb = plt.colorbar(sc, ax=info['ax'], **cb_kwargs)
+        cb = plt.colorbar(sc, ax=info['ax'], **updated_dict(cb_kwargs))
         xerr = err1[isort] if err1 is not None else None
         yerr = err2[isort] if err2 is not None else None
         err_kwargs_['ecolor'] = [cb.mappable.cmap(cb.mappable.norm(c)) for c in zplot]
     if err1 is not None or err2 is not None:
-        err_kwargs_.update(err_kwargs)
-        info['ax'].errorbar(xplot, yplot, xerr=xerr, yerr=yerr, **err_kwargs_)
+        info['ax'].errorbar(xplot, yplot, xerr=xerr, yerr=yerr,
+                            **updated_dict(err_kwargs_, err_kwargs))
     if values_color is not None:
         if add_cb:
             info['cb'] = cb
@@ -345,9 +341,9 @@ def plot_density(values1, values2, bins1=30, bins2=30,
                  ax_rotation=0, rotation_resolution=30,
                  xscale='linear', yscale='linear',
                  err1=None, err2=None,
-                 ax=None, plt_kwargs={},
-                 add_cb=True, cb_kwargs={},
-                 err_kwargs={}, **kwargs):
+                 ax=None, plt_kwargs=None,
+                 add_cb=True, cb_kwargs=None,
+                 err_kwargs=None, **kwargs):
 
     """
     Scatter plot with errorbars and color based on point density
@@ -368,13 +364,13 @@ def plot_density(values1, values2, bins1=30, bins2=30,
         Errors of component x and y.
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
 
     Other Parameters
@@ -410,8 +406,8 @@ def plot_density(values1, values2, bins1=30, bins2=30,
 
 def _plot_panel(plot_function, values_panel, bins_panel,
                 panel_kwargs_list=None, panel_kwargs_errlist=None,
-                fig_kwargs={}, add_label=True, label_format=lambda v: v,
-                plt_kwargs={}, err_kwargs={}, **plt_func_kwargs):
+                fig_kwargs=None, add_label=True, label_format=lambda v: v,
+                plt_kwargs=None, err_kwargs=None, **plt_func_kwargs):
     """
     Helper function to makes plots in panels
 
@@ -429,7 +425,7 @@ def _plot_panel(plot_function, values_panel, bins_panel,
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -455,26 +451,20 @@ def _plot_panel(plot_function, values_panel, bins_panel,
         np.linspace(min(values_panel), max(values_panel), bins_panel)
     nj = int(np.ceil(np.sqrt(len(edges[:-1]))))
     ni = int(np.ceil(len(edges[:-1])/float(nj)))
-    fig_kwargs_ = dict(sharex=True, sharey=True, figsize=(8, 6))
-    fig_kwargs_.update(fig_kwargs)
-    info = {key: value for key, value in zip(
-        ('fig', 'axes'), plt.subplots(ni, nj, **fig_kwargs_))}
-    panel_kwargs_list = none_val(panel_kwargs_list, [{} for m in edges[:-1]])
-    panel_kwargs_errlist = none_val(panel_kwargs_errlist, [{} for m in edges[:-1]])
+    fig, axes = plt.subplots(
+        ni, nj, **updated_dict({'sharex':True, 'sharey':True, 'figsize':(8, 6)}, fig_kwargs))
+    info = {'fig': fig, 'axes':axes}
     masks = [(values_panel>=v0)*(values_panel<v1) for v0, v1 in zip(edges, edges[1:])]
     ax_conf = []
     for ax, mask, p_kwargs, p_e_kwargs in zip(
-            info['axes'].flatten(), masks, panel_kwargs_list, panel_kwargs_errlist):
+            info['axes'].flatten(), masks,
+            none_val(panel_kwargs_list, iter(lambda:{}, 1)),
+            none_val(panel_kwargs_errlist, iter(lambda:{}, 1))):
         ph.add_grid(ax)
-        kwargs = {}
-        kwargs.update(plt_kwargs)
-        kwargs.update(p_kwargs)
-        kwargs_e = {}
-        kwargs_e.update(err_kwargs)
-        kwargs_e.update(p_e_kwargs)
         ax_conf.append(
             plot_function(
-                ax=ax, plt_kwargs=kwargs, err_kwargs=kwargs_e,
+                ax=ax, plt_kwargs=updated_dict(plt_kwargs, p_kwargs),
+                err_kwargs=updated_dict(err_kwargs, p_e_kwargs),
                 **{k:v[mask] if (hasattr(v, '__len__') and len(v)==mask.size) and
                     (not isinstance(v, (str, dict))) else v
                     for k, v in plt_func_kwargs.items()}))
@@ -491,8 +481,8 @@ def _plot_panel(plot_function, values_panel, bins_panel,
 
 def plot_panel(
     values1, values2, values_panel, bins_panel, err1=None, err2=None, values_color=None,
-    plt_kwargs={}, err_kwargs={}, add_cb=True, cb_kwargs={}, panel_kwargs_list=None,
-    panel_kwargs_errlist=None, fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
+    plt_kwargs=None, err_kwargs=None, add_cb=True, cb_kwargs=None, panel_kwargs_list=None,
+    panel_kwargs_errlist=None, fig_kwargs=None, add_label=True, label_format=lambda v: v, **kwargs):
     """
     Scatter plot with errorbars and color based on input with panels
 
@@ -510,13 +500,13 @@ def plot_panel(
         Errors of component x and y.
     values_color: array, None
         Values for color (cmap scale).
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     add_cb: bool
         Plot colorbar when values_color is not `None`.
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
@@ -524,7 +514,7 @@ def plot_panel(
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -573,9 +563,9 @@ def plot_panel(
 def plot_density_panel(values1, values2, values_panel, bins_panel,
     bins1=30, bins2=30, ax_rotation=0, rotation_resolution=30,
     xscale='linear', yscale='linear',
-    err1=None, err2=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
-    err_kwargs={}, panel_kwargs_list=None, panel_kwargs_errlist=None,
-    fig_kwargs={}, add_label=True, label_format=lambda v: v, **kwargs):
+    err1=None, err2=None, plt_kwargs=None, add_cb=True, cb_kwargs=None,
+    err_kwargs=None, panel_kwargs_list=None, panel_kwargs_errlist=None,
+    fig_kwargs=None, add_label=True, label_format=lambda v: v, **kwargs):
 
     """
     Scatter plot with errorbars and color based on point density with panels
@@ -600,13 +590,13 @@ def plot_density_panel(values1, values2, values_panel, bins_panel,
         Errors of component x and y.
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
@@ -614,7 +604,7 @@ def plot_density_panel(values1, values2, values_panel, bins_panel,
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -663,7 +653,7 @@ def plot_density_panel(values1, values2, values_panel, bins_panel,
 
 
 def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
-                  metrics=['mean'], metrics_kwargs={}, rotated=False):
+                  metrics=['mean'], metrics_kwargs=None, rotated=False):
     """
     Plot metrics of 1 component.
 
@@ -697,7 +687,7 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
             * 'p_#' : compute half the width where a percentile of data is found. Number must be
               between 0-100 (ex: 'p_68', 'p_95', 'p_99').
 
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
     rotated: bool
         Rotate ax of plot
@@ -753,8 +743,8 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
 
 
 def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
-                 metrics=['mean', 'std'], metrics_kwargs={}, fig_kwargs={},
-                 legend_kwargs={}):
+                 metrics=['mean', 'std'], metrics_kwargs=None, fig_kwargs=None,
+                 legend_kwargs=None):
     """
     Plot metrics of 1 component.
 
@@ -789,11 +779,11 @@ def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
         If `'.fill'` is added to each metric, it will produce a filled region between (-metric,
         metric).
 
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
 
     Returns
@@ -804,16 +794,14 @@ def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    fig_kwargs_ = dict(figsize=(8, 6))
-    fig_kwargs_.update(fig_kwargs)
-    info = {key: value for key, value in zip(
-        ('fig', 'axes'), plt.subplots(2, **fig_kwargs_))}
+    fig, axes = plt.subplots(2, **updated_dict({'figsize':(8, 6)}, fig_kwargs))
+    info = {'fig': fig, 'axes':axes}
     # default args
     info['top'] = _plot_metrics(values1, values2, bins=bins1, mode=mode, ax=info['axes'][0],
                                 metrics=metrics, metrics_kwargs=metrics_kwargs)
     info['bottom'] = _plot_metrics(values2, values1, bins=bins2, mode=mode, ax=info['axes'][1],
                                    metrics=metrics, metrics_kwargs=metrics_kwargs)
-    info['axes'][0].legend(**legend_kwargs)
+    info['axes'][0].legend(**updated_dict(legend_kwargs))
     info['axes'][0].xaxis.tick_top()
     info['axes'][0].xaxis.set_label_position('top')
     return info
@@ -822,8 +810,8 @@ def plot_metrics(values1, values2, bins1=30, bins2=30, mode='simple',
 def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
     err1=None, err2=None, metrics_mode='simple', metrics=['std'],
-    plt_kwargs={}, add_cb=True, cb_kwargs={},
-    err_kwargs={}, metrics_kwargs={}, fig_kwargs={},
+    plt_kwargs=None, add_cb=True, cb_kwargs=None,
+    err_kwargs=None, metrics_kwargs=None, fig_kwargs=None,
     fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02), **kwargs):
     """
     Scatter plot with errorbars and color based on point density with scatter and bias panels
@@ -865,17 +853,17 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
             * 'p_#' : compute half the width where a percentile of data is found. Number must be
               between 0-100 (ex: 'p_68', 'p_95', 'p_99').
 
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
@@ -907,9 +895,8 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
             * `plots` (optional): fit and binning plots \
             (see `scaling.array_funcs.plot` for more info).
     """
-    fig_kwargs_ = dict(figsize=(8, 6))
-    fig_kwargs_.update(fig_kwargs)
-    info = {'fig': plt.figure(**fig_kwargs_), 'axes':{}, 'metrics':{}}
+    info = {'fig': plt.figure(**updated_dict({'figsize':(8, 6)}, fig_kwargs)),
+            'axes':{}, 'metrics':{}}
     left, bottom, right, top = fig_pos
     frac, gap, cb = fig_frac
     cb = cb if add_cb else 0
@@ -923,14 +910,14 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
     info['axes']['colorbar'] = info['fig'].add_axes(
         [left, bottom+ymain+2*ygap+ypanel, xmain+xgap+xpanel, ycb]) if add_cb else None
     # Main plot
-    cb_kwargs_ = {'cax': info['axes']['colorbar'], 'orientation': 'horizontal'}
-    cb_kwargs_.update(cb_kwargs)
     main_info = plot_density(
         values1, values2, bins1=bins1, bins2=bins2,
         ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
         xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=info['axes']['main'],
-        plt_kwargs=plt_kwargs, add_cb=add_cb, cb_kwargs=cb_kwargs_,
-        err_kwargs=err_kwargs, **kwargs)
+        plt_kwargs=plt_kwargs, add_cb=add_cb, err_kwargs=err_kwargs,
+        cb_kwargs=updated_dict({'cax': info['axes']['colorbar'], 'orientation': 'horizontal'},
+                               cb_kwargs),
+        **kwargs)
     main_info.pop('ax')
     main_info.pop('ax_cb', None)
     info.update(main_info)
@@ -968,8 +955,8 @@ def plot_density_metrics(values1, values2, bins1=30, bins2=30,
 
 def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
               log_vals=False, log_aux=False, transpose=False,
-              shape='steps', plt_kwargs={}, line_kwargs_list=None,
-              fig_kwargs={}, legend_kwargs={}, panel_label_prefix='',
+              shape='steps', plt_kwargs=None, line_kwargs_list=None,
+              fig_kwargs=None, legend_kwargs=None, panel_label_prefix='',
               add_panel_label=True, panel_label_format=lambda v: v,
               add_line_label=True, line_label_format=lambda v: v):
     """
@@ -996,14 +983,14 @@ def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
         Invert lines and panels
     shape: str
         Shape of the lines. Can be steps or line.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     line_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins_aux)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     add_panel_label: bool
         Add bin label to panel
@@ -1032,31 +1019,29 @@ def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
     masks2 = binmasks(values2, edges2)
     masks_aux = [np.ones(len(values1), dtype=bool)] if values_aux is None\
                 else binmasks(values_aux, edges_aux)
-    steps1 = np.log(edges1_dist[1:])-np.log(edges1_dist[:-1]) if log_vals\
-            else edges1_dist[1:]-edges1_dist[:-1]
+    steps1 = (np.log10(edges1_dist[1:])-np.log10(edges1_dist[:-1])) \
+                if log_vals else edges1_dist[1:]-edges1_dist[:-1]
     # Use quantities relative to panel and lines:
     panel_masks, line_masks = (masks_aux, masks2) if transpose else (masks2, masks_aux)
     panel_edges, line_edges = (edges_aux, edges2) if transpose else (edges2, edges_aux)
     nj = int(np.ceil(np.sqrt(panel_edges[:-1].size)))
     ni = int(np.ceil(panel_edges[:-1].size/float(nj)))
-    fig_kwargs_ = dict(sharex=True, figsize=(8, 6))
-    fig_kwargs_.update(fig_kwargs)
-    info = {key: value for key, value in zip(
-        ('fig', 'axes'), plt.subplots(ni, nj, **fig_kwargs_))}
-    line_kwargs_list = none_val(line_kwargs_list, [{}] if values_aux is None else
-        [{'label': ph.get_bin_label(vb, vt, line_label_format)}
-            for vb, vt in zip(line_edges, line_edges[1:])])
+    fig, axes = plt.subplots(
+        ni, nj, **updated_dict({'sharex':True, 'figsize':(8, 6)}, fig_kwargs))
+    info = {'fig': fig, 'axes':axes}
+    line_kwargs_list = none_val(
+        line_kwargs_list, [{}] if values_aux is None
+            else [{'label': ph.get_bin_label(vb, vt, line_label_format)}
+                    for vb, vt in zip(line_edges, line_edges[1:])])
     for ax, maskp in zip(info['axes'].flatten(), panel_masks):
         ph.add_grid(ax)
-        kwargs = {}
-        kwargs.update(plt_kwargs)
         for maskl, p_kwargs in zip(line_masks, line_kwargs_list):
-            kwargs.update(p_kwargs)
             hist = np.histogram(values1[maskp*maskl], bins=edges1_dist)[0]
             norm = (hist*steps1).sum()
             norm = norm if norm>0 else 1
-            ph.plot_hist_line(hist/norm, edges1_dist,
-                              ax=ax, shape=shape, **kwargs)
+            ph.plot_hist_line(
+                hist/norm, edges1_dist, ax=ax, shape=shape,
+                **updated_dict(plt_kwargs, p_kwargs))
         ax.set_xscale('log' if log_vals else 'linear')
         ax.set_yticklabels([])
     for ax in info['axes'].flatten()[len(panel_edges)-1:]:
@@ -1066,15 +1051,15 @@ def plot_dist(values1, values2, bins1_dist, bins2, values_aux=None, bins_aux=5,
                                format_func=panel_label_format,
                                prefix=panel_label_prefix)
     if values_aux is not None and add_line_label:
-        info['axes'].flatten()[0].legend(**legend_kwargs)
+        info['axes'].flatten()[0].legend(**updated_dict(legend_kwargs))
     return info
 
 
 def plot_density_dist(values1, values2, bins1=30, bins2=30,
     ax_rotation=0, rotation_resolution=30, xscale='linear', yscale='linear',
-    err1=None, err2=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
-    err_kwargs={}, fig_kwargs={}, fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02),
-    vline_kwargs={}, **kwargs):
+    err1=None, err2=None, plt_kwargs=None, add_cb=True, cb_kwargs=None,
+    err_kwargs=None, fig_kwargs=None, fig_pos=(0.1, 0.1, 0.95, 0.95), fig_frac=(0.8, 0.01, 0.02),
+    vline_kwargs=None, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with distribution panels.
 
@@ -1093,15 +1078,15 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
         Scale for x/y axis.
     err1, err2: array, None
         Errors of component x and y.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
@@ -1117,7 +1102,7 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
         Fit and plot binned dat (default=False).
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.array_funcs.plot` for more info).
-    vline_kwargs: dict
+    vline_kwargs: dict, None
         Arguments for vlines marking bins in main plot, used in plt.axvline.
 
     Returns
@@ -1135,9 +1120,7 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
             (see `scaling.array_funcs.plot` for more info).
     """
     # Fig
-    fig_kwargs_ = dict(figsize=(8, 6))
-    fig_kwargs_.update(fig_kwargs)
-    info = {'fig': plt.figure(**fig_kwargs_), 'axes':{}}
+    info = {'fig': plt.figure(**updated_dict({'figsize':(8, 6)}, fig_kwargs)), 'axes':{}}
     left, bottom, right, top = fig_pos
     frac, gap, cb = fig_frac
     cb = cb if add_cb else 0
@@ -1147,13 +1130,13 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
     info['axes']['colorbar'] = info['fig'].add_axes(
         [left+xmain+xgap, bottom, ycb, ymain]) if add_cb else None
     # Main plot
-    cb_kwargs_ = {'cax': info['axes']['colorbar'], 'orientation': 'vertical'}
-    cb_kwargs_.update(cb_kwargs)
     plot_density(values1, values2, bins1=bins1, bins2=bins2,
         ax_rotation=ax_rotation, rotation_resolution=rotation_resolution,
         xscale=xscale, yscale=yscale, err1=err1, err2=err2, ax=info['axes']['main'],
-        plt_kwargs=plt_kwargs, add_cb=add_cb, cb_kwargs=cb_kwargs_,
-        err_kwargs=err_kwargs)
+        plt_kwargs=plt_kwargs, add_cb=add_cb, err_kwargs=err_kwargs,
+        cb_kwargs=updated_dict({'cax': info['axes']['colorbar'], 'orientation': 'vertical'},
+                               cb_kwargs),
+        )
     if add_cb:
         info['axes']['colorbar'].xaxis.tick_top()
         info['axes']['colorbar'].xaxis.set_label_position('top')
@@ -1162,10 +1145,8 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
     # Add v lines
     info['axes']['main'].xaxis.grid(False, which='both')
     fit_bins1 = autobins(values1, kwargs.get('fit_bins1', 10), xscale=='log')
-    vline_kwargs_ = {'lw':.5, 'color':'0'}
-    vline_kwargs_.update(vline_kwargs)
     for v in fit_bins1:
-        info['axes']['main'].axvline(v, **vline_kwargs_)
+        info['axes']['main'].axvline(v, **updated_dict({'lw':.5, 'color':'0'}, vline_kwargs))
     # Dist plot
     fit_bins2 = autobins(values2, kwargs.get('fit_bins2', 30), yscale=='log')
     masks1 = binmasks(values1, fit_bins1)
@@ -1179,11 +1160,9 @@ def plot_density_dist(values1, values2, bins1=30, bins2=30,
     dlims = (np.inf, -np.inf)
     for ax, mask, lkwarg in zip(info['axes']['top'], masks1, fit_line_kwargs_list):
         ph.add_grid(ax)
-        kwargs_ = {}
-        kwargs_.update(kwargs.get('fit_plt_kwargs', {}))
-        kwargs_.update(lkwarg)
         ph.plot_hist_line(*np.histogram(values2[mask], bins=fit_bins2),
-                          ax=ax, shape='line', rotate=True, **kwargs_)
+                          ax=ax, shape='line', rotate=True,
+                          **updated_dict(kwargs.get('fit_plt_kwargs'), lkwarg))
         ax.set_xlim(ax.get_xlim()[::-1])
         ax.set_xticklabels([])
         ax.set_yscale(xscale)
