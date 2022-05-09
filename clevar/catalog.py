@@ -103,14 +103,14 @@ class Catalog():
         Number of objects in the catalog
     id_dict: dict
         Dictionary of indicies given the object id
+    tags: dict
+        Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
     labels: dict
         Labels of data columns for plots
     colnames: list
         List of column names
-    tags: dict
-        Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
     """
-    def __init__(self, name, labels=None, tags=None, **kwargs):
+    def __init__(self, name, tags=None, labels=None, **kwargs):
         if not isinstance(name, str):
             raise ValueError('name must be str.')
         if labels is not None and not isinstance(labels, dict):
@@ -434,7 +434,7 @@ class Catalog():
                     out[colname][i] = c.split(',') if len(c)>0 else []
         return out
     @classmethod
-    def read(self, filename, name, labels=None, tags=None, full=False):
+    def read(self, filename, name, tags=None, labels=None, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -443,10 +443,10 @@ class Catalog():
             Input file.
         name: str, None
             Catalog name, if none reads from file.
-        labels: dict, None
-            Labels of data columns for plots.
         tags: dict, None
             Tags for table (required if full=False).
+        labels: dict, None
+            Labels of data columns for plots.
         full: bool
             Reads all columns of the catalog
         """
@@ -562,18 +562,18 @@ class ClCatalog(Catalog):
         Dictionary of indicies given the cluster id
     radius_unit: str, None
         Unit of the radius column
+    tags: dict
+        Tag for main quantities used in matching and plots (ex: id, ra, dec, z, mass,...)
     labels: dict
         Labels of data columns for plots
     colnames: list
         List of column names
-    tags: dict
-        Tag for main quantities used in matching and plots (ex: id, ra, dec, z, mass,...)
     members: MemCatalog
         Catalog of members associated to the clusters
     leftover_members: MemCatalog
         Catalog of members not associated to the clusters
     """
-    def __init__(self, name, labels=None, tags=None, radius_unit=None, members=None, **kwargs):
+    def __init__(self, name, tags=None, labels=None, radius_unit=None, members=None, **kwargs):
         self.members = None
         self.leftover_members = None
         self.radius_unit = radius_unit
@@ -647,7 +647,7 @@ class ClCatalog(Catalog):
             out = self
         return out
     @classmethod
-    def read(self, filename, name, labels=None, tags=None, radius_unit=None, full=False):
+    def read(self, filename, name, tags=None, labels=None, radius_unit=None, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -656,10 +656,10 @@ class ClCatalog(Catalog):
             Input file.
         name: str, None
             Catalog name, if none reads from file.
-        labels: dict, None
-            Labels of data columns for plots.
         tags: dict, None
             Tags for table (required if full=False).
+        labels: dict, None
+            Labels of data columns for plots.
         radius_unit: str, None
             Unit of the radius column (default read from file).
         full: bool
@@ -765,14 +765,14 @@ class MemCatalog(Catalog):
         Dictionary of indicies given the member id
     id_dict_list: dict
         Dictionary of indicies given the member id, returns list allowing for repeated ids.
+    tags: dict
+        Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,...)
     labels: dict
         Labels of data columns for plots
     colnames: list
         List of column names
-    tags: dict
-        Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,...)
     """
-    def __init__(self, name, labels=None, tags=None, **kwargs):
+    def __init__(self, name, tags=None, labels=None, **kwargs):
         if tags is not None and not isinstance(tags, dict):
             raise ValueError('tags must be dict.')
         Catalog.__init__(self, name, labels=labels,
