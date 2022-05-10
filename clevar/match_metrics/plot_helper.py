@@ -8,7 +8,7 @@ import pylab as plt
 import numpy as np
 from scipy.interpolate import interp2d
 from matplotlib.ticker import ScalarFormatter, NullFormatter
-from ..utils import none_val, hp
+from ..utils import none_val, hp, updated_dict
 
 def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     """
@@ -252,8 +252,8 @@ def _set_label_format(kwargs, label_format_key, label_fmt_key, log,
 
 def plot_histograms(
     histogram, edges1, edges2, ax, shape='steps',
-    plt_kwargs={}, lines_kwargs_list=None,
-    add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
+    plt_kwargs=None, lines_kwargs_list=None,
+    add_legend=True, legend_format=lambda v: v, legend_kwargs=None):
     """
     Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
 
@@ -267,7 +267,7 @@ def plot_histograms(
         Ax to add plot
     shape: str
         Shape of the lines. Can be steps or line.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
@@ -276,7 +276,7 @@ def plot_histograms(
         Add legend of bins
     legend_format: function
         Function to format the values of the bins in legend
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
@@ -288,12 +288,12 @@ def plot_histograms(
             histogram, none_val(lines_kwargs_list, iter(lambda: {}, 1)),
             zip(edges2, edges2[1:]),
         ):
-        kwargs = {'label': get_bin_label(*edges, legend_format) if add_legend else None}
-        kwargs.update(plt_kwargs)
-        kwargs.update(l_kwargs)
+        kwargs = updated_dict(
+            {'label': get_bin_label(*edges, legend_format) if add_legend else None},
+            plt_kwargs, l_kwargs)
         plot_hist_line(hist_line, edges1, ax, shape, **kwargs)
     if add_legend:
-        ax.legend(**legend_kwargs)
+        ax.legend(**updated_dict(legend_kwargs))
     return ax
 
 

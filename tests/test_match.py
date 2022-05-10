@@ -47,9 +47,14 @@ def test_proximity(CosmoClass):
     c2 = ClCatalog('Cat2', **input2)
     print(c1.data)
     print(c2.data)
-    # init match
     cosmo =  CosmoClass()
     mt = ProximityMatch()
+    # test missing data
+    assert_raises(AttributeError, mt.multiple, c1, c2)
+    c1.mt_input = 'xx'
+    assert_raises(AttributeError, mt.multiple, c1, c2)
+    c1.mt_input = None
+    # init match
     mt_config1 = {'delta_z':.2,
                 'match_radius': '1 mpc',
                 'cosmo':cosmo}
@@ -245,8 +250,17 @@ def test_membership():
     print(c2.data)
     # init match
     mt = MembershipMatch()
-    # Try to use fill_shared_members before match_mems
-    assert_raises(ValueError, mt.fill_shared_members, c1, c2)
+    # test missing data
+    assert_raises(AttributeError, mt.match_members, c1.members, None)
+    assert_raises(AttributeError, mt.match_members, None, c2.members)
+    assert_raises(AttributeError, mt.save_matched_members, 'xxx')
+    assert_raises(AttributeError, mt.save_shared_members, c1, c2, 'xxx')
+    assert_raises(AttributeError, mt.fill_shared_members, c1, c2)
+    assert_raises(AttributeError, mt.multiple, c1, c2)
+    c1.mt_input = 'xx'
+    assert_raises(AttributeError, mt.save_shared_members, c1, c2, 'xxx')
+    assert_raises(AttributeError, mt.multiple, c1, c2)
+    c1.mt_input = None
     # Check both methods
     mt.match_members(c1.members, c2.members, method='id')
     mt2 = MembershipMatch()

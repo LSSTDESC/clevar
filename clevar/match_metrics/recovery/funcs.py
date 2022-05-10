@@ -142,7 +142,7 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         Label for recovery rate.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
@@ -153,7 +153,7 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
         Function to format the values of the bins in legend
     legend_fmt: str
         Format the values of binedges (ex: '.2f')
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
@@ -229,12 +229,12 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
         Label for recovery rate.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -324,15 +324,15 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
         Label for recovery rate.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
     add_num: int
         Add numbers in each bin
-    num_kwargs: dict
+    num_kwargs: dict, None
         Arguments for number plot (used in plt.text)
 
     Returns

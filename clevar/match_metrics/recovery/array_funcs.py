@@ -5,7 +5,7 @@ Main recovery functions using arrays.
 import numpy as np
 import healpy as hp
 
-from ...utils import none_val
+from ...utils import none_val, updated_dict
 from .. import plot_helper as ph
 from ..plot_helper import plt
 
@@ -46,8 +46,8 @@ def get_recovery_rate(values1, values2, bins1, bins2, is_matched):
 
 
 def plot(values1, values2, bins1, bins2, is_matched, shape='steps',
-         ax=None, plt_kwargs={}, lines_kwargs_list=None,
-         add_legend=True, legend_format=lambda v: v, legend_kwargs={}):
+         ax=None, plt_kwargs=None, lines_kwargs_list=None,
+         add_legend=True, legend_format=lambda v: v, legend_kwargs=None):
     """
     Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
 
@@ -63,7 +63,7 @@ def plot(values1, values2, bins1, bins2, is_matched, shape='steps',
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
@@ -72,7 +72,7 @@ def plot(values1, values2, bins1, bins2, is_matched, shape='steps',
         Add legend of bins
     legend_format: function
         Function to format the values of the bins in legend
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
@@ -103,8 +103,8 @@ def plot(values1, values2, bins1, bins2, is_matched, shape='steps',
 
 
 def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
-               plt_kwargs={}, panel_kwargs_list=None,
-               fig_kwargs={}, add_label=True, label_format=lambda v: v):
+               plt_kwargs=None, panel_kwargs_list=None,
+               fig_kwargs=None, add_label=True, label_format=lambda v: v):
     """
     Plot recovery rate as lines in panels, with each line binned by bins1
     and each panel is based on the data inside a bins2 bin.
@@ -121,12 +121,12 @@ def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -153,20 +153,17 @@ def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
     info = {'data': get_recovery_rate(values1, values2, bins1, bins2, is_matched)}
     nj = int(np.ceil(np.sqrt(info['data']['edges2'][:-1].size)))
     ni = int(np.ceil(info['data']['edges2'][:-1].size/float(nj)))
-    fig_kwargs_ = dict(sharex=True, sharey=True, figsize=(8, 6))
-    fig_kwargs_.update(fig_kwargs)
-    info.update({key: value for key, value in zip(
-        ('fig', 'axes'), plt.subplots(ni, nj, **fig_kwargs_))})
+    fig, axes = plt.subplots(
+        ni, nj, **updated_dict({'sharex':True, 'sharey':True, 'figsize':(8, 6)}, fig_kwargs))
+    info.update({'fig': fig, 'axes':axes})
     for ax, rec_line, p_kwargs in zip(
             info['axes'].flatten(),
             info['data']['recovery'].T,
             none_val(panel_kwargs_list, iter(lambda: {}, 1))
         ):
         ph.add_grid(ax)
-        kwargs = {}
-        kwargs.update(plt_kwargs)
-        kwargs.update(p_kwargs)
-        ph.plot_hist_line(rec_line, info['data']['edges1'], ax, shape, **kwargs)
+        ph.plot_hist_line(rec_line, info['data']['edges1'], ax, shape,
+                          **updated_dict(plt_kwargs, p_kwargs))
     for ax in info['axes'].flatten()[len(info['data']['edges2'])-1:]:
         ax.axis('off')
     if add_label:
@@ -176,8 +173,8 @@ def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
 
 
 def plot2D(values1, values2, bins1, bins2, is_matched,
-           ax=None, plt_kwargs={}, add_cb=True, cb_kwargs={},
-           add_num=False, num_kwargs={}):
+           ax=None, plt_kwargs=None, add_cb=True, cb_kwargs=None,
+           add_num=False, num_kwargs=None):
     """
     Plot recovery rate as in 2D bins.
 
@@ -191,15 +188,15 @@ def plot2D(values1, values2, bins1, bins2, is_matched,
         Boolean array indicating matching status
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
     add_num: int
         Add numbers in each bin
-    num_kwargs: dict
+    num_kwargs: dict, None
         Arguments for number plot (used in plt.text)
 
     Returns
@@ -221,15 +218,13 @@ def plot2D(values1, values2, bins1, bins2, is_matched,
     info = {
         'data': get_recovery_rate(values1, values2, bins1, bins2, is_matched),
         'ax': plt.axes() if ax is None else ax,}
-    plt_kwargs_ = {'vmin':0, 'vmax':1}
-    plt_kwargs_.update(plt_kwargs)
     c = info['ax'].pcolor(info['data']['edges1'], info['data']['edges2'],
-                          info['data']['recovery'].T, **plt_kwargs_)
+                          info['data']['recovery'].T,
+                          **updated_dict({'vmin':0, 'vmax':1}, plt_kwargs))
     if add_num:
         xpositions = .5*(info['data']['edges1'][:-1]+info['data']['edges1'][1:])
         ypositions = .5*(info['data']['edges2'][:-1]+info['data']['edges2'][1:])
-        num_kwargs_ = {'va':'center', 'ha':'center'}
-        num_kwargs_.update(num_kwargs)
+        num_kwargs_ = updated_dict({'va':'center', 'ha':'center'}, num_kwargs)
         for xpos, line_matched, line_total in zip(
                 xpositions, info['data']['matched'], info['data']['counts']):
             for ypos, matched, total in zip(ypositions, line_matched, line_total):
@@ -237,9 +232,7 @@ def plot2D(values1, values2, bins1, bins2, is_matched,
                     info['ax'].text(xpos, ypos,
                                     rf'$\frac{{{matched:.0f}}}{{{total:.0f}}}$', **num_kwargs_)
     if add_cb:
-        cb_kwargs_ = {'ax': info['ax']}
-        cb_kwargs_.update(cb_kwargs)
-        info['cb'] = plt.colorbar(c, **cb_kwargs_)
+        info['cb'] = plt.colorbar(c, **updated_dict({'ax': info['ax']}, cb_kwargs))
     return info
 
 
@@ -320,10 +313,10 @@ def skyplot(ra, dec, is_matched, nside=256, nest=True, auto_lim=False, ra_lim=No
     if vmin==vmax:
         kwargs_['min'] = vmin-1e-10
         kwargs_['max'] = vmax+1e-10
-    kwargs_.update(kwargs)
     fig, ax, cb = ph.plot_healpix_map(
         map_, nest=nest, auto_lim=auto_lim, bad_val=np.nan,
-        ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs_)
+        ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize,
+        **updated_dict(kwargs_, kwargs))
 
     if cb:
         cb.set_xlabel(recovery_label)

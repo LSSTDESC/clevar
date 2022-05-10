@@ -67,6 +67,28 @@ def none_val(value, none_value):
         Value if value is not None else none_value
     """
     return value if value is not None else none_value
+def updated_dict(*dict_list):
+    """
+    Returns an dictionary with updated values if new dictionaries are not none
+
+    Parameters
+    ----------
+    *dict_list: positional arguments
+        Lists of dictionary with updated values
+
+    Returns
+    -------
+    dict
+        Updated dictionary
+    """
+    out = {}
+    for update_dict in dict_list:
+        updict = none_val(update_dict, {})
+        if not isinstance(updict, dict):
+            raise ValueError(
+                'all arguments of updated_dict must be dictionaries or None, got: {updict}')
+        out.update(updict)
+    return out
 def autobins(values, bins, log=False):
     """
     Get bin values automatically from bins, values

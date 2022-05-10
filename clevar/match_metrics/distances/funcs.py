@@ -41,7 +41,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
@@ -52,7 +52,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Function to format the values of the bins in legend
     legend_fmt: str
         Format the values of binedges (ex: '.2f')
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
@@ -114,7 +114,7 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
@@ -125,7 +125,7 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         Function to format the values of the bins in legend
     legend_fmt: str
         Format the values of binedges (ex: '.2f')
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
