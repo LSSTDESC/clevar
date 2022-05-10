@@ -4,7 +4,7 @@ import numpy as np
 
 from ..catalog import ClData, ClCatalog
 from ..geometry import convert_units, angular_bank, physical_bank
-from ..utils import none_val, hp
+from ..utils import none_val, hp, updated_dict
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 from .nfw_funcs import nfw2D_profile_flatcore
@@ -350,7 +350,7 @@ class Footprint():
             )
         return nfw2D_profile_flatcore(R, cl_radius, Rs, Rcore)
     def plot(self, data, bad_val=hp.UNSEEN, auto_lim=False, ra_lim=None, dec_lim=None,
-             cluster=None, cluster_kwargs={}, cosmo=None, fig=None, figsize=None, **kwargs):
+             cluster=None, cluster_kwargs=None, cosmo=None, fig=None, figsize=None, **kwargs):
         """
         Plot footprint. It can also overlay clusters with their radial sizes.
 
@@ -368,7 +368,7 @@ class Footprint():
             DEC limits in degrees.
         cluster: clevar.ClCatalog
             Clusters to be overlayed on footprint.
-        cluster_kwargs: dict
+        cluster_kwargs: dict, None
             Keyword arguments to plot clusters. If cluster radius used, arguments
             for plt.Circle function, if not arguments for plt.scatter.
         cosmo: clevar.Cosmology object
@@ -424,27 +424,24 @@ class Footprint():
                         raise TypeError(
                             'A cosmology and cluster redsift is necessary if '
                             'cluster radius in physical units.')
-                    cl_kwargs = dict(color='b', fill=0, lw=1)
-                    cl_kwargs.update(cluster_kwargs)
                     rad_deg = convert_units(cluster['radius'], cluster.radius_unit, 'degrees',
                                             redshift=cluster['z'], cosmo=cosmo)
-                    lims_mask = lambda ra, dec, rad_deg: (
-                        (ra+rad_deg>=xlim[0])*(ra-rad_deg<xlim[1])
-                        *(dec+rad_deg>=ylim[0])*(dec-rad_deg<ylim[1]))
                     plt_cl = lambda ra, dec, radius: [
-                        ax.add_patch(plt.Circle((ra_, dec_), radius=radius_, **cl_kwargs))
-                        for ra_, dec_, radius_ in
-                        np.transpose([ra, dec, radius])[lims_mask(ra, dec, radius)]]\
-                        if len(ra)>0 else []
+                        ax.add_patch(plt.Circle(
+                            (ra_, dec_), radius=radius_,
+                            **updated_dict({'color':'b', 'fill':0, 'lw':1}, cluster_kwargs)))
+                        for ra_, dec_, radius_ in np.transpose([ra, dec, radius])[
+                            (ra+radius>=xlim[0])*(ra-radius<xlim[1])
+                            *(dec+radius>=ylim[0])*(dec-radius<ylim[1])]
+                        ]
                 else:
                     warnings.warn("Column 'radius' or radius_unit of cluster not set up. "
                                   "Plotting clusters as points with plt.scatter.")
-                    cl_kwargs = dict(color='b', s=5)
-                    cl_kwargs.update(cluster_kwargs)
                     rad_deg = np.ones(cluster.size)
                     lims_mask = lambda ra, dec: ((ra>=xlim[0])*(ra<xlim[1])*(dec>=ylim[0])*(dec<ylim[1]))
                     plt_cl = lambda ra, dec, radius: \
-                        ax.scatter(*np.transpose([ra, dec])[lims_mask(ra, dec)].T, **cl_kwargs)
+                        ax.scatter(*np.transpose([ra, dec])[lims_mask(ra, dec)].T,
+                                   **updated_dict({'color':'b', 's':5}, cluster_kwargs))
                 # Plot clusters in regular range
                 plt_cl(cluster['ra'], cluster['dec'], rad_deg)
                 # Plot clusters using -180<ra<0

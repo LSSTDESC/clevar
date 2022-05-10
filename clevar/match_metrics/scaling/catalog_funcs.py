@@ -4,7 +4,7 @@ Main scaling functions using catalogs, wrapper of array_funcs functions
 """
 import numpy as np
 
-from ...utils import autobins
+from ...utils import autobins, updated_dict
 from ...match import get_matched_pairs
 from .. import plot_helper as ph
 from . import array_funcs
@@ -13,7 +13,7 @@ _local_args = ('xlabel', 'ylabel', 'xscale', 'yscale', 'add_err', 'add_fit_err',
               'label1', 'label2', 'scale1', 'scale2', 'mask1', 'mask2')
 
 
-def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
+def _prep_kwargs(cat1, cat2, matching_type, col, kwargs=None):
     """
     Prepare kwargs into args for this class and args for function
 
@@ -25,7 +25,7 @@ def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
     col: str
         Name of column to be plotted
-    kwargs: dict
+    kwargs: dict, None
         Input arguments
 
     Returns
@@ -37,25 +37,26 @@ def _prep_kwargs(cat1, cat2, matching_type, col, kwargs={}):
     mp: clevar.match.MatchedPairs
         Matched catalogs
     """
-    func_kwargs = {k:v for k, v in kwargs.items() if k not in _local_args}
+    kwargs_ = updated_dict(kwargs)
+    func_kwargs = {k:v for k, v in kwargs_.items() if k not in _local_args}
     mt1, mt2 = get_matched_pairs(cat1.raw(), cat2.raw(), matching_type,
-                      mask1=kwargs.get('mask1', None),
-                      mask2=kwargs.get('mask2', None))
+                      mask1=kwargs_.get('mask1', None),
+                      mask2=kwargs_.get('mask2', None))
     func_kwargs['values1'] = mt1[col]
     func_kwargs['values2'] = mt2[col]
-    func_kwargs['err1'] = mt1.get(f'{col}_err') if kwargs.get('add_err', True) else None
-    func_kwargs['err2'] = mt2.get(f'{col}_err') if kwargs.get('add_err', True) else None
-    func_kwargs['fit_err2'] = mt2.get(f'{col}_err') if kwargs.get('add_fit_err', True) else None
+    func_kwargs['err1'] = mt1.get(f'{col}_err') if kwargs_.get('add_err', True) else None
+    func_kwargs['err2'] = mt2.get(f'{col}_err') if kwargs_.get('add_err', True) else None
+    func_kwargs['fit_err2'] = mt2.get(f'{col}_err') if kwargs_.get('add_fit_err', True) else None
     class_kwargs = {
-        'xlabel': kwargs.get('xlabel', f'${cat1.labels[col]}$'),
-        'ylabel': kwargs.get('ylabel', f'${cat2.labels[col]}$'),
-        'xscale': kwargs.get('xscale', 'linear'),
-        'yscale': kwargs.get('yscale', 'linear'),
+        'xlabel': kwargs_.get('xlabel', f'${cat1.labels[col]}$'),
+        'ylabel': kwargs_.get('ylabel', f'${cat2.labels[col]}$'),
+        'xscale': kwargs_.get('xscale', 'linear'),
+        'yscale': kwargs_.get('yscale', 'linear'),
     }
-    if kwargs.get('add_fit', False):
-        xlabel = kwargs.get('label1', class_kwargs['xlabel'])
-        ylabel = kwargs.get('label2', class_kwargs['ylabel'])
-        func_kwargs['fit_label_components'] = kwargs.get('fit_label_components', (xlabel, ylabel))
+    if kwargs_.get('add_fit', False):
+        xlabel = kwargs_.get('label1', class_kwargs['xlabel'])
+        ylabel = kwargs_.get('label2', class_kwargs['ylabel'])
+        func_kwargs['fit_label_components'] = kwargs_.get('fit_label_components', (xlabel, ylabel))
     return class_kwargs, func_kwargs, mt1, mt2
 
 
@@ -104,13 +105,13 @@ def plot(cat1, cat2, matching_type, col, col_color=None,
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     xlabel, ylabel: str
         Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
@@ -137,11 +138,11 @@ def plot(cat1, cat2, matching_type, col, col_color=None,
         Bins for catalog 1 component (default=10).
     fit_bins2: array, None
         Bins for catalog 2 component (default=30).
-    fit_legend_kwargs: dict
+    fit_legend_kwargs: dict, None
         Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
+    fit_bindata_kwargs: dict, None
         Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
+    fit_plt_kwargs: dict, None
         Additional arguments for plot of fit pylab.scatter.
     fit_label_components: tuple (of strings)
         Names of fitted components in fit line label, default=(xlabel, ylabel)
@@ -209,13 +210,13 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
@@ -332,13 +333,13 @@ def plot_panel(
 
     Other Parameters
     ----------------
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
@@ -346,7 +347,7 @@ def plot_panel(
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -419,13 +420,13 @@ def plot_density_panel(cat1, cat2, matching_type, col,
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
@@ -437,7 +438,7 @@ def plot_density_panel(cat1, cat2, matching_type, col,
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -520,11 +521,11 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
 
     Other Parameters
     ----------------
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     label1, label2: str
         Label for catalog 1/2 components.
@@ -601,21 +602,21 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
     xscale, yscale: str
         Scale for x/y axis.
@@ -690,16 +691,16 @@ def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, b
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     shape: str
         Shape of the lines. Can be steps or line.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     line_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins_aux)-1
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     add_panel_label: bool
         Add bin label to panel
@@ -771,16 +772,16 @@ def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     shape: str
         Shape of the lines. Can be steps or line.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     line_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins_aux)-1
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     add_panel_label: bool
         Add bin label to panel
@@ -842,21 +843,21 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
     xscale, yscale: str
         Scale for x/y axis.

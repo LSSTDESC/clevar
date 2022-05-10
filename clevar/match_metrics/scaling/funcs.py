@@ -30,9 +30,9 @@ def redshift(cat1, cat2, matching_type, **kwargs):
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     xlabel, ylabel: str
         Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
@@ -58,11 +58,11 @@ def redshift(cat1, cat2, matching_type, **kwargs):
         Bins for redshift of catalog 1 (default=10).
     fit_bins2: array, None
         Bins for redshift of catalog 2 (default=30).
-    fit_legend_kwargs: dict
+    fit_legend_kwargs: dict, None
         Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
+    fit_bindata_kwargs: dict, None
         Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
+    fit_plt_kwargs: dict, None
         Additional arguments for plot of fit pylab.scatter.
     fit_label_components: tuple (of strings)
         Names of fitted components in fit line label, default=(xlabel, ylabel).
@@ -123,13 +123,13 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
@@ -182,13 +182,13 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     xlabel, ylabel: str
         Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
@@ -236,9 +236,9 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
 
     Other Parameters
     ----------------
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
@@ -246,7 +246,7 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -306,13 +306,13 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
@@ -324,7 +324,7 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -396,11 +396,11 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     label1, label2: str
         Label for catalog 1/2 redshifts.
@@ -465,21 +465,21 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
     xscale, yscale: str
         Scale for x/y axis.
@@ -537,16 +537,16 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     shape: str
         Shape of the lines. Can be steps or line.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     line_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins_aux)-1
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     add_panel_label: bool
         Add bin label to panel
@@ -606,16 +606,16 @@ def redshift_dist_self(cat, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     shape: str
         Shape of the lines. Can be steps or line.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     line_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins_aux)-1
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     add_panel_label: bool
         Add bin label to panel
@@ -671,21 +671,21 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
     xscale, yscale: str
         Scale for x/y axis.
@@ -696,7 +696,7 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
         and have values: [0, 1]. Colorbar is only used with add_cb key.
     **fit_kwargs:
         Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
-    vline_kwargs: dict
+    vline_kwargs: dict, None
         Arguments for vlines marking bins in main plot, used in plt.axvline.
 
 
@@ -742,9 +742,9 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     xlabel, ylabel: str
         Label of x/y axis (default=cat1.labels['mass']/cat2.labels['mass']).
@@ -772,11 +772,11 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
         Bins for mass of catalog 1 (default=10).
     fit_bins2: array, None
         Bins for mass of catalog 2 (default=30).
-    fit_legend_kwargs: dict
+    fit_legend_kwargs: dict, None
         Additional arguments for plt.legend.
-    fit_bindata_kwargs: dict
+    fit_bindata_kwargs: dict, None
         Additional arguments for pylab.errorbar.
-    fit_plt_kwargs: dict
+    fit_plt_kwargs: dict, None
         Additional arguments for plot of fit pylab.scatter.
     fit_label_components: tuple (of strings)
         Names of fitted components in fit line label, default=(xlabel, ylabel).
@@ -841,13 +841,13 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     xlabel, ylabel: str
         Label of x/y axis (default=cat1.labels['mass']/cat2.labels['mass']).
@@ -899,13 +899,13 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
@@ -960,9 +960,9 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
 
     Other Parameters
     ----------------
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
@@ -970,7 +970,7 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -1034,13 +1034,13 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     ----------------
     ax: matplotlib.axes, None
         Ax to add plot. If equals `None`, one is created.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)
@@ -1052,7 +1052,7 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
     panel_kwargs_errlist: list, None
         List of additional arguments for plotting each panel (using pylab.errorbar).
         Must have same size as len(bins2)-1
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     add_label: bool
         Add bin label to panel
@@ -1129,11 +1129,11 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     label1, label2: str
         Label for catalog 1/2 masses.
@@ -1202,21 +1202,21 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)
@@ -1272,16 +1272,16 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     shape: str
         Shape of the lines. Can be steps or line.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     line_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins_aux)-1
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     add_panel_label: bool
         Add bin label to panel
@@ -1341,16 +1341,16 @@ def mass_dist_self(cat, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     shape: str
         Shape of the lines. Can be steps or line.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.plot
     line_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins_aux)-1
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for plt.legend
     add_panel_label: bool
         Add bin label to panel
@@ -1408,21 +1408,21 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
 
     Other Parameters
     ----------------
-    fig_kwargs: dict
+    fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
         Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
-    plt_kwargs: dict
+    plt_kwargs: dict, None
         Additional arguments for pylab.scatter
     add_cb: bool
         Plot colorbar
-    cb_kwargs: dict
+    cb_kwargs: dict, None
         Colorbar arguments
-    err_kwargs: dict
+    err_kwargs: dict, None
         Additional arguments for pylab.errorbar
-    metrics_kwargs: dict
+    metrics_kwargs: dict, None
         Dictionary of dictionary configs for each metric plots.
     fig_pos: tuple
         List with edges for the figure. Must be in format (left, bottom, right, top)

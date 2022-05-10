@@ -49,7 +49,7 @@ yaml.read = read_yaml
 ########################################################################
 ### dict functions #####################################################
 ########################################################################
-def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
+def add_dicts_diff(dict1, dict2, pref='', diff_lines=None):
     """
     Adds the differences between dictionaries to a list
 
@@ -59,9 +59,11 @@ def add_dicts_diff(dict1, dict2, pref='', diff_lines=[]):
         Dictionaies to be compared
     pref: str
         Prefix to be added in output
-    diff_lines: list
-        List where differences will be appended to
+    diff_lines: list, None
+        List where differences will be appended to. If None, it is a new list.
     """
+    if diff_lines is None:
+        diff_lines = []
     for k in set(k for d in (dict1, dict2) for k in d):
         if k not in dict1:
             diff_lines.append((f'{pref}[{k}]', 'missing', 'present'))
@@ -154,7 +156,7 @@ def get_input_loop(options_msg, actions):
         prt = print(f'Option {action} not valid. Please choose:') if loop else None
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
-def loadconf(config_file, load_configs=[], add_new_configs=[],
+def loadconf(config_file, load_configs=None, add_new_configs=None,
              fail_action='ask', check_matching=False):
     """
     Load configuration from yaml file, creates output directory and config.log.yml
@@ -163,9 +165,9 @@ def loadconf(config_file, load_configs=[], add_new_configs=[],
     ----------
     config_file: str
         Yaml configuration file.
-    load_configs: list
+    load_configs: list, None
         List of configurations loaded (will be checked with config.log.yml).
-    add_new_configs: list
+    add_new_configs: list, None
         List of configurations that will be automatically added if not in config.log.yml.
     fail_action: str
         Action to do when there is inconsistency in configs.
@@ -178,6 +180,10 @@ def loadconf(config_file, load_configs=[], add_new_configs=[],
         Configuration for clevar
     """
     print("\n## Loading config")
+    if load_configs is None:
+        load_configs = []
+    if add_new_configs is None:
+        add_new_configs = []
     if not os.path.isfile(config_file):
         raise ValueError(f'Config file "{config_file}" not found')
     base_cfg_file = f'{os.path.dirname(__file__)}/base_config.yml'
