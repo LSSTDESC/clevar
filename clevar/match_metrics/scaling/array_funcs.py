@@ -737,7 +737,7 @@ def _plot_metrics(values1, values2, bins=30, mode='diff_z', ax=None,
         else:
             func = info['ax'].plot
             args = (stat, values_mid) if rotated else (values_mid, stat)
-        kwargs.update(metrics_kwargs.get(metric, {}))
+        kwargs.update(updated_dict(metrics_kwargs).get(metric, {}))
         deep_update(info, {'plots': {metric: func(*(a[safe] for a in args), **kwargs)}})
     return info
 
