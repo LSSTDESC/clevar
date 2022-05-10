@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.utils &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.utils &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -295,6 +295,28 @@
 <span class="sd">        Value if value is not None else none_value</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">value</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">none_value</span></div>
+<div class="viewcode-block" id="updated_dict"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.updated_dict">[docs]</a><span class="k">def</span> <span class="nf">updated_dict</span><span class="p">(</span><span class="o">*</span><span class="n">dict_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns an dictionary with updated values if new dictionaries are not none</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *dict_list: positional arguments</span>
+<span class="sd">        Lists of dictionary with updated values</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Updated dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">update_dict</span> <span class="ow">in</span> <span class="n">dict_list</span><span class="p">:</span>
+        <span class="n">updict</span> <span class="o">=</span> <span class="n">none_val</span><span class="p">(</span><span class="n">update_dict</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">updict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;all arguments of updated_dict must be dictionaries or None, got: </span><span class="si">{updict}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">updict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
 <div class="viewcode-block" id="autobins"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.autobins">[docs]</a><span class="k">def</span> <span class="nf">autobins</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get bin values automatically from bins, values</span>

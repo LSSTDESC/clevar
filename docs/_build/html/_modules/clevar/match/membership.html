@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.membership &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.match.membership &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -254,6 +254,10 @@
 <span class="sd">        cat2: clevar.ClCatalog</span>
 <span class="sd">            Target catalog with members attribute.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;cat1.mt_input is None, run fill_shared_members first.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cat2</span><span class="o">.</span><span class="n">mt_input</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;cat2.mt_input is None, run fill_shared_members first.&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cat1_mmt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span> <span class="c1"># To add flag in multi step matching</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Finding candidates (</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">share_mems1</span><span class="p">,</span> <span class="n">nmem1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span><span class="p">[</span><span class="s1">&#39;share_mems&#39;</span><span class="p">],</span> <span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span><span class="p">[</span><span class="s1">&#39;nmem&#39;</span><span class="p">])):</span>
@@ -278,7 +282,7 @@
 <span class="sd">            Cluster catalog with members attribute.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Members not matched, run match_members before.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Members not matched, run match_members before.&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;pmem&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cat1</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
             <span class="n">cat1</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;pmem&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
         <span class="k">if</span> <span class="s1">&#39;pmem&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cat2</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
@@ -350,6 +354,10 @@
 <span class="sd">        overwrite: bool</span>
 <span class="sd">            Overwrite saved files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;cat1.mt_input is None cannot save it.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cat2</span><span class="o">.</span><span class="n">mt_input</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;cat2.mt_input is None cannot save it.&#39;</span><span class="p">)</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="n">c</span><span class="p">:</span><span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span><span class="o">.</span><span class="n">colnames</span><span class="p">},</span>
                     <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fileprefix</span><span class="si">}</span><span class="s1">.1.p&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
         <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="n">c</span><span class="p">:</span><span class="n">cat2</span><span class="o">.</span><span class="n">mt_input</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cat2</span><span class="o">.</span><span class="n">mt_input</span><span class="o">.</span><span class="n">colnames</span><span class="p">},</span>
@@ -388,6 +396,10 @@
 <span class="sd">        cosmo: clevar.Cosmology, None</span>
 <span class="sd">            For `method=&#39;angular_distance&#39;`. Cosmology object for when radius has physical units.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">mem1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;members of catalog 1 is None, add members to catalog 1 first.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mem2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;members of catalog 2 is None, add members to catalog 2 first.&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;id&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_match_members_by_id</span><span class="p">(</span><span class="n">mem1</span><span class="p">,</span> <span class="n">mem2</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;angular_distance&#39;</span><span class="p">:</span>
@@ -464,6 +476,8 @@
 <span class="sd">        overwrite: bool</span>
 <span class="sd">            Overwrite saved files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;self.matched_mems is None cannot save it.&#39;</span><span class="p">)</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span></div>
 <div class="viewcode-block" id="MembershipMatch.load_matched_members"><a class="viewcode-back" href="../../../api/clevar.match.membership.html#clevar.match.membership.MembershipMatch.load_matched_members">[docs]</a>    <span class="k">def</span> <span class="nf">load_matched_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.plot_helper module &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.match_metrics.plot_helper module &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -415,7 +415,7 @@
 
 <dl class="py function">
 <dt id="clevar.match_metrics.plot_helper.plot_histograms">
-<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">plot_histograms</code><span class="sig-paren">(</span><em class="sig-param">histogram</em>, <em class="sig-param">edges1</em>, <em class="sig-param">edges2</em>, <em class="sig-param">ax</em>, <em class="sig-param">shape='steps'</em>, <em class="sig-param">plt_kwargs={}</em>, <em class="sig-param">lines_kwargs_list=None</em>, <em class="sig-param">add_legend=True</em>, <em class="sig-param">legend_format=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">legend_kwargs={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#plot_histograms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.plot_histograms" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.match_metrics.plot_helper.</code><code class="sig-name descname">plot_histograms</code><span class="sig-paren">(</span><em class="sig-param">histogram</em>, <em class="sig-param">edges1</em>, <em class="sig-param">edges2</em>, <em class="sig-param">ax</em>, <em class="sig-param">shape='steps'</em>, <em class="sig-param">plt_kwargs=None</em>, <em class="sig-param">lines_kwargs_list=None</em>, <em class="sig-param">add_legend=True</em>, <em class="sig-param">legend_format=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">legend_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/plot_helper.html#plot_histograms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.plot_helper.plot_histograms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -425,12 +425,12 @@
 <li><p><strong>edges2</strong> (<em>array</em>) – Edges of histogram.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.plot</p></li>
 <li><p><strong>lines_kwargs_list</strong> (<em>list</em><em>, </em><em>None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 <li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
 <li><p><strong>legend_format</strong> (<em>function</em>) – Function to format the values of the bins in legend</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.legend</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.legend</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

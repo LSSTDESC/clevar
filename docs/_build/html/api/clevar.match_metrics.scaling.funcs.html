@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.scaling.funcs module &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.match_metrics.scaling.funcs module &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -259,8 +259,8 @@ wrapper of catalog_funcs functions</p>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘mass’]/cat2.labels[‘mass’]).</p></li>
 </ul>
 </dd>
@@ -282,9 +282,9 @@ wrapper of catalog_funcs functions</p>
 </li>
 <li><p><strong>fit_bins1</strong> (<em>array, None</em>) – Bins for mass of catalog 1 (default=10).</p></li>
 <li><p><strong>fit_bins2</strong> (<em>array, None</em>) – Bins for mass of catalog 2 (default=30).</p></li>
-<li><p><strong>fit_legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend.</p></li>
-<li><p><strong>fit_bindata_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar.</p></li>
-<li><p><strong>fit_plt_kwargs</strong> (<em>dict</em>) – Additional arguments for plot of fit pylab.scatter.</p></li>
+<li><p><strong>fit_legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend.</p></li>
+<li><p><strong>fit_bindata_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar.</p></li>
+<li><p><strong>fit_plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plot of fit pylab.scatter.</p></li>
 <li><p><strong>fit_label_components</strong> (<em>tuple (of strings)</em>) – Names of fitted components in fit line label, default=(xlabel, ylabel).</p></li>
 </ul>
 </dd>
@@ -357,10 +357,10 @@ wrapper of catalog_funcs functions</p>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)</p></li>
 <li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
 <li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘mass’]/cat2.labels[‘mass’]).</p></li>
@@ -408,14 +408,14 @@ wrapper of catalog_funcs functions</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.</p></li>
 <li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
-<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict, None</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
 <li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
 <li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
 and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
@@ -488,14 +488,14 @@ between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.</p></li>
 <li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
-<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict, None</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
 <li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
 <li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
 and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
@@ -543,17 +543,17 @@ and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)</p></li>
 <li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
 <li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 <li><p><strong>panel_kwargs_errlist</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.errorbar).
 Must have same size as len(bins2)-1</p></li>
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 <li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
@@ -602,12 +602,12 @@ with option for cat2 redshift bins (in lines).</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
 <li><p><strong>line_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins_aux)-1</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend</p></li>
 <li><p><strong>add_panel_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>panel_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 <li><p><strong>add_line_label</strong> (<em>bool</em>) – Add bin label to line</p></li>
@@ -652,12 +652,12 @@ Is is useful to compare with mass_dist results.</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
 <li><p><strong>line_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins_aux)-1</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend</p></li>
 <li><p><strong>add_panel_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>panel_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 <li><p><strong>add_line_label</strong> (<em>bool</em>) – Add bin label to line</p></li>
@@ -726,9 +726,9 @@ between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
-<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict, None</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend</p></li>
 <li><p><strong>label1, label2</strong> (<em>str</em>) – Label for catalog 1/2 masses.</p></li>
 <li><p><strong>scale1, scale2</strong> (<em>str</em>) – Scale of catalog 1/2 masses.</p></li>
 </ul>
@@ -770,10 +770,10 @@ between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘mass’]/cat2.labels[‘mass’]).</p></li>
 <li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.mass</cite> for more info).</p></li>
 </ul>
@@ -819,13 +819,13 @@ between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 <li><p><strong>panel_kwargs_errlist</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.errorbar).
 Must have same size as len(bins2)-1</p></li>
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 <li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
@@ -871,8 +871,8 @@ Must have same size as len(bins2)-1</p></li>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘z’]/cat2.labels[‘z’]).</p></li>
 </ul>
 </dd>
@@ -893,9 +893,9 @@ Must have same size as len(bins2)-1</p></li>
 </li>
 <li><p><strong>fit_bins1</strong> (<em>array, None</em>) – Bins for redshift of catalog 1 (default=10).</p></li>
 <li><p><strong>fit_bins2</strong> (<em>array, None</em>) – Bins for redshift of catalog 2 (default=30).</p></li>
-<li><p><strong>fit_legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend.</p></li>
-<li><p><strong>fit_bindata_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar.</p></li>
-<li><p><strong>fit_plt_kwargs</strong> (<em>dict</em>) – Additional arguments for plot of fit pylab.scatter.</p></li>
+<li><p><strong>fit_legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend.</p></li>
+<li><p><strong>fit_bindata_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar.</p></li>
+<li><p><strong>fit_plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plot of fit pylab.scatter.</p></li>
 <li><p><strong>fit_label_components</strong> (<em>tuple (of strings)</em>) – Names of fitted components in fit line label, default=(xlabel, ylabel).</p></li>
 </ul>
 </dd>
@@ -968,10 +968,10 @@ Must have same size as len(bins2)-1</p></li>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)</p></li>
 <li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
 <li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘z’]/cat2.labels[‘z’]).</p></li>
@@ -1019,20 +1019,20 @@ Must have same size as len(bins2)-1</p></li>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.</p></li>
 <li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
-<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict, None</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
 <li><p><strong>xscale, yscale</strong> (<em>str</em>) – Scale for x/y axis.</p></li>
 <li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
 <li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
 and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
 <li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.redshift</cite> for more info).</p></li>
-<li><p><strong>vline_kwargs</strong> (<em>dict</em>) – Arguments for vlines marking bins in main plot, used in plt.axvline.</p></li>
+<li><p><strong>vline_kwargs</strong> (<em>dict, None</em>) – Arguments for vlines marking bins in main plot, used in plt.axvline.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
@@ -1078,17 +1078,17 @@ and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2)</p></li>
 <li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
 <li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 <li><p><strong>panel_kwargs_errlist</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.errorbar).
 Must have same size as len(bins2)-1</p></li>
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 <li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
@@ -1163,14 +1163,14 @@ between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>ax_rotation</strong> (<em>float</em>) – Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.</p></li>
 <li><p><strong>rotation_resolution</strong> (<em>int</em>) – Number of bins to be used when ax_rotation!=0.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
-<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict, None</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
 <li><p><strong>xscale, yscale</strong> (<em>str</em>) – Scale for x/y axis.</p></li>
 <li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
 <li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
@@ -1216,12 +1216,12 @@ with option for cat2 mass bins (in lines).</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
 <li><p><strong>line_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins_aux)-1</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend</p></li>
 <li><p><strong>add_panel_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>panel_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 <li><p><strong>add_line_label</strong> (<em>bool</em>) – Add bin label to line</p></li>
@@ -1266,12 +1266,12 @@ Is is useful to compare with redshift_dist results.</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
 <li><p><strong>line_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins_aux)-1</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend</p></li>
 <li><p><strong>add_panel_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>panel_label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 <li><p><strong>add_line_label</strong> (<em>bool</em>) – Add bin label to line</p></li>
@@ -1315,10 +1315,10 @@ Must have same size as len(bins_aux)-1</p></li>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ax</strong> (<em>matplotlib.axes, None</em>) – Ax to add plot. If equals <cite>None</cite>, one is created.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Label of x/y axis (default=cat1.labels[‘z’]/cat2.labels[‘z’]).</p></li>
 <li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.redshift</cite> for more info).</p></li>
 </ul>
@@ -1363,13 +1363,13 @@ Must have same size as len(bins_aux)-1</p></li>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.scatter</p></li>
-<li><p><strong>err_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.errorbar</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.scatter</p></li>
+<li><p><strong>err_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar</p></li>
 <li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 <li><p><strong>panel_kwargs_errlist</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.errorbar).
 Must have same size as len(bins2)-1</p></li>
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 <li><p><strong>label_fmt</strong> (<em>str</em>) – Format the values of binedges (ex: ‘.2f’)</p></li>
@@ -1441,9 +1441,9 @@ between 0-100 (ex: <cite>p_68</cite>, <cite>p_95</cite>, <cite>p_99</cite>).</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
-<li><p><strong>metrics_kwargs</strong> (<em>dict</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.legend</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>metrics_kwargs</strong> (<em>dict, None</em>) – Dictionary of dictionary configs for each metric plots.</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend</p></li>
 <li><p><strong>label1, label2</strong> (<em>str</em>) – Label for catalog 1/2 redshifts.</p></li>
 <li><p><strong>scale1, scale2</strong> (<em>str</em>) – Scale of catalog 1/2 redshifts.</p></li>
 </ul>

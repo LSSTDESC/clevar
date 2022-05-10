@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.catalog module &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.catalog module &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -237,7 +237,7 @@
 The ClCatalog and improved Astropy table classes</p>
 <dl class="py class">
 <dt id="clevar.catalog.Catalog">
-<em class="property">class </em><code class="sig-prename descclassname">clevar.catalog.</code><code class="sig-name descname">Catalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.Catalog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">clevar.catalog.</code><code class="sig-name descname">Catalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.Catalog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Parent object to handle catalogs.</p>
 <dl class="field-list simple">
@@ -248,9 +248,9 @@ The ClCatalog and improved Astropy table classes</p>
 Matching data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)</p></li>
 <li><p><strong>size</strong> (<em>int</em>) – Number of objects in the catalog</p></li>
 <li><p><strong>id_dict</strong> (<em>dict</em>) – Dictionary of indicies given the object id</p></li>
+<li><p><strong>tags</strong> (<em>dict</em>) – Tag for main quantities used in matching and plots (ex: id, ra, dec, z)</p></li>
 <li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots</p></li>
 <li><p><strong>colnames</strong> (<em>list</em>) – List of column names</p></li>
-<li><p><strong>tags</strong> (<em>dict</em>) – Tag for main quantities used in matching and plots (ex: id, ra, dec, z)</p></li>
 </ul>
 </dd>
 </dl>
@@ -344,15 +344,15 @@ It also considers zmax values on the footprint if available.</p>
 
 <dl class="py method">
 <dt id="clevar.catalog.Catalog.read">
-<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">full</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.Catalog.read" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">full</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.Catalog.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read catalog from fits file. If full=False, only columns in tags are read.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em>) – Input file.</p></li>
 <li><p><strong>name</strong> (<em>str</em><em>, </em><em>None</em>) – Catalog name, if none reads from file.</p></li>
-<li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots (default vals from file header).</p></li>
-<li><p><strong>tags</strong> (<em>dict</em>) – Tags for table (default vals from file header).</p></li>
+<li><p><strong>tags</strong> (<em>dict</em><em>, </em><em>None</em>) – Tags for table (required if full=False).</p></li>
+<li><p><strong>labels</strong> (<em>dict</em><em>, </em><em>None</em>) – Labels of data columns for plots.</p></li>
 <li><p><strong>full</strong> (<em>bool</em>) – Reads all columns of the catalog</p></li>
 </ul>
 </dd>
@@ -453,7 +453,7 @@ The catalog must contain name information.</p>
 
 <dl class="py class">
 <dt id="clevar.catalog.ClCatalog">
-<em class="property">class </em><code class="sig-prename descclassname">clevar.catalog.</code><code class="sig-name descname">ClCatalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">radius_unit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">members</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">clevar.catalog.</code><code class="sig-name descname">ClCatalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius_unit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">members</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#clevar.catalog.Catalog" title="clevar.catalog.Catalog"><code class="xref py py-class docutils literal notranslate"><span class="pre">clevar.catalog.Catalog</span></code></a></p>
 <p>Object to handle cluster catalogs.</p>
 <dl class="field-list simple">
@@ -466,9 +466,9 @@ Mathing data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)</p></l
 <li><p><strong>size</strong> (<em>int</em>) – Number of objects in the catalog</p></li>
 <li><p><strong>id_dict</strong> (<em>dict</em>) – Dictionary of indicies given the cluster id</p></li>
 <li><p><strong>radius_unit</strong> (<em>str</em><em>, </em><em>None</em>) – Unit of the radius column</p></li>
+<li><p><strong>tags</strong> (<em>dict</em>) – Tag for main quantities used in matching and plots (ex: id, ra, dec, z, mass,…)</p></li>
 <li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots</p></li>
 <li><p><strong>colnames</strong> (<em>list</em>) – List of column names</p></li>
-<li><p><strong>tags</strong> (<em>dict</em>) – Tag for main quantities used in matching and plots (ex: id, ra, dec, z, mass,…)</p></li>
 <li><p><strong>members</strong> (<a class="reference internal" href="#clevar.catalog.MemCatalog" title="clevar.catalog.MemCatalog"><em>MemCatalog</em></a>) – Catalog of members associated to the clusters</p></li>
 <li><p><strong>leftover_members</strong> (<a class="reference internal" href="#clevar.catalog.MemCatalog" title="clevar.catalog.MemCatalog"><em>MemCatalog</em></a>) – Catalog of members not associated to the clusters</p></li>
 </ul>
@@ -500,15 +500,15 @@ and save them in leftover_members attribute.</p></li>
 
 <dl class="py method">
 <dt id="clevar.catalog.ClCatalog.read">
-<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">radius_unit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">full</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.read" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">radius_unit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">full</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read catalog from fits file. If full=False, only columns in tags are read.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em>) – Input file.</p></li>
 <li><p><strong>name</strong> (<em>str</em><em>, </em><em>None</em>) – Catalog name, if none reads from file.</p></li>
-<li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots (default vals from file header).</p></li>
-<li><p><strong>tags</strong> (<em>dict</em>) – Tags for table (default vals from file header).</p></li>
+<li><p><strong>tags</strong> (<em>dict</em><em>, </em><em>None</em>) – Tags for table (required if full=False).</p></li>
+<li><p><strong>labels</strong> (<em>dict</em><em>, </em><em>None</em>) – Labels of data columns for plots.</p></li>
 <li><p><strong>radius_unit</strong> (<em>str</em><em>, </em><em>None</em>) – Unit of the radius column (default read from file).</p></li>
 <li><p><strong>full</strong> (<em>bool</em>) – Reads all columns of the catalog</p></li>
 </ul>
@@ -518,14 +518,14 @@ and save them in leftover_members attribute.</p></li>
 
 <dl class="py method">
 <dt id="clevar.catalog.ClCatalog.read_members">
-<code class="sig-name descname">read_members</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">members_consistency</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">members_warning</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.read_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.read_members" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_members</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">members_consistency</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">members_warning</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">full</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#ClCatalog.read_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.ClCatalog.read_members" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read members catalog from fits file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em>) – Input file.</p></li>
-<li><p><strong>tags</strong> (<em>dict</em>) – Tags for member table.</p></li>
-<li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots.</p></li>
+<li><p><strong>tags</strong> (<em>dict</em><em>, </em><em>None</em>) – Tags for member table.</p></li>
+<li><p><strong>labels</strong> (<em>dict</em><em>, </em><em>None</em>) – Labels of data columns for plots.</p></li>
 <li><p><strong>members_consistency</strong> (<em>bool</em>) – Require that all input members belong to this cluster catalog.</p></li>
 <li><p><strong>members_warning</strong> (<em>bool</em>) – Raise warning if members are do not belong to this cluster catalog,
 and save them in leftover_members attribute.</p></li>
@@ -875,7 +875,7 @@ name (e.g. <code class="docutils literal notranslate"><span class="pre">ascii.aa
 
 <dl class="py class">
 <dt id="clevar.catalog.MemCatalog">
-<em class="property">class </em><code class="sig-prename descclassname">clevar.catalog.</code><code class="sig-name descname">MemCatalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">{}</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#MemCatalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.MemCatalog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">clevar.catalog.</code><code class="sig-name descname">MemCatalog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#MemCatalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.catalog.MemCatalog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#clevar.catalog.Catalog" title="clevar.catalog.Catalog"><code class="xref py py-class docutils literal notranslate"><span class="pre">clevar.catalog.Catalog</span></code></a></p>
 <p>Object to handle member catalogs.</p>
 <dl class="field-list simple">
@@ -887,9 +887,9 @@ name (e.g. <code class="docutils literal notranslate"><span class="pre">ascii.aa
 <li><p><strong>size</strong> (<em>int</em>) – Number of objects in the catalog</p></li>
 <li><p><strong>id_dict</strong> (<em>dict</em>) – Dictionary of indicies given the member id</p></li>
 <li><p><strong>id_dict_list</strong> (<em>dict</em>) – Dictionary of indicies given the member id, returns list allowing for repeated ids.</p></li>
+<li><p><strong>tags</strong> (<em>dict</em>) – Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,…)</p></li>
 <li><p><strong>labels</strong> (<em>dict</em>) – Labels of data columns for plots</p></li>
 <li><p><strong>colnames</strong> (<em>list</em>) – List of column names</p></li>
-<li><p><strong>tags</strong> (<em>dict</em>) – Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,…)</p></li>
 </ul>
 </dd>
 </dl>

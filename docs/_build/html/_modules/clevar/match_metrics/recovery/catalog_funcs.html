@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.catalog_funcs &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.match_metrics.recovery.catalog_funcs &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -336,7 +336,7 @@
 <span class="sd">        Label of recovery rate.</span>
 <span class="sd">    scale1: str</span>
 <span class="sd">        Scale of col 1 component</span>
-<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">    plt_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.plot</span>
 <span class="sd">    lines_kwargs_list: list, None</span>
 <span class="sd">        List of additional arguments for plotting each line (using pylab.plot).</span>
@@ -345,7 +345,7 @@
 <span class="sd">        Add legend of bins</span>
 <span class="sd">    legend_format: function</span>
 <span class="sd">        Function to format the values of the bins in legend</span>
-<span class="sd">    legend_kwargs: dict</span>
+<span class="sd">    legend_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.legend</span>
 
 <span class="sd">    Returns</span>
@@ -407,12 +407,12 @@
 <span class="sd">        Label of recovery rate.</span>
 <span class="sd">    scale1: str</span>
 <span class="sd">        Scale of col 1 component</span>
-<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">    plt_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.plot</span>
 <span class="sd">    panel_kwargs_list: list, None</span>
 <span class="sd">        List of additional arguments for plotting each panel (using pylab.plot).</span>
 <span class="sd">        Must have same size as len(bins2)-1</span>
-<span class="sd">    fig_kwargs: dict</span>
+<span class="sd">    fig_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for plt.subplots</span>
 <span class="sd">    add_label: bool</span>
 <span class="sd">        Add bin label to panel</span>
@@ -476,15 +476,15 @@
 <span class="sd">        Labels of components 1 and 2. Default is col1, col2.</span>
 <span class="sd">    scale1, scale2: str</span>
 <span class="sd">        Scales of col 1, 2 components.</span>
-<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">    plt_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.plot</span>
 <span class="sd">    add_cb: bool</span>
 <span class="sd">        Plot colorbar</span>
-<span class="sd">    cb_kwargs: dict</span>
+<span class="sd">    cb_kwargs: dict, None</span>
 <span class="sd">        Colorbar arguments</span>
 <span class="sd">    add_num: int</span>
 <span class="sd">        Add numbers in each bin</span>
-<span class="sd">    num_kwargs: dict</span>
+<span class="sd">    num_kwargs: dict, None</span>
 <span class="sd">        Arguments for number plot (used in plt.text)</span>
 
 <span class="sd">    Returns</span>
