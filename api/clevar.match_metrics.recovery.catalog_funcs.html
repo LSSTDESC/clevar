@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.catalog_funcs module &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.match_metrics.recovery.catalog_funcs module &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -264,12 +264,12 @@
 <li><p><strong>xlabel</strong> (<em>str</em>) – Label of component 1. Default is col1.</p></li>
 <li><p><strong>ylabel</strong> (<em>str</em>) – Label of recovery rate.</p></li>
 <li><p><strong>scale1</strong> (<em>str</em>) – Scale of col 1 component</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
 <li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 <li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
 <li><p><strong>legend_format</strong> (<em>function</em>) – Function to format the values of the bins in legend</p></li>
-<li><p><strong>legend_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.legend</p></li>
+<li><p><strong>legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.legend</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
@@ -322,11 +322,11 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
 <li><p><strong>xlabel, ylabel</strong> (<em>str</em>) – Labels of components 1 and 2. Default is col1, col2.</p></li>
 <li><p><strong>scale1, scale2</strong> (<em>str</em>) – Scales of col 1, 2 components.</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
-<li><p><strong>cb_kwargs</strong> (<em>dict</em>) – Colorbar arguments</p></li>
+<li><p><strong>cb_kwargs</strong> (<em>dict, None</em>) – Colorbar arguments</p></li>
 <li><p><strong>add_num</strong> (<em>int</em>) – Add numbers in each bin</p></li>
-<li><p><strong>num_kwargs</strong> (<em>dict</em>) – Arguments for number plot (used in plt.text)</p></li>
+<li><p><strong>num_kwargs</strong> (<em>dict, None</em>) – Arguments for number plot (used in plt.text)</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns</dt>
@@ -383,10 +383,10 @@ and each panel is based on the data inside a bins2 bin.</p>
 <li><p><strong>xlabel</strong> (<em>str</em>) – Label of component 1. Default is col1.</p></li>
 <li><p><strong>ylabel</strong> (<em>str</em>) – Label of recovery rate.</p></li>
 <li><p><strong>scale1</strong> (<em>str</em>) – Scale of col 1 component</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
 <li><p><strong>panel_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
-<li><p><strong>fig_kwargs</strong> (<em>dict</em>) – Additional arguments for plt.subplots</p></li>
+<li><p><strong>fig_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
 </ul>

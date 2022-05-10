@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.distances.catalog_funcs &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.match_metrics.distances.catalog_funcs &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -236,10 +236,11 @@
 <span class="kn">from</span> <span class="nn">...match</span> <span class="kn">import</span> <span class="n">get_matched_pairs</span>
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">plot_helper</span> <span class="k">as</span> <span class="n">ph</span>
 <span class="kn">from</span> <span class="nn">..plot_helper</span> <span class="kn">import</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">none_val</span>
 
 <span class="k">def</span> <span class="nf">_histograms</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">distance_bins</span><span class="p">,</span> <span class="n">quantity2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bins2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log2</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;steps&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plt_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">lines_kwargs_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">add_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend_format</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="n">legend_kwargs</span><span class="o">=</span><span class="p">{}):</span>
+                <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;steps&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plt_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lines_kwargs_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">add_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend_format</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="n">legend_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot histograms for distances.</span>
 
@@ -259,7 +260,7 @@
 <span class="sd">        Shape of the lines. Can be steps or line.</span>
 <span class="sd">    ax: matplotlib.axes</span>
 <span class="sd">        Ax to add plot</span>
-<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">    plt_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.plot</span>
 <span class="sd">    lines_kwargs_list: list, None</span>
 <span class="sd">        List of additional arguments for plotting each line (using pylab.plot).</span>
@@ -268,7 +269,7 @@
 <span class="sd">        Add legend of bins</span>
 <span class="sd">    legend_format: function</span>
 <span class="sd">        Function to format the values of the bins in legend</span>
-<span class="sd">    legend_kwargs: dict</span>
+<span class="sd">    legend_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.legend</span>
 
 <span class="sd">    Returns</span>
@@ -342,7 +343,7 @@
 <span class="sd">        Shape of the lines. Can be steps or line.</span>
 <span class="sd">    ax: matplotlib.axes</span>
 <span class="sd">        Ax to add plot</span>
-<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">    plt_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.plot</span>
 <span class="sd">    lines_kwargs_list: list, None</span>
 <span class="sd">        List of additional arguments for plotting each line (using pylab.plot).</span>
@@ -407,7 +408,7 @@
 <span class="sd">        Shape of the lines. Can be steps or line.</span>
 <span class="sd">    ax: matplotlib.axes</span>
 <span class="sd">        Ax to add plot</span>
-<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">    plt_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.plot</span>
 <span class="sd">    lines_kwargs_list: list, None</span>
 <span class="sd">        List of additional arguments for plotting each line (using pylab.plot).</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.plot_helper &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.match_metrics.plot_helper &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -236,7 +236,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp2d</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">ScalarFormatter</span><span class="p">,</span> <span class="n">NullFormatter</span>
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">none_val</span><span class="p">,</span> <span class="n">hp</span>
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">none_val</span><span class="p">,</span> <span class="n">hp</span><span class="p">,</span> <span class="n">updated_dict</span>
 
 <div class="viewcode-block" id="add_grid"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_grid">[docs]</a><span class="k">def</span> <span class="nf">add_grid</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">major_lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">minor_lw</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -480,8 +480,8 @@
 
 <div class="viewcode-block" id="plot_histograms"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.plot_histograms">[docs]</a><span class="k">def</span> <span class="nf">plot_histograms</span><span class="p">(</span>
     <span class="n">histogram</span><span class="p">,</span> <span class="n">edges1</span><span class="p">,</span> <span class="n">edges2</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;steps&#39;</span><span class="p">,</span>
-    <span class="n">plt_kwargs</span><span class="o">=</span><span class="p">{},</span> <span class="n">lines_kwargs_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">add_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend_format</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="n">legend_kwargs</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="n">plt_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lines_kwargs_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">add_legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend_format</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="n">legend_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.</span>
 
@@ -495,7 +495,7 @@
 <span class="sd">        Ax to add plot</span>
 <span class="sd">    shape: str</span>
 <span class="sd">        Shape of the lines. Can be steps or line.</span>
-<span class="sd">    plt_kwargs: dict</span>
+<span class="sd">    plt_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.plot</span>
 <span class="sd">    lines_kwargs_list: list, None</span>
 <span class="sd">        List of additional arguments for plotting each line (using pylab.plot).</span>
@@ -504,7 +504,7 @@
 <span class="sd">        Add legend of bins</span>
 <span class="sd">    legend_format: function</span>
 <span class="sd">        Function to format the values of the bins in legend</span>
-<span class="sd">    legend_kwargs: dict</span>
+<span class="sd">    legend_kwargs: dict, None</span>
 <span class="sd">        Additional arguments for pylab.legend</span>
 
 <span class="sd">    Returns</span>
@@ -516,12 +516,12 @@
             <span class="n">histogram</span><span class="p">,</span> <span class="n">none_val</span><span class="p">(</span><span class="n">lines_kwargs_list</span><span class="p">,</span> <span class="nb">iter</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">{},</span> <span class="mi">1</span><span class="p">)),</span>
             <span class="nb">zip</span><span class="p">(</span><span class="n">edges2</span><span class="p">,</span> <span class="n">edges2</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span>
         <span class="p">):</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">get_bin_label</span><span class="p">(</span><span class="o">*</span><span class="n">edges</span><span class="p">,</span> <span class="n">legend_format</span><span class="p">)</span> <span class="k">if</span> <span class="n">add_legend</span> <span class="k">else</span> <span class="kc">None</span><span class="p">}</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">plt_kwargs</span><span class="p">)</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">l_kwargs</span><span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">updated_dict</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">get_bin_label</span><span class="p">(</span><span class="o">*</span><span class="n">edges</span><span class="p">,</span> <span class="n">legend_format</span><span class="p">)</span> <span class="k">if</span> <span class="n">add_legend</span> <span class="k">else</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="n">plt_kwargs</span><span class="p">,</span> <span class="n">l_kwargs</span><span class="p">)</span>
         <span class="n">plot_hist_line</span><span class="p">(</span><span class="n">hist_line</span><span class="p">,</span> <span class="n">edges1</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">add_legend</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">**</span><span class="n">legend_kwargs</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">**</span><span class="n">updated_dict</span><span class="p">(</span><span class="n">legend_kwargs</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">ax</span></div>
 
 
@@ -584,8 +584,7 @@
 <span class="sd">        Colorbar</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nside</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">npix2nside</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">healpix_map</span><span class="p">))</span>
-    <span class="n">kwargs_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;flip&#39;</span><span class="p">:</span><span class="s1">&#39;geo&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;cbar&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;nest&#39;</span><span class="p">:</span><span class="n">nest</span><span class="p">}</span>
-    <span class="n">kwargs_</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">kwargs_</span> <span class="o">=</span> <span class="n">updated_dict</span><span class="p">({</span><span class="s1">&#39;flip&#39;</span><span class="p">:</span><span class="s1">&#39;geo&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;cbar&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;nest&#39;</span><span class="p">:</span><span class="n">nest</span><span class="p">},</span> <span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">auto_lim</span><span class="p">:</span>
         <span class="n">ra</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">healpix_map</span><span class="p">))[</span><span class="n">healpix_map</span><span class="o">!=</span><span class="n">bad_val</span><span class="p">],</span>
                              <span class="n">nest</span><span class="o">=</span><span class="n">nest</span><span class="p">,</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

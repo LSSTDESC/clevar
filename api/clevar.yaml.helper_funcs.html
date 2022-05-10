@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.yaml.helper_funcs module &mdash; ClEvaR 0.10.0 documentation</title>
+  <title>clevar.yaml.helper_funcs module &mdash; ClEvaR 0.10.3 documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                0.10.0
+                0.10.3
               </div>
             
           
@@ -239,7 +239,7 @@
 Helper functions for command line execution</p>
 <dl class="py function">
 <dt id="clevar.yaml.helper_funcs.add_dicts_diff">
-<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">add_dicts_diff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict1</span></em>, <em class="sig-param"><span class="n">dict2</span></em>, <em class="sig-param"><span class="n">pref</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">diff_lines</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#add_dicts_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.add_dicts_diff" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">add_dicts_diff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict1</span></em>, <em class="sig-param"><span class="n">dict2</span></em>, <em class="sig-param"><span class="n">pref</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">diff_lines</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#add_dicts_diff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.add_dicts_diff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the differences between dictionaries to a list</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -247,7 +247,7 @@ Helper functions for command line execution</p>
 <li><p><strong>dict1</strong> (<em>dict</em>) – Dictionaies to be compared</p></li>
 <li><p><strong>dict2</strong> (<em>dict</em>) – Dictionaies to be compared</p></li>
 <li><p><strong>pref</strong> (<em>str</em>) – Prefix to be added in output</p></li>
-<li><p><strong>diff_lines</strong> (<em>list</em>) – List where differences will be appended to</p></li>
+<li><p><strong>diff_lines</strong> (<em>list</em><em>, </em><em>None</em>) – List where differences will be appended to. If None, it is a new list.</p></li>
 </ul>
 </dd>
 </dl>
@@ -330,14 +330,14 @@ If there are differences, a table with the information is printed.</p>
 
 <dl class="py function">
 <dt id="clevar.yaml.helper_funcs.loadconf">
-<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">loadconf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em>, <em class="sig-param"><span class="n">load_configs</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">add_new_configs</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">fail_action</span><span class="o">=</span><span class="default_value">'ask'</span></em>, <em class="sig-param"><span class="n">check_matching</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#loadconf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.loadconf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">clevar.yaml.helper_funcs.</code><code class="sig-name descname">loadconf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em>, <em class="sig-param"><span class="n">load_configs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">add_new_configs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fail_action</span><span class="o">=</span><span class="default_value">'ask'</span></em>, <em class="sig-param"><span class="n">check_matching</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/yaml/helper_funcs.html#loadconf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.yaml.helper_funcs.loadconf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load configuration from yaml file, creates output directory and config.log.yml</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config_file</strong> (<em>str</em>) – Yaml configuration file.</p></li>
-<li><p><strong>load_configs</strong> (<em>list</em>) – List of configurations loaded (will be checked with config.log.yml).</p></li>
-<li><p><strong>add_new_configs</strong> (<em>list</em>) – List of configurations that will be automatically added if not in config.log.yml.</p></li>
+<li><p><strong>load_configs</strong> (<em>list</em><em>, </em><em>None</em>) – List of configurations loaded (will be checked with config.log.yml).</p></li>
+<li><p><strong>add_new_configs</strong> (<em>list</em><em>, </em><em>None</em>) – List of configurations that will be automatically added if not in config.log.yml.</p></li>
 <li><p><strong>fail_action</strong> (<em>str</em>) – Action to do when there is inconsistency in configs.
 Options are ‘ask’, ‘overwrite’ and ‘quit’</p></li>
 <li><p><strong>check_matching</strong> (<em>bool</em>) – Check matching config</p></li>

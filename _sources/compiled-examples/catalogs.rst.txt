@@ -287,7 +287,7 @@ arguments:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139672678917936" class="table-striped table-bordered table-condensed">
+    <table id="table140542663669408" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -312,7 +312,7 @@ catalog to have names that are not default for ``ClEvaR`` use:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> ID_CLUSTER(id), M200(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513627584" class="table-striped table-bordered table-condensed">
+    <table id="table140542663670656" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID_CLUSTER (id)</th><th>M200 (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -336,7 +336,7 @@ exeptions in `Important inputs of ``ClCatalog`` <#clcat_input>`__):
 .. raw:: html
 
     <b>test name</b><br></b><b>tags:</b> id(id)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139672678917840" class="table-striped table-bordered table-condensed">
+    <table id="table140542663668880" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>test_column</th><th>other</th><th>third</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>int64</th><th>bool</th><th>object</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1</td><td>True</td><td>None</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -364,7 +364,7 @@ You can also create a ``ClCatalog`` passing directly a full data table:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513627968" class="table-striped table-bordered table-condensed">
+    <table id="table140545829118832" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -390,7 +390,7 @@ have names that are not default for ``ClEvaR`` use:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> ID_CLUSTER(id), M200(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513626864" class="table-striped table-bordered table-condensed">
+    <table id="table140542663320624" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID_CLUSTER (id)</th><th>M200 (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -413,7 +413,7 @@ You can also pass a dictionary or a ``numpy`` array with names:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513629168" class="table-striped table-bordered table-condensed">
+    <table id="table140542663323456" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -437,7 +437,7 @@ You can also pass a dictionary or a ``numpy`` array with names:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513626864" class="table-striped table-bordered table-condensed">
+    <table id="table140542663668448" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str10</th><th>float32</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -466,7 +466,7 @@ fits file as the first argument, the catalog name as the second, and the
 .. raw:: html
 
     <b>my cluster</b><br></b><b>tags:</b> ID(id), MASS(mass)<br><b>Radius unit:</b> None<br><i>ClData length=5</i>
-    <table id="table139669513629600" class="table-striped table-bordered table-condensed">
+    <table id="table140542663322592" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID (id)</th><th>MASS (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -494,7 +494,7 @@ If you want to read all columns in the ``.fits`` file, set the argument
 .. raw:: html
 
     <b>my cluster</b><br></b><b>tags:</b> ID(id), MASS(mass), RA(ra), DEC(dec), Z(z)<br><b>Radius unit:</b> None<br><i>ClData length=5</i>
-    <table id="table139669513627440" class="table-striped table-bordered table-condensed">
+    <table id="table140542663319760" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID (id)</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>MASS (mass)</th><th>RADIUS_ARCMIN</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.2</td><td>3.16e+13</td><td>1.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -525,7 +525,7 @@ columns (with prefix ``mt_``):
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513625808" class="table-striped table-bordered table-condensed">
+    <table id="table140545829174096" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -546,7 +546,7 @@ one will be created:
 
 .. parsed-literal::
 
-    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.0-py3.9.egg/clevar/catalog.py:212: UserWarning: id column missing, additional one is being created.
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.3-py3.9.egg/clevar/catalog.py:212: UserWarning: id column missing, additional one is being created.
       warnings.warn(
 
 
@@ -555,7 +555,7 @@ one will be created:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513628688" class="table-striped table-bordered table-condensed">
+    <table id="table140545829074592" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str1</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>0</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -622,13 +622,7 @@ not provided as argument, a default value is assigned:
 
 .. parsed-literal::
 
-    {'id': 'id_{cluster}',
-     'mass': 'mass_{cluster}',
-     'ID_CLUSTER': 'ID_CLUSTER_{cluster}',
-     'M200': 'M200_{cluster}',
-     'test_column': 'test_column_{test name}',
-     'other': 'other_{test name}',
-     'third': 'third_{test name}'}
+    {'id': 'id_{cluster}', 'mass': 'mass_{cluster}'}
 
 
 
@@ -706,7 +700,7 @@ This information is also show directly when displaing the catalog:
 .. raw:: html
 
     <b>Cat</b><br></b><b>tags:</b> id(id), radius(radius)<br><b>Radius unit:</b> degrees<br><i>ClData length=2</i>
-    <table id="table139669513304096" class="table-striped table-bordered table-condensed">
+    <table id="table140542663668688" class="table-striped table-bordered table-condensed">
     <thead><tr><th colspan=6></th><th colspan=3 style='text-align:left; background-color:grey; color:white'>mt_input</th></tr></thread><thead><tr><th>id</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>zmin</th><th>zmax</th><th>ang</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>c1</td><td>0.01</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>-1.0</td><td>10.0</td><td>0.01</td></tr>
@@ -752,7 +746,7 @@ Using physical units (requires a cosmology):
 .. raw:: html
 
     <b>Cat</b><br></b><b>tags:</b> id(id), radius(radius), z(z)<br><b>Radius unit:</b> mpc<br><i>ClData length=2</i>
-    <table id="table139669513629120" class="table-striped table-bordered table-condensed">
+    <table id="table140542663320720" class="table-striped table-bordered table-condensed">
     <thead><tr><th colspan=7></th><th colspan=3 style='text-align:left; background-color:grey; color:white'>mt_input</th></tr></thread><thead><tr><th>id</th><th>radius</th><th>z</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>zmin</th><th>zmax</th><th>ang</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>c1</td><td>1.0</td><td>0.4</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>-1.0</td><td>10.0</td><td>0.05169945411341919</td></tr>
@@ -778,7 +772,7 @@ Using physical units (requires a cosmology):
 .. raw:: html
 
     <b>Cat</b><br></b><b>tags:</b> id(id), mass(radius), mass(mass), z(z)<br><b>Radius unit:</b> m200c<br><i>ClData length=2</i>
-    <table id="table139669513481808" class="table-striped table-bordered table-condensed">
+    <table id="table140542663322496" class="table-striped table-bordered table-condensed">
     <thead><tr><th colspan=7></th><th colspan=3 style='text-align:left; background-color:grey; color:white'>mt_input</th></tr></thread><thead><tr><th>id</th><th>mass (radius)</th><th>z</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>zmin</th><th>zmax</th><th>ang</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>float64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>0.4</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>-1.0</td><td>10.0</td><td>0.01996895400735947</td></tr>
@@ -815,7 +809,7 @@ a ``name`` argument:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> ID_CLUSTER(id), M200(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139672679023424" class="table-striped table-bordered table-condensed">
+    <table id="table140542663320288" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID_CLUSTER (id)</th><th>M200 (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -867,7 +861,7 @@ the row/column is returned:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> ID_CLUSTER(id), M200(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513305008" class="table-striped table-bordered table-condensed">
+    <table id="table140542663669792" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID_CLUSTER (id)</th><th>M200 (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -886,7 +880,7 @@ the row/column is returned:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> ID_CLUSTER(id), M200(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513626960" class="table-striped table-bordered table-condensed">
+    <table id="table140542663321680" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID_CLUSTER (id)</th><th>M200 (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c2</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -905,7 +899,7 @@ the row/column is returned:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> ID_CLUSTER(id), M200(mass)<br><b>Radius unit:</b> None<br><i>ClData length=1</i>
-    <table id="table139669513628496" class="table-striped table-bordered table-condensed">
+    <table id="table140542663320768" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID_CLUSTER (id)</th><th>M200 (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -923,7 +917,7 @@ the row/column is returned:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> ID_CLUSTER(id), M200(mass)<br><b>Radius unit:</b> None<br><i>ClData length=1</i>
-    <table id="table139672679025200" class="table-striped table-bordered table-condensed">
+    <table id="table140542663321104" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID_CLUSTER (id)</th><th>M200 (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -941,7 +935,7 @@ the row/column is returned:
 .. raw:: html
 
     <i>Row index=0</i>
-    <table id="table139669513627536">
+    <table id="table140542663670896">
     <thead><tr><th>ID_CLUSTER</th><th>M200</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -979,7 +973,7 @@ that is tagged will return the tagged column:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> ID_CLUSTER(id), M200(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513628496" class="table-striped table-bordered table-condensed">
+    <table id="table140542663320336" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID_CLUSTER (id)</th><th>M200 (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -1019,7 +1013,7 @@ footprint.ipynb for information on those.
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139672679023616" class="table-striped table-bordered table-condensed">
+    <table id="table140542663260720" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -1037,7 +1031,7 @@ footprint.ipynb for information on those.
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513629120" class="table-striped table-bordered table-condensed">
+    <table id="table140542663259376" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c2</td><td>1.00e+14</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -1076,7 +1070,7 @@ main cluster catalog):
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139669513305392" class="table-striped table-bordered table-condensed">
+    <table id="table140542663258608" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -1088,7 +1082,7 @@ main cluster catalog):
 .. raw:: html
 
     <b>members</b><br></b><b>tags:</b> id(id), id_cluster(id_cluster)<br><i>ClData length=3</i>
-    <table id="table139669513064896" class="table-striped table-bordered table-condensed">
+    <table id="table140542663261296" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
     <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
     <tr><td>m1</td><td>c1</td><td>0</td></tr>
@@ -1114,7 +1108,7 @@ The same can be done using ``tags``:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=2</i>
-    <table id="table139672678971760" class="table-striped table-bordered table-condensed">
+    <table id="table140542662771472" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -1126,7 +1120,7 @@ The same can be done using ``tags``:
 .. raw:: html
 
     <b>members</b><br></b><b>tags:</b> ID(id), IDCL(id_cluster)<br><i>ClData length=3</i>
-    <table id="table139672678971808" class="table-striped table-bordered table-condensed">
+    <table id="table140545829171840" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID (id)</th><th>IDCL (id_cluster)</th><th>ind_cl</th></tr></thead>
     <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
     <tr><td>m1</td><td>c1</td><td>0</td></tr>
@@ -1159,7 +1153,7 @@ names of the columns in the fits files as keyword arguments:
 .. raw:: html
 
     <b>my cluster</b><br></b><b>tags:</b> ID(id), MASS(mass)<br><b>Radius unit:</b> None<br><i>ClData length=5</i>
-    <table id="table139669513064800" class="table-striped table-bordered table-condensed">
+    <table id="table140542663321296" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID (id)</th><th>MASS (mass)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>3.16e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -1174,7 +1168,7 @@ names of the columns in the fits files as keyword arguments:
 .. raw:: html
 
     <b>members</b><br></b><b>tags:</b> ID(id), ID_CLUSTER(id_cluster)<br><i>ClData length=15</i>
-    <table id="table139669513068208" class="table-striped table-bordered table-condensed">
+    <table id="table140542663322736" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID (id)</th><th>ID_CLUSTER (id_cluster)</th><th>ind_cl</th></tr></thead>
     <thead><tr><th>str5</th><th>str3</th><th>int64</th></tr></thead>
     <tr><td>MEM0</td><td>CL0</td><td>0</td></tr>
@@ -1214,7 +1208,7 @@ Again, passing ``full=True`` will read all columns in the file:
 .. raw:: html
 
     <b>my cluster</b><br></b><b>tags:</b> ID(id), MASS(mass), RA(ra), DEC(dec), Z(z)<br><b>Radius unit:</b> None<br><i>ClData length=5</i>
-    <table id="table139669513481760" class="table-striped table-bordered table-condensed">
+    <table id="table140542662770848" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID (id)</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>MASS (mass)</th><th>RADIUS_ARCMIN</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>CL0</td><td>0.0</td><td>0.0</td><td>0.2</td><td>3.16e+13</td><td>1.0</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -1229,7 +1223,7 @@ Again, passing ``full=True`` will read all columns in the file:
 .. raw:: html
 
     <b>members</b><br></b><b>tags:</b> ID(id), ID_CLUSTER(id_cluster), RA(ra), DEC(dec), Z(z)<br><i>ClData length=15</i>
-    <table id="table139669513067824" class="table-striped table-bordered table-condensed">
+    <table id="table140542662772288" class="table-striped table-bordered table-condensed">
     <thead><tr><th>ID (id)</th><th>ID_CLUSTER (id_cluster)</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>ind_cl</th></tr></thead>
     <thead><tr><th>str5</th><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>int64</th></tr></thead>
     <tr><td>MEM0</td><td>CL0</td><td>0.0</td><td>0.0</td><td>0.2</td><td>0</td></tr>
@@ -1296,7 +1290,7 @@ the clusters not hosted are stored in ``leftover_members``:
 
 .. parsed-literal::
 
-    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.0-py3.9.egg/clevar/catalog.py:707: UserWarning: Some galaxies were not members of the cluster catalog. They are stored in leftover_members attribute.
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.3-py3.9.egg/clevar/catalog.py:711: UserWarning: Some galaxies were not members of the cluster catalog. They are stored in leftover_members attribute.
       warnings.warn(
 
 
@@ -1304,7 +1298,7 @@ the clusters not hosted are stored in ``leftover_members``:
 .. raw:: html
 
     <b>cluster</b><br></b><b>tags:</b> id(id), mass(mass)<br><b>Radius unit:</b> None<br><i>ClData length=1</i>
-    <table id="table139669513120448" class="table-striped table-bordered table-condensed">
+    <table id="table140542662800144" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>mass</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th></tr></thead>
     <thead><tr><th>str2</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th></tr></thead>
     <tr><td>c1</td><td>1.00e+13</td><td>None</td><td>None</td><td>[]</td><td>[]</td></tr>
@@ -1315,7 +1309,7 @@ the clusters not hosted are stored in ``leftover_members``:
 .. raw:: html
 
     <b>members</b><br></b><b>tags:</b> id(id), id_cluster(id_cluster)<br><i>ClData length=2</i>
-    <table id="table139669513066672" class="table-striped table-bordered table-condensed">
+    <table id="table140542663259616" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
     <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
     <tr><td>m1</td><td>c1</td><td>0</td></tr>
@@ -1327,7 +1321,7 @@ the clusters not hosted are stored in ``leftover_members``:
 .. raw:: html
 
     <b>leftover members</b><br></b><b>tags:</b> id(id), id_cluster(id_cluster)<br><i>ClData length=1</i>
-    <table id="table139669513118624" class="table-striped table-bordered table-condensed">
+    <table id="table140542662800912" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
     <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
     <tr><td>m2</td><td>c2</td><td>-1</td></tr>
@@ -1377,7 +1371,7 @@ member free version of the catalog, use the ``raw`` function:
 .. raw:: html
 
     <b>members</b><br></b><b>tags:</b> id(id), id_cluster(id_cluster)<br><i>ClData length=2</i>
-    <table id="table139669512638272" class="table-striped table-bordered table-condensed">
+    <table id="table140542662771376" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>id_cluster</th><th>ind_cl</th></tr></thead>
     <thead><tr><th>str2</th><th>str2</th><th>int64</th></tr></thead>
     <tr><td>m1</td><td>c1</td><td>0</td></tr>
