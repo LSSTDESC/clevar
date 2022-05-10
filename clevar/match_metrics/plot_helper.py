@@ -356,8 +356,7 @@ def plot_healpix_map(healpix_map, nest=True, auto_lim=False, bad_val=None,
         Colorbar
     """
     nside = hp.npix2nside(len(healpix_map))
-    kwargs_ = {'flip':'geo', 'title':None, 'cbar':True, 'nest':nest}
-    kwargs_.update(kwargs)
+    kwargs_ = updated_dict({'flip':'geo', 'title':None, 'cbar':True, 'nest':nest}, kwargs)
     if auto_lim:
         ra, dec = hp.pix2ang(nside, np.arange(len(healpix_map))[healpix_map!=bad_val],
                              nest=nest, lonlat=True)
