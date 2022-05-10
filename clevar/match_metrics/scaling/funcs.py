@@ -3,7 +3,7 @@
 Main scaling functions for mass and redshift plots,
 wrapper of catalog_funcs functions
 """
-from ...utils import deep_update
+from ...utils import deep_update, updated_dict
 from . import catalog_funcs
 
 ############################################################################################
@@ -565,18 +565,18 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    kwargs_ = {}
-    kwargs_.update(kwargs)
-    kwargs_.update({
-        'col': 'z',
-        'col_aux': 'mass',
-        'bins1': redshift_bins_dist,
-        'bins2': redshift_bins,
-        'bins_aux': mass_bins,
-        'log_vals': False,
-        'log_aux': log_mass,
-        'transpose': transpose,
-    })
+    kwargs_ = updated_dict(
+        kwargs,
+        {
+            'col': 'z',
+            'col_aux': 'mass',
+            'bins1': redshift_bins_dist,
+            'bins2': redshift_bins,
+            'bins_aux': mass_bins,
+            'log_vals': False,
+            'log_aux': log_mass,
+            'transpose': transpose,
+            })
     return catalog_funcs.plot_dist(cat1, cat2, matching_type, **kwargs_)
 
 
@@ -634,9 +634,9 @@ def redshift_dist_self(cat, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    kwargs_ = {}
-    kwargs_.update(kwargs)
-    kwargs_.update({
+    kwargs_ = updated_dict(
+        kwargs,
+        {
         'col': 'z',
         'col_aux': 'mass',
         'bins1': redshift_bins_dist,
@@ -1300,9 +1300,9 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    kwargs_ = {}
-    kwargs_.update(kwargs)
-    kwargs_.update({
+    kwargs_ = updated_dict(
+        kwargs,
+        {
         'col': 'mass',
         'col_aux': 'z',
         'bins1': mass_bins_dist,
@@ -1369,9 +1369,9 @@ def mass_dist_self(cat, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    kwargs_ = {}
-    kwargs_.update(kwargs)
-    kwargs_.update({
+    kwargs_ = updated_dict(
+        kwargs,
+        {
         'col': 'mass',
         'col_aux': 'z',
         'bins1': mass_bins_dist,
