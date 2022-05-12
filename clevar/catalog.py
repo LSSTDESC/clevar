@@ -777,7 +777,7 @@ class MemCatalog(Catalog):
             raise ValueError('tags must be dict.')
         Catalog.__init__(self, name, labels=labels,
                          tags=LowerCaseDict(updated_dict({'id_cluster':'id_cluster'}, tags)),
-                         default_tags=['id', 'id_cluster', 'ra', 'dec', 'z', 'radius'],
+                         default_tags=['id', 'id_cluster', 'ra', 'dec', 'z', 'radius', 'pmem'],
                          **kwargs)
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
