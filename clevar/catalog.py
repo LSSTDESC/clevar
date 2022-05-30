@@ -61,9 +61,12 @@ class ClData(APtable):
     @classmethod
     def read(self, filename, **kwargs):
         tab = APtable.read(filename, **kwargs)
+        print(tab)
+        print(tab.colnames)
         out = ClData(meta=tab.meta)
         for c in tab.colnames:
             out[c] = tab[c]
+        print('out:', out.colnames)
         return out
     def _check_cols(self, columns):
         """
