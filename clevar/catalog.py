@@ -131,6 +131,8 @@ class Catalog():
             self._add_values(**kwargs)
         # make sure columns don't overwrite tags
         if tags is not None:
+            print(self.colnames)
+            print(tags)
             for colname, coltag in tags.items():
                 self.tag_column(coltag, colname, skip_warn=True)
     def __setitem__(self, item, value):
