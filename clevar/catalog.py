@@ -244,7 +244,7 @@ class Catalog():
             Skip overwriting warning
         """
         if colname not in self.colnames:
-            warnings.warn(
+            raise ValueError(
                 f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
         if coltag in NameList([c for c in self.colnames if c!=colname]):
             warnings.warn(

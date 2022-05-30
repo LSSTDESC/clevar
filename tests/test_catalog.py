@@ -38,13 +38,12 @@ def _base_cat_test(**quantities):
     # test removing column
     del c['ra']
     assert_raises(KeyError, c.__getitem__, 'ra')
+    assert_raises(ValueError, c.tag_column, 'XXX', 'newtag')
     # test warnings
-    with pytest.warns(None) as record:
-        c.tag_column('XXX', 'newtag')
-    assert f'{record._list[0].message}'=='setting tag newtag:XXX to column (XXX) missing in catalog'
+    c.tag_column('ra', 'newtag')
     with pytest.warns(None) as record:
         c.tag_column('z', 'newtag')
-    assert f'{record._list[0].message}'=='tag newtag:XXX being replaced by newtag:z'
+    assert f'{record._list[0].message}'=='tag newtag:ra being replaced by newtag:z'
     with pytest.warns(None) as record:
         c.tag_column('dec', 'z')
     assert f'{record._list[0].message}'==("There is a column with the same name as the tag setup."
