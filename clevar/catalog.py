@@ -482,6 +482,7 @@ class Catalog():
         }
         kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
                         if 'RADIUS_UNIT' in data.meta else {})
+        print(data.colnames, kwargs)
         out = self._read(data, **kwargs)
         return out
     def save_match(self, filename, overwrite=False):
