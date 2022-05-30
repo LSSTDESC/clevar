@@ -31,6 +31,8 @@ class ClData(APtable):
         """
         self.namedict = LowerCaseDict()
         APtable.__init__(self, *args, **kwargs)
+        for col in self.colnames:
+            self.namedict[col] = col
     def __getitem__(self, item):
         """
         To make case insensitive
@@ -199,7 +201,7 @@ class Catalog():
                     )
             data = ClData(columns)
         self.size = len(data)
-        if self.tags['id'] not in data.colnames:
+        if self.tags['id'] not in data.namedict:
             self._create_id()
         else:
             self[self.tags['id']] = data[self.tags['id']]
@@ -312,7 +314,7 @@ class Catalog():
             Name of mask to be added
         """
         self[f'ft_{maskname}'] = ftpt.zmax_masks_from_footprint(self['ra'], self['dec'],
-            self['z'] if 'z' in self.data.colnames else 1e-10)
+            self['z'] if 'z' in self.tags else 1e-10)
     def add_ftpt_masks(self, ftpt_self, ftpt_other):
         """
         Add masks based on the cluster position relative to both footprints.
@@ -580,7 +582,8 @@ class ClCatalog(Catalog):
         self.mt_input = kwargs.pop('mt_input', None)
         members_warning = kwargs.pop('members_warning', True)
         Catalog.__init__(self, name, labels=labels, tags=tags,
-                         default_tags=['id', 'ra', 'dec', 'mass', 'z', 'radius'],
+                         default_tags=['id', 'ra', 'dec', 'mass', 'z',
+                                       'radius', 'zmin', 'zmax', 'z_err'],
                          **kwargs)
         if members is not None:
             self.add_members(members_catalog=members,

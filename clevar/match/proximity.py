@@ -92,12 +92,12 @@ class ProximityMatch(Match):
             cat.mt_input['zmax'] = 10*np.ones(cat.size)
         elif delta_z == 'cat':
             # Values from catalog
-            if 'zmin' in cat.data.colnames and 'zmax' in cat.data.colnames:
+            if 'zmin' in cat.tags and 'zmax' in cat.tags:
                 print('* zmin|zmax from cat cols (zmin, zmax)')
                 cat.mt_input['zmin'] = self._rescale_z(cat['z'], cat['zmin'], n_delta_z)
                 cat.mt_input['zmax'] = self._rescale_z(cat['z'], cat['zmax'], n_delta_z)
             # create zmin/zmax if not there
-            elif 'z_err' in cat.data.colnames:
+            elif 'z_err' in cat.tags:
                 print('* zmin|zmax from cat cols (err)')
                 cat.mt_input['zmin'] = cat['z']-n_delta_z*cat['z_err']
                 cat.mt_input['zmax'] = cat['z']+n_delta_z*cat['z_err']
@@ -137,7 +137,7 @@ class ProximityMatch(Match):
         # convert to degrees
         cat.mt_input['ang'] = convert_units(
             in_rad*n_match_radius, in_rad_unit, 'degrees',
-            redshift=cat['z'] if 'z' in cat.colnames else None,
+            redshift=cat['z'] if 'z' in cat.tags else None,
             cosmo=cosmo)
     def _rescale_z(self, z, zlim, n):
         """Rescale zmin/zmax by a factor n

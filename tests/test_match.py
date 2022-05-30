@@ -131,8 +131,7 @@ def test_proximity(CosmoClass):
     assert_allclose(c1.mt_input['zmin'], c1['zmin'])
     assert_allclose(c1.mt_input['zmax'], c1['zmax'])
         # z_err in catalog
-    del c1['zmin']
-    del c1['zmax']
+    del c1['zmin'], c1['zmax'], c1.tags['zmin'], c1.tags['zmax']
     mt.prep_cat_for_match(c1, delta_z='cat', match_radius='1 mpc', cosmo=cosmo)
     assert_allclose(c1.mt_input['zmin'], c1['z']-c1['z_err'])
     assert_allclose(c1.mt_input['zmax'], c1['z']+c1['z_err'])
