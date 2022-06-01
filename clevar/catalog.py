@@ -397,6 +397,7 @@ class Catalog():
         overwrite: bool
             Overwrite saved files
         """
+        print('Writing')
         out = ClData()
         if add_header:
             out.meta['name'] = self.name
@@ -410,6 +411,9 @@ class Catalog():
             else:
                 out[col] = self[col]
         out.write(filename, overwrite=overwrite)
+        print(self.colnames)
+        print(out.colnames)
+        print('Wrinting - end')
     @classmethod
     def _read(self, data, **kwargs):
         """Does the main execution for reading catalog.
