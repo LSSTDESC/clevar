@@ -39,8 +39,11 @@ class ClData(APtable):
         """
         if isinstance(item, str):
             item = self.namedict.get(item, item)
+        is_str_list = isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item)
+        if is_str_list:
+            item = list(map(lambda i: self.namedict[i], item))
         out = APtable.__getitem__(self, item)
-        if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+        if is_str_list:
             out.namedict = LowerCaseDict({col: col for col in out.colnames})
         return out
     def __setitem__(self, item, value):
