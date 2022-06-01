@@ -482,7 +482,7 @@ class Catalog():
         """
         print('Read full')
         print(filename)
-        print('Aptable': APtable.read(filename))
+        print('Aptable:', APtable.read(filename))
         data = ClData.read(filename)
         # read labels and radius unit from file
         kwargs = {
