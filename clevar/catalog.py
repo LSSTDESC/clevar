@@ -408,6 +408,8 @@ class Catalog():
                 out[col] = [c if c else '' for c in self[col]]
             elif col in ('mt_multi_self', 'mt_multi_other'):
                 out[col] = [','.join(c) if c else '' for c in self[col]]
+            elif col=='SkyCoord':
+                pass
             else:
                 out[col] = self[col]
         out.write(filename, overwrite=overwrite)
