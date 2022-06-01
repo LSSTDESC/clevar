@@ -61,12 +61,9 @@ class ClData(APtable):
     @classmethod
     def read(self, filename, **kwargs):
         tab = APtable.read(filename, **kwargs)
-        print(tab)
-        print(tab.colnames)
         out = ClData(meta=tab.meta)
         for c in tab.colnames:
             out[c] = tab[c]
-        print('out:', out.colnames)
         return out
     def _check_cols(self, columns):
         """
@@ -134,8 +131,6 @@ class Catalog():
             self._add_values(**kwargs)
         # make sure columns don't overwrite tags
         if tags is not None:
-            print(self.colnames)
-            print(tags)
             for colname, coltag in tags.items():
                 self.tag_column(coltag, colname, skip_warn=True)
     def __setitem__(self, item, value):
@@ -397,7 +392,6 @@ class Catalog():
         overwrite: bool
             Overwrite saved files
         """
-        print('Writing')
         out = ClData()
         if add_header:
             out.meta['name'] = self.name
@@ -413,9 +407,6 @@ class Catalog():
             else:
                 out[col] = self[col]
         out.write(filename, overwrite=overwrite)
-        print(self.colnames)
-        print(out.colnames)
-        print('Wrinting - end')
     @classmethod
     def _read(self, data, **kwargs):
         """Does the main execution for reading catalog.
@@ -482,9 +473,6 @@ class Catalog():
         filename: str
             Input file.
         """
-        print('Read full')
-        print(filename)
-        print('Aptable:', APtable.read(filename))
         data = ClData.read(filename)
         # read labels and radius unit from file
         kwargs = {
@@ -494,9 +482,7 @@ class Catalog():
         }
         kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
                         if 'RADIUS_UNIT' in data.meta else {})
-        print(data.colnames, kwargs)
         out = self._read(data, **kwargs)
-        print('Read full - end')
         return out
     def save_match(self, filename, overwrite=False):
         """
