@@ -480,6 +480,9 @@ class Catalog():
         filename: str
             Input file.
         """
+        print('Read full')
+        print(filename)
+        print('Aptable': APtable.read(filename))
         data = ClData.read(filename)
         # read labels and radius unit from file
         kwargs = {
@@ -491,6 +494,7 @@ class Catalog():
                         if 'RADIUS_UNIT' in data.meta else {})
         print(data.colnames, kwargs)
         out = self._read(data, **kwargs)
+        print('Read full - end')
         return out
     def save_match(self, filename, overwrite=False):
         """
