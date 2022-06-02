@@ -638,8 +638,8 @@ class ClCatalog(Catalog):
         """
         if self.members is not None:
             out = ClCatalog(
-                name=self.name, labels=self.labels, radius_unit=self.radius_unit,
-                **{c:self.data[c] for c in self.data.colnames},
+                name=self.name, tags=self.tags, labels=self.labels,
+                radius_unit=self.radius_unit, data=self.data,
                 mt_input=self.mt_input)
         else:
             out = self
