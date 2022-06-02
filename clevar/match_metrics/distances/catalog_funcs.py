@@ -142,7 +142,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
                                        'degrees', radial_bin_units, redshift=mt1['z'],
                                        cosmo=cosmo)}
     info.update(_histograms(distances=info['distances'], distance_bins=radial_bins,
-                            quantity2=mt1[col2] if (col2 in mt1.colnames
+                            quantity2=mt1[col2] if (col2 in mt1.data.colnames
                                                     or col2 in mt1.tags)
                                         else None,
                             bins2=bins2, **kwargs))
@@ -214,7 +214,7 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, col2=None, bins2=None,
     info = {'distances': (mt1['z']-mt2['z'])/norm}
     info.update(_histograms(info['distances'],
                             distance_bins=redshift_bins,
-                            quantity2=mt1[col2] if (col2 in mt1.colnames
+                            quantity2=mt1[col2] if (col2 in mt1.data.colnames
                                                     or col2 in mt1.tags)
                                         else None,
                             bins2=bins2, **kwargs))

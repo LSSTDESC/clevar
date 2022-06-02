@@ -57,9 +57,9 @@ class MembershipMatch(Match):
             cat1.members['pmem'] = 1.
         if 'pmem' not in cat2.members.tags:
             cat2.members['pmem'] = 1.
-        cat1.mt_input = ClData({'share_mems': [{} for i in range(cat1.size)],
+        cat1.mt_input = ClData({'share_mems': list(map(lambda x: {}, range(cat1.size))),
                                 'nmem': self._comp_nmem(cat1)})
-        cat2.mt_input = ClData({'share_mems': [{} for i in range(cat2.size)],
+        cat2.mt_input = ClData({'share_mems': list(map(lambda x: {}, range(cat2.size))),
                                 'nmem': self._comp_nmem(cat2)})
         for i1, i2 in self.matched_mems:
             idcl1, pmem1 = cat1.members['id_cluster'][i1], cat1.members['pmem'][i1]

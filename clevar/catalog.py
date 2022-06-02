@@ -113,8 +113,6 @@ class Catalog():
         Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
     labels: dict
         Labels of data columns for plots
-    colnames: list
-        List of column names
     """
     def __init__(self, name, tags=None, labels=None, **kwargs):
         if not isinstance(name, str):
@@ -127,7 +125,6 @@ class Catalog():
         self.size = None
         self.data = ClData()
         self.id_dict = {}
-        self.colnames = NameList()
         self.labels = LowerCaseDict(updated_dict(labels))
         self.tags = LowerCaseDict(updated_dict({'id':'id'}, tags))
         self.default_tags = NameList(kwargs.pop('default_tags', ['id', 'ra', 'dec']))
@@ -142,8 +139,6 @@ class Catalog():
         if isinstance(item, str):
             if item[:3]!='mt_':
                 self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
-            if item not in self.colnames:
-                self.colnames.append(item)
             if item in self.default_tags:
                 self.tags[item] = self.tags.get(item, item)
             if item==self.tags['id']:
@@ -209,7 +204,7 @@ class Catalog():
             self._create_id()
         else:
             self[self.tags['id']] = data[self.tags['id']]
-        for colname in [col for col in data.colnames if col!=self.tags['id']]:
+        for colname in filter(lambda col: col!=self.tags['id'], data.colnames):
             self[colname] = data[colname]
         self._add_skycoord()
         self.id_dict = {i:ind for ind, i in enumerate(self['id'])}
@@ -231,7 +226,7 @@ class Catalog():
             Overwrite values of pre-existing columns.
         """
         for col in ('mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other'):
-            if overwrite or col not in self.colnames:
+            if overwrite or col not in self.data.namedict:
                 self[col] = None
                 if col in ('mt_multi_self', 'mt_multi_other'):
                     for i in range(self.size):
@@ -249,10 +244,10 @@ class Catalog():
         skip_warn: bool
             Skip overwriting warning
         """
-        if colname not in self.colnames:
+        if colname not in self.data.namedict:
             raise ValueError(
                 f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
-        if coltag in NameList([c for c in self.colnames if c!=colname]):
+        if coltag in NameList(filter(lambda c: c.lower()!=colname.lower(), self.data.colnames)):
             warnings.warn(
                 f'There is a column with the same name as the tag setup.'
                 f' cat[\'{coltag}\'] calls cat[\'{colname}\'] now.'
@@ -401,7 +396,7 @@ class Catalog():
             out.meta['name'] = self.name
             out.meta.update({f'hierarch LABEL_{k}':v for k, v in self.labels.items()})
             out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
-        for col in self.colnames:
+        for col in self.data.colnames:
             if col in ('mt_self', 'mt_other', 'mt_cross'):
                 out[col] = pack_mt_col(self[col])
             elif col in ('mt_multi_self', 'mt_multi_other'):
@@ -510,7 +505,7 @@ class Catalog():
             Name of file with matching results
         """
         mt = self.read_full(filename)
-        for col in mt.colnames:
+        for col in mt.data.colnames:
             if col!='id':
                 self[col] = mt[col]
         self.cross_match()
@@ -570,8 +565,6 @@ class ClCatalog(Catalog):
         Tag for main quantities used in matching and plots (ex: id, ra, dec, z, mass,...)
     labels: dict
         Labels of data columns for plots
-    colnames: list
-        List of column names
     members: MemCatalog
         Catalog of members associated to the clusters
     leftover_members: MemCatalog
@@ -591,7 +584,7 @@ class ClCatalog(Catalog):
             self.add_members(members_catalog=members,
                              members_warning=members_warning)
     def _repr_html_(self):
-        show_data_cols = [c for c in self.colnames if c!='SkyCoord']
+        show_data_cols = [c for c in self.data.colnames if c!='SkyCoord']
         print_data = self.data[show_data_cols]
         table = self._prt_table_tags(print_data)
         if self.mt_input is not None:
@@ -625,7 +618,7 @@ class ClCatalog(Catalog):
             if (isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item)):
                 item_ = NameList([self.tags.get(i, i) for i in item])
                 tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
-                mt_cols = [c for c in self.colnames if c[:3]=='mt_' and c not in item_]
+                mt_cols = [c for c in self.data.colnames if c[:3]=='mt_' and c not in item_]
                 item_ = [*item_, *mt_cols]
             else:
                 item_ = item
@@ -774,8 +767,6 @@ class MemCatalog(Catalog):
         Tag for main quantities used in matching and plots (ex: id, id_cluster, ra, dec, z,...)
     labels: dict
         Labels of data columns for plots
-    colnames: list
-        List of column names
     """
     def __init__(self, name, tags=None, labels=None, **kwargs):
         if tags is not None and not isinstance(tags, dict):
@@ -788,7 +779,7 @@ class MemCatalog(Catalog):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
         Catalog._add_values(self, **columns)
-        if self.tags['id_cluster'] not in self.colnames:
+        if self.tags['id_cluster'] not in self.data.colnames:
             idcl_name = ('id_cluster' if self.tags['id_cluster']=='id_cluster'
                             else f'id_cluster ({self.tags["id_cluster"]})')
             raise ValueError(f'Members catalog must have a {idcl_name} column!.')
@@ -796,9 +787,10 @@ class MemCatalog(Catalog):
         id_name, id_cl_name = self.tags['id'], self.tags['id_cluster']
         self[id_cl_name] = np.array(self[id_cl_name], dtype=str)
         # always put id, id_cluster columns first
-        self.colnames = NameList([id_name, id_cl_name, *(c for c in self.colnames
-                                    if c not in (id_name, id_cl_name))])
-        self.data = self.data[self.colnames]
+        cols = list(self.data.colnames)
+        cols.insert(0, cols.pop(cols.index(id_name)))
+        cols.insert(1, cols.pop(cols.index(id_cl_name)))
+        self.data = self.data[cols]
         # sort columns
         self.id_dict_list = {}
         for ind, i in enumerate(self['id']):
@@ -810,7 +802,7 @@ class MemCatalog(Catalog):
             item_ = NameList([self.tags.get(i, i) for i in item])
             # also pass main and mt cols
             main_cols = [self.tags[c] for c in ('id', 'id_cluster') if self.tags[c] not in item_]
-            mt_cols = [c for c in self.colnames if c.lower()[:3]=='mt_' and c not in item_]
+            mt_cols = [c for c in self.data.colnames if c.lower()[:3]=='mt_' and c not in item_]
             item_ = [*item_, *main_cols, *mt_cols]
             tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
         else:
