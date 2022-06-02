@@ -90,8 +90,8 @@ class MembershipMatch(Match):
             Cluster catalog with members attribute.
         """
         out = np.zeros(cat.size)
-        for ID, pmem in zip(cat.members['id_cluster'], cat.members['pmem']):
-            out[cat.id_dict[ID]] += pmem
+        for ind, pmem in zip(cat.members['ind_cl'], cat.members['pmem']):
+            out[ind] += pmem
         return out
     def _add_pmem(self, cat1_share_mems, ind1, cat2_id, pmem1):
         """
