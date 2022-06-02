@@ -42,8 +42,7 @@ def test_plot():
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e16]
-    rc.plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
-            redshift_label=None, mass_label=None, recovery_label=None)
+    rc.plot(cat, matching_type, redshift_bins, mass_bins)
     rc.plot(cat, matching_type, redshift_bins, mass_bins, shape='line')
     rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True)
     assert_raises(ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins,
@@ -59,9 +58,7 @@ def test_plot_panel():
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
-    rc.plot_panel(
-        cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
-        redshift_label=None, mass_label=None, recovery_label=None,)
+    rc.plot_panel(cat, matching_type, redshift_bins, mass_bins)
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, add_label=True, label_fmt='.2f')
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=True)
     rc.plot_panel(cat, matching_type, redshift_bins, mass_bins,
@@ -83,6 +80,6 @@ def test_plot2D():
 def test_skyplot():
     cat = _test_data.c1
     matching_type = 'cat1'
-    rc.skyplot(cat, matching_type, recovery_label=None,)
+    rc.skyplot(cat, matching_type)
     # for monocromatic map
     rc.skyplot(cat[cat['mt_self']!=None], matching_type, recovery_label=None,)

@@ -418,9 +418,9 @@ class Footprint():
         xlim, ylim = ax.get_xlim(), ax.get_ylim()
         if cluster is not None:
             if isinstance(cluster, ClCatalog):
-                if 'radius' in cluster.colnames and cluster.radius_unit is not None:
+                if 'radius' in cluster.tags and cluster.radius_unit is not None:
                     if (cluster.radius_unit in physical_bank and
-                            (cosmo is None or 'z' not in cluster.colnames)):
+                            (cosmo is None or 'z' not in cluster.tags)):
                         raise TypeError(
                             'A cosmology and cluster redsift is necessary if '
                             'cluster radius in physical units.')

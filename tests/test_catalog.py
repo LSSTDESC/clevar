@@ -1,6 +1,6 @@
 from clevar import ClCatalog, MemCatalog, ClData
 from clevar.catalog import Catalog
-from clevar.utils import LowerCaseDict, updated_dict
+from clevar.utils import NameList, LowerCaseDict, updated_dict
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 import pytest
@@ -8,8 +8,11 @@ import os
 
 def test_lowercasedict():
     for key in ('Key', 'key', 'KEY', 'keY'):
+        nlist = NameList([key, 2])
         d = LowerCaseDict()
         for key2 in ('Key', 'key', 'KEY', 'keY'):
+            assert key2 in nlist
+            assert 2 in nlist
             d.setdefault(key, 'value')
             assert_equal(d[key2], 'value')
             del d[key2]
@@ -18,6 +21,8 @@ def test_lowercasedict():
             assert_equal(d[key2], 'value')
             d.pop(key2)
             assert key2 not in d
+            d.update({key:'value'})
+            assert_equal(d[key2], 'value')
     assert_raises(ValueError, updated_dict, 'temp')
 
 def _base_cat_test(**quantities):
@@ -38,13 +43,12 @@ def _base_cat_test(**quantities):
     # test removing column
     del c['ra']
     assert_raises(KeyError, c.__getitem__, 'ra')
+    assert_raises(ValueError, c.tag_column, 'XXX', 'newtag')
     # test warnings
-    with pytest.warns(None) as record:
-        c.tag_column('XXX', 'newtag')
-    assert f'{record._list[0].message}'=='setting tag newtag:XXX to column (XXX) missing in catalog'
+    c.tag_column('ra', 'newtag')
     with pytest.warns(None) as record:
         c.tag_column('z', 'newtag')
-    assert f'{record._list[0].message}'=='tag newtag:XXX being replaced by newtag:z'
+    assert f'{record._list[0].message}'=='tag newtag:ra being replaced by newtag:z'
     with pytest.warns(None) as record:
         c.tag_column('dec', 'z')
     assert f'{record._list[0].message}'==("There is a column with the same name as the tag setup."

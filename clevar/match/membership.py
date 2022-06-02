@@ -53,13 +53,13 @@ class MembershipMatch(Match):
         """
         if self.matched_mems is None:
             raise AttributeError('Members not matched, run match_members before.')
-        if 'pmem' not in cat1.members.data.colnames:
+        if 'pmem' not in cat1.members.tags:
             cat1.members['pmem'] = 1.
-        if 'pmem' not in cat2.members.data.colnames:
+        if 'pmem' not in cat2.members.tags:
             cat2.members['pmem'] = 1.
-        cat1.mt_input = ClData({'share_mems': [{} for i in range(cat1.size)],
+        cat1.mt_input = ClData({'share_mems': list(map(lambda x: {}, range(cat1.size))),
                                 'nmem': self._comp_nmem(cat1)})
-        cat2.mt_input = ClData({'share_mems': [{} for i in range(cat2.size)],
+        cat2.mt_input = ClData({'share_mems': list(map(lambda x: {}, range(cat2.size))),
                                 'nmem': self._comp_nmem(cat2)})
         for i1, i2 in self.matched_mems:
             idcl1, pmem1 = cat1.members['id_cluster'][i1], cat1.members['pmem'][i1]
@@ -90,8 +90,8 @@ class MembershipMatch(Match):
             Cluster catalog with members attribute.
         """
         out = np.zeros(cat.size)
-        for ID, pmem in zip(cat.members['id_cluster'], cat.members['pmem']):
-            out[cat.id_dict[ID]] += pmem
+        for ind, pmem in zip(cat.members['ind_cl'], cat.members['pmem']):
+            out[ind] += pmem
         return out
     def _add_pmem(self, cat1_share_mems, ind1, cat2_id, pmem1):
         """
