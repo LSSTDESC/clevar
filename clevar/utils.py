@@ -4,6 +4,8 @@ import numpy as np
 ########################################################################
 ########## Improved list and dict ######################################
 ########################################################################
+
+
 class NameList(list):
     """
     List without case consideration in `in` function
@@ -49,7 +51,11 @@ class LowerCaseDict(dict):
 ########################################################################
 ########## Helpful functions ###########################################
 ########################################################################
+
+
 veclen = np.vectorize(len)
+
+
 def none_val(value, none_value):
     """
     Set default value to be returned if input is None
@@ -67,6 +73,8 @@ def none_val(value, none_value):
         Value if value is not None else none_value
     """
     return value if value is not None else none_value
+
+
 def updated_dict(*dict_list):
     """
     Returns an dictionary with updated values if new dictionaries are not none
@@ -89,6 +97,8 @@ def updated_dict(*dict_list):
                 'all arguments of updated_dict must be dictionaries or None, got: {updict}')
         out.update(updict)
     return out
+
+
 def autobins(values, bins, log=False):
     """
     Get bin values automatically from bins, values
@@ -117,6 +127,8 @@ def autobins(values, bins, log=False):
         bins = np.linspace(values.min(), values.max(), bins+1)
         bins[-1] *= 1.0001
     return bins
+
+
 def binmasks(values, bins):
     """
     Get corresponding masks for each bin. Last bin is inclusive.
@@ -136,6 +148,8 @@ def binmasks(values, bins):
     bin_masks = [(values>=b0)*(values<b1) for b0, b1 in zip(bins, bins[1:])]
     bin_masks[-1] += values==bins[-1]
     return bin_masks
+
+
 def str2dataunit(input_str, units_bank, err_msg=''):
     """
     Convert a string to a float with unit.
@@ -155,6 +169,8 @@ def str2dataunit(input_str, units_bank, err_msg=''):
             except:
                 pass
     raise ValueError(f"Unknown unit of '{input_str}', must be in {units_bank}. {err_msg}")
+
+
 def deep_update(dict_base, dict_update):
     """
     Update a multi-layer dictionary.
@@ -177,6 +193,8 @@ def deep_update(dict_base, dict_update):
         else:
             dict_base[k] = dict_update[k]
     return dict_base
+
+
 def gaussian(value, mean, std):
     """
     Gaussian function.
@@ -196,10 +214,35 @@ def gaussian(value, mean, std):
         Value of the gaussian distribution at input `value`.
     """
     return np.exp(-0.5*(value-mean)**2/std**2)/np.sqrt(2*np.pi)/std
+
+
+def pack_mt_col(col):
+    return list(map(lambda c: c if c else '', col))
+
+
+def pack_mmt_col(col):
+    return list(map(lambda c: ','.join(c) if c else '', col))
+
+
+def unpack_mt_col(col):
+    out = np.array(np.array(col, dtype=str), dtype=np.ndarray)
+    out[out==''] = None
+    return out
+
+
+def unpack_mmt_col(col):
+    return  list(map(lambda c:c.split(',') if len(c)>0 else [],
+                     np.array(np.array(col, dtype=str), dtype=np.ndarray)))
+
+
 ########################################################################
 ########## Monkeypatching healpy #######################################
 ########################################################################
+
+
 import healpy as hp
+
+
 def pix2map(nside, pixels, values, null):
     '''
     Convert from pixels, values to map
@@ -218,6 +261,8 @@ def pix2map(nside, pixels, values, null):
     outmap = np.zeros(12*nside**2)+null
     outmap[pixels] = values
     return outmap
+
+
 def neighbors_of_pixels(nside, pixels, nest=False):
     '''
     Get all neighbors of a pixel list

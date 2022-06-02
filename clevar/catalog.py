@@ -7,7 +7,8 @@ from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 
-from .utils import veclen, none_val, NameList, LowerCaseDict, updated_dict
+from .utils import (veclen, none_val, NameList, LowerCaseDict, updated_dict,
+                    pack_mt_col, unpack_mt_col, pack_mmt_col, unpack_mmt_col)
 
 
 class ClData(APtable):
@@ -402,9 +403,9 @@ class Catalog():
             out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
         for col in self.colnames:
             if col in ('mt_self', 'mt_other', 'mt_cross'):
-                out[col] = [c if c else '' for c in self[col]]
+                out[col] = pack_mt_col(self[col])
             elif col in ('mt_multi_self', 'mt_multi_other'):
-                out[col] = [','.join(c) if c else '' for c in self[col]]
+                out[col] = pack_mmt_col(self[col])
             elif col=='SkyCoord':
                 pass
             else:
@@ -430,15 +431,11 @@ class Catalog():
         non_mt_cols = [c for c in data.colnames if c not in mt_cols]
         out = self(data=data[non_mt_cols], **kwargs)
         # matching cols
-        for colname in [c for c in data.colnames if c in mt_cols]:
-            out[colname] = None
-            col = np.array(data[colname], dtype=str)
+        for colname in filter(lambda c:c in mt_cols, data.colnames):
             if colname in NameList(('mt_self', 'mt_other', 'mt_cross')):
-                out[colname] = np.array(col, dtype=np.ndarray)
-                out[colname][out[colname]==''] = None
+                out[colname] = unpack_mt_col(data[colname])
             if colname in NameList(('mt_multi_self', 'mt_multi_other')):
-                for i, c in enumerate(col):
-                    out[colname][i] = c.split(',') if len(c)>0 else []
+                out[colname] = unpack_mmt_col(data[colname])
         return out
     @classmethod
     def read(self, filename, name, tags=None, labels=None, full=False):
