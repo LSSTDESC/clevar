@@ -141,7 +141,7 @@ class Catalog():
                 self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
             if item in self.default_tags:
                 self.tags[item] = self.tags.get(item, item)
-            if item==self.tags['id']:
+            if item.lower()==self.tags['id'].lower():
                 value_ = np.array(value, dtype=str) # make id a string
             elif len(self.data.colnames)==0:
                 if isinstance(value, (int, np.int64)):
