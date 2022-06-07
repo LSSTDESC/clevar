@@ -114,7 +114,7 @@ class Catalog():
     labels: dict
         Labels of data columns for plots
     """
-    def __init__(self, name, tags=None, labels=None, **kwargs):
+    def __init__(self, name, tags=None, labels=None, unique_id=False, **kwargs):
         if not isinstance(name, str):
             raise ValueError('name must be str.')
         if labels is not None and not isinstance(labels, dict):
@@ -128,6 +128,7 @@ class Catalog():
         self.labels = LowerCaseDict(updated_dict(labels))
         self.tags = LowerCaseDict(updated_dict({'id':'id'}, tags))
         self.default_tags = NameList(kwargs.pop('default_tags', ['id', 'ra', 'dec']))
+        self.unique_id = unique_id
         if len(kwargs)>0:
             self._add_values(**kwargs)
         # make sure columns don't overwrite tags
@@ -143,6 +144,17 @@ class Catalog():
                 self.tags[item] = self.tags.get(item, item)
             if item.lower()==self.tags['id'].lower():
                 value_ = np.array(value, dtype=str) # make id a string
+                if self.unique_id:
+                    unique_vals, counts = np.unique(value_, return_counts=True)
+                    if (counts>1).any():
+                        warnings.warn(
+                            f'Repeated ID\'s in {item} column, adding suffix _r# to them.')
+                        value_ = np.array(value_, dtype=np.ndarray)
+                        inds = np.arange(value_.size, dtype=int)
+                        for id_ in unique_vals[counts>1]:
+                            case = value_==id_
+                            fmt = f'_r%0{len(f"{case.sum()}")}d'
+                            value_[case] += [fmt%(i+1) for i in range(case.sum())]
             elif len(self.data.colnames)==0:
                 if isinstance(value, (int, np.int64)):
                     raise TypeError('Empty table cannot have column set to scalar value')
@@ -579,7 +591,7 @@ class ClCatalog(Catalog):
         Catalog.__init__(self, name, labels=labels, tags=tags,
                          default_tags=['id', 'ra', 'dec', 'mass', 'z',
                                        'radius', 'zmin', 'zmax', 'z_err'],
-                         **kwargs)
+                         unique_id=True, **kwargs)
         if members is not None:
             self.add_members(members_catalog=members,
                              members_warning=members_warning)
