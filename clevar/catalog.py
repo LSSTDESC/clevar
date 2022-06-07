@@ -706,7 +706,7 @@ class ClCatalog(Catalog):
         if members_catalog is None:
             members = MemCatalog('members', **kwargs)
         elif isinstance(members_catalog, MemCatalog):
-            members = members_catalog[:]
+            members = members_catalog
             if len(kwargs)>0:
                 warnings.warn(f'leftover input arguments ignored: {kwargs.keys()}')
         else:
