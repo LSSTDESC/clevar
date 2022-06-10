@@ -6,10 +6,10 @@ import yaml
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 from unittest import mock
 
-from clevar import yaml as clevar_yaml
+from clevar import clv_yaml as clevar_yaml
 
 def test_yaml_helper_functions():
-    from clevar.yaml import helper_funcs as hf
+    from clevar.clv_yaml import helper_funcs as hf
     hf.add_dicts_diff({'x':None}, {})
     hf.add_dicts_diff({'x':{'x':None}}, {'x':{}})
     hf.add_dicts_diff({'x':{'x':None}}, {'x':{'x':1}})

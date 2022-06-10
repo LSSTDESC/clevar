@@ -94,6 +94,13 @@ def test_clcatalog():
     assert_raises(KeyError, c.__getitem__, 'unknown')
     c.mt_input = ClData({'test':[1, 1]})
     c._repr_html_()
+    # test repeated ids
+    with pytest.warns(None) as record:
+        c0 = ClCatalog(name='test', id=['a', 'a'], z=[0, 0])
+    assert f'{record._list[0].message}'== \
+            'Repeated ID\'s in id column, adding suffix _r# to them.'
+    assert_equal(c0['id'], ['a_r1', 'a_r2'])
+    del c0
     # Check init match values
     empty_list = np.array([None for i in range(c.size)], dtype=np.ndarray)
     for i in range(c.size):

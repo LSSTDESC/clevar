@@ -231,8 +231,10 @@ def unpack_mt_col(col):
 
 
 def unpack_mmt_col(col):
-    return  list(map(lambda c:c.split(',') if len(c)>0 else [],
-                     np.array(np.array(col, dtype=str), dtype=np.ndarray)))
+    out = np.full(col.size, None)
+    for i, c in enumerate(np.array(col, dtype=str)):
+        out[i] = c.split(',') if len(c)>0 else []
+    return out
 
 
 ########################################################################
