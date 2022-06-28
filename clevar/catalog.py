@@ -66,7 +66,13 @@ class ClData(APtable):
         if isinstance(item, str):
             item = self.namedict.get(item, item)
             self.namedict[item] = item
-        APtable.__setitem__(self, item, value)
+        super().__setitem__(self, item, value)
+    def __delitem__(self, item):
+        if isinstance(item, str):
+            del self.namedict[item]
+            if item in self.tags:
+                del self.tags[item]
+        super().__delitem__.(self, item)
     def get(self, key, default=None):
         """
         Return the column for key if key is in the dictionary, else default
