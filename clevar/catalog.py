@@ -116,6 +116,57 @@ class ClData(APtable):
             raise KeyError(
                 f"Column(s) '{missing}' not found "
                 "in catalog {data.colnames}")
+    def _repr_html_(self):
+        # tags header
+        _prt_tags = ', '.join(map(lambda kv: f'{kv[0]}({kv[1]})', self.tags.items()))
+        # Add tags to colnames
+        tags_inv = {v:f' ({k})' for k, v in self.tags.items() if k!=v}
+        table_list = super()._repr_html_(self).split('<tr>')
+        new_header = '</th>'.join([c+tags_inv.get(c[4:], '') if c[:4]=='<th>' else c
+                                    for c in table_list[1].split('</th>')])
+        table_list[1] = new_header
+        return f'<b>tags:</b> {_prt_tags}'+ '<tr>'.join(table_list)
+
+    def tag_column(self, colname, coltag, skip_warn=False):
+        """
+        Tag column
+
+        Parameters
+        ----------
+        colname: str
+            Name of column
+        coltag: str
+            Tag for column
+        skip_warn: bool
+            Skip overwriting warning
+        """
+        if colname not in data.namedict:
+            raise ValueError(
+                f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
+        if coltag in self.colnames and coltag.lower()!=colname.lower():
+            raise ValueError(
+                f'Cannot tag column as there is already a column with the same name as the tag.')
+        if coltag in self.tags and colname in self.tags and not skip_warn:
+            if self.tags[coltag].lower()!=colname.lower():
+                warnings.warn(
+                    f'tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}')
+        self.tags[coltag] = colname
+    def tag_columns(self, colnames, coltags):
+        """
+        Tag columns
+
+        Parameters
+        ----------
+        colname: list
+            Name of columns
+        coltag: list
+            Tag for columns
+        """
+        if len(colnames)!=len(coltags):
+            raise ValueError(
+                f'Size of colnames ({len(colnames)} and coltags {len(coltags)} must be the same.')
+        for colname, coltag in zip(colnames, coltags):
+            self.tag_column(colname, coltag)
 
 _matching_mask_funcs = {
     'cross': lambda match: match['mt_cross']!=None,
