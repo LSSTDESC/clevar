@@ -49,23 +49,41 @@ class ClData(APtable):
         """
         To make case insensitive
         """
-        is_list = isinstance(item, (tuple, list))
-        is_str_list = is_list and all(isinstance(x, str) for x in item)
+        # get one column
         if isinstance(item, str):
-            item = self.namedict.get(item, item)
-        elif is_str_list:
-            item = list(map(lambda i: self.namedict[i], item))
-        out = APtable.__getitem__(self, item)
-        if is_list:
-            out = ClData(out)
-        return out
+            return super().__getitem__(self, self.namedict.get(item, item))
+
+        # get one row
+        elif isinstance(item, (int, np.int64)):
+            out = super().__getitem__(self, item)
+            out.namedict = self.namedict
+            out.tags = self.tags
+            return out
+
+        # Get sub rows
+        elif isinstance(item, (tuple, list)):
+            item_ = item
+            tags_ = self.tags
+
+        # Get sub cols
+        elif isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+            item_ = NameList(map(lambda i: self.tags.get(i, i), item))
+            tags_ = dict(filter(lambda key_val: key_val[1] in item_), self.tags.items())
+
+        else:
+            raise ValueError(f'input item (={item}) not valid')
+
+        return ClData(super().__getitem__(self, item_),
+                      tags=tags_, default_tags=self.__default_tags)
     def __setitem__(self, item, value):
         """
         To make case insensitive
         """
         if isinstance(item, str):
             item = self.namedict.get(item, item)
-            self.namedict[item] = item
+            self.namedict[item] = self.namedict.get(item, item)
+            if item in self.__default_tags:
+                self.tags[item] = self.tags.get(item, item)
         super().__setitem__(self, item, value)
     def __delitem__(self, item):
         if isinstance(item, str):
