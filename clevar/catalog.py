@@ -67,12 +67,8 @@ class ClData(APtable):
     def _repr_html_(self):
         return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
     @classmethod
-    def read(self, filename, **kwargs):
-        tab = APtable.read(filename, **kwargs)
-        out = ClData(meta=tab.meta)
-        for c in tab.colnames:
-            out[c] = tab[c]
-        return out
+    def read(self, **kwargs):
+        return ClData(APtable.read(**kwargs))
     def _check_cols(self, columns):
         """
         Checks if required columns exist
