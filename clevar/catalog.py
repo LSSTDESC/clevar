@@ -30,22 +30,26 @@ class ClData(APtable):
         ----------
         *args, **kwargs: Same used for astropy tables
         """
-        self.namedict = LowerCaseDict()
+        self.__namedict = LowerCaseDict()
         APtable.__init__(self, *args, **kwargs)
         for col in self.colnames:
             self.namedict[col] = col
+    @property
+    def namedict(self):
+        return self.__namedict
     def __getitem__(self, item):
         """
         To make case insensitive
         """
+        is_list = isinstance(item, (tuple, list))
+        is_str_list = is_list and all(isinstance(x, str) for x in item)
         if isinstance(item, str):
             item = self.namedict.get(item, item)
-        is_str_list = isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item)
-        if is_str_list:
+        elif is_str_list:
             item = list(map(lambda i: self.namedict[i], item))
         out = APtable.__getitem__(self, item)
-        if is_str_list:
-            out.namedict = LowerCaseDict({col: col for col in out.colnames})
+        if is_list:
+            out = ClData(out)
         return out
     def __setitem__(self, item, value):
         """
