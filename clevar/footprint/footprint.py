@@ -26,7 +26,7 @@ class Footprint():
     pixel_dict: dict
         Dictionary to point to pixel in data
     '''
-    def __init__(self, *args, **kargs):
+    def __init__(self, tags=None, *args, **kargs):
         '''
         Parameters
         ----------
@@ -41,13 +41,33 @@ class Footprint():
         zmax_vals: array
             Zmax
         '''
-        self.data = ClData()
+        if tags is not None and not isinstance(tags, dict):
+            raise ValueError('tags must be dict.')
+        self.__data = ClData()
         self.nside = None
         self.nest = None
+        self.tags = LowerCaseDict()
         if len(args)>0 or len(kargs)>0:
             self._add_values(*args, **kargs)
+
+    @property
+    def nside(self):
+        return self.data.meta['nside']
+    
+    @property
+    def nest(self):
+        return self.data.meta['nside']
+    
+    @nside.setter
+    def nside(self, nside):
+        self.__data.meta['nside'] = None
+    
+    @nest.setter
+    def nest(self, nest):
+        self.__data.meta['nest'] = None
+
     def _add_values(self, nside, pixels, detfrac=None, zmax=None,
-            nest=False):
+                    nest=False):
         '''
         Adds provided values for attribues and assign default values to rest
 

@@ -94,6 +94,155 @@ _matching_mask_funcs = {
     'multi_join': lambda match: (veclen(match['mt_multi_self'])>0)+(veclen(match['mt_multi_other'])>0),
 }
 
+class TagCatalog():
+    """
+    Parent object to implement tag to catalogs.
+
+    Attributes
+    ----------
+    data: ClData
+        Main catalog data (ex: id, ra, dec, z).
+    size: int
+        Number of objects in the catalog
+    id_dict (private): dict
+        Dictionary of indicies given the object id
+    tags: dict
+        Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
+    """
+    def __init__(self, tags=None, **kwargs):
+        if tags is not None and not isinstance(tags, dict):
+            raise ValueError('tags must be dict.')
+        self.size = None
+        self.__data = ClData()
+        self.__id_dict = {}
+        self.tags = LowerCaseDict()
+        self.default_tags = NameList(kwargs.pop('default_tags', []))
+        if len(kwargs)>0:
+            self._add_values(**kwargs)
+        # make sure columns don't overwrite tags
+        if tags is not None:
+            for colname, coltag in tags.items():
+                self.tag_column(coltag, colname, skip_warn=True)
+    @property
+    def data(self):
+        return self.__data
+
+    @property
+    def size(self):
+        return len(self.__data)
+
+    def __setitem__(self, item, value):
+        if isinstance(item, str):
+            if item in self.default_tags:
+                self.tags[item] = self.tags.get(item, item)
+            self.data[item] = value
+        else:
+            raise ValueError(f'can only set with str item (={item}) argument.')
+    def __getitem__(self, item):
+        # Get one row
+        if isinstance(item, (str, int, np.int64)):
+            item_ = self.tags.get(item, item) if isinstance(item, str) else item
+            return self.data[item_]
+        # Get sub cols
+        if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+            item_ = NameList(map(lambda i: self.tags.get(i, i), item))
+            tags = dict(filter(kv: any(i in item_ for i in kv), self.tags.items()))
+        # Get sub rows
+        else:
+            item_ = item
+            tags = self.tags
+        return TagCatalog(tags=tags, data=self.data[item_])
+    def __len__(self):
+        return self.size
+    def __delitem__(self, item):
+        del self.data[item]
+    def __str__(self):
+        return f'{self.name}:\n{self.data.__str__()}'
+    def _prt_tags(self):
+        return ', '.join([f'{v}({k})' for k, v in self.tags.items()])
+    def _prt_table_tags(self, table):
+        tags_inv = {v:f' ({k})' for k, v in self.tags.items() if k!=v}
+        table_list = table._repr_html_().split('<tr>')
+        new_header = '</th>'.join([c+tags_inv.get(c[4:], '') if c[:4]=='<th>' else c
+                                    for c in table_list[1].split('</th>')])
+        table_list[1] = new_header
+        return '<tr>'.join(table_list)
+    def _repr_html_(self):
+        return (f'<b>{self.name}</b>'
+                f'<br></b><b>tags:</b> {self._prt_tags()}'
+                f'<br>{self._prt_table_tags(self.data)}')
+    def _add_values(self, **columns):
+        """Add values for all attributes. If id is not provided, one is created"""
+        if 'data' in columns:
+            if len(columns)>1:
+                extra_cols = ', '.join([cols for cols in columns if cols!='data'])
+                raise KeyError(f'data and columns (={extra_cols}) cannot be passed together.')
+            if not hasattr(columns['data'], '__getitem__'):
+                raise TypeError('data must be interactable (i. e. have __getitem__ function.)')
+            data = ClData(columns['data'])
+        else:
+            # Check all columns have same size
+            names = [n for n in columns]
+            sizes = [len(v) for v in columns.values()]
+            if any(sizes[0]!=s for s in sizes):
+                raise ValueError(f"Column sizes inconsistent:\n"+
+                    "\n".join([f"{' '*12}{k:10}: {l:,}" for k, l in zip(names, sizes)])
+                    )
+            data = ClData(columns)
+        for colname in filter(lambda col: col!=self.tags['id'], data.colnames):
+            self[colname] = data[colname]
+    def _set_id_dict(self, colname):
+        self.id_dict = dict(map(lambda v:v[::-1], enumerate(self[colname])))
+    def tag_column(self, colname, coltag, skip_warn=False):
+        """
+        Tag column
+
+        Parameters
+        ----------
+        colname: str
+            Name of column
+        coltag: str
+            Tag for column
+        skip_warn: bool
+            Skip overwriting warning
+        """
+        if colname not in self.data.namedict:
+            raise ValueError(
+                f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
+        if coltag in NameList(filter(lambda c: c.lower()!=colname.lower(), self.data.colnames)):
+            warnings.warn(
+                f'There is a column with the same name as the tag setup.'
+                f' cat[\'{coltag}\'] calls cat[\'{colname}\'] now.'
+                f' To get \'{coltag}\' column, use cat.data[\'{coltag}\'].'
+                )
+        if coltag in self.tags and self.tags.get(coltag, None)!=colname and not skip_warn:
+            warnings.warn(
+                f'tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}')
+        self.tags[coltag] = colname
+        self.labels[coltag] = self.labels.get(coltag, f'{coltag}_{{{self.name}}}')
+    def tag_columns(self, colnames, coltags):
+        """
+        Tag columns
+
+        Parameters
+        ----------
+        colname: list
+            Name of columns
+        coltag: list
+            Tag for columns
+        """
+        if len(colnames)!=len(coltags):
+            raise ValueError(
+                f'Size of colnames ({len(colnames)} and coltags {len(coltags)} must be the same.')
+        for colname, coltag in zip(colnames, coltags):
+            self.tag_column(colname, coltag)
+    def get(self, key, default=None):
+        """
+        Return the column for key if key is in the dictionary, else default
+        """
+        key_ = self.tags.get(key, key)
+        return ClData.get(self.data, key_, default)
+
 class Catalog():
     """
     Parent object to handle catalogs.
