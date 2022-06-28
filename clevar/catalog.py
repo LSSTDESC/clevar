@@ -30,13 +30,21 @@ class ClData(APtable):
         ----------
         *args, **kwargs: Same used for astropy tables
         """
-        self.__namedict = LowerCaseDict()
-        APtable.__init__(self, *args, **kwargs)
-        for col in self.colnames:
-            self.namedict[col] = col
+        tags = kwargs.pop('tags', {})
+        default_tags = kwargs.pop('default_tags', [])
+        super().__init__(self, *args, **kwargs)
+        self.__namedict = LowerCaseDict(self.colnames)
+        self.__tags = LowerCaseDict()
+        self.__default_tags = NameList(default_tags)
     @property
     def namedict(self):
         return self.__namedict
+    @property
+    def tags(self):
+        return self.__tags
+    @property
+    def size(self):
+        return len(self.__data)
     def __getitem__(self, item):
         """
         To make case insensitive
