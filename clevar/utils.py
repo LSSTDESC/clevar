@@ -94,7 +94,7 @@ def updated_dict(*dict_list):
         updict = none_val(update_dict, {})
         if not isinstance(updict, dict):
             raise ValueError(
-                'all arguments of updated_dict must be dictionaries or None, got: {updict}')
+                f'all arguments of updated_dict must be dictionaries or None, got: {updict}')
         out.update(updict)
     return out
 
