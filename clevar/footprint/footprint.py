@@ -2,7 +2,7 @@
 import warnings
 import numpy as np
 
-from ..catalog import ClData, ClCatalog
+from ..catalog import ClData, TagData, ClCatalog
 from ..geometry import convert_units, angular_bank, physical_bank
 from ..utils import none_val, hp, updated_dict
 from astropy.coordinates import SkyCoord
@@ -11,7 +11,7 @@ from .nfw_funcs import nfw2D_profile_flatcore
 from ..match_metrics import plot_helper as ph
 from ..match_metrics.plot_helper import plt
 
-class Footprint():
+class Footprint(TagData):
     '''
     Functions for footprint management
 
@@ -26,29 +26,10 @@ class Footprint():
     pixel_dict: dict
         Dictionary to point to pixel in data
     '''
-    def __init__(self, tags=None, *args, **kargs):
-        '''
-        Parameters
-        ----------
-        nside: int
-            Heapix NSIDE
-        nest: bool
-            If ordering is nested
-        pixels: array
-            Pixels inside the footprint
-        detfrac_vals: array
-            Detection fraction
-        zmax_vals: array
-            Zmax
-        '''
-        if tags is not None and not isinstance(tags, dict):
-            raise ValueError('tags must be dict.')
-        self.__data = ClData()
-        self.nside = None
-        self.nest = None
-        self.tags = LowerCaseDict()
-        if len(args)>0 or len(kargs)>0:
-            self._add_values(*args, **kargs)
+
+    @property
+    def pixel_dict(self):
+        return self.__pixel_dict
 
     @property
     def nside(self):
@@ -56,17 +37,43 @@ class Footprint():
     
     @property
     def nest(self):
-        return self.data.meta['nside']
+        return self.data.meta['nest']
     
     @nside.setter
     def nside(self, nside):
-        self.__data.meta['nside'] = None
+        self.data.meta['nside'] = nside
     
     @nest.setter
     def nest(self, nest):
-        self.__data.meta['nest'] = None
+        self.data.meta['nest'] = nest
 
-    def _add_values(self, nside, pixels, detfrac=None, zmax=None,
+    def __init__(self, nside=None, tags=None, nest=False, **kwargs):
+        '''
+        Parameters
+        ----------
+        nside: int
+            Heapix NSIDE
+        nest: bool
+            If ordering is nested
+        pixel: array
+            Pixels inside the footprint
+        detfrac_vals: array
+            Detection fraction
+        zmax_vals: array
+            Zmax
+        '''
+        self.__pixel_dict = {}
+        tags = updated_dict({'pixel':'pixel', 'detfrac':'detfrac', 'zmax':'zmax'}, tags)
+        if len(kwargs)>0:
+            if tags['pixel'] not in kwargs:
+                raise ValueError(f'Pixel column ({tags["pixel"]}) must be included')
+            kwargs['nside'] = nside
+            kwargs['nest'] = nest
+        TagData.__init__(self, tags=tags,
+                         default_tags=['pixel', 'detfrac', 'zmax'],
+                         **kwargs)
+
+    def _add_values(self, nside=None, pixel=None, detfrac=None, zmax=None,
                     nest=False):
         '''
         Adds provided values for attribues and assign default values to rest
@@ -77,7 +84,7 @@ class Footprint():
             Heapix NSIDE
         nest: bool
             If ordering is nested
-        pixels: array
+        pixel: array
             Pixels inside the footprint
         detfrac: array
             Detection fraction. If None, value 1 is assigned.
@@ -86,15 +93,12 @@ class Footprint():
         '''
         self.nside = nside
         self.nest = nest
-        self.data.meta.update({'nside':nside, 'nest':nest})
-        self.data['pixel'] = np.array(pixels, dtype=int)
-        self.data['detfrac'] = none_val(detfrac, 1)
-        self.data['zmax'] = none_val(zmax, 99)
-        ra, dec = hp.pix2ang(nside, pixels, lonlat=True, nest=nest)
+        self.data[self.tags['pixel']] = np.array(pixel, dtype=int)
+        self.data[self.tags['detfrac']] = none_val(detfrac, 1)
+        self.data[self.tags['zmax']] = none_val(zmax, 99)
+        ra, dec = hp.pix2ang(nside, pixel, lonlat=True, nest=nest)
         self.data['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
-        self.pixel_dict = {p:i for i, p in enumerate(self['pixel'])}
-    def __getitem__(self, item):
-        return self.data[item]
+        self.pixel_dict.update(self._make_col_dict('pixel'))
     def get_map(self, data, bad_val=0):
         '''
         Transforms a internal quantity into a map
@@ -180,8 +184,9 @@ class Footprint():
         """
         self = Footprint()
         values = ClData.read(filename)
+        print(values.colnames)
         self._add_values(nside=nside, nest=nest,
-            pixels=values[pixel_name],
+            pixel=values[pixel_name],
             detfrac=values[detfrac_name] if detfrac_name is not None else None,
             zmax=values[zmax_name] if zmax_name is not None else None)
         return self
