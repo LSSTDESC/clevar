@@ -30,31 +30,67 @@ class ClData(APtable):
         ----------
         *args, **kwargs: Same used for astropy tables
         """
-        self.namedict = LowerCaseDict()
-        APtable.__init__(self, *args, **kwargs)
-        for col in self.colnames:
-            self.namedict[col] = col
+        tags = kwargs.pop('tags', {})
+        default_tags = kwargs.pop('default_tags', [])
+        super().__init__(self, *args, **kwargs)
+        self.__namedict = LowerCaseDict(self.colnames)
+        self.__tags = LowerCaseDict()
+        self.__default_tags = NameList(default_tags)
+    @property
+    def namedict(self):
+        return self.__namedict
+    @property
+    def tags(self):
+        return self.__tags
+    @property
+    def size(self):
+        return len(self.__data)
     def __getitem__(self, item):
         """
         To make case insensitive
         """
+        # get one column
         if isinstance(item, str):
-            item = self.namedict.get(item, item)
-        is_str_list = isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item)
-        if is_str_list:
-            item = list(map(lambda i: self.namedict[i], item))
-        out = APtable.__getitem__(self, item)
-        if is_str_list:
-            out.namedict = LowerCaseDict({col: col for col in out.colnames})
-        return out
+            return super().__getitem__(self, self.namedict.get(item, item))
+
+        # get one row
+        elif isinstance(item, (int, np.int64)):
+            out = super().__getitem__(self, item)
+            out.namedict = self.namedict
+            out.tags = self.tags
+            return out
+
+        # Get sub rows
+        elif isinstance(item, (tuple, list)):
+            item_ = item
+            tags_ = self.tags
+
+        # Get sub cols
+        elif isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+            item_ = NameList(map(lambda i: self.tags.get(i, i), item))
+            tags_ = dict(filter(lambda key_val: key_val[1] in item_), self.tags.items())
+
+        else:
+            raise ValueError(f'input item (={item}) not valid')
+
+        return ClData(super().__getitem__(self, item_),
+                      tags=tags_, default_tags=self.__default_tags)
     def __setitem__(self, item, value):
         """
         To make case insensitive
         """
         if isinstance(item, str):
             item = self.namedict.get(item, item)
-            self.namedict[item] = item
-        APtable.__setitem__(self, item, value)
+            self.namedict[item] = self.namedict.get(item, item)
+            if item in self.__default_tags:
+                self.tags[item] = self.tags.get(item, item)
+        super().__setitem__(self, item, value)
+    def __delitem__(self, item):
+        if isinstance(item, str):
+            del self.namedict[item]
+            if item in self.tags:
+                del self.tags[item]
+        super().__delitem__.(self, item)
     def get(self, key, default=None):
         """
         Return the column for key if key is in the dictionary, else default
@@ -63,12 +99,8 @@ class ClData(APtable):
     def _repr_html_(self):
         return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
     @classmethod
-    def read(self, filename, **kwargs):
-        tab = APtable.read(filename, **kwargs)
-        out = ClData(meta=tab.meta)
-        for c in tab.colnames:
-            out[c] = tab[c]
-        return out
+    def read(self, **kwargs):
+        return ClData(APtable.read(**kwargs))
     def _check_cols(self, columns):
         """
         Checks if required columns exist
@@ -84,6 +116,57 @@ class ClData(APtable):
             raise KeyError(
                 f"Column(s) '{missing}' not found "
                 "in catalog {data.colnames}")
+    def _repr_html_(self):
+        # tags header
+        _prt_tags = ', '.join(map(lambda kv: f'{kv[0]}({kv[1]})', self.tags.items()))
+        # Add tags to colnames
+        tags_inv = {v:f' ({k})' for k, v in self.tags.items() if k!=v}
+        table_list = super()._repr_html_(self).split('<tr>')
+        new_header = '</th>'.join([c+tags_inv.get(c[4:], '') if c[:4]=='<th>' else c
+                                    for c in table_list[1].split('</th>')])
+        table_list[1] = new_header
+        return f'<b>tags:</b> {_prt_tags}'+ '<tr>'.join(table_list)
+
+    def tag_column(self, colname, coltag, skip_warn=False):
+        """
+        Tag column
+
+        Parameters
+        ----------
+        colname: str
+            Name of column
+        coltag: str
+            Tag for column
+        skip_warn: bool
+            Skip overwriting warning
+        """
+        if colname not in data.namedict:
+            raise ValueError(
+                f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
+        if coltag in self.colnames and coltag.lower()!=colname.lower():
+            raise ValueError(
+                f'Cannot tag column as there is already a column with the same name as the tag.')
+        if coltag in self.tags and colname in self.tags and not skip_warn:
+            if self.tags[coltag].lower()!=colname.lower():
+                warnings.warn(
+                    f'tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}')
+        self.tags[coltag] = colname
+    def tag_columns(self, colnames, coltags):
+        """
+        Tag columns
+
+        Parameters
+        ----------
+        colname: list
+            Name of columns
+        coltag: list
+            Tag for columns
+        """
+        if len(colnames)!=len(coltags):
+            raise ValueError(
+                f'Size of colnames ({len(colnames)} and coltags {len(coltags)} must be the same.')
+        for colname, coltag in zip(colnames, coltags):
+            self.tag_column(colname, coltag)
 
 
 class TagData():
