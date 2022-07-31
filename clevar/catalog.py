@@ -242,7 +242,17 @@ class TagData():
                     "\n".join([f"{' '*12}{k:10}: {l:,}" for k, l in zip(names, sizes)])
                     )
             data = ClData(columns)
+
         # Add columns
+
+        missing = [f"'{dtag}': '{self.tags.get(dtag, None)}'" for dtag in self.default_tags
+                    if dtag in self.tags and self.tags.get(dtag, None) not in data.colnames
+                    and dtag.lower()!='id']
+        if len(missing)>0:
+            missing = ", ".join(missing)
+            raise KeyError(
+                f"Tagged column(s) ({missing}) not found in catalog {data.colnames}")
+
         cols = list(data.colnames)
         if first_cols:
             for col in first_cols[::-1]:
@@ -1046,11 +1056,6 @@ class MemCatalog(Catalog):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
         Catalog._add_values(self, first_cols=[self.tags['id_cluster']], **columns)
-        if self.tags['id_cluster'] not in self.data.colnames:
-            idcl_name = ('id_cluster' if self.tags['id_cluster']=='id_cluster'
-                            else f'id_cluster ({self.tags["id_cluster"]})')
-            raise ValueError(f'Members catalog must have a {idcl_name} column!.')
-
         self.id_dict_list.update(self._make_col_dict_list('id'))
 
     def __getitem__(self, item):
