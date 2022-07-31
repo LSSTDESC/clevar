@@ -60,17 +60,13 @@ class ClData(APtable):
             out.namedict = self.namedict
             return out
 
-        # Get sub rows
-        elif isinstance(item, (tuple, list)):
-            item_ = item
-
         # Get sub cols
         elif isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
             item_ = NameList(map(lambda i: self.namedict[i], item))
 
+        # Get sub rows
         else:
             item_ = item
-            #raise ValueError(f'input item (={item}) not valid')
 
         return ClData(super().__getitem__(item_))
 
