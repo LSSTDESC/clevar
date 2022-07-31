@@ -342,6 +342,47 @@ class TagData():
             out[col] = self[col]
         out.write(filename, overwrite=overwrite)
 
+
+    @classmethod
+    def read(self, filename, tags=None, full=False):
+        """Read catalog from fits file. If full=False, only columns in tags are read.
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        tags: LoweCaseDict, None
+            Tags for table (required if full=False).
+        full: bool
+            Reads all columns of the catalog
+        """
+        data = ClData.read(filename)
+        if not full:
+            if tags is None:
+                raise KeyError('If full=False, tags must be provided.')
+            if not isinstance(tags, dict):
+                raise ValueError('tags must be dict.')
+            data._check_cols(tags.values())
+            data = data[list(tags.values())]
+        return self(data=data, tags=tags)
+
+    @classmethod
+    def read_full(self, filename):
+        """Read fits file catalog saved by clevar with all information.
+        The catalog must contain name information.
+
+        Parameters
+        ----------
+        filename: str
+            Input file.
+        """
+        data = ClData.read(filename)
+        # read labels and radius unit from file
+        kwargs = {
+            'tags': LowerCaseDict({k[4:]:v for k, v in data.meta.items() if k[:4]=='TAG_'}),
+        }
+        return self(data=data, **kwargs)
+
 _matching_mask_funcs = {
     'cross': lambda match: match['mt_cross']!=None,
     'self': lambda match: match['mt_self']!=None,
