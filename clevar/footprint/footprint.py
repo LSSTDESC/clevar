@@ -184,13 +184,12 @@ class Footprint(TagData):
         """
         self = Footprint()
         values = ClData.read(filename)
-        print(values.colnames)
         self._add_values(nside=nside, nest=nest,
             pixel=values[pixel_name],
             detfrac=values[detfrac_name] if detfrac_name is not None else None,
             zmax=values[zmax_name] if zmax_name is not None else None)
         return self
-    def __repr__(self,):
+    def __repr__(self):
         out = f"FootprintZmax object with {len(self.data):,} pixels\n"
         out += "zmax: [%g, %g]\n"%(self['zmax'].min(), self['zmax'].max())
         out += "detfrac: [%g, %g]"%(self['detfrac'].min(), self['detfrac'].max())

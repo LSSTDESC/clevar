@@ -24,6 +24,7 @@ def test_footprint():
     c1, c2 = get_test_data()
     cosmo = AstroPyCosmology()
     # Gen footprint
+    assert_raises(ValueError, Footprint, nside=32, detfrac=range(10))
     nside = 128
     pixels1 = hp.ang2pix(nside, c1['ra'], c1['dec'], lonlat=True)
     ftpt1 = Footprint(nside=nside, pixel=list(set(pixels1)))
@@ -31,6 +32,7 @@ def test_footprint():
     ftpt2 = Footprint(nside=nside, pixel=list(set(pixels2)))
     # Footprint functions
     print(ftpt1)
+    ftpt1.__repr__()
     ftpt1.get_map('zmax')
     # Load external
     ftpt1.data.write('ftpt1.fits', overwrite=True)
