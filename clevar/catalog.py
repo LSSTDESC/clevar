@@ -884,33 +884,6 @@ class ClCatalog(Catalog):
                     kwargs['members'] = self.members[cl_mask[self.members['ind_cl']]]
         return self._getitem_base(DataType=ClCatalog, **kwargs)
 
-
-        if isinstance(item, (str, int, np.int64)):
-            item_ = self.tags.get(item, item) if isinstance(item, str) else item
-            return self.data[item_]
-        else:
-            mt_input = None
-            members = self.members
-            tags = self.tags
-            # Check if item_ is not a list of strings
-            if (isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item)):
-                item_ = NameList([self.tags.get(i, i) for i in item])
-                tags = {k:v for k, v in self.tags.items() if k in item_ or v in item_}
-                mt_cols = [c for c in self.data.colnames if c[:3]=='mt_' and c not in item_]
-                item_ = [*item_, *mt_cols]
-            else:
-                item_ = item
-                if self.mt_input is not None:
-                    mt_input = self.mt_input[item_]
-                if members is not None and isinstance(item_, (list, np.ndarray)):
-                    cl_mask = np.zeros(self.size, dtype=bool)
-                    cl_mask[item_] = True
-                    members = members[cl_mask[members['ind_cl']]]
-            # generate catalog
-            return ClCatalog(name=self.name, labels=self.labels, radius_unit=self.radius_unit,
-                             mt_input=mt_input, members=members, members_warning=False,
-                             tags=tags, data=self.data[item_])
-
     def raw(self):
         """
         Get a copy of the catalog without members.
