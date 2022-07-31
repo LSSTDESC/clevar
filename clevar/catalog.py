@@ -132,6 +132,8 @@ class TagData():
         Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
     default_tags: NameList
         List of keys that generate tags automatically.
+    colnames: NameList
+        Names of columns in data.
     """
 
     @property
@@ -149,6 +151,10 @@ class TagData():
     @property
     def default_tags(self):
         return self.__default_tags
+
+    @property
+    def colnames(self):
+        return NameList(data.colnames)
 
     def __init__(self, tags=None, default_tags=None, **kwargs):
         if tags is not None and not isinstance(tags, dict):
