@@ -150,13 +150,13 @@ class TagData():
 
     @property
     def colnames(self):
-        return NameList(data.colnames)
+        return NameList(self.data.colnames)
 
     def __init__(self, tags=None, default_tags=None, **kwargs):
         if tags is not None and not isinstance(tags, dict):
             raise ValueError('tags must be dict.')
         self.__data = ClData()
-        self.__tags = LowerCaseDict(tags)
+        self.__tags = LowerCaseDict(none_val(tags, {}))
         self.__default_tags = NameList(none_val(default_tags, []))
         if len(kwargs)>0:
             self._add_values(**kwargs)
@@ -676,8 +676,7 @@ class Catalog(TagData):
         }
         kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
                         if 'RADIUS_UNIT' in data.meta else {})
-        out = self._read(data, **kwargs)
-        return out
+        return self._read(data, **kwargs)
 
     def save_match(self, filename, overwrite=False):
         """
