@@ -45,6 +45,7 @@ def _base_cat_test(**quantities):
     assert_raises(KeyError, c.__getitem__, 'ra')
     assert_raises(ValueError, c.tag_column, 'XXX', 'newtag')
     # test warnings
+    c['ra'] = 1.
     c.tag_column('ra', 'newtag')
     with pytest.warns(None) as record:
         c.tag_column('z', 'newtag')
