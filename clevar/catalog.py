@@ -21,8 +21,6 @@ class ClData(APtable):
         Dictionary with metadata for this object
     namedict: dict
         Dictionary for making ClData case insensitive
-    size: int
-        Number of objects in the catalog
 
     Same as astropy tables
     """
@@ -30,10 +28,6 @@ class ClData(APtable):
     @property
     def namedict(self):
         return self.__namedict
-
-    @property
-    def size(self):
-        return len(self)
 
     def __init__(self, *args, **kwargs):
         """
@@ -142,7 +136,7 @@ class TagData():
 
     @property
     def size(self):
-        return self.data.size
+        return len(self.data)
 
     @property
     def default_tags(self):
