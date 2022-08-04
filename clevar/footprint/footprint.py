@@ -25,6 +25,10 @@ class Footprint(TagData):
         Data with columns: pixel, detfrac, zmax
     pixel_dict: dict
         Dictionary to point to pixel in data
+    size: int
+        Number of objects in the catalog
+    tags: LoweCaseDict
+        Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax)
     '''
 
     @property
@@ -57,24 +61,21 @@ class Footprint(TagData):
             If ordering is nested
         pixel: array
             Pixels inside the footprint
-        detfrac_vals: array
-            Detection fraction
-        zmax_vals: array
-            Zmax
+        detfrac_vals: array, None
+            Detection fraction, if None is set to 1
+        zmax_vals: array, None
+            Zmax, if None is set to 99
         '''
         self.__pixel_dict = {}
-        tags = updated_dict({'pixel':'pixel', 'detfrac':'detfrac', 'zmax':'zmax'}, tags)
+        tags = updated_dict({'pixel':'pixel'}, tags)
         if len(kwargs)>0:
-            if tags['pixel'] not in kwargs:
-                raise ValueError(f'Pixel column ({tags["pixel"]}) must be included')
             kwargs['nside'] = nside
             kwargs['nest'] = nest
         TagData.__init__(self, tags=tags,
                          default_tags=['pixel', 'detfrac', 'zmax'],
                          **kwargs)
 
-    def _add_values(self, nside=None, pixel=None, detfrac=None, zmax=None,
-                    nest=False):
+    def _add_values(self, nside=None, nest=False, **columns):
         '''
         Adds provided values for attribues and assign default values to rest
 
@@ -91,13 +92,18 @@ class Footprint(TagData):
         zmax: array
             Zmax. If None, value 99 is assigned.
         '''
+        if not hp.isnsideok(nside):
+            raise ValueError(f'nside (={nside}) must be a power of 2.')
         self.nside = nside
         self.nest = nest
-        self.data[self.tags['pixel']] = np.array(pixel, dtype=int)
-        self.data[self.tags['detfrac']] = none_val(detfrac, 1)
-        self.data[self.tags['zmax']] = none_val(zmax, 99)
-        ra, dec = hp.pix2ang(nside, pixel, lonlat=True, nest=nest)
-        self.data['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
+        TagData._add_values(self, **columns)
+        self['pixel'] = self['pixel'].astype(int)
+        if self.tags.get('detfrac', None) not in self.colnames:
+            self['detfrac'] = 1.
+        if self.tags.get('zmax', None) not in self.colnames:
+            self['zmax'] = 99.
+        ra, dec = hp.pix2ang(nside, self['pixel'], lonlat=True, nest=nest)
+        self['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
         self.pixel_dict.update(self._make_col_dict('pixel'))
     def get_map(self, data, bad_val=0):
         '''
