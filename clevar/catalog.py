@@ -162,10 +162,10 @@ class TagData():
     def __setitem__(self, item, value):
         """ Adds items to tags if in default_tags"""
         if isinstance(item, str):
+            cname = self.tags.get(item, item)
             if item in self.default_tags:
-                name = self.tags.get(item, item)
-                self.tags[item] = self.data.namedict.get(name, name)
-            self.data[item] = value
+                self.tags[item] = self.data.namedict.get(cname, cname)
+            self.data[cname] = value
         else:
             raise ValueError(f'can only set with str item (={item}) argument.')
 
