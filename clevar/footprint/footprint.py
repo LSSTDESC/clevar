@@ -456,12 +456,13 @@ class Footprint(TagData):
                         raise TypeError(
                             'A cosmology and cluster redsift is necessary if '
                             'cluster radius in physical units.')
+                    theta = np.linspace(0, 2*np.pi, 50)
+                    sin, cos = np.sin(theta), np.cos(theta)
                     rad_deg = convert_units(cluster['radius'], cluster.radius_unit, 'degrees',
                                             redshift=cluster['z'], cosmo=cosmo)
                     plt_cl = lambda ra, dec, radius: [
-                        ax.add_patch(plt.Circle(
-                            (ra_, dec_), radius=radius_,
-                            **updated_dict({'color':'b', 'fill':0, 'lw':1}, cluster_kwargs)))
+                        ax.plot(ra_+radius_*sin/np.cos(np.radians(dec_)), dec_+radius_*cos,
+                            **updated_dict({'color':'b', 'lw':1}, cluster_kwargs))
                         for ra_, dec_, radius_ in np.transpose([ra, dec, radius])[
                             (ra+radius>=xlim[0])*(ra-radius<xlim[1])
                             *(dec+radius>=ylim[0])*(dec-radius<ylim[1])]
