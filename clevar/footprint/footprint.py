@@ -190,10 +190,12 @@ class Footprint(TagData):
         """
         self = Footprint()
         values = ClData.read(filename)
-        self._add_values(nside=nside, nest=nest,
-            pixel=values[pixel_name],
-            detfrac=values[detfrac_name] if detfrac_name is not None else None,
-            zmax=values[zmax_name] if zmax_name is not None else None)
+        kwargs = dict(nside=nside, nest=nest, pixel=values[pixel_name])
+        if detfrac_name is not None:
+            kwargs['detfrac'] = values[detfrac_name]
+        if zmax_name is not None:
+            kwargs['zmax'] = values[zmax_name]
+        self._add_values(**kwargs)
         return self
     def __repr__(self):
         out = f"FootprintZmax object with {len(self.data):,} pixels\n"
