@@ -444,6 +444,8 @@ class Footprint(TagData):
             ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs)
         if cb:
             cb.set_xlabel(data)
+            ax.xaxis.tick_top()
+            ax.xaxis.set_label_position('top')
 
         xlim, ylim = ax.get_xlim(), ax.get_ylim()
         if cluster is not None:
