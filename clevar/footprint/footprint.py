@@ -92,7 +92,7 @@ class Footprint(TagData):
         zmax: array
             Zmax. If None, value 99 is assigned.
         '''
-        if not hp.isnsideok(nside):
+        if not isinstance(nside, int) or (nside&(nside-1)!=0) or nside==0:
             raise ValueError(f'nside (={nside}) must be a power of 2.')
         self.nside = nside
         self.nest = nest
@@ -170,8 +170,7 @@ class Footprint(TagData):
         zmax_vals = self.get_values_in_pixels('zmax', pixels, 0)
         return z<=zmax_vals
     @classmethod
-    def read(self, filename, nside, pixel_name, detfrac_name=None, zmax_name=None,
-             nest=False):
+    def read(self, filename, nside, tags, nest=False, full=False):
         """
         Loads fits file and converst to FootprintZmax object
 
@@ -187,16 +186,21 @@ class Footprint(TagData):
             Name of detection fraction colum. If None value 1 is assigned.
         zmax_name:
             Name of maximum redshit colum. If None value 99 is assigned.
+        tags: LoweCaseDict, None
+            Tags for table (required if full=False).
+        full: bool
+            Reads all columns of the catalog
         """
-        self = Footprint()
-        values = ClData.read(filename)
-        kwargs = dict(nside=nside, nest=nest, pixel=values[pixel_name])
-        if detfrac_name is not None:
-            kwargs['detfrac'] = values[detfrac_name]
-        if zmax_name is not None:
-            kwargs['zmax'] = values[zmax_name]
-        self._add_values(**kwargs)
-        return self
+        if not isinstance(tags, dict):
+            raise ValueError(f'tags (={tags}) must be a dictionary.')
+        elif 'pixel' not in tags:
+            raise ValueError(f'pixel must be a key in tags (={tags})')
+
+        data = ClData.read(filename)
+        if not full:
+            data._check_cols(tags.values())
+            data = data[list(tags.values())]
+        return self(nside=nside, nest=nest, data=data, tags=tags)
     def __repr__(self):
         out = f"FootprintZmax object with {len(self.data):,} pixels\n"
         out += "zmax: [%g, %g]\n"%(self['zmax'].min(), self['zmax'].max())
