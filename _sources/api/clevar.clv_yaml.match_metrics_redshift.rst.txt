@@ -1,0 +1,7 @@
+clevar.clv\_yaml.match\_metrics\_redshift module
+================================================
+
+.. automodule:: clevar.clv_yaml.match_metrics_redshift
+   :members:
+   :undoc-members:
+   :show-inheritance:

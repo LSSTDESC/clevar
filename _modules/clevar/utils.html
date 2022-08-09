@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.utils &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.utils &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +28,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -60,7 +61,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -85,13 +86,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -104,7 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/clevar.catalog.html">clevar.catalog module</a></li>
@@ -150,14 +151,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -232,6 +233,8 @@
 <span class="c1">########################################################################</span>
 <span class="c1">########## Improved list and dict ######################################</span>
 <span class="c1">########################################################################</span>
+
+
 <div class="viewcode-block" id="NameList"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.NameList">[docs]</a><span class="k">class</span> <span class="nc">NameList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List without case consideration in `in` function</span>
@@ -277,7 +280,11 @@
 <span class="c1">########################################################################</span>
 <span class="c1">########## Helpful functions ###########################################</span>
 <span class="c1">########################################################################</span>
+
+
 <span class="n">veclen</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="none_val"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.none_val">[docs]</a><span class="k">def</span> <span class="nf">none_val</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">none_value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set default value to be returned if input is None</span>
@@ -295,6 +302,8 @@
 <span class="sd">        Value if value is not None else none_value</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">value</span> <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">none_value</span></div>
+
+
 <div class="viewcode-block" id="updated_dict"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.updated_dict">[docs]</a><span class="k">def</span> <span class="nf">updated_dict</span><span class="p">(</span><span class="o">*</span><span class="n">dict_list</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns an dictionary with updated values if new dictionaries are not none</span>
@@ -314,9 +323,11 @@
         <span class="n">updict</span> <span class="o">=</span> <span class="n">none_val</span><span class="p">(</span><span class="n">update_dict</span><span class="p">,</span> <span class="p">{})</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">updict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;all arguments of updated_dict must be dictionaries or None, got: </span><span class="si">{updict}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">&#39;all arguments of updated_dict must be dictionaries or None, got: </span><span class="si">{</span><span class="n">updict</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">updict</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
+
+
 <div class="viewcode-block" id="autobins"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.autobins">[docs]</a><span class="k">def</span> <span class="nf">autobins</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get bin values automatically from bins, values</span>
@@ -345,6 +356,8 @@
         <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">bins</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">1.0001</span>
     <span class="k">return</span> <span class="n">bins</span></div>
+
+
 <div class="viewcode-block" id="binmasks"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.binmasks">[docs]</a><span class="k">def</span> <span class="nf">binmasks</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">bins</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get corresponding masks for each bin. Last bin is inclusive.</span>
@@ -364,6 +377,8 @@
     <span class="n">bin_masks</span> <span class="o">=</span> <span class="p">[(</span><span class="n">values</span><span class="o">&gt;=</span><span class="n">b0</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">values</span><span class="o">&lt;</span><span class="n">b1</span><span class="p">)</span> <span class="k">for</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:])]</span>
     <span class="n">bin_masks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">values</span><span class="o">==</span><span class="n">bins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">bin_masks</span></div>
+
+
 <div class="viewcode-block" id="str2dataunit"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.str2dataunit">[docs]</a><span class="k">def</span> <span class="nf">str2dataunit</span><span class="p">(</span><span class="n">input_str</span><span class="p">,</span> <span class="n">units_bank</span><span class="p">,</span> <span class="n">err_msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a string to a float with unit.</span>
@@ -383,6 +398,8 @@
             <span class="k">except</span><span class="p">:</span>
                 <span class="k">pass</span>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown unit of &#39;</span><span class="si">{</span><span class="n">input_str</span><span class="si">}</span><span class="s2">&#39;, must be in </span><span class="si">{</span><span class="n">units_bank</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">err_msg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="deep_update"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.deep_update">[docs]</a><span class="k">def</span> <span class="nf">deep_update</span><span class="p">(</span><span class="n">dict_base</span><span class="p">,</span> <span class="n">dict_update</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update a multi-layer dictionary.</span>
@@ -405,6 +422,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dict_base</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">dict_update</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">dict_base</span></div>
+
+
 <div class="viewcode-block" id="gaussian"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.gaussian">[docs]</a><span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gaussian function.</span>
@@ -424,10 +443,37 @@
 <span class="sd">        Value of the gaussian distribution at input `value`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">value</span><span class="o">-</span><span class="n">mean</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">std</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="n">std</span></div>
+
+
+<div class="viewcode-block" id="pack_mt_col"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.pack_mt_col">[docs]</a><span class="k">def</span> <span class="nf">pack_mt_col</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">c</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">col</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="pack_mmt_col"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.pack_mmt_col">[docs]</a><span class="k">def</span> <span class="nf">pack_mmt_col</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">col</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="unpack_mt_col"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.unpack_mt_col">[docs]</a><span class="k">def</span> <span class="nf">unpack_mt_col</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">[</span><span class="n">out</span><span class="o">==</span><span class="s1">&#39;&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="unpack_mmt_col"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.unpack_mmt_col">[docs]</a><span class="k">def</span> <span class="nf">unpack_mmt_col</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)):</span>
+        <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
 <span class="c1">########################################################################</span>
 <span class="c1">########## Monkeypatching healpy #######################################</span>
 <span class="c1">########################################################################</span>
+
+
 <span class="kn">import</span> <span class="nn">healpy</span> <span class="k">as</span> <span class="nn">hp</span>
+
+
 <div class="viewcode-block" id="pix2map"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.pix2map">[docs]</a><span class="k">def</span> <span class="nf">pix2map</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixels</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">null</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Convert from pixels, values to map</span>
@@ -446,6 +492,8 @@
     <span class="n">outmap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">12</span><span class="o">*</span><span class="n">nside</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="n">null</span>
     <span class="n">outmap</span><span class="p">[</span><span class="n">pixels</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span>
     <span class="k">return</span> <span class="n">outmap</span></div>
+
+
 <div class="viewcode-block" id="neighbors_of_pixels"><a class="viewcode-back" href="../../api/clevar.utils.html#clevar.utils.neighbors_of_pixels">[docs]</a><span class="k">def</span> <span class="nf">neighbors_of_pixels</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixels</span><span class="p">,</span> <span class="n">nest</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Get all neighbors of a pixel list</span>

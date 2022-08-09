@@ -204,7 +204,7 @@ Generate random data and add to catalog
 
 .. parsed-literal::
 
-    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.3-py3.9.egg/clevar/catalog.py:212: UserWarning: id column missing, additional one is being created.
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.12.0-py3.9.egg/clevar/catalog.py:265: UserWarning: id column missing, additional one is being created.
       warnings.warn(
 
 

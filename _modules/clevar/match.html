@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.match &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +28,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -60,7 +61,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -85,13 +86,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -104,7 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/clevar.catalog.html">clevar.catalog module</a></li>
@@ -150,14 +151,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -255,12 +256,12 @@
     <span class="n">mt_mask2</span> <span class="o">=</span> <span class="n">mt_mask2</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
     <span class="n">mt1</span><span class="p">,</span> <span class="n">mt2</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="n">mt_mask1</span><span class="p">],</span> <span class="n">cat2</span><span class="p">[</span><span class="n">mt_mask2</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">mt1</span><span class="o">.</span><span class="n">members</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;match&#39;</span> <span class="ow">in</span> <span class="n">mt1</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;match&#39;</span> <span class="ow">in</span> <span class="n">mt1</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
             <span class="n">mt1</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;in_mt_sample&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="nb">any</span><span class="p">(</span><span class="n">id2</span> <span class="ow">in</span> <span class="n">mt2</span><span class="o">.</span><span class="n">id_dict</span> <span class="k">for</span> <span class="n">id2</span> <span class="ow">in</span> <span class="n">mem1</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">])</span>
                 <span class="k">for</span> <span class="n">mem1</span> <span class="ow">in</span> <span class="n">mt1</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">mt2</span><span class="o">.</span><span class="n">members</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;match&#39;</span> <span class="ow">in</span> <span class="n">mt2</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;match&#39;</span> <span class="ow">in</span> <span class="n">mt2</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
             <span class="n">mt2</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;in_mt_sample&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="nb">any</span><span class="p">(</span><span class="n">id1</span> <span class="ow">in</span> <span class="n">mt1</span><span class="o">.</span><span class="n">id_dict</span> <span class="k">for</span> <span class="n">id1</span> <span class="ow">in</span> <span class="n">mem2</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">])</span>
                 <span class="k">for</span> <span class="n">mem2</span> <span class="ow">in</span> <span class="n">mt2</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
@@ -309,7 +310,7 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">catalog</span><span class="p">):</span>
         <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input file (</span><span class="si">{</span><span class="n">file_in</span><span class="si">}</span><span class="s1">) size (=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span>
             <span class="o">+</span><span class="sa">f</span><span class="s1">&#39; differs from catalog size (=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span><span class="si">}</span><span class="s1">).&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="n">c_</span> <span class="k">for</span> <span class="n">c_</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">colnames</span> <span class="k">if</span> <span class="n">c_</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_&#39;</span><span class="p">,</span> <span class="s1">&#39;ft_&#39;</span><span class="p">,</span> <span class="s1">&#39;cf_&#39;</span><span class="p">)]:</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="n">c_</span> <span class="k">for</span> <span class="n">c_</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span> <span class="k">if</span> <span class="n">c_</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_&#39;</span><span class="p">,</span> <span class="s1">&#39;ft_&#39;</span><span class="p">,</span> <span class="s1">&#39;cf_&#39;</span><span class="p">)]:</span>
         <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_other&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_cross&#39;</span><span class="p">):</span>
             <span class="n">out</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">if</span> <span class="n">c</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">catalog</span><span class="p">[</span><span class="n">col</span><span class="p">]]</span>
         <span class="k">elif</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">,</span> <span class="s1">&#39;mt_multi_other&#39;</span><span class="p">):</span>
@@ -344,24 +345,24 @@
     <span class="c1"># match masks</span>
     <span class="n">m1</span><span class="p">,</span> <span class="n">m2</span> <span class="o">=</span> <span class="n">get_matched_masks</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">matching_type</span><span class="p">)</span>
     <span class="c1"># add cat 1 info</span>
-    <span class="n">cat1_full</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_in1</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat1_full</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input file (</span><span class="si">{</span><span class="n">file_in1</span><span class="si">}</span><span class="s1">) size (=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1_full</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span>
+    <span class="n">dat1_full</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_in1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dat1_full</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input file (</span><span class="si">{</span><span class="n">file_in1</span><span class="si">}</span><span class="s1">) size (=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dat1_full</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span>
             <span class="o">+</span><span class="sa">f</span><span class="s1">&#39; differs from cat1 size (=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span><span class="si">}</span><span class="s1">).&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cat1_full</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
-        <span class="n">c_matched</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;cat1_</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat1_full</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">m1</span><span class="p">]</span>
-    <span class="k">del</span> <span class="n">cat1_full</span>
-    <span class="k">if</span> <span class="s1">&#39;mt_frac_self&#39;</span> <span class="ow">in</span> <span class="n">cat1</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dat1_full</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+        <span class="n">c_matched</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;cat1_</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dat1_full</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">m1</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">dat1_full</span>
+    <span class="k">if</span> <span class="s1">&#39;mt_frac_self&#39;</span> <span class="ow">in</span> <span class="n">cat1</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
         <span class="n">c_matched</span><span class="p">[</span><span class="s1">&#39;cat1_mt_frac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_frac_self&#39;</span><span class="p">][</span><span class="n">m1</span><span class="p">]</span>
     <span class="c1"># add cat 2 info</span>
-    <span class="n">cat2_full</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_in2</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat2_full</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input file (</span><span class="si">{</span><span class="n">file_in2</span><span class="si">}</span><span class="s1">) size (=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat2_full</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span>
+    <span class="n">dat2_full</span> <span class="o">=</span> <span class="n">ClData</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">file_in2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dat2_full</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Input file (</span><span class="si">{</span><span class="n">file_in2</span><span class="si">}</span><span class="s1">) size (=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">dat2_full</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span>
             <span class="o">+</span><span class="sa">f</span><span class="s1">&#39; differs from cat2 size (=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat2</span><span class="p">)</span><span class="si">}</span><span class="s1">).&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cat2_full</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
-        <span class="n">c_matched</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;cat2_</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat2_full</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">m2</span><span class="p">]</span>
-    <span class="k">del</span> <span class="n">cat2_full</span>
-    <span class="k">if</span> <span class="s1">&#39;mt_frac_self&#39;</span> <span class="ow">in</span> <span class="n">cat2</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">dat2_full</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+        <span class="n">c_matched</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;cat2_</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dat2_full</span><span class="p">[</span><span class="n">col</span><span class="p">][</span><span class="n">m2</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">dat2_full</span>
+    <span class="k">if</span> <span class="s1">&#39;mt_frac_self&#39;</span> <span class="ow">in</span> <span class="n">cat2</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
         <span class="n">c_matched</span><span class="p">[</span><span class="s1">&#39;cat2_mt_frac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_frac_self&#39;</span><span class="p">][</span><span class="n">m2</span><span class="p">]</span>
     <span class="c1"># Save</span>
     <span class="n">c_matched</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file_out</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="n">overwrite</span><span class="p">)</span></div>

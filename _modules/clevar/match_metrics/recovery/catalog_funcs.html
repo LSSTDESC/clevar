@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.catalog_funcs &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.match_metrics.recovery.catalog_funcs &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +28,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -60,7 +61,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -85,13 +86,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -104,7 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.catalog.html">clevar.catalog module</a></li>
@@ -150,14 +151,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>

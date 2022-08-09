@@ -1,0 +1,21 @@
+clevar.clv\_yaml package
+========================
+
+.. automodule:: clevar.clv_yaml
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   clevar.clv_yaml.footprint
+   clevar.clv_yaml.helper_funcs
+   clevar.clv_yaml.match
+   clevar.clv_yaml.match_metrics_distances
+   clevar.clv_yaml.match_metrics_mass
+   clevar.clv_yaml.match_metrics_recovery_rate
+   clevar.clv_yaml.match_metrics_redshift

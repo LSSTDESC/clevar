@@ -4,15 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.utils module &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.utils module &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,18 +29,17 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="clevar.yaml package" href="clevar.yaml.html" />
+    <link rel="next" title="clevar.clv_yaml package" href="clevar.clv_yaml.html" />
     <link rel="prev" title="clevar.match_metrics.plot_helper module" href="clevar.match_metrics.plot_helper.html" /> 
 </head>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -87,13 +89,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -106,7 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
@@ -152,14 +154,14 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -231,35 +233,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-clevar.utils">
+  <section id="module-clevar.utils">
 <span id="clevar-utils-module"></span><h1>clevar.utils module<a class="headerlink" href="#module-clevar.utils" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="clevar.utils.LowerCaseDict">
-<em class="property">class </em><code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">LowerCaseDict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.LowerCaseDict">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">LowerCaseDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
 <p>Dictionary with lowercase keys</p>
 <dl class="py method">
-<dt id="clevar.utils.LowerCaseDict.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.get" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.LowerCaseDict.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the value for key if key is in the dictionary, else default.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="clevar.utils.LowerCaseDict.pop">
-<code class="sig-name descname">pop</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="optional">[</span>, <em class="sig-param">d</em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; v, remove specified key and return the corresponding value.<a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.pop" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.LowerCaseDict.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">v,</span> <span class="pre">remove</span> <span class="pre">specified</span> <span class="pre">key</span> <span class="pre">and</span> <span class="pre">return</span> <span class="pre">the</span> <span class="pre">corresponding</span> <span class="pre">value.</span></span></span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.pop" title="Permalink to this definition">¶</a></dt>
 <dd><p>If key is not found, default is returned if given, otherwise KeyError is raised</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="clevar.utils.LowerCaseDict.setdefault">
-<code class="sig-name descname">setdefault</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.setdefault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.setdefault" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.LowerCaseDict.setdefault">
+<span class="sig-name descname"><span class="pre">setdefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.setdefault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.setdefault" title="Permalink to this definition">¶</a></dt>
 <dd><p>Insert key with a value of default if key is not in the dictionary.</p>
 <p>Return the value for key if key is in the dictionary, else default.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="clevar.utils.LowerCaseDict.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">E</em>, <span class="optional">]</span><em class="sig-param">**F</em><span class="sig-paren">)</span> &#x2192; None.  Update D from dict/iterable E and F.<a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.update" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.LowerCaseDict.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">**F</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None.</span>&#160; <span class="pre">Update</span> <span class="pre">D</span> <span class="pre">from</span> <span class="pre">dict/iterable</span> <span class="pre">E</span> <span class="pre">and</span> <span class="pre">F.</span></span></span><a class="reference internal" href="../_modules/clevar/utils.html#LowerCaseDict.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.LowerCaseDict.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>If E is present and has a .keys() method, then does:  for k in E: D[k] = E[k]
 If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v
 In either case, this is followed by: for k in F:  D[k] = F[k]</p>
@@ -268,15 +270,15 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="clevar.utils.NameList">
-<em class="property">class </em><code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">NameList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iterable</span><span class="o">=</span><span class="default_value">()</span></em>, <em class="sig-param"><span class="o">/</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#NameList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.NameList" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.NameList">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">NameList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#NameList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.NameList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
 <p>List without case consideration in <cite>in</cite> function</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.autobins">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">autobins</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">log</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#autobins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.autobins" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.autobins">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">autobins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#autobins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.autobins" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get bin values automatically from bins, values</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -296,8 +298,8 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.binmasks">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">binmasks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">bins</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#binmasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.binmasks" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.binmasks">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">binmasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#binmasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.binmasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get corresponding masks for each bin. Last bin is inclusive.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -316,8 +318,8 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.deep_update">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">deep_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dict_base</span></em>, <em class="sig-param"><span class="n">dict_update</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#deep_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.deep_update" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.deep_update">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">deep_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict_update</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#deep_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.deep_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update a multi-layer dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -336,8 +338,8 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.gaussian">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">gaussian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">mean</span></em>, <em class="sig-param"><span class="n">std</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.gaussian" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.gaussian">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#gaussian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.gaussian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gaussian function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -357,8 +359,8 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.neighbors_of_pixels">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">neighbors_of_pixels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nside</span></em>, <em class="sig-param"><span class="n">pixels</span></em>, <em class="sig-param"><span class="n">nest</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#neighbors_of_pixels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.neighbors_of_pixels" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.neighbors_of_pixels">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">neighbors_of_pixels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nside</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#neighbors_of_pixels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.neighbors_of_pixels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all neighbors of a pixel list</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -378,8 +380,8 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.none_val">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">none_val</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">none_value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#none_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.none_val" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.none_val">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">none_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">none_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#none_val"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.none_val" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set default value to be returned if input is None</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -398,8 +400,18 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.pix2map">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">pix2map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nside</span></em>, <em class="sig-param"><span class="n">pixels</span></em>, <em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">null</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#pix2map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.pix2map" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.pack_mmt_col">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">pack_mmt_col</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#pack_mmt_col"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.pack_mmt_col" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clevar.utils.pack_mt_col">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">pack_mt_col</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#pack_mt_col"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.pack_mt_col" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clevar.utils.pix2map">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">pix2map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nside</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#pix2map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.pix2map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert from pixels, values to map</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -414,8 +426,8 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.str2dataunit">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">str2dataunit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">input_str</span></em>, <em class="sig-param"><span class="n">units_bank</span></em>, <em class="sig-param"><span class="n">err_msg</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#str2dataunit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.str2dataunit" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.str2dataunit">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">str2dataunit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_bank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#str2dataunit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.str2dataunit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a string to a float with unit.
 ex: ‘1mpc’ -&gt; (1, ‘mpc’)</p>
 <dl class="field-list simple">
@@ -429,8 +441,18 @@ ex: ‘1mpc’ -&gt; (1, ‘mpc’)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.utils.updated_dict">
-<code class="sig-prename descclassname">clevar.utils.</code><code class="sig-name descname">updated_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">dict_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#updated_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.utils.updated_dict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.utils.unpack_mmt_col">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">unpack_mmt_col</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#unpack_mmt_col"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.unpack_mmt_col" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clevar.utils.unpack_mt_col">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">unpack_mt_col</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#unpack_mt_col"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.unpack_mt_col" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clevar.utils.updated_dict">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">updated_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">dict_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#updated_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.updated_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an dictionary with updated values if new dictionaries are not none</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -445,7 +467,7 @@ ex: ‘1mpc’ -&gt; (1, ‘mpc’)</p>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

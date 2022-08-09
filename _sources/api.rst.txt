@@ -14,4 +14,4 @@ Information on specific functions, classes, and methods.
    api/clevar.match.rst
    api/clevar.match_metrics.rst
    api/clevar.utils.rst
-   api/clevar.yaml.rst
+   api/clevar.clv_yaml.rst

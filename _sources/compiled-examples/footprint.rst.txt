@@ -5,114 +5,6 @@ Here we show how to use the footprint functionality. It is not used
 directly in the matching, but can be applied on the recovery rates
 computation
 
-.. raw:: html
-
-   <h1>
-
-Table of Contents
-
-.. raw:: html
-
-   </h1>
-
-.. container:: toc
-
-   .. raw:: html
-
-      <ul class="toc-item">
-
-   .. raw:: html
-
-      <li>
-
-   1  Generate random data and add to catalog
-
-   .. raw:: html
-
-      </li>
-
-   .. raw:: html
-
-      <li>
-
-   2  Add an external footprint
-
-   .. raw:: html
-
-      <ul class="toc-item">
-
-   .. raw:: html
-
-      <li>
-
-   2.1  Plotting the footprint
-
-   .. raw:: html
-
-      </li>
-
-   .. raw:: html
-
-      </ul>
-
-   .. raw:: html
-
-      </li>
-
-   .. raw:: html
-
-      <li>
-
-   3  Use ClEvaR functions to create a footprint
-
-   .. raw:: html
-
-      </li>
-
-   .. raw:: html
-
-      <li>
-
-   4  Footprint masks
-
-   .. raw:: html
-
-      </li>
-
-   .. raw:: html
-
-      <li>
-
-   5  Saving and loading footprint quantities
-
-   .. raw:: html
-
-      </li>
-
-   .. raw:: html
-
-      <li>
-
-   6  Match catalogs
-
-   .. raw:: html
-
-      </li>
-
-   .. raw:: html
-
-      <li>
-
-   7  Recovery rate
-
-   .. raw:: html
-
-      </li>
-
-   .. raw:: html
-
-      </ul>
-
 .. code:: ipython3
 
     %load_ext autoreload
@@ -124,8 +16,11 @@ Table of Contents
     import pylab as plt
     import healpy as hp
 
-Generate random data and add to catalog
----------------------------------------
+Random data example
+-------------------
+
+For display purposes, we will generate some quick random data to be used
+with the footprints.
 
 .. code:: ipython3
 
@@ -148,12 +43,13 @@ Generate random data and add to catalog
 .. code:: ipython3
 
     from clevar import ClCatalog
-    c1 = ClCatalog('Cat1', ra=input1['RA'], dec=input1['DEC'], z=input1['Z'], mass=input1['MASS'],
-                mass_err=input1['MASS_ERR'], z_err=input1['Z_ERR'], radius=input1['RADIUS_ARCMIN'],
-                radius_unit='arcmin')
-    c2 = ClCatalog('Cat2', ra=input2['RA'], dec=input2['DEC'], z=input2['Z'], mass=input2['MASS'],
-                mass_err=input2['MASS_ERR'], z_err=input2['Z_ERR'], radius=input2['RADIUS_ARCMIN'],
-                radius_unit='arcmin')
+    tags = dict(ra='RA', dec='DEC', z='Z', mass='MASS',
+                mass_err='MASS_ERR', z_err='Z_ERR',
+                radius='RADIUS_ARCMIN')
+    
+    c1 = ClCatalog('Cat1', data=input1, tags=tags, radius_unit='arcmin')
+    c2 = ClCatalog('Cat2', data=input2, tags=tags, radius_unit='arcmin')
+    
     # Format for nice display
     for c in ('ra', 'dec', 'z', 'z_err', 'radius'):
         c1[c].info.format = '.2f'
@@ -165,14 +61,14 @@ Generate random data and add to catalog
 
 .. parsed-literal::
 
-    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.3-py3.9.egg/clevar/catalog.py:212: UserWarning: id column missing, additional one is being created.
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.12.0-py3.9.egg/clevar/catalog.py:265: UserWarning: id column missing, additional one is being created.
       warnings.warn(
 
 
-Add an external footprint
--------------------------
+Check position in healpix
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Here we will get heapy pixels based on the positions of the clusters
+Check what are the pixels that contain the clusters
 
 .. code:: ipython3
 
@@ -180,7 +76,7 @@ Here we will get heapy pixels based on the positions of the clusters
     pixels1 = hp.ang2pix(nside, c1['ra'], c1['dec'], lonlat=True)
     pixels2 = hp.ang2pix(nside, c2['ra'], c2['dec'], lonlat=True)
 
-Check to see if selected pixels are correct
+Plot to confirm selected pixels are correct
 
 .. code:: ipython3
 
@@ -219,48 +115,334 @@ Check to see if selected pixels are correct
 
 .. parsed-literal::
 
-    <matplotlib.legend.Legend at 0x7f09c4893d60>
+    <matplotlib.legend.Legend at 0x7fb2460d7f10>
 
 
 
 
-.. image:: footprint_files/footprint_11_2.png
+.. image:: footprint_files/footprint_10_2.png
 
 
-Add them to the ``Footprint`` object. It also has an option of detection
-fraction and :math:`z_{max}` information. If not provided, a default
-value is set:
+The Footprint object
+--------------------
+
+ClEvaR uses the ``Footprint`` object to handle operations related to
+spatial masking. It has the following internal attributes: - ``data``:
+Table with main footprint data (ex: pixel, detfrac, zmax) - ``tags``:
+Dictionary that tells which are the default columns to be used -
+``size``: Number of pixels in the catalog - ``pixel_dict``: Dictionary
+of indicies given the object pixel
 
 .. code:: ipython3
 
     from clevar.footprint import Footprint
-    # Random values for detfrac and zmax for ftpt1
-    detfrac_rand, z_rand = 0.9+.1*np.random.rand(len(set(pixels1))), 0.5+.5*np.random.rand(len(set(pixels1)))
-    ftpt1 = Footprint(nside=nside, pixels=list(set(pixels1)),
-                      detfrac=detfrac_rand, zmax=z_rand)
-    ftpt2 = Footprint(nside=nside, pixels=list(set(pixels2)))
+
+Adding external data to footprint
+---------------------------------
+
+The input data for the footprint is the following:
+
+-  ``nside`` (int): Heapix NSIDE
+-  ``nest`` (bool): If ordering is nested (default=False)
+-  ``pixel`` (array): Pixels inside the footprint
+-  ``detfrac_vals`` (array, None): Detection fraction, if None is set to
+   1
+-  ``zmax_vals`` (array, None): Zmax, if None is set to 99
+
+Just like the ``ClCatalog`` object, data in ``Footorint`` can be added
+from columns, a dictionary or a table. First, let’s create some input
+data:
 
 .. code:: ipython3
 
-    f, axes = plt.subplots(1, 2)
+    # Random values for detfrac and zmax for ftpt1
+    set_pixels1 = list(set(pixels1))
+    set_pixels2 = list(set(pixels2))
+    detfrac_rand = 0.9+.1*np.random.rand(len(set_pixels1))
+    z_rand = 0.5+.5*np.random.rand(len(set_pixels1))
+
+From columns
+~~~~~~~~~~~~
+
+To create a footprint fom columns, you have to pass the name as the
+initial argument and the data columns for the table as keyword
+arguments:
+
+.. code:: ipython3
+
+    ftpt1 = Footprint(nside=nside, pixel=set_pixels1, detfrac=detfrac_rand, zmax=z_rand)
+    ftpt1[:5]
+
+
+
+
+.. raw:: html
+
+    <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=5</i>
+    <table id="table140403657138816" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
+    <tr><td>5190</td><td>0.951647091119141</td><td>0.7147891228605607</td></tr>
+    <tr><td>4682</td><td>0.9020547775560774</td><td>0.9995254135867374</td></tr>
+    <tr><td>5192</td><td>0.9388815488596242</td><td>0.5046096565358194</td></tr>
+    <tr><td>5194</td><td>0.9673579833430996</td><td>0.7466031661083729</td></tr>
+    </table></div>
+
+
+
+You can also pass a ``tags`` dictionary as input if you want your
+catalog to have names that are not default for ``ClEvaR`` use:
+
+.. code:: ipython3
+
+    ftpt1 = Footprint(nside=nside, hpix=set_pixels1, df=detfrac_rand, zm=z_rand,
+                     tags={'pixel': 'hpix', 'detfrac':'df', 'zmax': 'zm'})
+    ftpt1[:5]
+
+
+
+
+.. raw:: html
+
+    <b>tags:</b> hpix(pixel), df(detfrac), zm(zmax)<br><div><i>ClData length=5</i>
+    <table id="table140406797936432" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zm (zmax)</th></tr></thead>
+    <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
+    <tr><td>5190</td><td>0.951647091119141</td><td>0.7147891228605607</td></tr>
+    <tr><td>4682</td><td>0.9020547775560774</td><td>0.9995254135867374</td></tr>
+    <tr><td>5192</td><td>0.9388815488596242</td><td>0.5046096565358194</td></tr>
+    <tr><td>5194</td><td>0.9673579833430996</td><td>0.7466031661083729</td></tr>
+    </table></div>
+
+
+
+From data table
+~~~~~~~~~~~~~~~
+
+You can also create a ``ClCatalog`` passing directly a full data table:
+
+.. code:: ipython3
+
+    from astropy.table import Table
+    ap_table = Table([set_pixels1, detfrac_rand], names=['hpix', 'df'])
+    ftpt1 = Footprint(nside=32, data=ap_table, tags={'pixel': 'hpix', 'detfrac':'df'})
+    ftpt1[:3]
+
+
+
+
+.. raw:: html
+
+    <b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+    <table id="table140406797937056" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
+    <tr><td>5190</td><td>0.951647091119141</td><td>99.0</td></tr>
+    <tr><td>4682</td><td>0.9020547775560774</td><td>99.0</td></tr>
+    </table></div>
+
+
+
+The data table can also be a dictionary or a ``numpy`` array with names:
+
+.. code:: ipython3
+
+    # default colnames
+    print('default colnames:')
+    ftpt1 = Footprint(nside=32, data={'pixel': set_pixels1, 'detfrac': detfrac_rand})
+    display(ftpt1[:3])
     
-    bins = np.linspace(0.85, 1.05, 41)
-    axes[0].hist(ftpt1['detfrac'], bins=bins, label='ftpt1')
-    axes[0].hist(ftpt2['detfrac'], bins=bins, histtype='step', label='ftpt2')
-    axes[0].legend()
-    axes[0].set_xlabel('detfrac')
-    axes[0].set_yscale('log')
     
-    bins = np.append(np.linspace(0.5, 1.0, 11), [99, 100])
-    axes[1].hist(ftpt1['zmax'], bins=bins)
-    axes[1].hist(ftpt2['zmax'], bins=bins, histtype='step')
-    axes[1].set_xlabel('zmax')
-    axes[1].set_xscale('log')
-    axes[1].set_yscale('log')
+    print('different colnames:')
+    # different colnames
+    ftpt1 = Footprint(nside=32, data={'hpix': set_pixels1, 'df': detfrac_rand},
+                      tags={'pixel': 'hpix', 'detfrac':'df'})
+    display(ftpt1[:3])
+
+
+.. parsed-literal::
+
+    default colnames:
 
 
 
-.. image:: footprint_files/footprint_14_0.png
+.. raw:: html
+
+    <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+    <table id="table140403655417232" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
+    <tr><td>5190</td><td>0.951647091119141</td><td>99.0</td></tr>
+    <tr><td>4682</td><td>0.9020547775560774</td><td>99.0</td></tr>
+    </table></div>
+
+
+.. parsed-literal::
+
+    different colnames:
+
+
+
+.. raw:: html
+
+    <b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+    <table id="table140403655340624" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
+    <tr><td>5190</td><td>0.951647091119141</td><td>99.0</td></tr>
+    <tr><td>4682</td><td>0.9020547775560774</td><td>99.0</td></tr>
+    </table></div>
+
+
+.. code:: ipython3
+
+    # default colnames
+    print('default colnames:')
+    np_table = np.array(list(zip(set_pixels1, detfrac_rand)),
+                        dtype=[('pixel', 'f4'), ('detfrac', 'f4')])
+    ftpt1 = Footprint(nside=32, data=np_table)
+    display(ftpt1[:3])
+    
+    
+    print('different colnames:')
+    # different colnames
+    np_table = np.array(list(zip(set_pixels1, detfrac_rand)),
+                        dtype=[('hpix', 'f4'), ('df', 'f4')])
+    ftpt1 = Footprint(nside=32, data=np_table,
+                      tags={'pixel': 'hpix', 'detfrac':'df'})
+    display(ftpt1[:3])
+
+
+.. parsed-literal::
+
+    default colnames:
+
+
+
+.. raw:: html
+
+    <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+    <table id="table140403655458624" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float32</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345</td><td>99.0</td></tr>
+    <tr><td>5190</td><td>0.9516471</td><td>99.0</td></tr>
+    <tr><td>4682</td><td>0.9020548</td><td>99.0</td></tr>
+    </table></div>
+
+
+.. parsed-literal::
+
+    different colnames:
+
+
+
+.. raw:: html
+
+    <b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+    <table id="table140405299565232" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float32</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345</td><td>99.0</td></tr>
+    <tr><td>5190</td><td>0.9516471</td><td>99.0</td></tr>
+    <tr><td>4682</td><td>0.9020548</td><td>99.0</td></tr>
+    </table></div>
+
+
+Read the footprint from fits file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To read the footprint, the arguments are:
+
+-  ``filename`` (str): Name of ``.fits`` catalog
+-  ``nside`` (int): Heapix NSIDE
+-  ``tags`` (dict): Dictionary with the tags and column names. It must
+   contain
+
+   -  ``pixel`` (str): Name of pixels column inside the footprint
+   -  ``detfrac`` (str): Name of detection fraction column, if None is
+      set to 1
+   -  ``zmax`` (str): Name of Zmax column, if None is set to 99
+
+-  ``nest`` (bool): If ordering is nested (default=False)
+-  ``full`` (bool): read all columns of file
+
+Let’s first create a file with the footprint info:
+
+.. code:: ipython3
+
+    Footprint(nside=nside, pixel=set_pixels1, detfrac=detfrac_rand, zmax=z_rand).write('ftpt_temp.fits')
+
+and then read it:
+
+.. code:: ipython3
+
+    Footprint.read('ftpt_temp.fits', nside=nside,
+                   tags={'pixel': 'pixel',
+                         'detfrac': 'detfrac',
+                         'zmax': 'zmax'})[:3]
+
+
+
+
+.. raw:: html
+
+    <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+    <table id="table140403655455024" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
+    <tr><td>5190</td><td>0.951647091119141</td><td>0.7147891228605607</td></tr>
+    <tr><td>4682</td><td>0.9020547775560774</td><td>0.9995254135867374</td></tr>
+    </table></div>
+
+
+
+.. code:: ipython3
+
+    Footprint.read('ftpt_temp.fits', nside=nside,
+                   tags={'pixel': 'pixel'})[:3]
+
+
+
+
+.. raw:: html
+
+    <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+    <table id="table140403655452512" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>1.0</td><td>99.0</td></tr>
+    <tr><td>5190</td><td>1.0</td><td>99.0</td></tr>
+    <tr><td>4682</td><td>1.0</td><td>99.0</td></tr>
+    </table></div>
+
+
+
+.. code:: ipython3
+
+    Footprint.read('ftpt_temp.fits', nside=nside,
+                   tags={'pixel': 'pixel'}, full=True)[:3]
+
+
+
+
+.. raw:: html
+
+    <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+    <table id="table140403655455792" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+    <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+    <tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
+    <tr><td>5190</td><td>0.951647091119141</td><td>0.7147891228605607</td></tr>
+    <tr><td>4682</td><td>0.9020547775560774</td><td>0.9995254135867374</td></tr>
+    </table></div>
+
 
 
 Plotting the footprint
@@ -287,24 +469,28 @@ The footprints have an inbuilt function to plot their values
 
 
 
-.. image:: footprint_files/footprint_16_1.png
+.. image:: footprint_files/footprint_33_1.png
 
 
 
-.. image:: footprint_files/footprint_16_2.png
+.. image:: footprint_files/footprint_33_2.png
 
 
 Clusters can also be added to the plot with their actual angular size:
 
 .. code:: ipython3
 
+    # increase cluster radius for display
+    c1['radius'] *= 10
     f = ftpt1.plot('detfrac', bad_val=np.nan,
                    ra_lim=[3, 8], dec_lim=[10, 15],
                    cluster=c1)
+    # return original value
+    c1['radius'] /= 10
 
 
 
-.. image:: footprint_files/footprint_18_0.png
+.. image:: footprint_files/footprint_35_0.png
 
 
 Use ClEvaR functions to create a footprint
@@ -353,7 +539,7 @@ Fixed ``NSIDE``:
     Pixels in footprint: 506
 
 
-fill holes
+-  there is also an option to fill holes in this artificial footprint
 
 .. code:: ipython3
 
@@ -383,6 +569,7 @@ fill holes
 
 .. code:: ipython3
 
+    ftpt1['detfrac'] = np.random.rand(ftpt1.size)
     f = ftpt1.plot('detfrac', np.nan,  latra=[5, 35], lonra=[-5, 40])
 
 
@@ -399,21 +586,7 @@ fill holes
 
 
 
-.. image:: footprint_files/footprint_27_1.png
-
-
-.. code:: ipython3
-
-    ra, dec = hp.pix2ang(128, np.arange(hp.nside2npix(128)), lonlat=True)
-    ra.min(), ra.max(), dec.min(), dec.max()
-
-
-
-
-.. parsed-literal::
-
-    (0.0, 359.6484375, -89.63451650477154, 89.63451650477154)
-
+.. image:: footprint_files/footprint_44_1.png
 
 
 Footprint masks
@@ -424,6 +597,12 @@ has has 3 functions related to the footprint: - ``add_ftpt_masks``: info
 for cluster in footprint - ``add_ftpt_coverfrac``: computes cover
 fraction - ``add_ftpt_coverfrac_nfw2D``: computes cover fraction
 weighted by a project NFW profile
+
+.. code:: ipython3
+
+    ftpt1 = Footprint(nside=nside, pixel=set_pixels1, detfrac=detfrac_rand, zmax=z_rand)
+    ftpt2 = Footprint(nside=nside, pixel=set_pixels2)
+    ftpt2['detfrac'][::2] = .5 # add effects to this footprint
 
 .. code:: ipython3
 
@@ -438,8 +617,8 @@ weighted by a project NFW profile
     ## creating visibility mask ##
     ## creating visibility mask ##
     ## creating visibility mask ##
-    CPU times: user 8.38 ms, sys: 768 µs, total: 9.14 ms
-    Wall time: 8.66 ms
+    CPU times: user 18.1 ms, sys: 23 ms, total: 41.1 ms
+    Wall time: 13.6 ms
 
 
 .. code:: ipython3
@@ -451,29 +630,29 @@ weighted by a project NFW profile
 
 .. raw:: html
 
-    <b>Cat1</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
-    <table id="table139679922777632" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
+    <b>Cat1</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
+    <table id="table140403653141552" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    </table>
+    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>0.94</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td></tr>
+    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>0.48</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>0.84</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td></tr>
+    <tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>0.42</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td></tr>
+    </table></div>
 
 
 
 .. raw:: html
 
-    <b>Cat2</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
-    <table id="table139679922776144" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
+    <b>Cat2</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
+    <table id="table140403652967872" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    <tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-    </table>
+    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>0.94</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>0.48</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>0.84</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+    <tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>0.42</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+    </table></div>
 
 
 Add coverfraction values based on the footprint. It needs a cosmology
@@ -494,8 +673,8 @@ object.
 
 .. parsed-literal::
 
-    CPU times: user 5.62 s, sys: 398 µs, total: 5.62 s
-    Wall time: 5.62 s
+    CPU times: user 7.77 s, sys: 81 ms, total: 7.85 s
+    Wall time: 7.76 s
 
 
 .. code:: ipython3
@@ -507,29 +686,29 @@ object.
 
 .. raw:: html
 
-    <b>Cat1</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
-    <table id="table139679923206128" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
+    <b>Cat1</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
+    <table id="table140403653020736" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
-    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-    <tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-    </table>
+    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>0.94</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td><td>0.8333333333333334</td><td>0.7741572794115797</td></tr>
+    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>0.48</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.5</td><td>0.5</td></tr>
+    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>0.84</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td><td>0.75</td><td>0.7260951172194341</td></tr>
+    <tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>0.42</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td><td>1.0</td><td>1.0</td></tr>
+    </table></div>
 
 
 
 .. raw:: html
 
-    <b>Cat2</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
-    <table id="table139679923207328" class="table-striped table-bordered table-condensed">
-    <thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
+    <b>Cat2</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
+    <table id="table140403653018192" class="table-striped table-bordered table-condensed">
+    <thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
-    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-    <tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-    </table>
+    <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>0.94</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td></tr>
+    <tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>0.48</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.9664374259818176</td></tr>
+    <tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>0.84</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.4350822741933005</td></tr>
+    <tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>0.42</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td></tr>
+    </table></div>
 
 
 Saving and loading footprint quantities
@@ -543,8 +722,17 @@ the catalog so you don’t have to compute them again:
     c1.save_footprint_quantities('cat1_ft_quantities.fits', overwrite=True)
     c1.load_footprint_quantities('cat1_ft_quantities.fits')
 
+Application of footprint flags on recovery rate
+-----------------------------------------------
+
+The recovery rate of clusters should take into account the footprint of
+the catalogs. Regions without overlaps should not be taken into
+consideration. Here we show how this can be done with ``ClEvaR``.
+
 Match catalogs
---------------
+~~~~~~~~~~~~~~
+
+Let’s match the catalogs to compute the recovery rate
 
 .. code:: ipython3
 
@@ -601,16 +789,17 @@ Match catalogs
     * 719/835 objects matched.
     Cross Matches (Cat2)
     * 719/928 objects matched.
-    CPU times: user 11.2 s, sys: 262 ms, total: 11.5 s
-    Wall time: 11.2 s
+    CPU times: user 16.5 s, sys: 230 ms, total: 16.7 s
+    Wall time: 16.5 s
 
 
 Recovery rate
--------------
+~~~~~~~~~~~~~
 
 Use pass the parameters ``mask`` (masks all clusters) or
 ``mask_unmatched`` (masks only unmatched clusters) to consider only
-specific clusters on the recovery rate.
+specific clusters on the recovery rate. This way, you can exclude
+clusters outside the common regions from the consideration.
 
 .. code:: ipython3
 
@@ -621,14 +810,16 @@ specific clusters on the recovery rate.
     zbins = np.linspace(0, 2, 11)
     mbins = np.logspace(13, 14, 5)
 
+Mask based on footprint overlap
+
 .. code:: ipython3
 
     f, axes = plt.subplots(1, 3, figsize=(15, 5))
-    recovery.plot(c1, 'cross', zbins, mbins, ax=axes[0], add_legend=False)
+    recovery.plot(c1, 'cross', zbins, mbins, ax=axes[0], add_legend=False, shape='line')
     recovery.plot(c1, 'cross', zbins, mbins, ax=axes[1], add_legend=False,
-                  mask=c1.data['cf_nfw_1_mpc']<1)
+                  mask=c1['ft_other'], shape='line')
     recovery.plot(c1, 'cross', zbins, mbins, ax=axes[2],
-                  mask_unmatched=c1.data['cf_nfw_1_mpc']<1)
+                  mask_unmatched=~c1['ft_other'], shape='line')
     for ax in axes:
         ax.set_ylim(-.01, 1.05)
     axes[0].text(1, 1.1, 'no mask')
@@ -638,7 +829,29 @@ specific clusters on the recovery rate.
 
 
 
-.. image:: footprint_files/footprint_45_0.png
+.. image:: footprint_files/footprint_64_0.png
+
+
+Mask based on coverfraction
+
+.. code:: ipython3
+
+    f, axes = plt.subplots(1, 3, figsize=(15, 5))
+    recovery.plot(c1, 'cross', zbins, mbins, ax=axes[0], add_legend=False, shape='line')
+    recovery.plot(c1, 'cross', zbins, mbins, ax=axes[1], add_legend=False,
+                  mask=c1['cf_nfw_1_mpc']>.8, shape='line')
+    recovery.plot(c1, 'cross', zbins, mbins, ax=axes[2],
+                  mask_unmatched=c1['cf_nfw_1_mpc']<.8, shape='line')
+    for ax in axes:
+        ax.set_ylim(-.01, 1.05)
+    axes[0].text(1, 1.1, 'no mask')
+    axes[1].text(1, 1.1, 'mask all')
+    axes[2].text(1, 1.1, 'mask unmatched')
+    plt.show()
+
+
+
+.. image:: footprint_files/footprint_66_0.png
 
 
 You can check the exact numbers used on the 2D plots
@@ -652,10 +865,10 @@ You can check the exact numbers used on the 2D plots
                                              })
     recovery.plot2D(c1, 'cross', zbins, mbins, ax=axes[1],
                     add_num=True, num_kwargs={'fontsize':12},
-                   mask=c1.data['cf_nfw_1_mpc']<1)
+                   mask=c1['cf_nfw_1_mpc']>.8)
     recovery.plot2D(c1, 'cross', zbins, mbins, ax=axes[2],
                     add_num=True, num_kwargs={'fontsize':12},
-                   mask_unmatched=c1.data['cf_nfw_1_mpc']<1)
+                   mask_unmatched=c1['cf_nfw_1_mpc']<.8)
     axes[0].text(1, mbins[-1]*1.1,'no mask')
     axes[1].text(1, mbins[-1]*1.1,'mask all')
     axes[2].text(1, mbins[-1]*1.1,'mask unmatched')
@@ -664,6 +877,6 @@ You can check the exact numbers used on the 2D plots
 
 
 
-.. image:: footprint_files/footprint_47_0.png
+.. image:: footprint_files/footprint_68_0.png
 
 

@@ -4,15 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.distances.catalog_funcs module &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.match_metrics.distances.catalog_funcs module &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -87,13 +89,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -106,7 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
@@ -152,14 +154,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -235,13 +237,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-clevar.match_metrics.distances.catalog_funcs">
+  <section id="module-clevar.match_metrics.distances.catalog_funcs">
 <span id="clevar-match-metrics-distances-catalog-funcs-module"></span><h1>clevar.match_metrics.distances.catalog_funcs module<a class="headerlink" href="#module-clevar.match_metrics.distances.catalog_funcs" title="Permalink to this headline">¶</a></h1>
 <p>&#64;file clevar/match_metrics/distances/catalog_funcs.py</p>
 <p>Main distances functions using catalogs.</p>
 <dl class="py function">
-<dt id="clevar.match_metrics.distances.catalog_funcs.central_position">
-<code class="sig-prename descclassname">clevar.match_metrics.distances.catalog_funcs.</code><code class="sig-name descname">central_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">radial_bins</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">radial_bin_units</span><span class="o">=</span><span class="default_value">'degrees'</span></em>, <em class="sig-param"><span class="n">cosmo</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">col2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bins2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/distances/catalog_funcs.html#central_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.distances.catalog_funcs.central_position" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.distances.catalog_funcs.central_position">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.distances.catalog_funcs.</span></span><span class="sig-name descname"><span class="pre">central_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matching_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radial_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radial_bin_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'degrees'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cosmo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/distances/catalog_funcs.html#central_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.distances.catalog_funcs.central_position" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -257,19 +259,15 @@
 <li><p><strong>log2</strong> (<em>bool</em>) – Log scale for quantity 2</p></li>
 <li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
 <li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
+<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>lines_kwargs_list</strong> (<em>list</em><em>, </em><em>None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
 <p>Information of data in the plots, it contains the sections:</p>
 <blockquote>
 <div><ul>
@@ -288,15 +286,15 @@ Must have same size as len(bins2)-1</p></li>
 </div></blockquote>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.distances.catalog_funcs.redshift">
-<code class="sig-prename descclassname">clevar.match_metrics.distances.catalog_funcs.</code><code class="sig-name descname">redshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cat1</span></em>, <em class="sig-param"><span class="n">cat2</span></em>, <em class="sig-param"><span class="n">matching_type</span></em>, <em class="sig-param"><span class="n">redshift_bins</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">col2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bins2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/distances/catalog_funcs.html#redshift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.distances.catalog_funcs.redshift" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.distances.catalog_funcs.redshift">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.distances.catalog_funcs.</span></span><span class="sig-name descname"><span class="pre">redshift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matching_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">redshift_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/distances/catalog_funcs.html#redshift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.distances.catalog_funcs.redshift" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate as lines, with each line binned by redshift inside a mass bin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -311,19 +309,15 @@ Must have same size as len(bins2)-1</p></li>
 or ‘mean’ for (1+(z1+z2)/2).</p></li>
 <li><p><strong>mask1</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
 <li><p><strong>mask2</strong> (<em>array</em><em>, </em><em>None</em>) – Masks for clusters 1(2), must have size=cat1(2).size</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.plot</p></li>
-<li><p><strong>lines_kwargs_list</strong> (<em>list, None</em>) – List of additional arguments for plotting each line (using pylab.plot).
+<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>lines_kwargs_list</strong> (<em>list</em><em>, </em><em>None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
 <p>Information of data in the plots, it contains the sections:</p>
 <blockquote>
 <div><ul>
@@ -342,13 +336,13 @@ Must have same size as len(bins2)-1</p></li>
 </div></blockquote>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
