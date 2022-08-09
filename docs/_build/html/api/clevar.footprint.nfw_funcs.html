@@ -4,15 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.footprint.nfw_funcs module &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.footprint.nfw_funcs module &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +29,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -62,7 +65,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -87,13 +90,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -106,7 +109,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
@@ -152,14 +155,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -233,11 +236,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-clevar.footprint.nfw_funcs">
+  <section id="module-clevar.footprint.nfw_funcs">
 <span id="clevar-footprint-nfw-funcs-module"></span><h1>clevar.footprint.nfw_funcs module<a class="headerlink" href="#module-clevar.footprint.nfw_funcs" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="clevar.footprint.nfw_funcs.nfw2D_profile">
-<code class="sig-prename descclassname">clevar.footprint.nfw_funcs.</code><code class="sig-name descname">nfw2D_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">Rc</span></em>, <em class="sig-param"><span class="n">Rs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/nfw_funcs.html#nfw2D_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.nfw_funcs.nfw2D_profile" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.footprint.nfw_funcs.nfw2D_profile">
+<span class="sig-prename descclassname"><span class="pre">clevar.footprint.nfw_funcs.</span></span><span class="sig-name descname"><span class="pre">nfw2D_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/nfw_funcs.html#nfw2D_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.footprint.nfw_funcs.nfw2D_profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Approximation for NFW 2D Profile</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -260,8 +263,8 @@ validated with Rs = 0.15 Mpc/h (0.214 <span class="math notranslate nohighlight"
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.footprint.nfw_funcs.nfw2D_profile_flatcore">
-<code class="sig-prename descclassname">clevar.footprint.nfw_funcs.</code><code class="sig-name descname">nfw2D_profile_flatcore</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">R</span></em>, <em class="sig-param"><span class="n">Rc</span></em>, <em class="sig-param"><span class="n">Rs</span></em>, <em class="sig-param"><span class="n">Rcore</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/nfw_funcs.html#nfw2D_profile_flatcore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.footprint.nfw_funcs.nfw2D_profile_flatcore" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.footprint.nfw_funcs.nfw2D_profile_flatcore">
+<span class="sig-prename descclassname"><span class="pre">clevar.footprint.nfw_funcs.</span></span><span class="sig-name descname"><span class="pre">nfw2D_profile_flatcore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Rcore</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/footprint/nfw_funcs.html#nfw2D_profile_flatcore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.footprint.nfw_funcs.nfw2D_profile_flatcore" title="Permalink to this definition">¶</a></dt>
 <dd><p>Approximation for NFW 2D Profile with a top-hat core</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -281,7 +284,7 @@ validated with Rs = 0.15 Mpc/h (0.214 <span class="math notranslate nohighlight"
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

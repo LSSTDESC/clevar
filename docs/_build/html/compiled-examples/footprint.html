@@ -4,15 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Footprint functionality &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>Footprint functionality &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -87,13 +89,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -106,7 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/clevar.catalog.html">clevar.catalog module</a></li>
@@ -152,14 +154,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -229,22 +231,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="footprint-functionality">
+  <section id="footprint-functionality">
 <h1>Footprint functionality<a class="headerlink" href="#footprint-functionality" title="Permalink to this headline">¶</a></h1>
 <p>Here we show how to use the footprint functionality. It is not used
 directly in the matching, but can be applied on the recovery rates
 computation</p>
-<h1><p>Table of Contents</p>
-</h1><div class="toc docutils container">
-<ul class="toc-item"><li><p>1  Generate random data and add to catalog</p>
-</li><li><p>2  Add an external footprint</p>
-<ul class="toc-item"><li><p>2.1  Plotting the footprint</p>
-</li></ul></li><li><p>3  Use ClEvaR functions to create a footprint</p>
-</li><li><p>4  Footprint masks</p>
-</li><li><p>5  Saving and loading footprint quantities</p>
-</li><li><p>6  Match catalogs</p>
-</li><li><p>7  Recovery rate</p>
-</li></ul></div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
 <span class="o">%</span><span class="k">autoreload</span> 2
 </pre></div>
@@ -254,8 +245,10 @@ computation</p>
 <span class="kn">import</span> <span class="nn">healpy</span> <span class="k">as</span> <span class="nn">hp</span>
 </pre></div>
 </div>
-<div class="section" id="generate-random-data-and-add-to-catalog">
-<h2>Generate random data and add to catalog<a class="headerlink" href="#generate-random-data-and-add-to-catalog" title="Permalink to this headline">¶</a></h2>
+<section id="random-data-example">
+<h2>Random data example<a class="headerlink" href="#random-data-example" title="Permalink to this headline">¶</a></h2>
+<p>For display purposes, we will generate some quick random data to be used
+with the footprints.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># For reproducibility</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
@@ -270,12 +263,13 @@ computation</p>
 </pre></div>
 </div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar</span> <span class="kn">import</span> <span class="n">ClCatalog</span>
-<span class="n">c1</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat1&#39;</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">],</span>
-            <span class="n">mass_err</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;MASS_ERR&#39;</span><span class="p">],</span> <span class="n">z_err</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;Z_ERR&#39;</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">input1</span><span class="p">[</span><span class="s1">&#39;RADIUS_ARCMIN&#39;</span><span class="p">],</span>
-            <span class="n">radius_unit</span><span class="o">=</span><span class="s1">&#39;arcmin&#39;</span><span class="p">)</span>
-<span class="n">c2</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat2&#39;</span><span class="p">,</span> <span class="n">ra</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">],</span> <span class="n">dec</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">],</span> <span class="n">z</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">],</span> <span class="n">mass</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;MASS&#39;</span><span class="p">],</span>
-            <span class="n">mass_err</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;MASS_ERR&#39;</span><span class="p">],</span> <span class="n">z_err</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;Z_ERR&#39;</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">input2</span><span class="p">[</span><span class="s1">&#39;RADIUS_ARCMIN&#39;</span><span class="p">],</span>
-            <span class="n">radius_unit</span><span class="o">=</span><span class="s1">&#39;arcmin&#39;</span><span class="p">)</span>
+<span class="n">tags</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">ra</span><span class="o">=</span><span class="s1">&#39;RA&#39;</span><span class="p">,</span> <span class="n">dec</span><span class="o">=</span><span class="s1">&#39;DEC&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="s1">&#39;MASS&#39;</span><span class="p">,</span>
+            <span class="n">mass_err</span><span class="o">=</span><span class="s1">&#39;MASS_ERR&#39;</span><span class="p">,</span> <span class="n">z_err</span><span class="o">=</span><span class="s1">&#39;Z_ERR&#39;</span><span class="p">,</span>
+            <span class="n">radius</span><span class="o">=</span><span class="s1">&#39;RADIUS_ARCMIN&#39;</span><span class="p">)</span>
+
+<span class="n">c1</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat1&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">input1</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">radius_unit</span><span class="o">=</span><span class="s1">&#39;arcmin&#39;</span><span class="p">)</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">ClCatalog</span><span class="p">(</span><span class="s1">&#39;Cat2&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">input2</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">radius_unit</span><span class="o">=</span><span class="s1">&#39;arcmin&#39;</span><span class="p">)</span>
+
 <span class="c1"># Format for nice display</span>
 <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;ra&#39;</span><span class="p">,</span> <span class="s1">&#39;dec&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;z_err&#39;</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">):</span>
     <span class="n">c1</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2f&#39;</span>
@@ -285,20 +279,19 @@ computation</p>
     <span class="n">c2</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s1">&#39;.2e&#39;</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/.</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">clevar</span><span class="o">-</span><span class="mf">0.10</span><span class="o">.</span><span class="mi">3</span><span class="o">-</span><span class="n">py3</span><span class="o">.</span><span class="mf">9.</span><span class="n">egg</span><span class="o">/</span><span class="n">clevar</span><span class="o">/</span><span class="n">catalog</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">212</span><span class="p">:</span> <span class="ne">UserWarning</span><span class="p">:</span> <span class="nb">id</span> <span class="n">column</span> <span class="n">missing</span><span class="p">,</span> <span class="n">additional</span> <span class="n">one</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">created</span><span class="o">.</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/.</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">clevar</span><span class="o">-</span><span class="mf">0.12</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">py3</span><span class="o">.</span><span class="mf">9.</span><span class="n">egg</span><span class="o">/</span><span class="n">clevar</span><span class="o">/</span><span class="n">catalog</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">265</span><span class="p">:</span> <span class="ne">UserWarning</span><span class="p">:</span> <span class="nb">id</span> <span class="n">column</span> <span class="n">missing</span><span class="p">,</span> <span class="n">additional</span> <span class="n">one</span> <span class="ow">is</span> <span class="n">being</span> <span class="n">created</span><span class="o">.</span>
   <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="add-an-external-footprint">
-<h2>Add an external footprint<a class="headerlink" href="#add-an-external-footprint" title="Permalink to this headline">¶</a></h2>
-<p>Here we will get heapy pixels based on the positions of the clusters</p>
+<section id="check-position-in-healpix">
+<h3>Check position in healpix<a class="headerlink" href="#check-position-in-healpix" title="Permalink to this headline">¶</a></h3>
+<p>Check what are the pixels that contain the clusters</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nside</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">pixels1</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ang2pix</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">c1</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="n">c1</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">pixels2</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">ang2pix</span><span class="p">(</span><span class="n">nside</span><span class="p">,</span> <span class="n">c2</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="n">c2</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Check to see if selected pixels are correct</p>
+<p>Plot to confirm selected pixels are correct</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="n">cmap</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">)</span>
@@ -328,40 +321,228 @@ computation</p>
   <span class="n">aximg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x7f09c4893d60</span><span class="o">&gt;</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span> <span class="n">at</span> <span class="mh">0x7fb2460d7f10</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<img alt="../_images/footprint_11_2.png" src="../_images/footprint_11_2.png" />
-<p>Add them to the <code class="docutils literal notranslate"><span class="pre">Footprint</span></code> object. It also has an option of detection
-fraction and <span class="math notranslate nohighlight">\(z_{max}\)</span> information. If not provided, a default
-value is set:</p>
+<img alt="../_images/footprint_10_2.png" src="../_images/footprint_10_2.png" />
+</section>
+</section>
+<section id="the-footprint-object">
+<h2>The Footprint object<a class="headerlink" href="#the-footprint-object" title="Permalink to this headline">¶</a></h2>
+<p>ClEvaR uses the <code class="docutils literal notranslate"><span class="pre">Footprint</span></code> object to handle operations related to
+spatial masking. It has the following internal attributes: - <code class="docutils literal notranslate"><span class="pre">data</span></code>:
+Table with main footprint data (ex: pixel, detfrac, zmax) - <code class="docutils literal notranslate"><span class="pre">tags</span></code>:
+Dictionary that tells which are the default columns to be used -
+<code class="docutils literal notranslate"><span class="pre">size</span></code>: Number of pixels in the catalog - <code class="docutils literal notranslate"><span class="pre">pixel_dict</span></code>: Dictionary
+of indicies given the object pixel</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.footprint</span> <span class="kn">import</span> <span class="n">Footprint</span>
-<span class="c1"># Random values for detfrac and zmax for ftpt1</span>
-<span class="n">detfrac_rand</span><span class="p">,</span> <span class="n">z_rand</span> <span class="o">=</span> <span class="mf">0.9</span><span class="o">+.</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pixels1</span><span class="p">))),</span> <span class="mf">0.5</span><span class="o">+.</span><span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pixels1</span><span class="p">)))</span>
-<span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixels</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pixels1</span><span class="p">)),</span>
-                  <span class="n">detfrac</span><span class="o">=</span><span class="n">detfrac_rand</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">z_rand</span><span class="p">)</span>
-<span class="n">ftpt2</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixels</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pixels2</span><span class="p">)))</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">,</span> <span class="mi">41</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">[</span><span class="s1">&#39;detfrac&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ftpt1&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ftpt2</span><span class="p">[</span><span class="s1">&#39;detfrac&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ftpt2&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;detfrac&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-
-<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">[</span><span class="mi">99</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">[</span><span class="s1">&#39;zmax&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ftpt2</span><span class="p">[</span><span class="s1">&#39;zmax&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">&#39;step&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;zmax&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+</section>
+<section id="adding-external-data-to-footprint">
+<h2>Adding external data to footprint<a class="headerlink" href="#adding-external-data-to-footprint" title="Permalink to this headline">¶</a></h2>
+<p>The input data for the footprint is the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nside</span></code> (int): Heapix NSIDE</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nest</span></code> (bool): If ordering is nested (default=False)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pixel</span></code> (array): Pixels inside the footprint</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">detfrac_vals</span></code> (array, None): Detection fraction, if None is set to
+1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zmax_vals</span></code> (array, None): Zmax, if None is set to 99</p></li>
+</ul>
+<p>Just like the <code class="docutils literal notranslate"><span class="pre">ClCatalog</span></code> object, data in <code class="docutils literal notranslate"><span class="pre">Footorint</span></code> can be added
+from columns, a dictionary or a table. First, let’s create some input
+data:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Random values for detfrac and zmax for ftpt1</span>
+<span class="n">set_pixels1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pixels1</span><span class="p">))</span>
+<span class="n">set_pixels2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pixels2</span><span class="p">))</span>
+<span class="n">detfrac_rand</span> <span class="o">=</span> <span class="mf">0.9</span><span class="o">+.</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">set_pixels1</span><span class="p">))</span>
+<span class="n">z_rand</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">+.</span><span class="mi">5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">set_pixels1</span><span class="p">))</span>
 </pre></div>
 </div>
-<img alt="../_images/footprint_14_0.png" src="../_images/footprint_14_0.png" />
-<div class="section" id="plotting-the-footprint">
+<section id="from-columns">
+<h3>From columns<a class="headerlink" href="#from-columns" title="Permalink to this headline">¶</a></h3>
+<p>To create a footprint fom columns, you have to pass the name as the
+initial argument and the data columns for the table as keyword
+arguments:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixel</span><span class="o">=</span><span class="n">set_pixels1</span><span class="p">,</span> <span class="n">detfrac</span><span class="o">=</span><span class="n">detfrac_rand</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">z_rand</span><span class="p">)</span>
+<span class="n">ftpt1</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=5</i>
+<table id="table140403657138816" class="table-striped table-bordered table-condensed">
+<thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
+<tr><td>5190</td><td>0.951647091119141</td><td>0.7147891228605607</td></tr>
+<tr><td>4682</td><td>0.9020547775560774</td><td>0.9995254135867374</td></tr>
+<tr><td>5192</td><td>0.9388815488596242</td><td>0.5046096565358194</td></tr>
+<tr><td>5194</td><td>0.9673579833430996</td><td>0.7466031661083729</td></tr>
+</table></div><p>You can also pass a <code class="docutils literal notranslate"><span class="pre">tags</span></code> dictionary as input if you want your
+catalog to have names that are not default for <code class="docutils literal notranslate"><span class="pre">ClEvaR</span></code> use:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">hpix</span><span class="o">=</span><span class="n">set_pixels1</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">detfrac_rand</span><span class="p">,</span> <span class="n">zm</span><span class="o">=</span><span class="n">z_rand</span><span class="p">,</span>
+                 <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;pixel&#39;</span><span class="p">:</span> <span class="s1">&#39;hpix&#39;</span><span class="p">,</span> <span class="s1">&#39;detfrac&#39;</span><span class="p">:</span><span class="s1">&#39;df&#39;</span><span class="p">,</span> <span class="s1">&#39;zmax&#39;</span><span class="p">:</span> <span class="s1">&#39;zm&#39;</span><span class="p">})</span>
+<span class="n">ftpt1</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+<b>tags:</b> hpix(pixel), df(detfrac), zm(zmax)<br><div><i>ClData length=5</i>
+<table id="table140406797936432" class="table-striped table-bordered table-condensed">
+<thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zm (zmax)</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
+<tr><td>5190</td><td>0.951647091119141</td><td>0.7147891228605607</td></tr>
+<tr><td>4682</td><td>0.9020547775560774</td><td>0.9995254135867374</td></tr>
+<tr><td>5192</td><td>0.9388815488596242</td><td>0.5046096565358194</td></tr>
+<tr><td>5194</td><td>0.9673579833430996</td><td>0.7466031661083729</td></tr>
+</table></div></section>
+<section id="from-data-table">
+<h3>From data table<a class="headerlink" href="#from-data-table" title="Permalink to this headline">¶</a></h3>
+<p>You can also create a <code class="docutils literal notranslate"><span class="pre">ClCatalog</span></code> passing directly a full data table:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
+<span class="n">ap_table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">([</span><span class="n">set_pixels1</span><span class="p">,</span> <span class="n">detfrac_rand</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hpix&#39;</span><span class="p">,</span> <span class="s1">&#39;df&#39;</span><span class="p">])</span>
+<span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ap_table</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;pixel&#39;</span><span class="p">:</span> <span class="s1">&#39;hpix&#39;</span><span class="p">,</span> <span class="s1">&#39;detfrac&#39;</span><span class="p">:</span><span class="s1">&#39;df&#39;</span><span class="p">})</span>
+<span class="n">ftpt1</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+<table id="table140406797937056" class="table-striped table-bordered table-condensed">
+<thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
+<tr><td>5190</td><td>0.951647091119141</td><td>99.0</td></tr>
+<tr><td>4682</td><td>0.9020547775560774</td><td>99.0</td></tr>
+</table></div><p>The data table can also be a dictionary or a <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array with names:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default colnames</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;default colnames:&#39;</span><span class="p">)</span>
+<span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;pixel&#39;</span><span class="p">:</span> <span class="n">set_pixels1</span><span class="p">,</span> <span class="s1">&#39;detfrac&#39;</span><span class="p">:</span> <span class="n">detfrac_rand</span><span class="p">})</span>
+<span class="n">display</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;different colnames:&#39;</span><span class="p">)</span>
+<span class="c1"># different colnames</span>
+<span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;hpix&#39;</span><span class="p">:</span> <span class="n">set_pixels1</span><span class="p">,</span> <span class="s1">&#39;df&#39;</span><span class="p">:</span> <span class="n">detfrac_rand</span><span class="p">},</span>
+                  <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;pixel&#39;</span><span class="p">:</span> <span class="s1">&#39;hpix&#39;</span><span class="p">,</span> <span class="s1">&#39;detfrac&#39;</span><span class="p">:</span><span class="s1">&#39;df&#39;</span><span class="p">})</span>
+<span class="n">display</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">default</span> <span class="n">colnames</span><span class="p">:</span>
+</pre></div>
+</div>
+<b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+<table id="table140403655417232" class="table-striped table-bordered table-condensed">
+<thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
+<tr><td>5190</td><td>0.951647091119141</td><td>99.0</td></tr>
+<tr><td>4682</td><td>0.9020547775560774</td><td>99.0</td></tr>
+</table></div><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">different</span> <span class="n">colnames</span><span class="p">:</span>
+</pre></div>
+</div>
+<b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+<table id="table140403655340624" class="table-striped table-bordered table-condensed">
+<thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
+<tr><td>5190</td><td>0.951647091119141</td><td>99.0</td></tr>
+<tr><td>4682</td><td>0.9020547775560774</td><td>99.0</td></tr>
+</table></div><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># default colnames</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;default colnames:&#39;</span><span class="p">)</span>
+<span class="n">np_table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">set_pixels1</span><span class="p">,</span> <span class="n">detfrac_rand</span><span class="p">)),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;pixel&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;detfrac&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">)])</span>
+<span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">np_table</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;different colnames:&#39;</span><span class="p">)</span>
+<span class="c1"># different colnames</span>
+<span class="n">np_table</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">set_pixels1</span><span class="p">,</span> <span class="n">detfrac_rand</span><span class="p">)),</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;hpix&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;df&#39;</span><span class="p">,</span> <span class="s1">&#39;f4&#39;</span><span class="p">)])</span>
+<span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">np_table</span><span class="p">,</span>
+                  <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;pixel&#39;</span><span class="p">:</span> <span class="s1">&#39;hpix&#39;</span><span class="p">,</span> <span class="s1">&#39;detfrac&#39;</span><span class="p">:</span><span class="s1">&#39;df&#39;</span><span class="p">})</span>
+<span class="n">display</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">default</span> <span class="n">colnames</span><span class="p">:</span>
+</pre></div>
+</div>
+<b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+<table id="table140403655458624" class="table-striped table-bordered table-condensed">
+<thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float32</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345</td><td>99.0</td></tr>
+<tr><td>5190</td><td>0.9516471</td><td>99.0</td></tr>
+<tr><td>4682</td><td>0.9020548</td><td>99.0</td></tr>
+</table></div><div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">different</span> <span class="n">colnames</span><span class="p">:</span>
+</pre></div>
+</div>
+<b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+<table id="table140405299565232" class="table-striped table-bordered table-condensed">
+<thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float32</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345</td><td>99.0</td></tr>
+<tr><td>5190</td><td>0.9516471</td><td>99.0</td></tr>
+<tr><td>4682</td><td>0.9020548</td><td>99.0</td></tr>
+</table></div></section>
+<section id="read-the-footprint-from-fits-file">
+<h3>Read the footprint from fits file<a class="headerlink" href="#read-the-footprint-from-fits-file" title="Permalink to this headline">¶</a></h3>
+<p>To read the footprint, the arguments are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">filename</span></code> (str): Name of <code class="docutils literal notranslate"><span class="pre">.fits</span></code> catalog</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nside</span></code> (int): Heapix NSIDE</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tags</span></code> (dict): Dictionary with the tags and column names. It must
+contain</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pixel</span></code> (str): Name of pixels column inside the footprint</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">detfrac</span></code> (str): Name of detection fraction column, if None is
+set to 1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zmax</span></code> (str): Name of Zmax column, if None is set to 99</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nest</span></code> (bool): If ordering is nested (default=False)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">full</span></code> (bool): read all columns of file</p></li>
+</ul>
+<p>Let’s first create a file with the footprint info:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixel</span><span class="o">=</span><span class="n">set_pixels1</span><span class="p">,</span> <span class="n">detfrac</span><span class="o">=</span><span class="n">detfrac_rand</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">z_rand</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;ftpt_temp.fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and then read it:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Footprint</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ftpt_temp.fits&#39;</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span>
+               <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;pixel&#39;</span><span class="p">:</span> <span class="s1">&#39;pixel&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;detfrac&#39;</span><span class="p">:</span> <span class="s1">&#39;detfrac&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;zmax&#39;</span><span class="p">:</span> <span class="s1">&#39;zmax&#39;</span><span class="p">})[:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+<table id="table140403655455024" class="table-striped table-bordered table-condensed">
+<thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
+<tr><td>5190</td><td>0.951647091119141</td><td>0.7147891228605607</td></tr>
+<tr><td>4682</td><td>0.9020547775560774</td><td>0.9995254135867374</td></tr>
+</table></div><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Footprint</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ftpt_temp.fits&#39;</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span>
+               <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;pixel&#39;</span><span class="p">:</span> <span class="s1">&#39;pixel&#39;</span><span class="p">})[:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+<table id="table140403655452512" class="table-striped table-bordered table-condensed">
+<thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>1.0</td><td>99.0</td></tr>
+<tr><td>5190</td><td>1.0</td><td>99.0</td></tr>
+<tr><td>4682</td><td>1.0</td><td>99.0</td></tr>
+</table></div><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Footprint</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;ftpt_temp.fits&#39;</span><span class="p">,</span> <span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span>
+               <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;pixel&#39;</span><span class="p">:</span> <span class="s1">&#39;pixel&#39;</span><span class="p">},</span> <span class="n">full</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
+</pre></div>
+</div>
+<b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
+<table id="table140403655455792" class="table-striped table-bordered table-condensed">
+<thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
+<thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
+<tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
+<tr><td>5190</td><td>0.951647091119141</td><td>0.7147891228605607</td></tr>
+<tr><td>4682</td><td>0.9020547775560774</td><td>0.9995254135867374</td></tr>
+</table></div></section>
+<section id="plotting-the-footprint">
 <h3>Plotting the footprint<a class="headerlink" href="#plotting-the-footprint" title="Permalink to this headline">¶</a></h3>
 <p>The footprints have an inbuilt function to plot their values</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">ftpt1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;detfrac&#39;</span><span class="p">,</span> <span class="n">bad_val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">auto_lim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -378,18 +559,22 @@ value is set:</p>
   <span class="n">aximg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
 </pre></div>
 </div>
-<img alt="../_images/footprint_16_1.png" src="../_images/footprint_16_1.png" />
-<img alt="../_images/footprint_16_2.png" src="../_images/footprint_16_2.png" />
+<img alt="../_images/footprint_33_1.png" src="../_images/footprint_33_1.png" />
+<img alt="../_images/footprint_33_2.png" src="../_images/footprint_33_2.png" />
 <p>Clusters can also be added to the plot with their actual angular size:</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">ftpt1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;detfrac&#39;</span><span class="p">,</span> <span class="n">bad_val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># increase cluster radius for display</span>
+<span class="n">c1</span><span class="p">[</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">10</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">ftpt1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;detfrac&#39;</span><span class="p">,</span> <span class="n">bad_val</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
                <span class="n">ra_lim</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="n">dec_lim</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
                <span class="n">cluster</span><span class="o">=</span><span class="n">c1</span><span class="p">)</span>
+<span class="c1"># return original value</span>
+<span class="n">c1</span><span class="p">[</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span> <span class="o">/=</span> <span class="mi">10</span>
 </pre></div>
 </div>
-<img alt="../_images/footprint_18_0.png" src="../_images/footprint_18_0.png" />
-</div>
-</div>
-<div class="section" id="use-clevar-functions-to-create-a-footprint">
+<img alt="../_images/footprint_35_0.png" src="../_images/footprint_35_0.png" />
+</section>
+</section>
+<section id="use-clevar-functions-to-create-a-footprint">
 <h2>Use ClEvaR functions to create a footprint<a class="headerlink" href="#use-clevar-functions-to-create-a-footprint" title="Permalink to this headline">¶</a></h2>
 <p>Import <code class="docutils literal notranslate"><span class="pre">create_footprint</span></code> functions to create a footprint based on a
 cluster catalog. It can create a footprint based on cluster positions
@@ -422,7 +607,9 @@ density per pixel. It also can fill holes in the footprint.</p>
 <span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">506</span>
 </pre></div>
 </div>
-<p>fill holes</p>
+<ul class="simple">
+<li><p>there is also an option to fill holes in this artificial footprint</p></li>
+</ul>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ftpt1</span> <span class="o">=</span> <span class="n">create_artificial_footprint</span><span class="p">(</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">],</span> <span class="n">c1</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">],</span> <span class="n">nside</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">neighbor_fill</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -445,7 +632,8 @@ density per pixel. It also can fill holes in the footprint.</p>
 <span class="n">Pixels</span> <span class="ow">in</span> <span class="n">footprint</span><span class="p">:</span> <span class="mi">700</span>
 </pre></div>
 </div>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span> <span class="o">=</span> <span class="n">ftpt1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;detfrac&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>  <span class="n">latra</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">35</span><span class="p">],</span> <span class="n">lonra</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ftpt1</span><span class="p">[</span><span class="s1">&#39;detfrac&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">ftpt1</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">ftpt1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;detfrac&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>  <span class="n">latra</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">35</span><span class="p">],</span> <span class="n">lonra</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">40</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">aguena</span><span class="o">/</span><span class="n">miniconda3</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">clmmenv</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">healpy</span><span class="o">/</span><span class="n">projaxes</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">920</span><span class="p">:</span> <span class="n">MatplotlibDeprecationWarning</span><span class="p">:</span> <span class="n">You</span> <span class="n">are</span> <span class="n">modifying</span> <span class="n">the</span> <span class="n">state</span> <span class="n">of</span> <span class="n">a</span> <span class="n">globally</span> <span class="n">registered</span> <span class="n">colormap</span><span class="o">.</span> <span class="n">In</span> <span class="n">future</span> <span class="n">versions</span><span class="p">,</span> <span class="n">you</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">modify</span> <span class="n">a</span> <span class="n">registered</span> <span class="n">colormap</span> <span class="ow">in</span><span class="o">-</span><span class="n">place</span><span class="o">.</span> <span class="n">To</span> <span class="n">remove</span> <span class="n">this</span> <span class="n">warning</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">make</span> <span class="n">a</span> <span class="n">copy</span> <span class="n">of</span> <span class="n">the</span> <span class="n">colormap</span> <span class="n">first</span><span class="o">.</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">))</span>
@@ -458,22 +646,20 @@ density per pixel. It also can fill holes in the footprint.</p>
   <span class="n">aximg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
 </pre></div>
 </div>
-<img alt="../_images/footprint_27_1.png" src="../_images/footprint_27_1.png" />
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ra</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="n">hp</span><span class="o">.</span><span class="n">pix2ang</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">nside2npix</span><span class="p">(</span><span class="mi">128</span><span class="p">)),</span> <span class="n">lonlat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">ra</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">ra</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">dec</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">dec</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">359.6484375</span><span class="p">,</span> <span class="o">-</span><span class="mf">89.63451650477154</span><span class="p">,</span> <span class="mf">89.63451650477154</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="footprint-masks">
+<img alt="../_images/footprint_44_1.png" src="../_images/footprint_44_1.png" />
+</section>
+<section id="footprint-masks">
 <h2>Footprint masks<a class="headerlink" href="#footprint-masks" title="Permalink to this headline">¶</a></h2>
 <p>Add masks to clusters regarding the footprint. The <code class="docutils literal notranslate"><span class="pre">ClCatalog</span></code> object
 has has 3 functions related to the footprint: - <code class="docutils literal notranslate"><span class="pre">add_ftpt_masks</span></code>: info
 for cluster in footprint - <code class="docutils literal notranslate"><span class="pre">add_ftpt_coverfrac</span></code>: computes cover
 fraction - <code class="docutils literal notranslate"><span class="pre">add_ftpt_coverfrac_nfw2D</span></code>: computes cover fraction
 weighted by a project NFW profile</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ftpt1</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixel</span><span class="o">=</span><span class="n">set_pixels1</span><span class="p">,</span> <span class="n">detfrac</span><span class="o">=</span><span class="n">detfrac_rand</span><span class="p">,</span> <span class="n">zmax</span><span class="o">=</span><span class="n">z_rand</span><span class="p">)</span>
+<span class="n">ftpt2</span> <span class="o">=</span> <span class="n">Footprint</span><span class="p">(</span><span class="n">nside</span><span class="o">=</span><span class="n">nside</span><span class="p">,</span> <span class="n">pixel</span><span class="o">=</span><span class="n">set_pixels2</span><span class="p">)</span>
+<span class="n">ftpt2</span><span class="p">[</span><span class="s1">&#39;detfrac&#39;</span><span class="p">][::</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">.</span><span class="mi">5</span> <span class="c1"># add effects to this footprint</span>
+</pre></div>
+</div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 <span class="n">c1</span><span class="o">.</span><span class="n">add_ftpt_masks</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">,</span> <span class="n">ftpt2</span><span class="p">)</span>
 <span class="n">c2</span><span class="o">.</span><span class="n">add_ftpt_masks</span><span class="p">(</span><span class="n">ftpt2</span><span class="p">,</span> <span class="n">ftpt1</span><span class="p">)</span>
@@ -483,31 +669,31 @@ weighted by a project NFW profile</p>
 <span class="c1">## creating visibility mask ##</span>
 <span class="c1">## creating visibility mask ##</span>
 <span class="c1">## creating visibility mask ##</span>
-<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">8.38</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">768</span> <span class="n">µs</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">9.14</span> <span class="n">ms</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">8.66</span> <span class="n">ms</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">18.1</span> <span class="n">ms</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">23</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">41.1</span> <span class="n">ms</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">13.6</span> <span class="n">ms</span>
 </pre></div>
 </div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
 </pre></div>
 </div>
-<b>Cat1</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
-<table id="table139679922777632" class="table-striped table-bordered table-condensed">
-<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
+<b>Cat1</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
+<table id="table140403653141552" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
 <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-<tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-<tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-<tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-<tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-</table><b>Cat2</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
-<table id="table139679922776144" class="table-striped table-bordered table-condensed">
-<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
+<tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>0.94</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td></tr>
+<tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>0.48</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>0.84</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td></tr>
+<tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>0.42</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td></tr>
+</table></div><b>Cat2</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
+<table id="table140403652967872" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
 <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
-<tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-<tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-<tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-<tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
-</table><p>Add coverfraction values based on the footprint. It needs a cosmology
+<tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>0.94</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+<tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>0.48</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td></tr>
+<tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>0.84</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+<tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>0.42</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
+</table></div><p>Add coverfraction values based on the footprint. It needs a cosmology
 object.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.cosmology</span> <span class="kn">import</span> <span class="n">AstroPyCosmology</span>
 <span class="n">cosmo</span> <span class="o">=</span> <span class="n">AstroPyCosmology</span><span class="p">()</span>
@@ -519,32 +705,32 @@ object.</p>
 <span class="n">c2</span><span class="o">.</span><span class="n">add_ftpt_coverfrac</span><span class="p">(</span><span class="n">ftpt1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;mpc&#39;</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s1">&#39;nfw2D&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">5.62</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">398</span> <span class="n">µs</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">5.62</span> <span class="n">s</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">5.62</span> <span class="n">s</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">7.77</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">81</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">7.85</span> <span class="n">s</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">7.76</span> <span class="n">s</span>
 </pre></div>
 </div>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">c1</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">display</span><span class="p">(</span><span class="n">c2</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
 </pre></div>
 </div>
-<b>Cat1</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
-<table id="table139679923206128" class="table-striped table-bordered table-condensed">
-<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
+<b>Cat1</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
+<table id="table140403653020736" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
 <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
-<tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-<tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-<tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-<tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td><td>1.0</td></tr>
-</table><b>Cat2</b><br></b><b>tags:</b> id(id), ra(ra), dec(dec), z(z), mass(mass), radius(radius)<br><b>Radius unit:</b> arcmin<br><i>ClData length=4</i>
-<table id="table139679923207328" class="table-striped table-bordered table-condensed">
-<thead><tr><th>id</th><th>ra</th><th>dec</th><th>z</th><th>mass</th><th>mass_err</th><th>z_err</th><th>radius</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
+<tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>0.94</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td><td>0.8333333333333334</td><td>0.7741572794115797</td></tr>
+<tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>0.48</td><td>1.57e+13</td><td>4.29e+12</td><td>0.04</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.5</td><td>0.5</td></tr>
+<tr><td>2</td><td>12.52</td><td>10.82</td><td>0.78</td><td>0.84</td><td>1.49e+13</td><td>6.11e+12</td><td>0.07</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td><td>0.75</td><td>0.7260951172194341</td></tr>
+<tr><td>3</td><td>4.21</td><td>14.78</td><td>1.01</td><td>0.42</td><td>1.13e+13</td><td>4.71e+12</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td><td>1.0</td><td>1.0</td></tr>
+</table></div><b>Cat2</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
+<table id="table140403653018192" class="table-striped table-bordered table-condensed">
+<thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
 <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
-<tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>0.94</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-<tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>0.48</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-<tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>0.84</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-<tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>0.42</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>1.0</td></tr>
-</table></div>
-<div class="section" id="saving-and-loading-footprint-quantities">
+<tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>0.94</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td></tr>
+<tr><td>1</td><td>6.13</td><td>23.17</td><td>0.33</td><td>0.48</td><td>2.35e+13</td><td>4.29e+12</td><td>0.04</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>True</td><td>0.9664374259818176</td></tr>
+<tr><td>2</td><td>12.52</td><td>10.82</td><td>0.80</td><td>0.84</td><td>1.36e+13</td><td>6.11e+12</td><td>0.07</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.4350822741933005</td></tr>
+<tr><td>3</td><td>4.21</td><td>14.78</td><td>0.99</td><td>0.42</td><td>1.71e+13</td><td>4.71e+12</td><td>0.06</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td></tr>
+</table></div></section>
+<section id="saving-and-loading-footprint-quantities">
 <h2>Saving and loading footprint quantities<a class="headerlink" href="#saving-and-loading-footprint-quantities" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ClEvaR</span></code> has internal functions to save and load these quantities into
 the catalog so you don’t have to compute them again:</p>
@@ -552,9 +738,15 @@ the catalog so you don’t have to compute them again:</p>
 <span class="n">c1</span><span class="o">.</span><span class="n">load_footprint_quantities</span><span class="p">(</span><span class="s1">&#39;cat1_ft_quantities.fits&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="match-catalogs">
-<h2>Match catalogs<a class="headerlink" href="#match-catalogs" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="application-of-footprint-flags-on-recovery-rate">
+<h2>Application of footprint flags on recovery rate<a class="headerlink" href="#application-of-footprint-flags-on-recovery-rate" title="Permalink to this headline">¶</a></h2>
+<p>The recovery rate of clusters should take into account the footprint of
+the catalogs. Regions without overlaps should not be taken into
+consideration. Here we show how this can be done with <code class="docutils literal notranslate"><span class="pre">ClEvaR</span></code>.</p>
+<section id="match-catalogs">
+<h3>Match catalogs<a class="headerlink" href="#match-catalogs" title="Permalink to this headline">¶</a></h3>
+<p>Let’s match the catalogs to compute the recovery rate</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.match</span> <span class="kn">import</span> <span class="n">ProximityMatch</span>
 </pre></div>
 </div>
@@ -603,16 +795,17 @@ the catalog so you don’t have to compute them again:</p>
 <span class="o">*</span> <span class="mi">719</span><span class="o">/</span><span class="mi">835</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
 <span class="n">Cross</span> <span class="n">Matches</span> <span class="p">(</span><span class="n">Cat2</span><span class="p">)</span>
 <span class="o">*</span> <span class="mi">719</span><span class="o">/</span><span class="mi">928</span> <span class="n">objects</span> <span class="n">matched</span><span class="o">.</span>
-<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">11.2</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">262</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">11.5</span> <span class="n">s</span>
-<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">11.2</span> <span class="n">s</span>
+<span class="n">CPU</span> <span class="n">times</span><span class="p">:</span> <span class="n">user</span> <span class="mf">16.5</span> <span class="n">s</span><span class="p">,</span> <span class="n">sys</span><span class="p">:</span> <span class="mi">230</span> <span class="n">ms</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="mf">16.7</span> <span class="n">s</span>
+<span class="n">Wall</span> <span class="n">time</span><span class="p">:</span> <span class="mf">16.5</span> <span class="n">s</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="recovery-rate">
-<h2>Recovery rate<a class="headerlink" href="#recovery-rate" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="recovery-rate">
+<h3>Recovery rate<a class="headerlink" href="#recovery-rate" title="Permalink to this headline">¶</a></h3>
 <p>Use pass the parameters <code class="docutils literal notranslate"><span class="pre">mask</span></code> (masks all clusters) or
 <code class="docutils literal notranslate"><span class="pre">mask_unmatched</span></code> (masks only unmatched clusters) to consider only
-specific clusters on the recovery rate.</p>
+specific clusters on the recovery rate. This way, you can exclude
+clusters outside the common regions from the consideration.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">clevar.match_metrics</span> <span class="kn">import</span> <span class="n">recovery</span>
 </pre></div>
 </div>
@@ -620,12 +813,13 @@ specific clusters on the recovery rate.</p>
 <span class="n">mbins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Mask based on footprint overlap</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">recovery</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">add_legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">recovery</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">add_legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">)</span>
 <span class="n">recovery</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">add_legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-              <span class="n">mask</span><span class="o">=</span><span class="n">c1</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cf_nfw_1_mpc&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">)</span>
+              <span class="n">mask</span><span class="o">=</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;ft_other&#39;</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">)</span>
 <span class="n">recovery</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-              <span class="n">mask_unmatched</span><span class="o">=</span><span class="n">c1</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cf_nfw_1_mpc&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">)</span>
+              <span class="n">mask_unmatched</span><span class="o">=~</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;ft_other&#39;</span><span class="p">],</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-.</span><span class="mi">01</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s1">&#39;no mask&#39;</span><span class="p">)</span>
@@ -634,7 +828,23 @@ specific clusters on the recovery rate.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/footprint_45_0.png" src="../_images/footprint_45_0.png" />
+<img alt="../_images/footprint_64_0.png" src="../_images/footprint_64_0.png" />
+<p>Mask based on coverfraction</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">recovery</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">add_legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">)</span>
+<span class="n">recovery</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">add_legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+              <span class="n">mask</span><span class="o">=</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;cf_nfw_1_mpc&#39;</span><span class="p">]</span><span class="o">&gt;.</span><span class="mi">8</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">)</span>
+<span class="n">recovery</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+              <span class="n">mask_unmatched</span><span class="o">=</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;cf_nfw_1_mpc&#39;</span><span class="p">]</span><span class="o">&lt;.</span><span class="mi">8</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-.</span><span class="mi">01</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s1">&#39;no mask&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s1">&#39;mask all&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s1">&#39;mask unmatched&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/footprint_66_0.png" src="../_images/footprint_66_0.png" />
 <p>You can check the exact numbers used on the 2D plots</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 
@@ -643,10 +853,10 @@ specific clusters on the recovery rate.</p>
                                          <span class="p">})</span>
 <span class="n">recovery</span><span class="o">.</span><span class="n">plot2D</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                 <span class="n">add_num</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fontsize&#39;</span><span class="p">:</span><span class="mi">12</span><span class="p">},</span>
-               <span class="n">mask</span><span class="o">=</span><span class="n">c1</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cf_nfw_1_mpc&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">)</span>
+               <span class="n">mask</span><span class="o">=</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;cf_nfw_1_mpc&#39;</span><span class="p">]</span><span class="o">&gt;.</span><span class="mi">8</span><span class="p">)</span>
 <span class="n">recovery</span><span class="o">.</span><span class="n">plot2D</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">,</span> <span class="n">zbins</span><span class="p">,</span> <span class="n">mbins</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                 <span class="n">add_num</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fontsize&#39;</span><span class="p">:</span><span class="mi">12</span><span class="p">},</span>
-               <span class="n">mask_unmatched</span><span class="o">=</span><span class="n">c1</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;cf_nfw_1_mpc&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">)</span>
+               <span class="n">mask_unmatched</span><span class="o">=</span><span class="n">c1</span><span class="p">[</span><span class="s1">&#39;cf_nfw_1_mpc&#39;</span><span class="p">]</span><span class="o">&lt;.</span><span class="mi">8</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mbins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">1.1</span><span class="p">,</span><span class="s1">&#39;no mask&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mbins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">1.1</span><span class="p">,</span><span class="s1">&#39;mask all&#39;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mbins</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">1.1</span><span class="p">,</span><span class="s1">&#39;mask unmatched&#39;</span><span class="p">)</span>
@@ -654,9 +864,10 @@ specific clusters on the recovery rate.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/footprint_47_0.png" src="../_images/footprint_47_0.png" />
-</div>
-</div>
+<img alt="../_images/footprint_68_0.png" src="../_images/footprint_68_0.png" />
+</section>
+</section>
+</section>
 
 
            </div>

@@ -4,15 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.scaling.array_funcs module &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.match_metrics.scaling.array_funcs module &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -87,13 +89,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -106,7 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
@@ -152,14 +154,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -235,15 +237,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-clevar.match_metrics.scaling.array_funcs">
+  <section id="module-clevar.match_metrics.scaling.array_funcs">
 <span id="clevar-match-metrics-scaling-array-funcs-module"></span><h1>clevar.match_metrics.scaling.array_funcs module<a class="headerlink" href="#module-clevar.match_metrics.scaling.array_funcs" title="Permalink to this headline">¶</a></h1>
 <p>&#64;file clevar/match_metrics/scaling/array_funcs.py</p>
 <p>Main scaling functions using arrays.</p>
 <dl class="py function">
-<dt id="clevar.match_metrics.scaling.array_funcs.plot">
-<code class="sig-prename descclassname">clevar.match_metrics.scaling.array_funcs.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values1</span></em>, <em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">err1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plt_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">values_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">add_cb</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cb_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.scaling.array_funcs.plot">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.scaling.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scatter plot with errorbars and color based on input</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>values1</strong> (<em>array</em>) – Components x and y for plot.</p></li>
@@ -256,34 +258,29 @@
 <li><p><strong>values_color</strong> (<em>array</em><em>, </em><em>None</em>) – Values for color (cmap scale).</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar when values_color is not <cite>None</cite>.</p></li>
 <li><p><strong>cb_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Colorbar arguments</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul>
 <li><p><strong>add_bindata</strong> (<em>bool</em>) – Plot binned data used for fit (default=False).</p></li>
 <li><p><strong>add_fit</strong> (<em>bool</em>) – Fit and plot binned dat (default=False).</p></li>
-<li><p><strong>fit_err2</strong> (<em>array, None</em>) – Error of component 2 (set to err2 if not provided).</p></li>
+<li><p><strong>fit_err2</strong> (<em>array</em><em>, </em><em>None</em>) – Error of component 2 (set to err2 if not provided).</p></li>
 <li><p><strong>fit_log</strong> (<em>bool</em>) – Bin and fit in log values (default=False).</p></li>
-<li><p><strong>fit_statistics</strong> (<em>str</em>) –</p>
-<p>Statistics to be used in fit (default=mean). Options are:</p>
+<li><p><strong>fit_statistics</strong> (<em>str</em>) – <p>Statistics to be used in fit (default=mean). Options are:</p>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p><cite>individual</cite> : Use each point</p></li>
 <li><p><cite>mode</cite> : Use mode of component 2 distribution in each comp 1 bin, requires bins2.</p></li>
 <li><p><cite>mean</cite> : Use mean of component 2 distribution in each comp 1 bin, requires bins2.</p></li>
 </ul>
 </div></blockquote>
-</li>
-<li><p><strong>fit_bins1</strong> (<em>array, None</em>) – Bins for component 1 (default=10).</p></li>
-<li><p><strong>fit_bins2</strong> (<em>array, None</em>) – Bins for component 2 (default=30).</p></li>
-<li><p><strong>fit_legend_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plt.legend.</p></li>
-<li><p><strong>fit_bindata_kwargs</strong> (<em>dict, None</em>) – Additional arguments for pylab.errorbar.</p></li>
-<li><p><strong>fit_plt_kwargs</strong> (<em>dict, None</em>) – Additional arguments for plot of fit pylab.scatter.</p></li>
-<li><p><strong>fit_label_components</strong> (<em>tuple (of strings)</em>) – Names of fitted components in fit line label, default=(‘x’, ‘y’).</p></li>
+</p></li>
+<li><p><strong>fit_bins1</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for component 1 (default=10).</p></li>
+<li><p><strong>fit_bins2</strong> (<em>array</em><em>, </em><em>None</em>) – Bins for component 2 (default=30).</p></li>
+<li><p><strong>fit_legend_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for plt.legend.</p></li>
+<li><p><strong>fit_bindata_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.errorbar.</p></li>
+<li><p><strong>fit_plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for plot of fit pylab.scatter.</p></li>
+<li><p><strong>fit_label_components</strong> (<em>tuple</em><em> (</em><em>of strings</em><em>)</em>) – Names of fitted components in fit line label, default=(‘x’, ‘y’).</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
 <p>Information of data in the plots, it contains the sections:</p>
 <blockquote>
 <div><ul>
@@ -325,15 +322,15 @@
 </div></blockquote>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.scaling.array_funcs.plot_density">
-<code class="sig-prename descclassname">clevar.match_metrics.scaling.array_funcs.</code><code class="sig-name descname">plot_density</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values1</span></em>, <em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">bins1</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">bins2</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">ax_rotation</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rotation_resolution</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">xscale</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">yscale</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">err1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plt_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">add_cb</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cb_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_density" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.scaling.array_funcs.plot_density">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.scaling.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax_rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_density" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scatter plot with errorbars and color based on point density</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -353,17 +350,13 @@
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
 <li><p><strong>cb_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Colorbar arguments</p></li>
 <li><p><strong>err_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.errorbar</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>add_bindata</strong> (<em>bool</em>) – Plot binned data used for fit (default=False).</p></li>
 <li><p><strong>add_fit</strong> (<em>bool</em>) – Fit and plot binned dat (default=False).</p></li>
 <li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.array_funcs.plot</cite> for more info).</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
 <p>Information of data in the plots, it contains the sections:</p>
 <blockquote>
 <div><ul class="simple">
@@ -376,15 +369,15 @@
 </div></blockquote>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.scaling.array_funcs.plot_density_dist">
-<code class="sig-prename descclassname">clevar.match_metrics.scaling.array_funcs.</code><code class="sig-name descname">plot_density_dist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values1</span></em>, <em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">bins1</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">bins2</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">ax_rotation</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rotation_resolution</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">xscale</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">yscale</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">err1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plt_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">add_cb</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cb_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fig_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fig_pos</span><span class="o">=</span><span class="default_value">(0.1, 0.1, 0.95, 0.95)</span></em>, <em class="sig-param"><span class="n">fig_frac</span><span class="o">=</span><span class="default_value">(0.8, 0.01, 0.02)</span></em>, <em class="sig-param"><span class="n">vline_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_density_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_density_dist" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.scaling.array_funcs.plot_density_dist">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.scaling.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot_density_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax_rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.95,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.8,</span> <span class="pre">0.01,</span> <span class="pre">0.02)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vline_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_density_dist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_density_dist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scatter plot with errorbars and color based on point density with distribution panels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -408,18 +401,14 @@ plot.</p></li>
 <li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
 <li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
 and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>add_bindata</strong> (<em>bool</em>) – Plot binned data used for fit (default=False).</p></li>
 <li><p><strong>add_fit</strong> (<em>bool</em>) – Fit and plot binned dat (default=False).</p></li>
 <li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.array_funcs.plot</cite> for more info).</p></li>
-<li><p><strong>vline_kwargs</strong> (<em>dict, None</em>) – Arguments for vlines marking bins in main plot, used in plt.axvline.</p></li>
+<li><p><strong>vline_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Arguments for vlines marking bins in main plot, used in plt.axvline.</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
 <p>Information of data in the plots, it contains the sections:</p>
 <blockquote>
 <div><ul class="simple">
@@ -432,15 +421,15 @@ and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
 </div></blockquote>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.scaling.array_funcs.plot_density_metrics">
-<code class="sig-prename descclassname">clevar.match_metrics.scaling.array_funcs.</code><code class="sig-name descname">plot_density_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values1</span></em>, <em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">bins1</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">bins2</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">ax_rotation</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rotation_resolution</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">xscale</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">yscale</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">err1</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metrics_mode</span><span class="o">=</span><span class="default_value">'simple'</span></em>, <em class="sig-param"><span class="n">metrics</span><span class="o">=</span><span class="default_value">['std']</span></em>, <em class="sig-param"><span class="n">plt_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">add_cb</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cb_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">err_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">metrics_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fig_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fig_pos</span><span class="o">=</span><span class="default_value">(0.1, 0.1, 0.95, 0.95)</span></em>, <em class="sig-param"><span class="n">fig_frac</span><span class="o">=</span><span class="default_value">(0.8, 0.01, 0.02)</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_density_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_density_metrics" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.scaling.array_funcs.plot_density_metrics">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.scaling.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot_density_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax_rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simple'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['std']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.1,</span> <span class="pre">0.1,</span> <span class="pre">0.95,</span> <span class="pre">0.95)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_frac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.8,</span> <span class="pre">0.01,</span> <span class="pre">0.02)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_density_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_density_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scatter plot with errorbars and color based on point density with scatter and bias panels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -491,17 +480,13 @@ between 0-100 (ex: ‘p_68’, ‘p_95’, ‘p_99’).</p></li>
 <li><p><strong>fig_pos</strong> (<em>tuple</em>) – List with edges for the figure. Must be in format (left, bottom, right, top)</p></li>
 <li><p><strong>fig_frac</strong> (<em>tuple</em>) – Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
 and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>add_bindata</strong> (<em>bool</em>) – Plot binned data used for fit (default=False).</p></li>
 <li><p><strong>add_fit</strong> (<em>bool</em>) – Fit and plot binned dat (default=False).</p></li>
 <li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.array_funcs.plot</cite> for more info).</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
 <p>Information of data in the plots, it contains the sections:</p>
 <blockquote>
 <div><ul class="simple">
@@ -515,15 +500,15 @@ and have values: [0, 1]. Colorbar is only used with add_cb key.</p></li>
 </div></blockquote>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.scaling.array_funcs.plot_density_panel">
-<code class="sig-prename descclassname">clevar.match_metrics.scaling.array_funcs.</code><code class="sig-name descname">plot_density_panel</code><span class="sig-paren">(</span><em class="sig-param">values1</em>, <em class="sig-param">values2</em>, <em class="sig-param">values_panel</em>, <em class="sig-param">bins_panel</em>, <em class="sig-param">bins1=30</em>, <em class="sig-param">bins2=30</em>, <em class="sig-param">ax_rotation=0</em>, <em class="sig-param">rotation_resolution=30</em>, <em class="sig-param">xscale='linear'</em>, <em class="sig-param">yscale='linear'</em>, <em class="sig-param">err1=None</em>, <em class="sig-param">err2=None</em>, <em class="sig-param">plt_kwargs=None</em>, <em class="sig-param">add_cb=True</em>, <em class="sig-param">cb_kwargs=None</em>, <em class="sig-param">err_kwargs=None</em>, <em class="sig-param">panel_kwargs_list=None</em>, <em class="sig-param">panel_kwargs_errlist=None</em>, <em class="sig-param">fig_kwargs=None</em>, <em class="sig-param">add_label=True</em>, <em class="sig-param">label_format=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_density_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_density_panel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.scaling.array_funcs.plot_density_panel">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.scaling.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot_density_panel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax_rotation=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation_resolution=30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xscale='linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yscale='linear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err1=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err2=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_cb=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_kwargs_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_kwargs_errlist=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_label=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_format=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_density_panel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_density_panel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scatter plot with errorbars and color based on point density with panels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -552,17 +537,13 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>fig_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>add_bindata</strong> (<em>bool</em>) – Plot binned data used for fit (default=False).</p></li>
 <li><p><strong>add_fit</strong> (<em>bool</em>) – Fit and plot binned dat (default=False).</p></li>
 <li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.array_funcs.plot</cite> for more info).</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
 <p>Information of data in the plots, it contains the sections:</p>
 <blockquote>
 <div><ul class="simple">
@@ -576,15 +557,15 @@ Must have same size as len(bins2)-1</p></li>
 </div></blockquote>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.scaling.array_funcs.plot_dist">
-<code class="sig-prename descclassname">clevar.match_metrics.scaling.array_funcs.</code><code class="sig-name descname">plot_dist</code><span class="sig-paren">(</span><em class="sig-param">values1</em>, <em class="sig-param">values2</em>, <em class="sig-param">bins1_dist</em>, <em class="sig-param">bins2</em>, <em class="sig-param">values_aux=None</em>, <em class="sig-param">bins_aux=5</em>, <em class="sig-param">log_vals=False</em>, <em class="sig-param">log_aux=False</em>, <em class="sig-param">transpose=False</em>, <em class="sig-param">shape='steps'</em>, <em class="sig-param">plt_kwargs=None</em>, <em class="sig-param">line_kwargs_list=None</em>, <em class="sig-param">fig_kwargs=None</em>, <em class="sig-param">legend_kwargs=None</em>, <em class="sig-param">panel_label_prefix=''</em>, <em class="sig-param">add_panel_label=True</em>, <em class="sig-param">panel_label_format=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">add_line_label=True</em>, <em class="sig-param">line_label_format=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_dist" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.scaling.array_funcs.plot_dist">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.scaling.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1_dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values_aux=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins_aux=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_vals=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_aux=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape='steps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_kwargs_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_label_prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_panel_label=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_label_format=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_line_label=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_label_format=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_dist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_dist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot distribution of a parameter, binned by other component in panels,
 and an optional secondary component in lines.</p>
 <dl class="field-list simple">
@@ -630,8 +611,8 @@ Must have same size as len(bins_aux)-1</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.scaling.array_funcs.plot_metrics">
-<code class="sig-prename descclassname">clevar.match_metrics.scaling.array_funcs.</code><code class="sig-name descname">plot_metrics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values1</span></em>, <em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">bins1</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">bins2</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">'simple'</span></em>, <em class="sig-param"><span class="n">metrics</span><span class="o">=</span><span class="default_value">['mean', 'std']</span></em>, <em class="sig-param"><span class="n">metrics_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fig_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">legend_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_metrics" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.scaling.array_funcs.plot_metrics">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.scaling.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simple'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['mean',</span> <span class="pre">'std']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot metrics of 1 component.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -691,8 +672,8 @@ metric).</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.scaling.array_funcs.plot_panel">
-<code class="sig-prename descclassname">clevar.match_metrics.scaling.array_funcs.</code><code class="sig-name descname">plot_panel</code><span class="sig-paren">(</span><em class="sig-param">values1</em>, <em class="sig-param">values2</em>, <em class="sig-param">values_panel</em>, <em class="sig-param">bins_panel</em>, <em class="sig-param">err1=None</em>, <em class="sig-param">err2=None</em>, <em class="sig-param">values_color=None</em>, <em class="sig-param">plt_kwargs=None</em>, <em class="sig-param">err_kwargs=None</em>, <em class="sig-param">add_cb=True</em>, <em class="sig-param">cb_kwargs=None</em>, <em class="sig-param">panel_kwargs_list=None</em>, <em class="sig-param">panel_kwargs_errlist=None</em>, <em class="sig-param">fig_kwargs=None</em>, <em class="sig-param">add_label=True</em>, <em class="sig-param">label_format=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_panel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.scaling.array_funcs.plot_panel">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.scaling.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot_panel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err1=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err2=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values_color=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_cb=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_kwargs_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_kwargs_errlist=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_label=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_format=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/scaling/array_funcs.html#plot_panel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.scaling.array_funcs.plot_panel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Scatter plot with errorbars and color based on input with panels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -716,17 +697,13 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>fig_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for plt.subplots</p></li>
 <li><p><strong>add_label</strong> (<em>bool</em>) – Add bin label to panel</p></li>
 <li><p><strong>label_format</strong> (<em>function</em>) – Function to format the values of the bins</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>add_bindata</strong> (<em>bool</em>) – Plot binned data used for fit (default=False).</p></li>
 <li><p><strong>add_fit</strong> (<em>bool</em>) – Fit and plot binned dat (default=False).</p></li>
 <li><p><strong>**fit_kwargs</strong> – Other fit arguments (see <cite>fit_*</cite> paramters in <cite>scaling.array_funcs.plot</cite> for more info).</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p><strong>info</strong> –</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p><strong>info</strong> –</p>
 <p>Information of data in the plots, it contains the sections:</p>
 <blockquote>
 <div><ul class="simple">
@@ -740,13 +717,13 @@ Must have same size as len(bins2)-1</p></li>
 </div></blockquote>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

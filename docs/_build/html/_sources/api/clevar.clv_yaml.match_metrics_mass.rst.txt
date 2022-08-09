@@ -1,0 +1,7 @@
+clevar.clv\_yaml.match\_metrics\_mass module
+============================================
+
+.. automodule:: clevar.clv_yaml.match_metrics_mass
+   :members:
+   :undoc-members:
+   :show-inheritance:

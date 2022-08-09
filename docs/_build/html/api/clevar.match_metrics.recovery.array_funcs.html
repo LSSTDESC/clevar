@@ -4,15 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.array_funcs module &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.match_metrics.recovery.array_funcs module &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +29,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -62,7 +64,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -87,13 +89,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -106,7 +108,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="clevar.catalog.html">clevar.catalog module</a></li>
@@ -152,14 +154,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -235,13 +237,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-clevar.match_metrics.recovery.array_funcs">
+  <section id="module-clevar.match_metrics.recovery.array_funcs">
 <span id="clevar-match-metrics-recovery-array-funcs-module"></span><h1>clevar.match_metrics.recovery.array_funcs module<a class="headerlink" href="#module-clevar.match_metrics.recovery.array_funcs" title="Permalink to this headline">¶</a></h1>
 <p>&#64;file clevar/match_metrics/recovery/array_funcs.py</p>
 <p>Main recovery functions using arrays.</p>
 <dl class="py function">
-<dt id="clevar.match_metrics.recovery.array_funcs.get_recovery_rate">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.array_funcs.</code><code class="sig-name descname">get_recovery_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values1</span></em>, <em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">bins1</span></em>, <em class="sig-param"><span class="n">bins2</span></em>, <em class="sig-param"><span class="n">is_matched</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#get_recovery_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.get_recovery_rate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.recovery.array_funcs.get_recovery_rate">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.recovery.array_funcs.</span></span><span class="sig-name descname"><span class="pre">get_recovery_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_matched</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#get_recovery_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.get_recovery_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get recovery rate binned in 2 components</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -273,8 +275,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.recovery.array_funcs.plot">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.array_funcs.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">values1</em>, <em class="sig-param">values2</em>, <em class="sig-param">bins1</em>, <em class="sig-param">bins2</em>, <em class="sig-param">is_matched</em>, <em class="sig-param">shape='steps'</em>, <em class="sig-param">ax=None</em>, <em class="sig-param">plt_kwargs=None</em>, <em class="sig-param">lines_kwargs_list=None</em>, <em class="sig-param">add_legend=True</em>, <em class="sig-param">legend_format=&lt;function &lt;lambda&gt;&gt;</em>, <em class="sig-param">legend_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.plot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.recovery.array_funcs.plot">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.recovery.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_matched</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape='steps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lines_kwargs_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_legend=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_format=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_kwargs=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -322,8 +324,8 @@ Must have same size as len(bins2)-1</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.recovery.array_funcs.plot2D">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.array_funcs.</code><code class="sig-name descname">plot2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values1</span></em>, <em class="sig-param"><span class="n">values2</span></em>, <em class="sig-param"><span class="n">bins1</span></em>, <em class="sig-param"><span class="n">bins2</span></em>, <em class="sig-param"><span class="n">is_matched</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">plt_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">add_cb</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cb_kwargs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">add_num</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_kwargs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#plot2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.plot2D" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.recovery.array_funcs.plot2D">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.recovery.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_matched</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#plot2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.plot2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate as in 2D bins.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -370,8 +372,8 @@ Must have same size as len(bins2)-1</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.recovery.array_funcs.plot_panel">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.array_funcs.</code><code class="sig-name descname">plot_panel</code><span class="sig-paren">(</span><em class="sig-param">values1</em>, <em class="sig-param">values2</em>, <em class="sig-param">bins1</em>, <em class="sig-param">bins2</em>, <em class="sig-param">is_matched</em>, <em class="sig-param">shape='steps'</em>, <em class="sig-param">plt_kwargs=None</em>, <em class="sig-param">panel_kwargs_list=None</em>, <em class="sig-param">fig_kwargs=None</em>, <em class="sig-param">add_label=True</em>, <em class="sig-param">label_format=&lt;function &lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#plot_panel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.plot_panel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.recovery.array_funcs.plot_panel">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.recovery.array_funcs.</span></span><span class="sig-name descname"><span class="pre">plot_panel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_matched</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape='steps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plt_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">panel_kwargs_list=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_label=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_format=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#plot_panel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.plot_panel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate as lines in panels, with each line binned by bins1
 and each panel is based on the data inside a bins2 bin.</p>
 <dl class="field-list simple">
@@ -421,8 +423,8 @@ Must have same size as len(bins2)-1</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="clevar.match_metrics.recovery.array_funcs.skyplot">
-<code class="sig-prename descclassname">clevar.match_metrics.recovery.array_funcs.</code><code class="sig-name descname">skyplot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ra</span></em>, <em class="sig-param"><span class="n">dec</span></em>, <em class="sig-param"><span class="n">is_matched</span></em>, <em class="sig-param"><span class="n">nside</span><span class="o">=</span><span class="default_value">256</span></em>, <em class="sig-param"><span class="n">nest</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">auto_lim</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ra_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dec_lim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recovery_label</span><span class="o">=</span><span class="default_value">'Recovery Rate'</span></em>, <em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#skyplot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.skyplot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="clevar.match_metrics.recovery.array_funcs.skyplot">
+<span class="sig-prename descclassname"><span class="pre">clevar.match_metrics.recovery.array_funcs.</span></span><span class="sig-name descname"><span class="pre">skyplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ra</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_matched</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_lim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ra_lim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec_lim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recovery_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Recovery</span> <span class="pre">Rate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match_metrics/recovery/array_funcs.html#skyplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match_metrics.recovery.array_funcs.skyplot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot recovery rate in healpix pixels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -479,7 +481,7 @@ Must have same size as len(bins2)-1</p></li>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.membership &mdash; ClEvaR 0.10.3 documentation</title>
+  <title>clevar.match.membership &mdash; ClEvaR 0.12.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -26,11 +28,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -60,7 +61,7 @@
             
             
               <div class="version">
-                0.10.3
+                0.12.0
               </div>
             
           
@@ -85,13 +86,13 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/overview.html">Rapid overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../source/citing.html">Citing ClEvaR</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage Demos</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage Demos</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/catalogs.html">Galaxy Cluster Catalogs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/proximity_matching.html">Matching catalogs based on proximity (simple)</a></li>
@@ -104,7 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/intrinsic_completeness.html">Intrinsic Completeness</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../compiled-examples/intrinsic_completeness.html#appendix-estimating-deviation-in-completeness-approximation">Appendix: Estimating deviation in completeness approximation</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.catalog.html">clevar.catalog module</a></li>
@@ -150,14 +151,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.utils.html">clevar.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.yaml.html">clevar.yaml package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.footprint.html">clevar.yaml.footprint module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.helper_funcs.html">clevar.yaml.helper_funcs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match.html">clevar.yaml.match module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_distances.html">clevar.yaml.match_metrics_distances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_mass.html">clevar.yaml.match_metrics_mass module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_recovery_rate.html">clevar.yaml.match_metrics_recovery_rate module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.yaml.match_metrics_redshift.html">clevar.yaml.match_metrics_redshift module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.clv_yaml.html">clevar.clv_yaml package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.footprint.html">clevar.clv_yaml.footprint module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.helper_funcs.html">clevar.clv_yaml.helper_funcs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.match.html">clevar.clv_yaml.match module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.match_metrics_distances.html">clevar.clv_yaml.match_metrics_distances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.match_metrics_mass.html">clevar.clv_yaml.match_metrics_mass module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.match_metrics_recovery_rate.html">clevar.clv_yaml.match_metrics_recovery_rate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
 </ul>
@@ -283,13 +284,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;Members not matched, run match_members before.&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;pmem&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cat1</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;pmem&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cat1</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
             <span class="n">cat1</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;pmem&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
-        <span class="k">if</span> <span class="s1">&#39;pmem&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cat2</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">colnames</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;pmem&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cat2</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
             <span class="n">cat2</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;pmem&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
-        <span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">({</span><span class="s1">&#39;share_mems&#39;</span><span class="p">:</span> <span class="p">[{}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="p">)],</span>
+        <span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">({</span><span class="s1">&#39;share_mems&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{},</span> <span class="nb">range</span><span class="p">(</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="p">))),</span>
                                 <span class="s1">&#39;nmem&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_nmem</span><span class="p">(</span><span class="n">cat1</span><span class="p">)})</span>
-        <span class="n">cat2</span><span class="o">.</span><span class="n">mt_input</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">({</span><span class="s1">&#39;share_mems&#39;</span><span class="p">:</span> <span class="p">[{}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cat2</span><span class="o">.</span><span class="n">size</span><span class="p">)],</span>
+        <span class="n">cat2</span><span class="o">.</span><span class="n">mt_input</span> <span class="o">=</span> <span class="n">ClData</span><span class="p">({</span><span class="s1">&#39;share_mems&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{},</span> <span class="nb">range</span><span class="p">(</span><span class="n">cat2</span><span class="o">.</span><span class="n">size</span><span class="p">))),</span>
                                 <span class="s1">&#39;nmem&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comp_nmem</span><span class="p">(</span><span class="n">cat2</span><span class="p">)})</span>
         <span class="k">for</span> <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span><span class="p">:</span>
             <span class="n">idcl1</span><span class="p">,</span> <span class="n">pmem1</span> <span class="o">=</span> <span class="n">cat1</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">][</span><span class="n">i1</span><span class="p">],</span> <span class="n">cat1</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;pmem&#39;</span><span class="p">][</span><span class="n">i1</span><span class="p">]</span>
@@ -320,8 +321,8 @@
 <span class="sd">            Cluster catalog with members attribute.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">ID</span><span class="p">,</span> <span class="n">pmem</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">],</span> <span class="n">cat</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;pmem&#39;</span><span class="p">]):</span>
-            <span class="n">out</span><span class="p">[</span><span class="n">cat</span><span class="o">.</span><span class="n">id_dict</span><span class="p">[</span><span class="n">ID</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">pmem</span>
+        <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">pmem</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cat</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;ind_cl&#39;</span><span class="p">],</span> <span class="n">cat</span><span class="o">.</span><span class="n">members</span><span class="p">[</span><span class="s1">&#39;pmem&#39;</span><span class="p">]):</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pmem</span>
         <span class="k">return</span> <span class="n">out</span>
     <span class="k">def</span> <span class="nf">_add_pmem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1_share_mems</span><span class="p">,</span> <span class="n">ind1</span><span class="p">,</span> <span class="n">cat2_id</span><span class="p">,</span> <span class="n">pmem1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -404,6 +405,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_match_members_by_id</span><span class="p">(</span><span class="n">mem1</span><span class="p">,</span> <span class="n">mem2</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;angular_distance&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_match_members_by_ang</span><span class="p">(</span><span class="n">mem1</span><span class="p">,</span> <span class="n">mem2</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">cosmo</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> members were matched.&#39;</span><span class="p">)</span>
         <span class="c1"># Add id_cluster if found in other catalog</span>
         <span class="n">mem1</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">mem2</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -462,9 +464,12 @@
         <span class="n">mem2</span><span class="o">.</span><span class="n">_init_match_vals</span><span class="p">()</span>
         <span class="n">mt</span><span class="o">.</span><span class="n">match_from_config</span><span class="p">(</span><span class="n">mem1</span><span class="p">,</span> <span class="n">mem2</span><span class="p">,</span> <span class="n">match_config</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">)</span>
         <span class="n">mask1</span> <span class="o">=</span> <span class="n">mem1</span><span class="o">.</span><span class="n">get_matching_mask</span><span class="p">(</span><span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
-        <span class="n">mask2</span> <span class="o">=</span> <span class="n">mem2</span><span class="o">.</span><span class="n">ids2inds</span><span class="p">(</span><span class="n">mem1</span><span class="p">[</span><span class="n">mask1</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;mt_</span><span class="si">{</span><span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mem1</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)[</span><span class="n">mask1</span><span class="p">],</span>
-                                          <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mem2</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)[</span><span class="n">mask2</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ind1</span><span class="p">,</span> <span class="n">id2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">mem1</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)[</span><span class="n">mask1</span><span class="p">],</span>
+                             <span class="n">mem1</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;mt_</span><span class="si">{</span><span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="n">mask1</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">ind2</span> <span class="ow">in</span> <span class="n">mem2</span><span class="o">.</span><span class="n">id_dict_list</span><span class="p">[</span><span class="n">id2</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span><span class="p">)</span>
 <div class="viewcode-block" id="MembershipMatch.save_matched_members"><a class="viewcode-back" href="../../../api/clevar.match.membership.html#clevar.match.membership.MembershipMatch.save_matched_members">[docs]</a>    <span class="k">def</span> <span class="nf">save_matched_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the matching results of members</span>

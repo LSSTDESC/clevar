@@ -376,7 +376,7 @@ Generate random data and add to catalog
 
 .. parsed-literal::
 
-    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.10.3-py3.9.egg/clevar/catalog.py:212: UserWarning: id column missing, additional one is being created.
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.12.0-py3.9.egg/clevar/catalog.py:265: UserWarning: id column missing, additional one is being created.
       warnings.warn(
 
 
@@ -855,8 +855,8 @@ catalogs
 
 .. parsed-literal::
 
-    CPU times: user 167 ms, sys: 176 ms, total: 343 ms
-    Wall time: 119 ms
+    CPU times: user 177 ms, sys: 173 ms, total: 350 ms
+    Wall time: 117 ms
 
 
 
@@ -877,8 +877,8 @@ Compare with the distribution on the other catalog
 
 .. parsed-literal::
 
-    CPU times: user 242 ms, sys: 207 ms, total: 449 ms
-    Wall time: 189 ms
+    CPU times: user 179 ms, sys: 193 ms, total: 371 ms
+    Wall time: 124 ms
 
 
 
@@ -1035,8 +1035,8 @@ catalogs
 
 .. parsed-literal::
 
-    CPU times: user 301 ms, sys: 179 ms, total: 479 ms
-    Wall time: 225 ms
+    CPU times: user 175 ms, sys: 196 ms, total: 371 ms
+    Wall time: 124 ms
 
 
 
@@ -1057,8 +1057,8 @@ Compare with the distribution on the other catalog
 
 .. parsed-literal::
 
-    CPU times: user 199 ms, sys: 190 ms, total: 388 ms
-    Wall time: 129 ms
+    CPU times: user 265 ms, sys: 217 ms, total: 482 ms
+    Wall time: 215 ms
 
 
 
