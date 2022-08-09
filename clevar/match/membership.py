@@ -53,13 +53,13 @@ class MembershipMatch(Match):
         """
         if self.matched_mems is None:
             raise AttributeError('Members not matched, run match_members before.')
-        if 'pmem' not in cat1.members.data.colnames:
+        if 'pmem' not in cat1.members.tags:
             cat1.members['pmem'] = 1.
-        if 'pmem' not in cat2.members.data.colnames:
+        if 'pmem' not in cat2.members.tags:
             cat2.members['pmem'] = 1.
-        cat1.mt_input = ClData({'share_mems': [{} for i in range(cat1.size)],
+        cat1.mt_input = ClData({'share_mems': list(map(lambda x: {}, range(cat1.size))),
                                 'nmem': self._comp_nmem(cat1)})
-        cat2.mt_input = ClData({'share_mems': [{} for i in range(cat2.size)],
+        cat2.mt_input = ClData({'share_mems': list(map(lambda x: {}, range(cat2.size))),
                                 'nmem': self._comp_nmem(cat2)})
         for i1, i2 in self.matched_mems:
             idcl1, pmem1 = cat1.members['id_cluster'][i1], cat1.members['pmem'][i1]
@@ -90,8 +90,8 @@ class MembershipMatch(Match):
             Cluster catalog with members attribute.
         """
         out = np.zeros(cat.size)
-        for ID, pmem in zip(cat.members['id_cluster'], cat.members['pmem']):
-            out[cat.id_dict[ID]] += pmem
+        for ind, pmem in zip(cat.members['ind_cl'], cat.members['pmem']):
+            out[ind] += pmem
         return out
     def _add_pmem(self, cat1_share_mems, ind1, cat2_id, pmem1):
         """
@@ -174,6 +174,7 @@ class MembershipMatch(Match):
             self._match_members_by_id(mem1, mem2)
         elif method=='angular_distance':
             self._match_members_by_ang(mem1, mem2, radius, cosmo)
+        print(f'{self.matched_mems.size:,} members were matched.')
         # Add id_cluster if found in other catalog
         mem1['match'] = None
         mem2['match'] = None
@@ -232,9 +233,12 @@ class MembershipMatch(Match):
         mem2._init_match_vals()
         mt.match_from_config(mem1, mem2, match_config, cosmo=cosmo)
         mask1 = mem1.get_matching_mask(match_config['type'])
-        mask2 = mem2.ids2inds(mem1[mask1][f"mt_{match_config['type']}"])
-        self.matched_mems = np.transpose([np.arange(mem1.size, dtype=int)[mask1],
-                                          np.arange(mem2.size, dtype=int)[mask2]])
+        self.matched_mems = []
+        for ind1, id2 in zip(np.arange(mem1.size, dtype=int)[mask1],
+                             mem1[f"mt_{match_config['type']}"][mask1]):
+            for ind2 in mem2.id_dict_list[id2]:
+                self.matched_mems.append([ind1, ind2])
+        self.matched_mems = np.array(self.matched_mems)
     def save_matched_members(self, filename, overwrite=False):
         """
         Saves the matching results of members

@@ -27,12 +27,12 @@ def get_matched_pairs(cat1, cat2, matching_type, mask1=None, mask2=None):
     mt_mask2 = mt_mask2[mask]
     mt1, mt2 = cat1[mt_mask1], cat2[mt_mask2]
     if mt1.members is not None:
-        if 'match' in mt1.members.colnames:
+        if 'match' in mt1.members.data.colnames:
             mt1.members['in_mt_sample'] = [
                 any(id2 in mt2.id_dict for id2 in mem1['match'])
                 for mem1 in mt1.members]
     if mt2.members is not None:
-        if 'match' in mt2.members.colnames:
+        if 'match' in mt2.members.data.colnames:
             mt2.members['in_mt_sample'] = [
                 any(id1 in mt1.id_dict for id1 in mem2['match'])
                 for mem2 in mt2.members]
@@ -81,7 +81,7 @@ def output_catalog_with_matching(file_in, file_out, catalog, overwrite=False):
     if len(out)!=len(catalog):
         ValueError(f'Input file ({file_in}) size (={len(out)})'
             +f' differs from catalog size (={len(catalog)}).')
-    for col in [c_ for c_ in catalog.colnames if c_[:3] in ('mt_', 'ft_', 'cf_')]:
+    for col in [c_ for c_ in catalog.data.colnames if c_[:3] in ('mt_', 'ft_', 'cf_')]:
         if col in ('mt_self', 'mt_other', 'mt_cross'):
             out[col] = [c if c else '' for c in catalog[col]]
         elif col in ('mt_multi_self', 'mt_multi_other'):
@@ -116,24 +116,24 @@ def output_matched_catalog(file_in1, file_in2, file_out, cat1, cat2,
     # match masks
     m1, m2 = get_matched_masks(cat1, cat2, matching_type)
     # add cat 1 info
-    cat1_full = ClData.read(file_in1)
-    if len(cat1_full)!=len(cat1):
-        raise ValueError(f'Input file ({file_in1}) size (={len(cat1_full)})'
+    dat1_full = ClData.read(file_in1)
+    if len(dat1_full)!=len(cat1):
+        raise ValueError(f'Input file ({file_in1}) size (={len(dat1_full)})'
             +f' differs from cat1 size (={len(cat1)}).')
-    for col in cat1_full.colnames:
-        c_matched[f'cat1_{col}'] = cat1_full[col][m1]
-    del cat1_full
-    if 'mt_frac_self' in cat1.colnames:
+    for col in dat1_full.colnames:
+        c_matched[f'cat1_{col}'] = dat1_full[col][m1]
+    del dat1_full
+    if 'mt_frac_self' in cat1.data.colnames:
         c_matched['cat1_mt_frac'] = cat1['mt_frac_self'][m1]
     # add cat 2 info
-    cat2_full = ClData.read(file_in2)
-    if len(cat2_full)!=len(cat2):
-        raise ValueError(f'Input file ({file_in2}) size (={len(cat2_full)})'
+    dat2_full = ClData.read(file_in2)
+    if len(dat2_full)!=len(cat2):
+        raise ValueError(f'Input file ({file_in2}) size (={len(dat2_full)})'
             +f' differs from cat2 size (={len(cat2)}).')
-    for col in cat2_full.colnames:
-        c_matched[f'cat2_{col}'] = cat2_full[col][m2]
-    del cat2_full
-    if 'mt_frac_self' in cat2.colnames:
+    for col in dat2_full.colnames:
+        c_matched[f'cat2_{col}'] = dat2_full[col][m2]
+    del dat2_full
+    if 'mt_frac_self' in cat2.data.colnames:
         c_matched['cat2_mt_frac'] = cat2['mt_frac_self'][m2]
     # Save
     c_matched.write(file_out, overwrite=overwrite)

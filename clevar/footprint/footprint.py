@@ -2,7 +2,7 @@
 import warnings
 import numpy as np
 
-from ..catalog import ClData, ClCatalog
+from ..catalog import ClData, TagData, ClCatalog
 from ..geometry import convert_units, angular_bank, physical_bank
 from ..utils import none_val, hp, updated_dict
 from astropy.coordinates import SkyCoord
@@ -11,7 +11,7 @@ from .nfw_funcs import nfw2D_profile_flatcore
 from ..match_metrics import plot_helper as ph
 from ..match_metrics.plot_helper import plt
 
-class Footprint():
+class Footprint(TagData):
     '''
     Functions for footprint management
 
@@ -25,8 +25,33 @@ class Footprint():
         Data with columns: pixel, detfrac, zmax
     pixel_dict: dict
         Dictionary to point to pixel in data
+    size: int
+        Number of objects in the catalog
+    tags: LoweCaseDict
+        Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax)
     '''
-    def __init__(self, *args, **kargs):
+
+    @property
+    def pixel_dict(self):
+        return self.__pixel_dict
+
+    @property
+    def nside(self):
+        return self.data.meta['nside']
+    
+    @property
+    def nest(self):
+        return self.data.meta['nest']
+    
+    @nside.setter
+    def nside(self, nside):
+        self.data.meta['nside'] = nside
+    
+    @nest.setter
+    def nest(self, nest):
+        self.data.meta['nest'] = nest
+
+    def __init__(self, nside=None, tags=None, nest=False, **kwargs):
         '''
         Parameters
         ----------
@@ -34,20 +59,23 @@ class Footprint():
             Heapix NSIDE
         nest: bool
             If ordering is nested
-        pixels: array
+        pixel: array
             Pixels inside the footprint
-        detfrac_vals: array
-            Detection fraction
-        zmax_vals: array
-            Zmax
+        detfrac_vals: array, None
+            Detection fraction, if None is set to 1
+        zmax_vals: array, None
+            Zmax, if None is set to 99
         '''
-        self.data = ClData()
-        self.nside = None
-        self.nest = None
-        if len(args)>0 or len(kargs)>0:
-            self._add_values(*args, **kargs)
-    def _add_values(self, nside, pixels, detfrac=None, zmax=None,
-            nest=False):
+        self.__pixel_dict = {}
+        tags = updated_dict({'pixel':'pixel'}, tags)
+        if len(kwargs)>0:
+            kwargs['nside'] = nside
+            kwargs['nest'] = nest
+        TagData.__init__(self, tags=tags,
+                         default_tags=['pixel', 'detfrac', 'zmax'],
+                         **kwargs)
+
+    def _add_values(self, nside=None, nest=False, **columns):
         '''
         Adds provided values for attribues and assign default values to rest
 
@@ -57,24 +85,26 @@ class Footprint():
             Heapix NSIDE
         nest: bool
             If ordering is nested
-        pixels: array
+        pixel: array
             Pixels inside the footprint
         detfrac: array
             Detection fraction. If None, value 1 is assigned.
         zmax: array
             Zmax. If None, value 99 is assigned.
         '''
+        if not isinstance(nside, int) or (nside&(nside-1)!=0) or nside==0:
+            raise ValueError(f'nside (={nside}) must be a power of 2.')
         self.nside = nside
         self.nest = nest
-        self.data.meta.update({'nside':nside, 'nest':nest})
-        self.data['pixel'] = np.array(pixels, dtype=int)
-        self.data['detfrac'] = none_val(detfrac, 1)
-        self.data['zmax'] = none_val(zmax, 99)
-        ra, dec = hp.pix2ang(nside, pixels, lonlat=True, nest=nest)
-        self.data['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
-        self.pixel_dict = {p:i for i, p in enumerate(self['pixel'])}
-    def __getitem__(self, item):
-        return self.data[item]
+        TagData._add_values(self, **columns)
+        self['pixel'] = self['pixel'].astype(int)
+        if self.tags.get('detfrac', None) not in self.colnames:
+            self['detfrac'] = 1.
+        if self.tags.get('zmax', None) not in self.colnames:
+            self['zmax'] = 99.
+        ra, dec = hp.pix2ang(nside, self['pixel'], lonlat=True, nest=nest)
+        self['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
+        self.pixel_dict.update(self._make_col_dict('pixel'))
     def get_map(self, data, bad_val=0):
         '''
         Transforms a internal quantity into a map
@@ -140,8 +170,7 @@ class Footprint():
         zmax_vals = self.get_values_in_pixels('zmax', pixels, 0)
         return z<=zmax_vals
     @classmethod
-    def read(self, filename, nside, pixel_name, detfrac_name=None, zmax_name=None,
-             nest=False):
+    def read(self, filename, nside, tags, nest=False, full=False):
         """
         Loads fits file and converst to FootprintZmax object
 
@@ -157,15 +186,22 @@ class Footprint():
             Name of detection fraction colum. If None value 1 is assigned.
         zmax_name:
             Name of maximum redshit colum. If None value 99 is assigned.
+        tags: LoweCaseDict, None
+            Tags for table (required if full=False).
+        full: bool
+            Reads all columns of the catalog
         """
-        self = Footprint()
-        values = ClData.read(filename)
-        self._add_values(nside=nside, nest=nest,
-            pixels=values[pixel_name],
-            detfrac=values[detfrac_name] if detfrac_name is not None else None,
-            zmax=values[zmax_name] if zmax_name is not None else None)
-        return self
-    def __repr__(self,):
+        if not isinstance(tags, dict):
+            raise ValueError(f'tags (={tags}) must be a dictionary.')
+        elif 'pixel' not in tags:
+            raise ValueError(f'pixel must be a key in tags (={tags})')
+
+        data = ClData.read(filename)
+        if not full:
+            data._check_cols(tags.values())
+            data = data[list(tags.values())]
+        return self(nside=nside, nest=nest, data=data, tags=tags)
+    def __repr__(self):
         out = f"FootprintZmax object with {len(self.data):,} pixels\n"
         out += "zmax: [%g, %g]\n"%(self['zmax'].min(), self['zmax'].max())
         out += "detfrac: [%g, %g]"%(self['detfrac'].min(), self['detfrac'].max())
@@ -414,22 +450,25 @@ class Footprint():
             ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs)
         if cb:
             cb.set_xlabel(data)
+            ax.xaxis.tick_top()
+            ax.xaxis.set_label_position('top')
 
         xlim, ylim = ax.get_xlim(), ax.get_ylim()
         if cluster is not None:
             if isinstance(cluster, ClCatalog):
-                if 'radius' in cluster.colnames and cluster.radius_unit is not None:
+                if 'radius' in cluster.tags and cluster.radius_unit is not None:
                     if (cluster.radius_unit in physical_bank and
-                            (cosmo is None or 'z' not in cluster.colnames)):
+                            (cosmo is None or 'z' not in cluster.tags)):
                         raise TypeError(
                             'A cosmology and cluster redsift is necessary if '
                             'cluster radius in physical units.')
+                    theta = np.linspace(0, 2*np.pi, 50)
+                    sin, cos = np.sin(theta), np.cos(theta)
                     rad_deg = convert_units(cluster['radius'], cluster.radius_unit, 'degrees',
                                             redshift=cluster['z'], cosmo=cosmo)
                     plt_cl = lambda ra, dec, radius: [
-                        ax.add_patch(plt.Circle(
-                            (ra_, dec_), radius=radius_,
-                            **updated_dict({'color':'b', 'fill':0, 'lw':1}, cluster_kwargs)))
+                        ax.plot(ra_+radius_*sin/np.cos(np.radians(dec_)), dec_+radius_*cos,
+                            **updated_dict({'color':'b', 'lw':1}, cluster_kwargs))
                         for ra_, dec_, radius_ in np.transpose([ra, dec, radius])[
                             (ra+radius>=xlim[0])*(ra-radius<xlim[1])
                             *(dec+radius>=ylim[0])*(dec-radius<ylim[1])]

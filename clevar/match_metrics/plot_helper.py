@@ -358,7 +358,8 @@ def plot_healpix_map(healpix_map, nest=True, auto_lim=False, bad_val=None,
     nside = hp.npix2nside(len(healpix_map))
     kwargs_ = updated_dict({'flip':'geo', 'title':None, 'cbar':True, 'nest':nest}, kwargs)
     if auto_lim:
-        ra, dec = hp.pix2ang(nside, np.arange(len(healpix_map))[healpix_map!=bad_val],
+        ra, dec = hp.pix2ang(nside, np.arange(len(healpix_map))[(healpix_map!=bad_val)
+                                                                *~np.isnan(healpix_map)],
                              nest=nest, lonlat=True)
         if ra.min()<180. and ra.max()>180.:
             gap_ra = 360.-(ra.max()-ra.min())
