@@ -7,4 +7,4 @@ from . import utils
 from . import cosmology
 from . import match
 
-__version__ = '0.11.0'
+__version__ = '0.12.0'

@@ -36,7 +36,7 @@ def create_footprint(ra, dec, nside=None, min_density=2, neighbor_fill=None, nes
         else (nside, np.array(list(set(hp.ang2pix(nside, ra, dec, lonlat=True, nest=nest)))))
     print(f'Footprint NSIDE: {nside:,}')
     print(f'Pixels in footprint: {pixel.size:,}')
-    ftpt = Footprint(nside=nside, pixels=pixel, nest=nest)
+    ftpt = Footprint(nside=nside, pixel=pixel, nest=nest)
     # filling holes
     ftpt = ftpt if neighbor_fill is None else fill_holes_conv(ftpt, neighbor_fill, nest=nest)
     print(f'Pixels in footprint: {ftpt["pixel"].size:,}')
@@ -102,7 +102,7 @@ def fill_holes(ftpt, neighbor_fill, nest=False):
             0).sum()>=neighbor_fill
             ]
     return ftpt if len(add_pixels)==0 else\
-        Footprint(nside=ftpt.nside, pixels=np.append(ftpt['pixel'], add_pixels), nest=nest)
+        Footprint(nside=ftpt.nside, pixel=np.append(ftpt['pixel'], add_pixels), nest=nest)
 def fill_holes_conv(ftpt, neighbor_fill, nest=False):
     '''
     Interactively fill holes in a footprint mask until convergence, updates ftpt input

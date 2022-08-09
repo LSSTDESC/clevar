@@ -1,5 +1,5 @@
 from clevar import ClCatalog, MemCatalog, ClData
-from clevar.catalog import Catalog
+from clevar.catalog import Catalog, TagData
 from clevar.utils import NameList, LowerCaseDict, updated_dict
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
@@ -25,26 +25,37 @@ def test_lowercasedict():
             assert_equal(d[key2], 'value')
     assert_raises(ValueError, updated_dict, 'temp')
 
-def _base_cat_test(**quantities):
-    c = Catalog(name='test', **quantities)
+def _base_cat_test(DataType, kwa=None, **quantities):
+    kwa = {} if kwa is None else kwa
+    # bad tags
+    assert_raises(ValueError, DataType, **kwa, **quantities, tags='XXX')
+    # init data
+    c = DataType(**kwa, **quantities)
     test_vals = quantities.get('data', quantities)
     for k, v in test_vals.items():
+        assert k in c.colnames
         assert_equal(c[k], v)
         assert_equal(c[:1][k], v[:1])
         assert_equal(c.get(k), v)
     assert_equal(c.get('ra2'), None)
     assert_equal(len(c), len(test_vals['ra']))
     c['ra', 'dec']
+    # bad insertion
+    assert_raises(ValueError, c.__setitem__, 3, 1)
     # test read
+    c = DataType(**kwa, **quantities)
     c.write('cat_with_header.fits', overwrite=True)
-    assert_raises(ValueError, Catalog.read, 'cat_with_header.fits', name='temp', tags='x')
-    c_read = Catalog.read_full('cat_with_header.fits')
+    assert_raises(ValueError, DataType.read, 'cat_with_header.fits', **kwa, tags='x')
+    assert_raises(KeyError, DataType.read, 'cat_with_header.fits', **kwa, full=False)
+    c_read = DataType.read('cat_with_header.fits', **kwa, tags={'ra':'ra'})
+    c_read = DataType.read_full('cat_with_header.fits')
     os.system('rm -f cat_with_header.fits')
     # test removing column
     del c['ra']
     assert_raises(KeyError, c.__getitem__, 'ra')
     assert_raises(ValueError, c.tag_column, 'XXX', 'newtag')
     # test warnings
+    c['ra'] = 1.
     c.tag_column('ra', 'newtag')
     with pytest.warns(None) as record:
         c.tag_column('z', 'newtag')
@@ -58,10 +69,15 @@ def _base_cat_test(**quantities):
     assert_raises(ValueError, c.tag_columns, ['2', '3'], ['1'])
     c.tag_columns(['id', 'dec'], ['id', 'dec'])
 
+def test_tagdata():
+    quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
+    _base_cat_test(TagData, **quantities)
+    _base_cat_test(TagData, data=quantities)
+
 def test_catalog():
     quantities = {'id': ['a', 'b'], 'ra': [10, 20], 'dec': [20, 30], 'z': [0.5, 0.6]}
-    _base_cat_test(**quantities)
-    _base_cat_test(data=quantities)
+    _base_cat_test(Catalog, kwa={'name': 'temp'}, **quantities)
+    _base_cat_test(Catalog, kwa={'name': 'temp'}, data=quantities)
     # fail to instantiance object
     assert_raises(ValueError, Catalog.__init__, Catalog, name=None)
     assert_raises(ValueError, Catalog.__init__, Catalog, name='test', labels='x')
@@ -140,11 +156,11 @@ def test_clcatalog():
     # Check add members
     c = ClCatalog(name='test', **{'id': ['a', 'b'], 'ra': [10, 20],
                                   'dec': [20, 30], 'z': [0.5, 0.6]})
+    assert_raises(TypeError, c.add_members, members_catalog={})
     mem_dat = {'id': ['m_a1', 'm_a2', 'm_b1', 'm_c1'], 'id_cluster': ['a', 'a', 'b', 'c']}
     c.add_members(**mem_dat)
     mem = MemCatalog('mem', **mem_dat)
     c.add_members(members_catalog=mem, **mem_dat)
-    assert_raises(TypeError, c.add_members, members_catalog={})
     # Check read members
     c.read_members('demo/cat1_mem.fits', tags={'id':'ID', 'id_cluster':'ID_CLUSTER'})
     # Check raw function
@@ -195,7 +211,7 @@ def test_memcatalog():
     c.cross_match()
     assert_equal(c['mt_cross'], ['a', None])
     # Check fails
-    assert_raises(ValueError, MemCatalog, name='test', id=[0, 0])
+    assert_raises(KeyError, MemCatalog, name='test', id=[0, 0])
     assert_raises(ValueError, MemCatalog, name='test', id=[0, 0], id_cluster=[0])
     assert_raises(ValueError, MemCatalog, name='test', id=[0, 0], id_cluster=[0], tags='x')
     # Check create ids
@@ -206,5 +222,5 @@ def test_memcatalog():
     # Reading function
     assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test')
     assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', tags={'id':'ID2'})
-    assert_raises(ValueError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', tags={'id':'ID'})
+    assert_raises(KeyError, MemCatalog.read, 'demo/cat1_mem.fits', 'test', tags={'id':'ID'})
     c = MemCatalog.read('demo/cat1_mem.fits', 'test', tags={'id':'ID', 'id_cluster':'ID_CLUSTER'})
