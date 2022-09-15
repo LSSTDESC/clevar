@@ -236,6 +236,125 @@ def unpack_mmt_col(col):
         out[i] = c.split(',') if len(c)>0 else []
     return out
 
+########################################################################
+########## Smooth Line #################################################
+########################################################################
+
+def smooth_loop(x0, hist, scheme=[1, 1]):
+    """Loop for smooth line using pixar's algorithm.
+
+    Parameters
+    ----------
+    x: array
+        x values.
+    y: array
+        y values.
+    scheme: list
+        Scheme to be used for smoothening. Newton's binomial coefficients work better.
+
+    Returns
+    -------
+    xsmooth, ysmooth: array
+        Smoothened line
+
+    Note
+    ----
+    Good description of the method can be found at
+    https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
+    """
+    # add midpoints
+    xmid = .5*(x0[:-1]+x0[1:])
+    ymid = interp1d(x0, hist, kind='linear')(xmid)
+    xsmooth, ysmooth = np.zeros(len(x)+len(xmid)), np.zeros(len(y)+len(ymid))
+    xsmooth[::2] = x
+    xsmooth[1::2] = xmid
+    ysmooth[::2] = y
+    ysmooth[1::2] = ymid
+
+    # move
+    n_edge = int(len(scheme)/2)
+    ncrop = 2*n_edge
+
+    xmid_new = np.zeros(xsmooth.size-ncrop)
+    ymid_new = np.zeros(ysmooth.size-ncrop)
+    i = 0
+    for w in scheme:
+        if i == len(scheme)/2:
+            i+=1
+        xmid_new += w*xsmooth[i:xsmooth.size-ncrop+i]
+        ymid_new += w*ysmooth[i:ysmooth.size-ncrop+i]
+        i += 1
+
+    xmid_new /= sum(scheme)
+    ymid_new /= sum(scheme)
+    xsmooth[n_edge:-n_edge] = xmid_new
+    ysmooth[n_edge:-n_edge] = ymid_new
+    return xsmooth, ysmooth
+
+def smooth_line(x, y, n_increase=10, scheme=[1, 1]):
+    """Make smooth line using pixar's algorithm.
+
+    Parameters
+    ----------
+    x: array
+        x values.
+    y: array
+        y values.
+    n_increase: int
+        Number of loops for the algorithm.
+    scheme: list
+        Scheme to be used for smoothening. Newton's binomial coefficients work better.
+
+    Returns
+    -------
+    xsmooth, ysmooth: array
+        Smoothened line
+
+    Note
+    ----
+    Good description of the method can be found at
+    https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
+    """
+    if n_increase==0:
+        return x, y
+    xsmooth, ysmooth = smooth(x, y, scheme=scheme)
+    for i in range(1, n_increase):
+        xsmooth, ysmooth = smooth(xsmooth, ysmooth, scheme=scheme)
+    return xsmooth, ysmooth
+
+def smooth_hist(values, bins=10, n_increase=10, scheme=[1, 1], **hist_kwargs):
+    """Make smooth histogram using pixar's algorithm.
+
+    Parameters
+    ----------
+    values : array_like
+        Input data. The histogram is computed over the flattened array.
+    bins : int or sequence of scalars or str, optional
+        If `bins` is an int, it defines the number of equal-width
+        bins in the given range (10, by default). If `bins` is a
+        sequence, it defines a monotonically increasing array of bin edges,
+        including the rightmost edge, allowing for non-uniform bin widths.
+    n_increase: int
+        Number of loops for the algorithm.
+    scheme: list
+        Scheme to be used for smoothening. Newton's binomial coefficients work better.
+    **hist_kwargs
+        Other arguments of histogram, check np.histogram for details
+
+    Returns
+    -------
+    xsmooth, ysmooth: array
+        Smoothened histogram
+
+    Note
+    ----
+    Good description of the method can be found at
+    https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
+    """
+    hist, edges = np.histogram(values, bins, **hist_kwargs)
+    mid_edges = 0.5*(edges[:-1]+edges[1:])
+    return smooth_line(mid_edges, hist, n_increase=n_increase, scheme=scheme)
+
 
 ########################################################################
 ########## Monkeypatching healpy #######################################
