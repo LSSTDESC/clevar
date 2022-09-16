@@ -323,39 +323,6 @@ def smooth_line(x, y, n_increase=10, scheme=[1, 2, 1]):
         xsmooth, ysmooth = smooth_loop(xsmooth, ysmooth, scheme=scheme)
     return xsmooth, ysmooth
 
-def smooth_hist(values, bins=10, n_increase=10, scheme=[1, 2, 1], **hist_kwargs):
-    """Make smooth histogram using pixar's algorithm.
-
-    Parameters
-    ----------
-    values : array_like
-        Input data. The histogram is computed over the flattened array.
-    bins : int or sequence of scalars or str, optional
-        If `bins` is an int, it defines the number of equal-width
-        bins in the given range (10, by default). If `bins` is a
-        sequence, it defines a monotonically increasing array of bin edges,
-        including the rightmost edge, allowing for non-uniform bin widths.
-    n_increase: int
-        Number of loops for the algorithm.
-    scheme: list
-        Scheme to be used for smoothening. Newton's binomial coefficients work better.
-    **hist_kwargs
-        Other arguments of histogram, check np.histogram for details
-
-    Returns
-    -------
-    xsmooth, ysmooth: array
-        Smoothened histogram
-
-    Note
-    ----
-    Good description of the method can be found at
-    https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
-    """
-    hist, edges = np.histogram(values, bins, **hist_kwargs)
-    mid_edges = 0.5*(edges[:-1]+edges[1:])
-    return smooth_line(mid_edges, hist, n_increase=n_increase, scheme=scheme)
-
 
 ########################################################################
 ########## Monkeypatching healpy #######################################
