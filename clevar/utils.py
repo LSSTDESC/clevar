@@ -292,7 +292,7 @@ def smooth_loop(x, y, scheme=[1, 1]):
     ysmooth[n_edge:-n_edge] = ymid_new
     return xsmooth, ysmooth
 
-def smooth_line(x, y, n_increase=10, scheme=[1, 1]):
+def smooth_line(x, y, n_increase=10, scheme=[1, 2, 1]):
     """Make smooth line using pixar's algorithm.
 
     Parameters
@@ -323,7 +323,7 @@ def smooth_line(x, y, n_increase=10, scheme=[1, 1]):
         xsmooth, ysmooth = smooth_loop(xsmooth, ysmooth, scheme=scheme)
     return xsmooth, ysmooth
 
-def smooth_hist(values, bins=10, n_increase=10, scheme=[1, 1], **hist_kwargs):
+def smooth_hist(values, bins=10, n_increase=10, scheme=[1, 2, 1], **hist_kwargs):
     """Make smooth histogram using pixar's algorithm.
 
     Parameters
