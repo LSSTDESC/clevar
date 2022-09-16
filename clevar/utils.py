@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.interpolate import interp1d
 
 
 ########################################################################
@@ -240,7 +241,7 @@ def unpack_mmt_col(col):
 ########## Smooth Line #################################################
 ########################################################################
 
-def smooth_loop(x0, hist, scheme=[1, 1]):
+def smooth_loop(x, y, scheme=[1, 1]):
     """Loop for smooth line using pixar's algorithm.
 
     Parameters
@@ -263,8 +264,8 @@ def smooth_loop(x0, hist, scheme=[1, 1]):
     https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
     """
     # add midpoints
-    xmid = .5*(x0[:-1]+x0[1:])
-    ymid = interp1d(x0, hist, kind='linear')(xmid)
+    xmid = .5*(x[:-1]+x[1:])
+    ymid = interp1d(x, y, kind='linear')(xmid)
     xsmooth, ysmooth = np.zeros(len(x)+len(xmid)), np.zeros(len(y)+len(ymid))
     xsmooth[::2] = x
     xsmooth[1::2] = xmid
@@ -317,9 +318,9 @@ def smooth_line(x, y, n_increase=10, scheme=[1, 1]):
     """
     if n_increase==0:
         return x, y
-    xsmooth, ysmooth = smooth(x, y, scheme=scheme)
+    xsmooth, ysmooth = smooth_loop(x, y, scheme=scheme)
     for i in range(1, n_increase):
-        xsmooth, ysmooth = smooth(xsmooth, ysmooth, scheme=scheme)
+        xsmooth, ysmooth = smooth_loop(xsmooth, ysmooth, scheme=scheme)
     return xsmooth, ysmooth
 
 def smooth_hist(values, bins=10, n_increase=10, scheme=[1, 1], **hist_kwargs):
