@@ -19,7 +19,7 @@ class AstroPyCosmology(Cosmology):
         super(AstroPyCosmology, self).__init__(**kwargs)
 
         # this tag will be used to check if the cosmology object is accepted by the modeling
-        self.backend = 'ct'
+        self.backend = 'astropy'
 
         assert isinstance(self.be_cosmo, LambdaCDM)
 
