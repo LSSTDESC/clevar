@@ -51,6 +51,12 @@ def test_plot():
             p_m1_m2=lambda  m1, m2: gaussian(np.log10(m2), np.log10(m1), 0.1))
     rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True, transpose=True,
             p_m1_m2=lambda  m1, m2: gaussian(np.log10(m2), np.log10(m1), 0.1))
+    rc.plot(cat, matching_type, redshift_bins, mass_bins,
+            plt_kwargs={'n_increase':3})
+    rc.plot(cat, matching_type, redshift_bins, mass_bins, shape='line',
+            plt_kwargs={'n_increase':3})
+    rc.plot(cat, matching_type, redshift_bins, mass_bins,
+            plt_kwargs={'n_increase':3, 'scheme':[1, 1]})
 
 
 def test_plot_panel():

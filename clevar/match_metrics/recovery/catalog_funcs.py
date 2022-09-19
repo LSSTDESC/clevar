@@ -109,7 +109,9 @@ def plot(cat, col1, col2, bins1, bins2, matching_type,
     scale1: str
         Scale of col 1 component
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -171,8 +173,6 @@ def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
     ----------------
     shape: str
         Shape of the lines. Can be steps or line.
-    ax: matplotlib.axes
-        Ax to add plot
     xlabel: str
         Label of component 1. Default is col1.
     ylabel: str
@@ -180,7 +180,9 @@ def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
     scale1: str
         Scale of col 1 component
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -249,7 +251,7 @@ def plot2D(cat, col1, col2, bins1, bins2, matching_type,
     scale1, scale2: str
         Scales of col 1, 2 components.
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.pcolor.
     add_cb: bool
         Plot colorbar
     cb_kwargs: dict, None

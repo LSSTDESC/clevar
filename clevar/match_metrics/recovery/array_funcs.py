@@ -64,7 +64,9 @@ def plot(values1, values2, bins1, bins2, is_matched, shape='steps',
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -119,10 +121,10 @@ def plot_panel(values1, values2, bins1, bins2, is_matched, shape='steps',
         Boolean array indicating matching status
     shape: str
         Shape of the lines. Can be steps or line.
-    ax: matplotlib.axes
-        Ax to add plot
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -189,7 +191,7 @@ def plot2D(values1, values2, bins1, bins2, is_matched,
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.pcolor.
     add_cb: bool
         Plot colorbar
     cb_kwargs: dict, None

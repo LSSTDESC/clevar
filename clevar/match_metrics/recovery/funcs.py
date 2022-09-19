@@ -143,7 +143,9 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -230,7 +232,9 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     panel_kwargs_list: list, None
         List of additional arguments for plotting each panel (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -322,10 +326,8 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
         Label for redshift.
     recovery_label: str
         Label for recovery rate.
-    ax: matplotlib.axes
-        Ax to add plot
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.pcolor.
     add_cb: bool
         Plot colorbar
     cb_kwargs: dict, None
