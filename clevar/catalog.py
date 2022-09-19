@@ -650,6 +650,13 @@ class Catalog(TagData):
             out.meta['name'] = self.name
             out.meta.update({f'hierarch LABEL_{k}':v for k, v in self.labels.items()})
             out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
+            for i, mt_step in enumerate(self.mt_hist):
+                for k, v in filter(lambda kv: kv[0]!='step', mt_step.items()):
+                    if k=='cosmo':
+                        for s in ('H0', 'Omega_dm0', 'Omega_b0', 'Omega_k0', '='):
+                            v = v.replace(s, '')
+                    out.meta[f'hierarch MT_{mt_step["step"]}.{i}_{k}'] = v
+                    print(f'hierarch MT_{mt_step["step"]}.{i}_{k}', v)
         for col in self.data.colnames:
             if col in ('mt_self', 'mt_other', 'mt_cross'):
                 out[col] = pack_mt_col(self[col])
