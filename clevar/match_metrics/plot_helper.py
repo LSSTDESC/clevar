@@ -82,7 +82,9 @@ def plot_hist_line(hist_values, bins, ax, shape='steps', rotate=False, **kwargs)
     rotate: bool
         Invert x-y axes in plot
     kwargs: parameters
-        Additional parameters for plt.plot
+        Additional parameters for plt.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     """
     if shape=='steps':
         data = (np.transpose([bins[:-1], bins[1:]]).flatten(),
