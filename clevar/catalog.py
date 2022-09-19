@@ -2,6 +2,7 @@
 The ClCatalog and improved Astropy table classes
 """
 import warnings
+import copy
 import numpy as np
 from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
@@ -415,13 +416,23 @@ class Catalog(TagData):
         Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
     labels: LowerCaseDict
         Labels of data columns for plots
+    mt_hist: list
+        Recorded steps of matching
     """
 
     @property
     def id_dict(self):
         return self.__id_dict
 
-    def __init__(self, name, tags=None, labels=None, unique_id=False, default_tags=None, **kwargs):
+    @property
+    def mt_hist(self):
+        return self.__mt_hist
+
+    def _set_mt_hist(self, value):
+        self.__mt_hist = copy.deepcopy(value)
+
+    def __init__(self, name, tags=None, labels=None, unique_id=False, default_tags=None,
+                 mt_hist=None, **kwargs):
         if not isinstance(name, str):
             raise ValueError('name must be str.')
         if labels is not None and not isinstance(labels, dict):
@@ -430,6 +441,7 @@ class Catalog(TagData):
         self.name = name
         self.labels = LowerCaseDict()
         self.__id_dict = {}
+        self._set_mt_hist(none_val(mt_hist, []))
         TagData.__init__(self, tags=updated_dict({'id':'id'}, tags),
                          default_tags=none_val(default_tags, ['id', 'ra', 'dec']),
                          **kwargs)
@@ -443,7 +455,8 @@ class Catalog(TagData):
                 f'<br>{TagData._repr_html_(self)}')
 
     def __getitem__(self, item):
-        return self._getitem_base(item, Catalog, name=self.name, labels=self.labels)
+        return self._getitem_base(item, Catalog, name=self.name, labels=self.labels,
+                                  mt_hist=self.mt_hist)
 
     def __setitem__(self, item, value):
         value_ = value
@@ -865,7 +878,7 @@ class ClCatalog(Catalog):
 
     def __getitem__(self, item):
         kwargs = {'name':self.name, 'labels': self.labels, 'radius_unit': self.radius_unit,
-                  'members_warning':False}
+                  'members_warning': False, 'mt_hist': self.mt_hist}
         # get one col/row
         if isinstance(item, (str, int, np.int64)):
             kwargs['item'] = item

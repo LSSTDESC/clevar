@@ -9,6 +9,7 @@ from ..utils import veclen, str2dataunit
 
 class ProximityMatch(Match):
     def __init__(self, ):
+        Match.__init__(self)
         self.type = 'Proximity'
     def multiple(self, cat1, cat2, radius_selection='max'):
         """
@@ -56,6 +57,11 @@ class ProximityMatch(Match):
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
+        self.history.append({
+            'step':'multiple', 'cats': (cat1.name, cat2.name),
+            'radius_selection':radius_selection})
+        cat1._set_mt_hist(self.history)
+        cat2._set_mt_hist(self.history)
     def prep_cat_for_match(self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1,
         cosmo=None):
         """
@@ -139,6 +145,10 @@ class ProximityMatch(Match):
             in_rad*n_match_radius, in_rad_unit, 'degrees',
             redshift=cat['z'] if 'z' in cat.tags else None,
             cosmo=cosmo)
+        self.history.append({
+            'step':'prep', 'cat': cat.name, 'delta_z': delta_z, 'match_radius': match_radius,
+            'n_delta_z': n_delta_z, 'n_match_radius': n_match_radius,
+            'cosmo': cosmo if cosmo is None else cosmo.get_desc()})
     def _rescale_z(self, z, zlim, n):
         """Rescale zmin/zmax by a factor n
 

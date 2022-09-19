@@ -1,6 +1,5 @@
 import numpy as np
 import pickle
-from scipy.interpolate import InterpolatedUnivariateSpline as spline
 
 from .parent import Match
 from .proximity import ProximityMatch
@@ -11,6 +10,7 @@ from ..utils import veclen, str2dataunit
 
 class MembershipMatch(Match):
     def __init__(self, ):
+        Match.__init__(self)
         self.type = 'Membership'
         self.matched_mems = None
     def multiple(self, cat1, cat2):
@@ -40,6 +40,9 @@ class MembershipMatch(Match):
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
+        self.history.append({'step':'multiple', 'cats': (cat1.name, cat2.name)})
+        cat1._set_mt_hist(self.history)
+        cat2._set_mt_hist(self.history)
     def fill_shared_members(self, cat1, cat2):
         """
         Adds shared members dicts and nmem to mt_input in catalogs.
@@ -185,6 +188,13 @@ class MembershipMatch(Match):
         for ind1, ind2 in self.matched_mems:
             mem1['match'][ind1].append(mem2['id_cluster'][ind2])
             mem2['match'][ind2].append(mem1['id_cluster'][ind1])
+        #self.history.append({
+        #    'step':'match_members', 'cat': cat.name, 'method': method,
+        #    'cosmo': cosmo if cosmo is None else cosmo.get_desc()})
+        #cfg = {'step':'match_members', 'cats': (cat1.name, cat2.name), 'method': method,
+        #       'radius': radius, 'cosmo': cosmo if cosmo is None else cosmo.get_desc()}
+        #cat1.mt_hist.append(cfg)
+        #cat2.mt_hist.append(cfg)
 
     def _match_members_by_id(self, mem1, mem2):
         """
