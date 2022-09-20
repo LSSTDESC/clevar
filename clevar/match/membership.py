@@ -289,18 +289,31 @@ class MembershipMatch(Match):
             Members of target catalog
         match_config: dict
             Dictionary with the matching configuration. Keys must be:
-                `type` -  type of matching, can be: `cat1`, `cat2`, `cross`.
-                `preference` -  Preference to set best match, can be: `more_massive`, `angular_proximity`, `redshift_proximity`, `shared_member_fraction` (default).
-                `minimum_share_fraction` -  Minimum share fraction to consider in matches (default=0).
-                `match_members` -  Match the members catalogs (default=`True`).
-                `match_members_kwargs` -  `kwargs` used in `match_members(mem1, mem2, **kwargs)`, needed if `match_members=True`.
-                `match_members_save` -  saves file with matched members (default=`False`).
-                `match_members_load` -  load matched members (default=`False`), if `True` skips matching (and save) of members.
-                `match_members_file` -  file to save matching of members, needed if `match_members_save` or `match_members_load` is `True`.
-                `shared_members_fill` -  Adds shared members dicts and nmem to mt_input in catalogs (default=`True`).
-                `shared_members_save` -  saves files with shared members (default=`False`).
-                `shared_members_load` -  load files with shared members (default=`False`), if `True` skips matching (and save) of members and fill (and save) of shared members.
-                `shared_members_file` -  Prefix of file names to save shared members, needed if `shared_members_save` or `shared_members_load` is `True`.
+
+                * `type` -  type of matching, can be: `cat1`, `cat2`, `cross`.
+                * `preference` -  Preference to set best match, can be: `more_massive`,
+                  `angular_proximity`, `redshift_proximity`, `shared_member_fraction` (default).
+                * `minimum_share_fraction1` -  Minimum share fraction of catalog 1 to consider
+                  in matches (default=0).
+                * `minimum_share_fraction2` -  Minimum share fraction of catalog 2 to consider
+                  in matches (default=0).
+                * `match_members` -  Match the members catalogs (default=`True`).
+                * `match_members_kwargs` -  `kwargs` used in `match_members(mem1, mem2, **kwargs)`,
+                  needed if `match_members=True`.
+                * `match_members_save` -  saves file with matched members (default=`False`).
+                * `match_members_load` -  load matched members (default=`False`), if `True` skips
+                  matching (and save) of members.
+                * `match_members_file` -  file to save matching of members, needed if
+                  `match_members_save` or `match_members_load` is `True`.
+                * `shared_members_fill` -  Adds shared members dicts and nmem to mt_input
+                  in catalogs (default=`True`).
+                * `shared_members_save` -  saves files with shared members (default=`False`).
+                * `shared_members_load` -  load files with shared members (default=`False`), if
+                  `True` skips matching (and save) of members and fill (and save) of shared members.
+                * `shared_members_file` -  Prefix of file names to save shared members,
+                  needed if `shared_members_save` or `shared_members_load` is `True`.
+
+
         """
         if match_config['type'] not in ('cat1', 'cat2', 'cross'):
             raise ValueError("config type must be cat1, cat2 or cross")
