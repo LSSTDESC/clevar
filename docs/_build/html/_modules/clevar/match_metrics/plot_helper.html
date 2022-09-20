@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.plot_helper &mdash; ClEvaR 0.12.0 documentation</title>
+  <title>clevar.match_metrics.plot_helper &mdash; ClEvaR 0.13.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.13.0
               </div>
             
           
@@ -161,6 +161,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.version.html">clevar.version module</a></li>
 </ul>
 </li>
 </ul>
@@ -239,6 +240,42 @@
 <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">ScalarFormatter</span><span class="p">,</span> <span class="n">NullFormatter</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">none_val</span><span class="p">,</span> <span class="n">hp</span><span class="p">,</span> <span class="n">updated_dict</span>
 
+<span class="c1">########################################################################</span>
+<span class="c1">########## Monkeypatching matplotlib ###################################</span>
+<span class="c1">########################################################################</span>
+
+<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">smooth_line</span>
+
+<span class="k">def</span> <span class="nf">_plot_smooth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">n_increase</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to apply loops in plots.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    self: class</span>
+<span class="sd">        To be used by mpl</span>
+<span class="sd">    *args</span>
+<span class="sd">        Main function positional arguments</span>
+<span class="sd">    scheme: list</span>
+<span class="sd">        Scheme to be used for smoothening. Newton&#39;s binomial coefficients work better.</span>
+<span class="sd">    n_increase: int</span>
+<span class="sd">        Number of loops for the algorithm.</span>
+<span class="sd">    *8kwargs</span>
+<span class="sd">        main function keyword arguments</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output of self.plot</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="o">*</span><span class="n">smooth_line</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">args</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span> <span class="n">scheme</span><span class="o">=</span><span class="n">scheme</span><span class="p">,</span> <span class="n">n_increase</span><span class="o">=</span><span class="n">n_increase</span><span class="p">),</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot_smooth</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span> <span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_plot_smooth</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="o">.</span><span class="n">plot_smooth</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span> <span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">_plot_smooth</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="c1">########################################################################</span>
+<span class="c1">########################################################################</span>
+<span class="c1">########################################################################</span>
+
 <div class="viewcode-block" id="add_grid"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.add_grid">[docs]</a><span class="k">def</span> <span class="nf">add_grid</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">major_lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">minor_lw</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adds a grid to ax</span>
@@ -275,7 +312,9 @@
 <span class="sd">    rotate: bool</span>
 <span class="sd">        Invert x-y axes in plot</span>
 <span class="sd">    kwargs: parameters</span>
-<span class="sd">        Additional parameters for plt.plot</span>
+<span class="sd">        Additional parameters for plt.plot.</span>
+<span class="sd">        It also includes the possibility of smoothening the line with `n_increase, scheme`</span>
+<span class="sd">        arguments. See `clevar.utils.smooth_line` for details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">shape</span><span class="o">==</span><span class="s1">&#39;steps&#39;</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">bins</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
@@ -286,7 +325,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;shape (</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">) must be &#39;steps&#39; or &#39;line&#39;&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">rotate</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot_smooth</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_bin_label"><a class="viewcode-back" href="../../../api/clevar.match_metrics.plot_helper.html#clevar.match_metrics.plot_helper.get_bin_label">[docs]</a><span class="k">def</span> <span class="nf">get_bin_label</span><span class="p">(</span><span class="n">edge_lower</span><span class="p">,</span> <span class="n">edge_higher</span><span class="p">,</span>

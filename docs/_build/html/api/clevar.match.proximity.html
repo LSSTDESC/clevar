@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.proximity module &mdash; ClEvaR 0.12.0 documentation</title>
+  <title>clevar.match.proximity module &mdash; ClEvaR 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.13.0
               </div>
             
           
@@ -164,6 +164,7 @@
 <li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.version.html">clevar.version module</a></li>
 </ul>
 </li>
 </ul>
@@ -250,14 +251,18 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – ClCatalog 1</p></li>
 <li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog 2</p></li>
-<li><p><strong>match_config</strong> (<em>dict</em>) – <dl class="simple">
-<dt>Dictionary with the matching configuration. Keys must be:</dt><dd><p><cite>type</cite>: type of matching, can be: <cite>cat1</cite>, <cite>cat2</cite>, <cite>cross</cite>.
-<cite>catalog1</cite>: <cite>kwargs</cite> used in <cite>prep_cat_for_match(cat1, **kwargs)</cite> (minus <cite>cosmo</cite>).
-<cite>catalog2</cite>: <cite>kwargs</cite> used in <cite>prep_cat_for_match(cat2, **kwargs)</cite> (minus <cite>cosmo</cite>).
-<cite>which_radius</cite>: Case of radius to be used, can be: <cite>cat1</cite>, <cite>cat2</cite>, <cite>min</cite>, <cite>max</cite>.
-<cite>preference</cite>: Preference to set best match, can be: <cite>more_massive</cite>, <cite>angular_proximity</cite>, <cite>redshift_proximity</cite>, <cite>shared_member_fraction</cite>.</p>
-</dd>
-</dl>
+<li><p><strong>match_config</strong> (<em>dict</em>) – <p>Dictionary with the matching configuration. Keys must be:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>type</cite>: type of matching, can be: <cite>cat1</cite>, <cite>cat2</cite>, <cite>cross</cite>.</p></li>
+<li><p><cite>catalog1</cite>: <cite>kwargs</cite> used in <cite>prep_cat_for_match(cat1, **kwargs)</cite> (minus <cite>cosmo</cite>).</p></li>
+<li><p><cite>catalog2</cite>: <cite>kwargs</cite> used in <cite>prep_cat_for_match(cat2, **kwargs)</cite> (minus <cite>cosmo</cite>).</p></li>
+<li><p><cite>which_radius</cite>: Case of radius to be used, can be: <cite>cat1</cite>, <cite>cat2</cite>, <cite>min</cite>, <cite>max</cite>.</p></li>
+<li><p><cite>preference</cite>: Preference to set best match, can be: <cite>more_massive</cite>,
+<cite>angular_proximity</cite>, <cite>redshift_proximity</cite>, <cite>shared_member_fraction</cite>.</p></li>
+<li><p><cite>verbose</cite>: Print result for individual matches (default=`True`).</p></li>
+</ul>
+</div></blockquote>
 </p></li>
 <li><p><strong>cosmo</strong> (<em>clevar.Cosmology object</em>) – Cosmology object for when radius has physical units</p></li>
 </ul>
@@ -267,13 +272,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="clevar.match.proximity.ProximityMatch.multiple">
-<span class="sig-name descname"><span class="pre">multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match/proximity.html#ProximityMatch.multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match.proximity.ProximityMatch.multiple" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match/proximity.html#ProximityMatch.multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match.proximity.ProximityMatch.multiple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the one way multiple matching</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – Base catalog</p></li>
 <li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – Target catalog</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Print result for individual matches.</p></li>
 <li><p><strong>radius_selection</strong> (<em>str</em><em> (</em><em>optional</em><em>)</em>) – Case of radius to be used, can be: max, min, self, other.</p></li>
 </ul>
 </dd>
@@ -288,19 +294,23 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cat</strong> (<em>clevar.ClCatalog</em>) – Input ClCatalog</p></li>
-<li><p><strong>delta_z</strong> (<em>float</em><em>, </em><em>string</em>) – <dl class="simple">
-<dt>Defines the zmin, zmax for matching. Options are:</dt><dd><p><cite>’cat’</cite> - uses redshift properties of the catalog
-<cite>‘spline.filename’</cite> - interpolates data in ‘filename’ (z, zmin, zmax) fmt
-<cite>float</cite> - uses delta_z*(1+z)
-<cite>None</cite> - does not use z</p>
-</dd>
-</dl>
+<li><p><strong>delta_z</strong> (<em>float</em><em>, </em><em>string</em>) – <p>Defines the zmin, zmax for matching. Options are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>’cat’</cite> - uses redshift properties of the catalog</p></li>
+<li><p><cite>’spline.filename’</cite> - interpolates data in ‘filename’ (z, zmin, zmax) fmt</p></li>
+<li><p><cite>float</cite> - uses delta_z*(1+z)</p></li>
+<li><p><cite>None</cite> - does not use z</p></li>
+</ul>
+</div></blockquote>
 </p></li>
-<li><p><strong>match_radius</strong> (<em>string</em>) – <dl class="simple">
-<dt>Defines the radius for matching. Options are:</dt><dd><p><cite>’cat’</cite> - uses the radius in the catalog
-<cite>‘value unit’</cite> - used fixed value (ex: <cite>1 arcsec</cite>, <cite>1 Mpc</cite>)</p>
-</dd>
-</dl>
+<li><p><strong>match_radius</strong> (<em>string</em>) – <p>Defines the radius for matching. Options are:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>’cat’</cite> - uses the radius in the catalog</p></li>
+<li><p><cite>’value unit’</cite> - used fixed value (ex: <cite>1 arcsec</cite>, <cite>1 Mpc</cite>)</p></li>
+</ul>
+</div></blockquote>
 </p></li>
 <li><p><strong>n_delta_z</strong> (<em>float</em>) – Number of delta_z to be used in the matching</p></li>
 <li><p><strong>n_match_radius</strong> (<em>float</em>) – Multiplies the radius of the matchingi</p></li>

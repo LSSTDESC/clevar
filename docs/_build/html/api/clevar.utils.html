@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.utils module &mdash; ClEvaR 0.12.0 documentation</title>
+  <title>clevar.utils module &mdash; ClEvaR 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.13.0
               </div>
             
           
@@ -164,6 +164,7 @@
 <li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.version.html">clevar.version module</a></li>
 </ul>
 </li>
 </ul>
@@ -423,6 +424,59 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clevar.utils.smooth_line">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">smooth_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_increase</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">1]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#smooth_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.smooth_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make smooth line using pixar’s algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array</em>) – x values.</p></li>
+<li><p><strong>y</strong> (<em>array</em>) – y values.</p></li>
+<li><p><strong>n_increase</strong> (<em>int</em>) – Number of loops for the algorithm.</p></li>
+<li><p><strong>scheme</strong> (<em>list</em>) – Scheme to be used for smoothening. Newton’s binomial coefficients work better.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>xsmooth, ysmooth</strong> – Smoothened line</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Good description of the method can be found at
+<a class="reference external" href="https://www.youtube.com/watch?v=mX0NB9IyYpU&amp;ab_channel=Numberphile">https://www.youtube.com/watch?v=mX0NB9IyYpU&amp;ab_channel=Numberphile</a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="clevar.utils.smooth_loop">
+<span class="sig-prename descclassname"><span class="pre">clevar.utils.</span></span><span class="sig-name descname"><span class="pre">smooth_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">1]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/utils.html#smooth_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.utils.smooth_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loop for smooth line using pixar’s algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array</em>) – x values.</p></li>
+<li><p><strong>y</strong> (<em>array</em>) – y values.</p></li>
+<li><p><strong>scheme</strong> (<em>list</em>) – Scheme to be used for smoothening. Newton’s binomial coefficients work better.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>xsmooth, ysmooth</strong> – Smoothened line</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Good description of the method can be found at
+<a class="reference external" href="https://www.youtube.com/watch?v=mX0NB9IyYpU&amp;ab_channel=Numberphile">https://www.youtube.com/watch?v=mX0NB9IyYpU&amp;ab_channel=Numberphile</a></p>
+</div>
 </dd></dl>
 
 <dl class="py function">

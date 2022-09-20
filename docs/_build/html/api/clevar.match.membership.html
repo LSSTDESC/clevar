@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.membership module &mdash; ClEvaR 0.12.0 documentation</title>
+  <title>clevar.match.membership module &mdash; ClEvaR 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.13.0
               </div>
             
           
@@ -164,6 +164,7 @@
 <li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.version.html">clevar.version module</a></li>
 </ul>
 </li>
 </ul>
@@ -292,21 +293,34 @@
 <li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – ClCatalog 2</p></li>
 <li><p><strong>mem1</strong> (<em>clevar.ClCatalog</em>) – Members of base catalog</p></li>
 <li><p><strong>mem2</strong> (<em>clevar.ClCatalog</em>) – Members of target catalog</p></li>
-<li><p><strong>match_config</strong> (<em>dict</em>) – <dl class="simple">
-<dt>Dictionary with the matching configuration. Keys must be:</dt><dd><p><cite>type</cite> -  type of matching, can be: <cite>cat1</cite>, <cite>cat2</cite>, <cite>cross</cite>.
-<cite>preference</cite> -  Preference to set best match, can be: <cite>more_massive</cite>, <cite>angular_proximity</cite>, <cite>redshift_proximity</cite>, <cite>shared_member_fraction</cite> (default).
-<cite>minimum_share_fraction</cite> -  Minimum share fraction to consider in matches (default=0).
-<cite>match_members</cite> -  Match the members catalogs (default=`True`).
-<cite>match_members_kwargs</cite> -  <cite>kwargs</cite> used in <cite>match_members(mem1, mem2, **kwargs)</cite>, needed if <cite>match_members=True</cite>.
-<cite>match_members_save</cite> -  saves file with matched members (default=`False`).
-<cite>match_members_load</cite> -  load matched members (default=`False`), if <cite>True</cite> skips matching (and save) of members.
-<cite>match_members_file</cite> -  file to save matching of members, needed if <cite>match_members_save</cite> or <cite>match_members_load</cite> is <cite>True</cite>.
-<cite>shared_members_fill</cite> -  Adds shared members dicts and nmem to mt_input in catalogs (default=`True`).
-<cite>shared_members_save</cite> -  saves files with shared members (default=`False`).
-<cite>shared_members_load</cite> -  load files with shared members (default=`False`), if <cite>True</cite> skips matching (and save) of members and fill (and save) of shared members.
-<cite>shared_members_file</cite> -  Prefix of file names to save shared members, needed if <cite>shared_members_save</cite> or <cite>shared_members_load</cite> is <cite>True</cite>.</p>
-</dd>
-</dl>
+<li><p><strong>match_config</strong> (<em>dict</em>) – <p>Dictionary with the matching configuration. Keys must be:</p>
+<blockquote>
+<div><ul>
+<li><p><cite>type</cite> -  type of matching, can be: <cite>cat1</cite>, <cite>cat2</cite>, <cite>cross</cite>.</p></li>
+<li><p><cite>preference</cite> -  Preference to set best match, can be: <cite>more_massive</cite>,
+<cite>angular_proximity</cite>, <cite>redshift_proximity</cite>, <cite>shared_member_fraction</cite> (default).</p></li>
+<li><p><cite>minimum_share_fraction1</cite> -  Minimum share fraction of catalog 1 to consider
+in matches (default=0).</p></li>
+<li><p><cite>minimum_share_fraction2</cite> -  Minimum share fraction of catalog 2 to consider
+in matches (default=0).</p></li>
+<li><p><cite>match_members</cite> -  Match the members catalogs (default=`True`).</p></li>
+<li><p><cite>match_members_kwargs</cite> -  <cite>kwargs</cite> used in <cite>match_members(mem1, mem2, **kwargs)</cite>,
+needed if <cite>match_members=True</cite>.</p></li>
+<li><p><cite>match_members_save</cite> -  saves file with matched members (default=`False`).</p></li>
+<li><p><cite>match_members_load</cite> -  load matched members (default=`False`), if <cite>True</cite> skips
+matching (and save) of members.</p></li>
+<li><p><cite>match_members_file</cite> -  file to save matching of members, needed if
+<cite>match_members_save</cite> or <cite>match_members_load</cite> is <cite>True</cite>.</p></li>
+<li><p><cite>shared_members_fill</cite> -  Adds shared members dicts and nmem to mt_input
+in catalogs (default=`True`).</p></li>
+<li><p><cite>shared_members_save</cite> -  saves files with shared members (default=`False`).</p></li>
+<li><p><cite>shared_members_load</cite> -  load files with shared members (default=`False`), if
+<cite>True</cite> skips matching (and save) of members and fill (and save) of shared members.</p></li>
+<li><p><cite>shared_members_file</cite> -  Prefix of file names to save shared members,
+needed if <cite>shared_members_save</cite> or <cite>shared_members_load</cite> is <cite>True</cite>.</p></li>
+<li><p><cite>verbose</cite>: Print result for individual matches (default=`True`).</p></li>
+</ul>
+</div></blockquote>
 </p></li>
 </ul>
 </dd>
@@ -334,13 +348,14 @@ with format <cite>‘value unit’</cite> - used fixed value (ex: <cite>1 arcsec
 
 <dl class="py method">
 <dt class="sig sig-object py" id="clevar.match.membership.MembershipMatch.multiple">
-<span class="sig-name descname"><span class="pre">multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match/membership.html#MembershipMatch.multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match.membership.MembershipMatch.multiple" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/match/membership.html#MembershipMatch.multiple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.match.membership.MembershipMatch.multiple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make the one way multiple matching</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cat1</strong> (<em>clevar.ClCatalog</em>) – Base catalog with members attribute.</p></li>
 <li><p><strong>cat2</strong> (<em>clevar.ClCatalog</em>) – Target catalog with members attribute.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Print result for individual matches.</p></li>
 </ul>
 </dd>
 </dl>

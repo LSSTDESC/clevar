@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.proximity &mdash; ClEvaR 0.12.0 documentation</title>
+  <title>clevar.match.proximity &mdash; ClEvaR 0.13.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.13.0
               </div>
             
           
@@ -161,6 +161,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.version.html">clevar.version module</a></li>
 </ul>
 </li>
 </ul>
@@ -240,8 +241,9 @@
 
 <div class="viewcode-block" id="ProximityMatch"><a class="viewcode-back" href="../../../api/clevar.match.proximity.html#clevar.match.proximity.ProximityMatch">[docs]</a><span class="k">class</span> <span class="nc">ProximityMatch</span><span class="p">(</span><span class="n">Match</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
+        <span class="n">Match</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;Proximity&#39;</span>
-<div class="viewcode-block" id="ProximityMatch.multiple"><a class="viewcode-back" href="../../../api/clevar.match.proximity.html#clevar.match.proximity.ProximityMatch.multiple">[docs]</a>    <span class="k">def</span> <span class="nf">multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">radius_selection</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="ProximityMatch.multiple"><a class="viewcode-back" href="../../../api/clevar.match.proximity.html#clevar.match.proximity.ProximityMatch.multiple">[docs]</a>    <span class="k">def</span> <span class="nf">multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">radius_selection</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make the one way multiple matching</span>
 
@@ -251,6 +253,8 @@
 <span class="sd">            Base catalog</span>
 <span class="sd">        cat2: clevar.ClCatalog</span>
 <span class="sd">            Target catalog</span>
+<span class="sd">        verbose: bool</span>
+<span class="sd">            Print result for individual matches.</span>
 <span class="sd">        radius_selection: str (optional)</span>
 <span class="sd">            Case of radius to be used, can be: max, min, self, other.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -283,10 +287,17 @@
                         <span class="n">i2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cat2</span><span class="o">.</span><span class="n">id_dict</span><span class="p">[</span><span class="n">id2</span><span class="p">])</span>
                         <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_multi_other&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">cat1_mmt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">) - </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> candidates&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">) - </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> candidates&quot;</span><span class="p">,</span>
+                      <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="p">(</span><span class="n">veclen</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_multi_self&quot;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span>
         <span class="n">cat1</span><span class="o">.</span><span class="n">remove_multiple_duplicates</span><span class="p">()</span>
-        <span class="n">cat2</span><span class="o">.</span><span class="n">remove_multiple_duplicates</span><span class="p">()</span></div>
+        <span class="n">cat2</span><span class="o">.</span><span class="n">remove_multiple_duplicates</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;step&#39;</span><span class="p">:</span><span class="s1">&#39;multiple&#39;</span><span class="p">,</span> <span class="s1">&#39;cats&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;radius_selection&#39;</span><span class="p">:</span><span class="n">radius_selection</span><span class="p">})</span>
+        <span class="n">cat1</span><span class="o">.</span><span class="n">_set_mt_hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+        <span class="n">cat2</span><span class="o">.</span><span class="n">_set_mt_hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span></div>
 <div class="viewcode-block" id="ProximityMatch.prep_cat_for_match"><a class="viewcode-back" href="../../../api/clevar.match.proximity.html#clevar.match.proximity.ProximityMatch.prep_cat_for_match">[docs]</a>    <span class="k">def</span> <span class="nf">prep_cat_for_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat</span><span class="p">,</span> <span class="n">delta_z</span><span class="p">,</span> <span class="n">match_radius</span><span class="p">,</span> <span class="n">n_delta_z</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_match_radius</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">cosmo</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -298,14 +309,18 @@
 <span class="sd">            Input ClCatalog</span>
 <span class="sd">        delta_z: float, string</span>
 <span class="sd">            Defines the zmin, zmax for matching. Options are:</span>
-<span class="sd">                `&#39;cat&#39;` - uses redshift properties of the catalog</span>
-<span class="sd">                `&#39;spline.filename&#39;` - interpolates data in &#39;filename&#39; (z, zmin, zmax) fmt</span>
-<span class="sd">                `float` - uses delta_z*(1+z)</span>
-<span class="sd">                `None` - does not use z</span>
+
+<span class="sd">                * `&#39;cat&#39;` - uses redshift properties of the catalog</span>
+<span class="sd">                * `&#39;spline.filename&#39;` - interpolates data in &#39;filename&#39; (z, zmin, zmax) fmt</span>
+<span class="sd">                * `float` - uses delta_z*(1+z)</span>
+<span class="sd">                * `None` - does not use z</span>
+
 <span class="sd">        match_radius: string</span>
 <span class="sd">            Defines the radius for matching. Options are:</span>
-<span class="sd">                `&#39;cat&#39;` - uses the radius in the catalog</span>
-<span class="sd">                `&#39;value unit&#39;` - used fixed value (ex: `1 arcsec`, `1 Mpc`)</span>
+
+<span class="sd">                * `&#39;cat&#39;` - uses the radius in the catalog</span>
+<span class="sd">                * `&#39;value unit&#39;` - used fixed value (ex: `1 arcsec`, `1 Mpc`)</span>
+
 <span class="sd">        n_delta_z: float</span>
 <span class="sd">            Number of delta_z to be used in the matching</span>
 <span class="sd">        n_match_radius: float</span>
@@ -369,7 +384,11 @@
         <span class="n">cat</span><span class="o">.</span><span class="n">mt_input</span><span class="p">[</span><span class="s1">&#39;ang&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_units</span><span class="p">(</span>
             <span class="n">in_rad</span><span class="o">*</span><span class="n">n_match_radius</span><span class="p">,</span> <span class="n">in_rad_unit</span><span class="p">,</span> <span class="s1">&#39;degrees&#39;</span><span class="p">,</span>
             <span class="n">redshift</span><span class="o">=</span><span class="n">cat</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;z&#39;</span> <span class="ow">in</span> <span class="n">cat</span><span class="o">.</span><span class="n">tags</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">)</span></div>
+            <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;step&#39;</span><span class="p">:</span><span class="s1">&#39;prep&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">:</span> <span class="n">cat</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;delta_z&#39;</span><span class="p">:</span> <span class="n">delta_z</span><span class="p">,</span> <span class="s1">&#39;match_radius&#39;</span><span class="p">:</span> <span class="n">match_radius</span><span class="p">,</span>
+            <span class="s1">&#39;n_delta_z&#39;</span><span class="p">:</span> <span class="n">n_delta_z</span><span class="p">,</span> <span class="s1">&#39;n_match_radius&#39;</span><span class="p">:</span> <span class="n">n_match_radius</span><span class="p">,</span>
+            <span class="s1">&#39;cosmo&#39;</span><span class="p">:</span> <span class="n">cosmo</span> <span class="k">if</span> <span class="n">cosmo</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cosmo</span><span class="o">.</span><span class="n">get_desc</span><span class="p">()})</span></div>
     <span class="k">def</span> <span class="nf">_rescale_z</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">zlim</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Rescale zmin/zmax by a factor n</span>
 
@@ -430,11 +449,15 @@
 <span class="sd">            ClCatalog 2</span>
 <span class="sd">        match_config: dict</span>
 <span class="sd">            Dictionary with the matching configuration. Keys must be:</span>
-<span class="sd">                `type`: type of matching, can be: `cat1`, `cat2`, `cross`.</span>
-<span class="sd">                `catalog1`: `kwargs` used in `prep_cat_for_match(cat1, **kwargs)` (minus `cosmo`).</span>
-<span class="sd">                `catalog2`: `kwargs` used in `prep_cat_for_match(cat2, **kwargs)` (minus `cosmo`).</span>
-<span class="sd">                `which_radius`: Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.</span>
-<span class="sd">                `preference`: Preference to set best match, can be: `more_massive`, `angular_proximity`, `redshift_proximity`, `shared_member_fraction`.</span>
+
+<span class="sd">                * `type`: type of matching, can be: `cat1`, `cat2`, `cross`.</span>
+<span class="sd">                * `catalog1`: `kwargs` used in `prep_cat_for_match(cat1, **kwargs)` (minus `cosmo`).</span>
+<span class="sd">                * `catalog2`: `kwargs` used in `prep_cat_for_match(cat2, **kwargs)` (minus `cosmo`).</span>
+<span class="sd">                * `which_radius`: Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.</span>
+<span class="sd">                * `preference`: Preference to set best match, can be: `more_massive`,</span>
+<span class="sd">                  `angular_proximity`, `redshift_proximity`, `shared_member_fraction`.</span>
+<span class="sd">                * `verbose`: Print result for individual matches (default=`True`).</span>
+
 <span class="sd">        cosmo: clevar.Cosmology object</span>
 <span class="sd">            Cosmology object for when radius has physical units</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -447,6 +470,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## ClCatalog 2&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prep_cat_for_match</span><span class="p">(</span><span class="n">cat2</span><span class="p">,</span> <span class="n">cosmo</span><span class="o">=</span><span class="n">cosmo</span><span class="p">,</span> <span class="o">**</span><span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;catalog2&#39;</span><span class="p">])</span>
 
+        <span class="n">verbose</span> <span class="o">=</span> <span class="n">match_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;cat1&#39;</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## Multiple match (catalog 1)&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;which_radius&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;cat1&#39;</span><span class="p">:</span>
@@ -455,7 +479,7 @@
                 <span class="n">radius_selection</span> <span class="o">=</span> <span class="s1">&#39;other&#39;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">radius_selection</span> <span class="o">=</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;which_radius&#39;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">multiple</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">radius_selection</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multiple</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">radius_selection</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;cat2&#39;</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## Multiple match (catalog 2)&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;which_radius&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;cat1&#39;</span><span class="p">:</span>
@@ -464,7 +488,7 @@
                 <span class="n">radius_selection</span> <span class="o">=</span> <span class="s1">&#39;self&#39;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">radius_selection</span> <span class="o">=</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;which_radius&#39;</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">multiple</span><span class="p">(</span><span class="n">cat2</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">radius_selection</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multiple</span><span class="p">(</span><span class="n">cat2</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">radius_selection</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;cat1&#39;</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## Finding unique matches of catalog 1&quot;</span><span class="p">)</span>

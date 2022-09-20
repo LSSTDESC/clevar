@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.membership &mdash; ClEvaR 0.12.0 documentation</title>
+  <title>clevar.match.membership &mdash; ClEvaR 0.13.0 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.13.0
               </div>
             
           
@@ -161,6 +161,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../api/clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/clevar.version.html">clevar.version module</a></li>
 </ul>
 </li>
 </ul>
@@ -231,7 +232,6 @@
   <h1>Source code for clevar.match.membership</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">InterpolatedUnivariateSpline</span> <span class="k">as</span> <span class="n">spline</span>
 
 <span class="kn">from</span> <span class="nn">.parent</span> <span class="kn">import</span> <span class="n">Match</span>
 <span class="kn">from</span> <span class="nn">.proximity</span> <span class="kn">import</span> <span class="n">ProximityMatch</span>
@@ -242,9 +242,10 @@
 
 <div class="viewcode-block" id="MembershipMatch"><a class="viewcode-back" href="../../../api/clevar.match.membership.html#clevar.match.membership.MembershipMatch">[docs]</a><span class="k">class</span> <span class="nc">MembershipMatch</span><span class="p">(</span><span class="n">Match</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
+        <span class="n">Match</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;Membership&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span> <span class="o">=</span> <span class="kc">None</span>
-<div class="viewcode-block" id="MembershipMatch.multiple"><a class="viewcode-back" href="../../../api/clevar.match.membership.html#clevar.match.membership.MembershipMatch.multiple">[docs]</a>    <span class="k">def</span> <span class="nf">multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">):</span>
+<div class="viewcode-block" id="MembershipMatch.multiple"><a class="viewcode-back" href="../../../api/clevar.match.membership.html#clevar.match.membership.MembershipMatch.multiple">[docs]</a>    <span class="k">def</span> <span class="nf">multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make the one way multiple matching</span>
 
@@ -254,6 +255,8 @@
 <span class="sd">            Base catalog with members attribute.</span>
 <span class="sd">        cat2: clevar.ClCatalog</span>
 <span class="sd">            Target catalog with members attribute.</span>
+<span class="sd">        verbose: bool</span>
+<span class="sd">            Print result for individual matches.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">cat1</span><span class="o">.</span><span class="n">mt_input</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;cat1.mt_input is None, run fill_shared_members first.&#39;</span><span class="p">)</span>
@@ -267,10 +270,15 @@
                 <span class="n">i2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cat2</span><span class="o">.</span><span class="n">id_dict</span><span class="p">[</span><span class="n">id2</span><span class="p">])</span>
                 <span class="n">cat2</span><span class="p">[</span><span class="s1">&#39;mt_multi_other&#39;</span><span class="p">][</span><span class="n">i2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">cat1_mmt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">) - </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> candidates&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">) - </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_multi_self&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">])</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> candidates&quot;</span><span class="p">,</span>
+                      <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="p">(</span><span class="n">veclen</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_multi_self&quot;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span>
         <span class="n">cat1</span><span class="o">.</span><span class="n">remove_multiple_duplicates</span><span class="p">()</span>
-        <span class="n">cat2</span><span class="o">.</span><span class="n">remove_multiple_duplicates</span><span class="p">()</span></div>
+        <span class="n">cat2</span><span class="o">.</span><span class="n">remove_multiple_duplicates</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;step&#39;</span><span class="p">:</span><span class="s1">&#39;multiple&#39;</span><span class="p">,</span> <span class="s1">&#39;cats&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
+        <span class="n">cat1</span><span class="o">.</span><span class="n">_set_mt_hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
+        <span class="n">cat2</span><span class="o">.</span><span class="n">_set_mt_hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span></div>
 <div class="viewcode-block" id="MembershipMatch.fill_shared_members"><a class="viewcode-back" href="../../../api/clevar.match.membership.html#clevar.match.membership.MembershipMatch.fill_shared_members">[docs]</a>    <span class="k">def</span> <span class="nf">fill_shared_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds shared members dicts and nmem to mt_input in catalogs.</span>
@@ -416,6 +424,13 @@
         <span class="k">for</span> <span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">matched_mems</span><span class="p">:</span>
             <span class="n">mem1</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">][</span><span class="n">ind1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem2</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">][</span><span class="n">ind2</span><span class="p">])</span>
             <span class="n">mem2</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">][</span><span class="n">ind2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem1</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">][</span><span class="n">ind1</span><span class="p">])</span></div>
+        <span class="c1">#self.history.append({</span>
+        <span class="c1">#    &#39;step&#39;:&#39;match_members&#39;, &#39;cat&#39;: cat.name, &#39;method&#39;: method,</span>
+        <span class="c1">#    &#39;cosmo&#39;: cosmo if cosmo is None else cosmo.get_desc()})</span>
+        <span class="c1">#cfg = {&#39;step&#39;:&#39;match_members&#39;, &#39;cats&#39;: (cat1.name, cat2.name), &#39;method&#39;: method,</span>
+        <span class="c1">#       &#39;radius&#39;: radius, &#39;cosmo&#39;: cosmo if cosmo is None else cosmo.get_desc()}</span>
+        <span class="c1">#cat1.mt_hist.append(cfg)</span>
+        <span class="c1">#cat2.mt_hist.append(cfg)</span>
 
     <span class="k">def</span> <span class="nf">_match_members_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mem1</span><span class="p">,</span> <span class="n">mem2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -510,18 +525,32 @@
 <span class="sd">            Members of target catalog</span>
 <span class="sd">        match_config: dict</span>
 <span class="sd">            Dictionary with the matching configuration. Keys must be:</span>
-<span class="sd">                `type` -  type of matching, can be: `cat1`, `cat2`, `cross`.</span>
-<span class="sd">                `preference` -  Preference to set best match, can be: `more_massive`, `angular_proximity`, `redshift_proximity`, `shared_member_fraction` (default).</span>
-<span class="sd">                `minimum_share_fraction` -  Minimum share fraction to consider in matches (default=0).</span>
-<span class="sd">                `match_members` -  Match the members catalogs (default=`True`).</span>
-<span class="sd">                `match_members_kwargs` -  `kwargs` used in `match_members(mem1, mem2, **kwargs)`, needed if `match_members=True`.</span>
-<span class="sd">                `match_members_save` -  saves file with matched members (default=`False`).</span>
-<span class="sd">                `match_members_load` -  load matched members (default=`False`), if `True` skips matching (and save) of members.</span>
-<span class="sd">                `match_members_file` -  file to save matching of members, needed if `match_members_save` or `match_members_load` is `True`.</span>
-<span class="sd">                `shared_members_fill` -  Adds shared members dicts and nmem to mt_input in catalogs (default=`True`).</span>
-<span class="sd">                `shared_members_save` -  saves files with shared members (default=`False`).</span>
-<span class="sd">                `shared_members_load` -  load files with shared members (default=`False`), if `True` skips matching (and save) of members and fill (and save) of shared members.</span>
-<span class="sd">                `shared_members_file` -  Prefix of file names to save shared members, needed if `shared_members_save` or `shared_members_load` is `True`.</span>
+
+<span class="sd">                * `type` -  type of matching, can be: `cat1`, `cat2`, `cross`.</span>
+<span class="sd">                * `preference` -  Preference to set best match, can be: `more_massive`,</span>
+<span class="sd">                  `angular_proximity`, `redshift_proximity`, `shared_member_fraction` (default).</span>
+<span class="sd">                * `minimum_share_fraction1` -  Minimum share fraction of catalog 1 to consider</span>
+<span class="sd">                  in matches (default=0).</span>
+<span class="sd">                * `minimum_share_fraction2` -  Minimum share fraction of catalog 2 to consider</span>
+<span class="sd">                  in matches (default=0).</span>
+<span class="sd">                * `match_members` -  Match the members catalogs (default=`True`).</span>
+<span class="sd">                * `match_members_kwargs` -  `kwargs` used in `match_members(mem1, mem2, **kwargs)`,</span>
+<span class="sd">                  needed if `match_members=True`.</span>
+<span class="sd">                * `match_members_save` -  saves file with matched members (default=`False`).</span>
+<span class="sd">                * `match_members_load` -  load matched members (default=`False`), if `True` skips</span>
+<span class="sd">                  matching (and save) of members.</span>
+<span class="sd">                * `match_members_file` -  file to save matching of members, needed if</span>
+<span class="sd">                  `match_members_save` or `match_members_load` is `True`.</span>
+<span class="sd">                * `shared_members_fill` -  Adds shared members dicts and nmem to mt_input</span>
+<span class="sd">                  in catalogs (default=`True`).</span>
+<span class="sd">                * `shared_members_save` -  saves files with shared members (default=`False`).</span>
+<span class="sd">                * `shared_members_load` -  load files with shared members (default=`False`), if</span>
+<span class="sd">                  `True` skips matching (and save) of members and fill (and save) of shared members.</span>
+<span class="sd">                * `shared_members_file` -  Prefix of file names to save shared members,</span>
+<span class="sd">                  needed if `shared_members_save` or `shared_members_load` is `True`.</span>
+<span class="sd">                * `verbose`: Print result for individual matches (default=`True`).</span>
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;cat1&#39;</span><span class="p">,</span> <span class="s1">&#39;cat2&#39;</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;config type must be cat1, cat2 or cross&quot;</span><span class="p">)</span>
@@ -542,21 +571,23 @@
         <span class="k">if</span> <span class="n">load_shared_member</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_shared_members</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;shared_members_file&#39;</span><span class="p">])</span>
 
+        <span class="n">verbose</span> <span class="o">=</span> <span class="n">match_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;cat1&#39;</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## Multiple match (catalog 1)&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">multiple</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multiple</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;cat2&#39;</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## Multiple match (catalog 2)&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">multiple</span><span class="p">(</span><span class="n">cat2</span><span class="p">,</span> <span class="n">cat1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multiple</span><span class="p">(</span><span class="n">cat2</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
         <span class="n">preference</span> <span class="o">=</span> <span class="n">match_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;preference&#39;</span><span class="p">,</span> <span class="s1">&#39;shared_member_fraction&#39;</span><span class="p">)</span>
-        <span class="n">minimum_share_fraction</span> <span class="o">=</span> <span class="n">match_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;minimum_share_fraction&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;cat1&#39;</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## Finding unique matches of catalog 1&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">preference</span><span class="p">,</span> <span class="n">minimum_share_fraction</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">,</span> <span class="n">preference</span><span class="p">,</span>
+                        <span class="n">match_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;minimum_share_fraction1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;cat2&#39;</span><span class="p">,</span> <span class="s1">&#39;cross&#39;</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">## Finding unique matches of catalog 2&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">cat2</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">preference</span><span class="p">,</span> <span class="n">minimum_share_fraction</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">cat2</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">preference</span><span class="p">,</span>
+                        <span class="n">match_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;minimum_share_fraction2&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">match_config</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;cross&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cross_match</span><span class="p">(</span><span class="n">cat1</span><span class="p">)</span>

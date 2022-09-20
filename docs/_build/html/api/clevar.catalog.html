@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.catalog module &mdash; ClEvaR 0.12.0 documentation</title>
+  <title>clevar.catalog module &mdash; ClEvaR 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.13.0
               </div>
             
           
@@ -164,6 +164,7 @@
 <li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.version.html">clevar.version module</a></li>
 </ul>
 </li>
 </ul>
@@ -239,7 +240,7 @@
 The ClCatalog and improved Astropy table classes</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="clevar.catalog.Catalog">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clevar.catalog.</span></span><span class="sig-name descname"><span class="pre">Catalog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.catalog.Catalog" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">clevar.catalog.</span></span><span class="sig-name descname"><span class="pre">Catalog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mt_hist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/clevar/catalog.html#Catalog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#clevar.catalog.Catalog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#clevar.catalog.TagData" title="clevar.catalog.TagData"><code class="xref py py-class docutils literal notranslate"><span class="pre">clevar.catalog.TagData</span></code></a></p>
 <p>Parent object to handle catalogs.</p>
 <dl class="field-list simple">
@@ -252,6 +253,7 @@ Matching data (mt_self, mt_other, mt_cross, mt_multi_self, mt_multi_other)</p></
 <li><p><strong>~Catalog.size</strong> (<em>int</em>) – Number of objects in the catalog</p></li>
 <li><p><strong>~Catalog.tags</strong> (<em>LoweCaseDict</em>) – Tag for main quantities used in matching and plots (ex: id, ra, dec, z)</p></li>
 <li><p><strong>~Catalog.labels</strong> (<a class="reference internal" href="clevar.utils.html#clevar.utils.LowerCaseDict" title="clevar.utils.LowerCaseDict"><em>LowerCaseDict</em></a>) – Labels of data columns for plots</p></li>
+<li><p><strong>~Catalog.mt_hist</strong> (<em>list</em>) – Recorded steps of matching</p></li>
 </ul>
 </dd>
 </dl>
@@ -341,6 +343,11 @@ It also considers zmax values on the footprint if available.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="clevar.catalog.Catalog.mt_hist">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mt_hist</span></span><a class="headerlink" href="#clevar.catalog.Catalog.mt_hist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="clevar.catalog.Catalog.read">

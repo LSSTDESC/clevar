@@ -1,0 +1,7 @@
+clevar.version module
+=====================
+
+.. automodule:: clevar.version
+   :members:
+   :undoc-members:
+   :show-inheritance:
