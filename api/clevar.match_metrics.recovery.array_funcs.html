@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match_metrics.recovery.array_funcs module &mdash; ClEvaR 0.12.0 documentation</title>
+  <title>clevar.match_metrics.recovery.array_funcs module &mdash; ClEvaR 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.13.0
               </div>
             
           
@@ -164,6 +164,7 @@
 <li class="toctree-l3"><a class="reference internal" href="clevar.clv_yaml.match_metrics_redshift.html">clevar.clv_yaml.match_metrics_redshift module</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="clevar.version.html">clevar.version module</a></li>
 </ul>
 </li>
 </ul>
@@ -288,7 +289,9 @@
 <li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.plot.
+It also includes the possibility of smoothening the line with <cite>n_increase, scheme</cite>
+arguments. See <cite>clevar.utils.smooth_line</cite> for details.</p></li>
 <li><p><strong>lines_kwargs_list</strong> (<em>list</em><em>, </em><em>None</em>) – List of additional arguments for plotting each line (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 <li><p><strong>add_legend</strong> (<em>bool</em>) – Add legend of bins</p></li>
@@ -336,7 +339,7 @@ Must have same size as len(bins2)-1</p></li>
 <li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for components 1 and 2.</p></li>
 <li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.pcolor.</p></li>
 <li><p><strong>add_cb</strong> (<em>bool</em>) – Plot colorbar</p></li>
 <li><p><strong>cb_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Colorbar arguments</p></li>
 <li><p><strong>add_num</strong> (<em>int</em>) – Add numbers in each bin</p></li>
@@ -385,8 +388,9 @@ and each panel is based on the data inside a bins2 bin.</p>
 <li><p><strong>bins2</strong> (<em>array</em><em>, </em><em>int</em>) – Bins for components 1 and 2.</p></li>
 <li><p><strong>is_matched</strong> (<em>array</em><em> (</em><em>boolean</em><em>)</em>) – Boolean array indicating matching status</p></li>
 <li><p><strong>shape</strong> (<em>str</em>) – Shape of the lines. Can be steps or line.</p></li>
-<li><p><strong>ax</strong> (<em>matplotlib.axes</em>) – Ax to add plot</p></li>
-<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.plot</p></li>
+<li><p><strong>plt_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for pylab.plot.
+It also includes the possibility of smoothening the line with <cite>n_increase, scheme</cite>
+arguments. See <cite>clevar.utils.smooth_line</cite> for details.</p></li>
 <li><p><strong>panel_kwargs_list</strong> (<em>list</em><em>, </em><em>None</em>) – List of additional arguments for plotting each panel (using pylab.plot).
 Must have same size as len(bins2)-1</p></li>
 <li><p><strong>fig_kwargs</strong> (<em>dict</em><em>, </em><em>None</em>) – Additional arguments for plt.subplots</p></li>

@@ -61,7 +61,7 @@ with the footprints.
 
 .. parsed-literal::
 
-    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.12.0-py3.9.egg/clevar/catalog.py:265: UserWarning: id column missing, additional one is being created.
+    /home/aguena/.local/lib/python3.9/site-packages/clevar-0.13.0-py3.9.egg/clevar/catalog.py:267: UserWarning: id column missing, additional one is being created.
       warnings.warn(
 
 
@@ -115,7 +115,7 @@ Plot to confirm selected pixels are correct
 
 .. parsed-literal::
 
-    <matplotlib.legend.Legend at 0x7fb2460d7f10>
+    <matplotlib.legend.Legend at 0x7fafa83c0bb0>
 
 
 
@@ -179,7 +179,7 @@ arguments:
 .. raw:: html
 
     <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=5</i>
-    <table id="table140403657138816" class="table-striped table-bordered table-condensed">
+    <table id="table140392419502304" class="table-striped table-bordered table-condensed">
     <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
@@ -206,7 +206,7 @@ catalog to have names that are not default for ``ClEvaR`` use:
 .. raw:: html
 
     <b>tags:</b> hpix(pixel), df(detfrac), zm(zmax)<br><div><i>ClData length=5</i>
-    <table id="table140406797936432" class="table-striped table-bordered table-condensed">
+    <table id="table140392418423568" class="table-striped table-bordered table-condensed">
     <thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zm (zmax)</th></tr></thead>
     <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
@@ -236,7 +236,7 @@ You can also create a ``ClCatalog`` passing directly a full data table:
 .. raw:: html
 
     <b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
-    <table id="table140406797937056" class="table-striped table-bordered table-condensed">
+    <table id="table140392419502496" class="table-striped table-bordered table-condensed">
     <thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
@@ -272,7 +272,7 @@ The data table can also be a dictionary or a ``numpy`` array with names:
 .. raw:: html
 
     <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
-    <table id="table140403655417232" class="table-striped table-bordered table-condensed">
+    <table id="table140392419502160" class="table-striped table-bordered table-condensed">
     <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
@@ -290,7 +290,7 @@ The data table can also be a dictionary or a ``numpy`` array with names:
 .. raw:: html
 
     <b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
-    <table id="table140403655340624" class="table-striped table-bordered table-condensed">
+    <table id="table140392419236400" class="table-striped table-bordered table-condensed">
     <thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345330078498</td><td>99.0</td></tr>
@@ -327,7 +327,7 @@ The data table can also be a dictionary or a ``numpy`` array with names:
 .. raw:: html
 
     <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
-    <table id="table140403655458624" class="table-striped table-bordered table-condensed">
+    <table id="table140392418220112" class="table-striped table-bordered table-condensed">
     <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float32</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345</td><td>99.0</td></tr>
@@ -345,7 +345,7 @@ The data table can also be a dictionary or a ``numpy`` array with names:
 .. raw:: html
 
     <b>tags:</b> hpix(pixel), df(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
-    <table id="table140405299565232" class="table-striped table-bordered table-condensed">
+    <table id="table140392419342656" class="table-striped table-bordered table-condensed">
     <thead><tr><th>hpix (pixel)</th><th>df (detfrac)</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float32</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345</td><td>99.0</td></tr>
@@ -393,7 +393,7 @@ and then read it:
 .. raw:: html
 
     <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
-    <table id="table140403655455024" class="table-striped table-bordered table-condensed">
+    <table id="table140392418220208" class="table-striped table-bordered table-condensed">
     <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
@@ -414,7 +414,7 @@ and then read it:
 .. raw:: html
 
     <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
-    <table id="table140403655452512" class="table-striped table-bordered table-condensed">
+    <table id="table140392417709024" class="table-striped table-bordered table-condensed">
     <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>1.0</td><td>99.0</td></tr>
@@ -435,7 +435,7 @@ and then read it:
 .. raw:: html
 
     <b>tags:</b> pixel(pixel), detfrac(detfrac), zmax(zmax)<br><div><i>ClData length=3</i>
-    <table id="table140403655455792" class="table-striped table-bordered table-condensed">
+    <table id="table140392418220016" class="table-striped table-bordered table-condensed">
     <thead><tr><th>pixel</th><th>detfrac</th><th>zmax</th></tr></thead>
     <thead><tr><th>int64</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>4681</td><td>0.9063345330078498</td><td>0.5603701608159029</td></tr>
@@ -617,8 +617,8 @@ weighted by a project NFW profile
     ## creating visibility mask ##
     ## creating visibility mask ##
     ## creating visibility mask ##
-    CPU times: user 18.1 ms, sys: 23 ms, total: 41.1 ms
-    Wall time: 13.6 ms
+    CPU times: user 23.4 ms, sys: 23.4 ms, total: 46.9 ms
+    Wall time: 15.5 ms
 
 
 .. code:: ipython3
@@ -631,7 +631,7 @@ weighted by a project NFW profile
 .. raw:: html
 
     <b>Cat1</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
-    <table id="table140403653141552" class="table-striped table-bordered table-condensed">
+    <table id="table140392429731552" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
     <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>0.94</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td></tr>
@@ -645,7 +645,7 @@ weighted by a project NFW profile
 .. raw:: html
 
     <b>Cat2</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
-    <table id="table140403652967872" class="table-striped table-bordered table-condensed">
+    <table id="table140392418470640" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th></tr></thead>
     <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>0.94</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td></tr>
@@ -673,8 +673,8 @@ object.
 
 .. parsed-literal::
 
-    CPU times: user 7.77 s, sys: 81 ms, total: 7.85 s
-    Wall time: 7.76 s
+    CPU times: user 8.16 s, sys: 993 µs, total: 8.16 s
+    Wall time: 8.13 s
 
 
 .. code:: ipython3
@@ -687,7 +687,7 @@ object.
 .. raw:: html
 
     <b>Cat1</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
-    <table id="table140403653020736" class="table-striped table-bordered table-condensed">
+    <table id="table140392417625280" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_1_mpc</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th><th>float64</th></tr></thead>
     <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.53</td><td>0.94</td><td>1.00e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>False</td><td>True</td><td>0.8333333333333334</td><td>0.7741572794115797</td></tr>
@@ -701,7 +701,7 @@ object.
 .. raw:: html
 
     <b>Cat2</b><br></b><b>tags:</b> id(id), RA(ra), DEC(dec), Z(z), MASS(mass), MASS_ERR(mass_err), Z_ERR(z_err), RADIUS_ARCMIN(radius)<br><b>Radius unit:</b> arcmin<br><div><i>ClData length=4</i>
-    <table id="table140403653018192" class="table-striped table-bordered table-condensed">
+    <table id="table140392417416432" class="table-striped table-bordered table-condensed">
     <thead><tr><th>id</th><th>RA (ra)</th><th>DEC (dec)</th><th>Z (z)</th><th>RADIUS_ARCMIN (radius)</th><th>MASS (mass)</th><th>MASS_ERR (mass_err)</th><th>Z_ERR (z_err)</th><th>mt_self</th><th>mt_other</th><th>mt_multi_self</th><th>mt_multi_other</th><th>ft_self</th><th>ft_other</th><th>cf_nfw_1_mpc</th></tr></thead>
     <thead><tr><th>str3</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>float64</th><th>object</th><th>object</th><th>object</th><th>object</th><th>bool</th><th>bool</th><th>float64</th></tr></thead>
     <tr><td>0</td><td>12.58</td><td>23.60</td><td>1.51</td><td>0.94</td><td>1.12e+13</td><td>3.69e+12</td><td>0.08</td><td>None</td><td>None</td><td>[]</td><td>[]</td><td>True</td><td>False</td><td>0.0</td></tr>
@@ -789,8 +789,8 @@ Let’s match the catalogs to compute the recovery rate
     * 719/835 objects matched.
     Cross Matches (Cat2)
     * 719/928 objects matched.
-    CPU times: user 16.5 s, sys: 230 ms, total: 16.7 s
-    Wall time: 16.5 s
+    CPU times: user 17.6 s, sys: 324 ms, total: 18 s
+    Wall time: 17.7 s
 
 
 Recovery rate
