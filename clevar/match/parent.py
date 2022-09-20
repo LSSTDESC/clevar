@@ -70,7 +70,7 @@ class Match():
                 self.cat1_mt[i] = set_unique(cat1, i, cat2)
         self.cat1_mt *= (cat1['mt_self']!=None) # In case ang pref removes a match
         print(f'* {(cat1["mt_self"]!=None).sum():,}/{cat1.size:,} objects matched.')
-        cfg = {'step':'unique', 'cats': f'{cat1.name}, {cat2.name}', 'preference': preference}
+        cfg = {'func':'unique', 'cats': f'{cat1.name}, {cat2.name}', 'preference': preference}
         if preference=='shared_member_fraction':
             cfg['minimum_share_fraction'] = minimum_share_fraction
         self.history.append(cfg)
