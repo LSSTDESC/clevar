@@ -329,13 +329,14 @@ class MembershipMatch(Match):
             self.multiple(cat2, cat1)
 
         preference = match_config.get('preference', 'shared_member_fraction')
-        minimum_share_fraction = match_config.get('minimum_share_fraction', 0)
         if match_config['type'] in ('cat1', 'cross'):
             print("\n## Finding unique matches of catalog 1")
-            self.unique(cat1, cat2, preference, minimum_share_fraction)
+            self.unique(cat1, cat2, preference,
+                        match_config.get('minimum_share_fraction1', 0))
         if match_config['type'] in ('cat2', 'cross'):
             print("\n## Finding unique matches of catalog 2")
-            self.unique(cat2, cat1, preference, minimum_share_fraction)
+            self.unique(cat2, cat1, preference,
+                        match_config.get('minimum_share_fraction2', 0))
 
         if match_config['type'] == 'cross':
             self.cross_match(cat1)
