@@ -751,7 +751,7 @@ class Catalog(TagData):
             ind = int(ind_)
             while len(kwargs['mt_hist'])<=ind:
                 kwargs['mt_hist'].append({})
-            if key=='cosmo' and value is not 'None':
+            if key=='cosmo' and value!='None':
                 cvars = ['Omega_dm0', 'Omega_b0', 'Omega_k0']
                 value = value.split(', ')
                 value = value[:1]+[f'{c}={v}' for c, v in zip(cvars, value[1:])]
