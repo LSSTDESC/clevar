@@ -2,6 +2,7 @@
 The ClCatalog and improved Astropy table classes
 """
 import warnings
+import copy
 import numpy as np
 from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
@@ -9,6 +10,7 @@ from astropy import units as u
 
 from .utils import (veclen, none_val, NameList, LowerCaseDict, updated_dict,
                     pack_mt_col, unpack_mt_col, pack_mmt_col, unpack_mmt_col)
+from .version import __version__
 
 
 class ClData(APtable):
@@ -415,13 +417,23 @@ class Catalog(TagData):
         Tag for main quantities used in matching and plots (ex: id, ra, dec, z)
     labels: LowerCaseDict
         Labels of data columns for plots
+    mt_hist: list
+        Recorded steps of matching
     """
 
     @property
     def id_dict(self):
         return self.__id_dict
 
-    def __init__(self, name, tags=None, labels=None, unique_id=False, default_tags=None, **kwargs):
+    @property
+    def mt_hist(self):
+        return self.__mt_hist
+
+    def _set_mt_hist(self, value):
+        self.__mt_hist = copy.deepcopy(value)
+
+    def __init__(self, name, tags=None, labels=None, unique_id=False, default_tags=None,
+                 mt_hist=None, **kwargs):
         if not isinstance(name, str):
             raise ValueError('name must be str.')
         if labels is not None and not isinstance(labels, dict):
@@ -430,6 +442,7 @@ class Catalog(TagData):
         self.name = name
         self.labels = LowerCaseDict()
         self.__id_dict = {}
+        self.__mt_hist = copy.deepcopy(none_val(mt_hist, []))
         TagData.__init__(self, tags=updated_dict({'id':'id'}, tags),
                          default_tags=none_val(default_tags, ['id', 'ra', 'dec']),
                          **kwargs)
@@ -443,7 +456,8 @@ class Catalog(TagData):
                 f'<br>{TagData._repr_html_(self)}')
 
     def __getitem__(self, item):
-        return self._getitem_base(item, Catalog, name=self.name, labels=self.labels)
+        return self._getitem_base(item, Catalog, name=self.name, labels=self.labels,
+                                  mt_hist=self.mt_hist)
 
     def __setitem__(self, item, value):
         value_ = value
@@ -634,9 +648,16 @@ class Catalog(TagData):
         """
         out = ClData()
         if add_header:
+            out.meta['hierarch ClEvaR_ver'] = __version__
             out.meta['name'] = self.name
             out.meta.update({f'hierarch LABEL_{k}':v for k, v in self.labels.items()})
             out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
+            for i, mt_step in enumerate(self.mt_hist):
+                for k, v in mt_step.items():
+                    if k=='cosmo' and v is not None:
+                        for s in ('H0', 'Omega_dm0', 'Omega_b0', 'Omega_k0', '='):
+                            v = v.replace(s, '')
+                    out.meta[f'hierarch MT.{i}.{k}'] = v if v is not None else 'None'
         for col in self.data.colnames:
             if col in ('mt_self', 'mt_other', 'mt_cross'):
                 out[col] = pack_mt_col(self[col])
@@ -713,6 +734,8 @@ class Catalog(TagData):
             Input file.
         """
         data = ClData.read(filename)
+        print('<< ClEvar used in matching: '
+              f'{data.meta.get("ClEvaR_ver", "<0.13.0")} >>')
         # read labels and radius unit from file
         kwargs = {
             'name': data.meta['NAME'],
@@ -721,6 +744,20 @@ class Catalog(TagData):
         }
         kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
                         if 'RADIUS_UNIT' in data.meta else {})
+        # read mt_hist vals
+        kwargs['mt_hist'] = []
+        for k, value in filter(lambda kv: kv[0][:3]=='MT.', data.meta.items()):
+            ind_, key = k.split('.')[1:]
+            ind = int(ind_)
+            while len(kwargs['mt_hist'])<=ind:
+                kwargs['mt_hist'].append({})
+            if key=='cosmo' and value is not 'None':
+                cvars = ['Omega_dm0', 'Omega_b0', 'Omega_k0']
+                value = value.split(', ')
+                value = value[:1]+[f'{c}={v}' for c, v in zip(cvars, value[1:])]
+                value = ', '.join(value)
+                value = value.replace("(", "(H0=")
+            kwargs['mt_hist'][ind][key] = value if value!='None' else None
         return self._read(data, **kwargs)
 
     def save_match(self, filename, overwrite=False):
@@ -753,6 +790,13 @@ class Catalog(TagData):
         for col in mt.data.colnames:
             if col!='id':
                 self[col] = mt[col]
+        if len(self.mt_hist)>0 and self.mt_hist!=mt.mt_hist:
+            warnings.warn(
+                "mt_hist of catalog will be overwritten from loaded file."
+                f"\n\nOriginal content:\n{self.mt_hist}"
+                f"\n\nLoaded content:\n{mt.mt_hist}"
+            )
+        self._set_mt_hist(mt.mt_hist)
         self.cross_match()
         print(f' * Total objects:    {self.size:,}')
         print(f' * multiple (self):  {(veclen(self["mt_multi_self"])>0).sum():,}')
@@ -865,7 +909,7 @@ class ClCatalog(Catalog):
 
     def __getitem__(self, item):
         kwargs = {'name':self.name, 'labels': self.labels, 'radius_unit': self.radius_unit,
-                  'members_warning':False}
+                  'members_warning': False, 'mt_hist': self.mt_hist}
         # get one col/row
         if isinstance(item, (str, int, np.int64)):
             kwargs['item'] = item

@@ -10,6 +10,42 @@ from scipy.interpolate import interp2d
 from matplotlib.ticker import ScalarFormatter, NullFormatter
 from ..utils import none_val, hp, updated_dict
 
+########################################################################
+########## Monkeypatching matplotlib ###################################
+########################################################################
+
+from ..utils import smooth_line
+
+def _plot_smooth(self, *args, scheme=[1, 2, 1], n_increase=0, **kwargs):
+    """Function to apply loops in plots.
+
+    Parameters
+    ----------
+    self: class
+        To be used by mpl
+    *args
+        Main function positional arguments
+    scheme: list
+        Scheme to be used for smoothening. Newton's binomial coefficients work better.
+    n_increase: int
+        Number of loops for the algorithm.
+    *8kwargs
+        main function keyword arguments
+
+    Returns
+    -------
+    output of self.plot
+    """
+    return self.plot(
+        *smooth_line(*np.array(args[:2]), scheme=scheme, n_increase=n_increase),
+        *args[2:], **kwargs)
+plt.plot_smooth = lambda *args , **kwargs: _plot_smooth(*args, **kwargs)
+plt.Axes.plot_smooth = lambda *args , **kwargs: _plot_smooth(*args, **kwargs)
+
+########################################################################
+########################################################################
+########################################################################
+
 def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     """
     Adds a grid to ax
@@ -46,7 +82,9 @@ def plot_hist_line(hist_values, bins, ax, shape='steps', rotate=False, **kwargs)
     rotate: bool
         Invert x-y axes in plot
     kwargs: parameters
-        Additional parameters for plt.plot
+        Additional parameters for plt.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     """
     if shape=='steps':
         data = (np.transpose([bins[:-1], bins[1:]]).flatten(),
@@ -57,7 +95,7 @@ def plot_hist_line(hist_values, bins, ax, shape='steps', rotate=False, **kwargs)
         raise ValueError(f"shape ({shape}) must be 'steps' or 'line'")
     if rotate:
         data = data[::-1]
-    ax.plot(*data, **kwargs)
+    ax.plot_smooth(*data, **kwargs)
 
 
 def get_bin_label(edge_lower, edge_higher,

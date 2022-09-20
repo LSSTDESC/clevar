@@ -8,7 +8,7 @@ from . import catalog_funcs
 def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units='degrees', cosmo=None,
                      quantity_bins=None, bins=None, log_quantity=False, ax=None, **kwargs):
     """
-    Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
+    Plot distance between central position of matched clusters, binned by a second quantity.
 
     Parameters
     ----------
@@ -42,7 +42,9 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -82,7 +84,7 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
              quantity_bins=None, bins=None, log_quantity=False,
              ax=None, **kwargs):
     """
-    Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
+    Plot redshift distance between matched clusters, binned by a second quantity.
 
     Parameters
     ----------
@@ -115,7 +117,9 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
-        Additional arguments for pylab.plot
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1

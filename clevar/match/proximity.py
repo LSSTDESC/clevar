@@ -9,8 +9,9 @@ from ..utils import veclen, str2dataunit
 
 class ProximityMatch(Match):
     def __init__(self, ):
+        Match.__init__(self)
         self.type = 'Proximity'
-    def multiple(self, cat1, cat2, radius_selection='max'):
+    def multiple(self, cat1, cat2, radius_selection='max', verbose=True):
         """
         Make the one way multiple matching
 
@@ -20,6 +21,8 @@ class ProximityMatch(Match):
             Base catalog
         cat2: clevar.ClCatalog
             Target catalog
+        verbose: bool
+            Print result for individual matches.
         radius_selection: str (optional)
             Case of radius to be used, can be: max, min, self, other.
         """
@@ -52,10 +55,17 @@ class ProximityMatch(Match):
                         i2 = int(cat2.id_dict[id2])
                         cat2['mt_multi_other'][i2].append(cat1['id'][i])
                         self.cat1_mmt[i] = True
-            print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
+            if verbose:
+                print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates",
+                      end='\r')
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
+        self.history.append({
+            'step':'multiple', 'cats': f'{cat1.name}, {cat2.name}',
+            'radius_selection':radius_selection})
+        cat1._set_mt_hist(self.history)
+        cat2._set_mt_hist(self.history)
     def prep_cat_for_match(self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1,
         cosmo=None):
         """
@@ -67,14 +77,18 @@ class ProximityMatch(Match):
             Input ClCatalog
         delta_z: float, string
             Defines the zmin, zmax for matching. Options are:
-                `'cat'` - uses redshift properties of the catalog
-                `'spline.filename'` - interpolates data in 'filename' (z, zmin, zmax) fmt
-                `float` - uses delta_z*(1+z)
-                `None` - does not use z
+
+                * `'cat'` - uses redshift properties of the catalog
+                * `'spline.filename'` - interpolates data in 'filename' (z, zmin, zmax) fmt
+                * `float` - uses delta_z*(1+z)
+                * `None` - does not use z
+
         match_radius: string
             Defines the radius for matching. Options are:
-                `'cat'` - uses the radius in the catalog
-                `'value unit'` - used fixed value (ex: `1 arcsec`, `1 Mpc`)
+
+                * `'cat'` - uses the radius in the catalog
+                * `'value unit'` - used fixed value (ex: `1 arcsec`, `1 Mpc`)
+
         n_delta_z: float
             Number of delta_z to be used in the matching
         n_match_radius: float
@@ -139,6 +153,10 @@ class ProximityMatch(Match):
             in_rad*n_match_radius, in_rad_unit, 'degrees',
             redshift=cat['z'] if 'z' in cat.tags else None,
             cosmo=cosmo)
+        self.history.append({
+            'step':'prep', 'cat': cat.name, 'delta_z': delta_z, 'match_radius': match_radius,
+            'n_delta_z': n_delta_z, 'n_match_radius': n_match_radius,
+            'cosmo': cosmo if cosmo is None else cosmo.get_desc()})
     def _rescale_z(self, z, zlim, n):
         """Rescale zmin/zmax by a factor n
 
@@ -199,11 +217,15 @@ class ProximityMatch(Match):
             ClCatalog 2
         match_config: dict
             Dictionary with the matching configuration. Keys must be:
-                `type`: type of matching, can be: `cat1`, `cat2`, `cross`.
-                `catalog1`: `kwargs` used in `prep_cat_for_match(cat1, **kwargs)` (minus `cosmo`).
-                `catalog2`: `kwargs` used in `prep_cat_for_match(cat2, **kwargs)` (minus `cosmo`).
-                `which_radius`: Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
-                `preference`: Preference to set best match, can be: `more_massive`, `angular_proximity`, `redshift_proximity`, `shared_member_fraction`.
+
+                * `type`: type of matching, can be: `cat1`, `cat2`, `cross`.
+                * `catalog1`: `kwargs` used in `prep_cat_for_match(cat1, **kwargs)` (minus `cosmo`).
+                * `catalog2`: `kwargs` used in `prep_cat_for_match(cat2, **kwargs)` (minus `cosmo`).
+                * `which_radius`: Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
+                * `preference`: Preference to set best match, can be: `more_massive`,
+                  `angular_proximity`, `redshift_proximity`, `shared_member_fraction`.
+                * `verbose`: Print result for individual matches (default=`True`).
+
         cosmo: clevar.Cosmology object
             Cosmology object for when radius has physical units
         """
@@ -216,6 +238,7 @@ class ProximityMatch(Match):
             print("\n## ClCatalog 2")
             self.prep_cat_for_match(cat2, cosmo=cosmo, **match_config['catalog2'])
 
+        verbose = match_config.get('verbose', True)
         if match_config['type'] in ('cat1', 'cross'):
             print("\n## Multiple match (catalog 1)")
             if match_config['which_radius'] == 'cat1':
@@ -224,7 +247,7 @@ class ProximityMatch(Match):
                 radius_selection = 'other'
             else:
                 radius_selection = match_config['which_radius']
-            self.multiple(cat1, cat2, radius_selection)
+            self.multiple(cat1, cat2, radius_selection, verbose=verbose)
         if match_config['type'] in ('cat2', 'cross'):
             print("\n## Multiple match (catalog 2)")
             if match_config['which_radius'] == 'cat1':
@@ -233,7 +256,7 @@ class ProximityMatch(Match):
                 radius_selection = 'self'
             else:
                 radius_selection = match_config['which_radius']
-            self.multiple(cat2, cat1, radius_selection)
+            self.multiple(cat2, cat1, radius_selection, verbose=verbose)
 
         if match_config['type'] in ('cat1', 'cross'):
             print("\n## Finding unique matches of catalog 1")

@@ -22,7 +22,7 @@ def get_version(rel_path):
 
 setup(
       name='clevar',
-      version=get_version('clevar/__init__.py'),
+      version=get_version('clevar/version.py'),
       author='The LSST DESC ClEvaR Contributors',
       author_email='aguena@lapp.in2p3.fr',
       license='BSD 3-Clause License',

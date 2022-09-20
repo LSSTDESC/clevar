@@ -8,13 +8,14 @@ class Match():
     """
     def __init__(self, ):
         self.type = None
+        self.history = []
     def prep_cat_for_match(self, cat):
         """
         Prepare the catalog for matching, will fill the cat.mt_input object.
         Each method must implement its specifics preparations.
         """
         raise NotImplementedError
-    def multiple(self, cat1, cat2):
+    def multiple(self, cat1, cat2, verbose=True):
         """Makes multiple matchig
 
         Parameters
@@ -23,6 +24,8 @@ class Match():
             Base catalog
         cat2: clevar.ClCatalog
             Target catalog
+        verbose: bool
+            Print result for individual matches.
 
         Note
         ----
@@ -67,6 +70,12 @@ class Match():
                 self.cat1_mt[i] = set_unique(cat1, i, cat2)
         self.cat1_mt *= (cat1['mt_self']!=None) # In case ang pref removes a match
         print(f'* {(cat1["mt_self"]!=None).sum():,}/{cat1.size:,} objects matched.')
+        cfg = {'step':'unique', 'cats': f'{cat1.name}, {cat2.name}', 'preference': preference}
+        if preference=='shared_member_fraction':
+            cfg['minimum_share_fraction'] = minimum_share_fraction
+        self.history.append(cfg)
+        cat1._set_mt_hist(self.history)
+        cat2._set_mt_hist(self.history)
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
