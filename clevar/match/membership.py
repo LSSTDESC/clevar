@@ -40,7 +40,7 @@ class MembershipMatch(Match):
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
-        self.history.append({'step':'multiple', 'cats': (cat1.name, cat2.name)})
+        self.history.append({'step':'multiple', 'cats': f'{cat1.name}, {cat2.name}'})
         cat1._set_mt_hist(self.history)
         cat2._set_mt_hist(self.history)
     def fill_shared_members(self, cat1, cat2):

@@ -651,12 +651,11 @@ class Catalog(TagData):
             out.meta.update({f'hierarch LABEL_{k}':v for k, v in self.labels.items()})
             out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
             for i, mt_step in enumerate(self.mt_hist):
-                for k, v in filter(lambda kv: kv[0]!='step', mt_step.items()):
+                for k, v in mt_step.items():
                     if k=='cosmo':
                         for s in ('H0', 'Omega_dm0', 'Omega_b0', 'Omega_k0', '='):
                             v = v.replace(s, '')
-                    out.meta[f'hierarch MT_{mt_step["step"]}.{i}_{k}'] = v
-                    print(f'hierarch MT_{mt_step["step"]}.{i}_{k}', v)
+                    out.meta[f'hierarch MT.{i}.{k}'] = v
         for col in self.data.colnames:
             if col in ('mt_self', 'mt_other', 'mt_cross'):
                 out[col] = pack_mt_col(self[col])
@@ -741,6 +740,19 @@ class Catalog(TagData):
         }
         kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
                         if 'RADIUS_UNIT' in data.meta else {})
+        kwargs['mt_hist'] = []
+        for k, value in filter(lambda kv: kv[0][:3]=='MT.', data.meta.items()):
+            ind_, key = k.split('.')[1:]
+            ind = int(ind_)
+            while len(kwargs['mt_hist'])<=ind:
+                kwargs['mt_hist'].append({})
+            if key=='cosmo':
+                cvars = ['Omega_dm0', 'Omega_b0', 'Omega_k0']
+                value = value.split(', ')
+                value = value[:1]+[f'{c}={v}' for c, v in zip(cvars, value[1:])]
+                value = ', '.join(value)
+                value = value.replace("(", "(H0=")
+            kwargs['mt_hist'][ind][key] = value
         return self._read(data, **kwargs)
 
     def save_match(self, filename, overwrite=False):
@@ -773,6 +785,13 @@ class Catalog(TagData):
         for col in mt.data.colnames:
             if col!='id':
                 self[col] = mt[col]
+        if len(self.mt_hist)>0 and self.mt_hist!=mt.mt_hist:
+            warnings.warn(
+                "mt_hist of catalog will be overwritten from loaded file."
+                f"\n\nOriginal content:\n{self.mt_hist}"
+                f"\n\nLoaded content:\n{mt.mt_hist}"
+            )
+        self._set_mt_hist(mt.mt_hist)
         self.cross_match()
         print(f' * Total objects:    {self.size:,}')
         print(f' * multiple (self):  {(veclen(self["mt_multi_self"])>0).sum():,}')

@@ -58,7 +58,7 @@ class ProximityMatch(Match):
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
         self.history.append({
-            'step':'multiple', 'cats': (cat1.name, cat2.name),
+            'step':'multiple', 'cats': f'{cat1.name}, {cat2.name}',
             'radius_selection':radius_selection})
         cat1._set_mt_hist(self.history)
         cat2._set_mt_hist(self.history)
