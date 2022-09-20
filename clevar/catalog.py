@@ -10,6 +10,7 @@ from astropy import units as u
 
 from .utils import (veclen, none_val, NameList, LowerCaseDict, updated_dict,
                     pack_mt_col, unpack_mt_col, pack_mmt_col, unpack_mmt_col)
+from .version import __version__
 
 
 class ClData(APtable):
@@ -441,7 +442,7 @@ class Catalog(TagData):
         self.name = name
         self.labels = LowerCaseDict()
         self.__id_dict = {}
-        self._set_mt_hist(none_val(mt_hist, []))
+        self.__mt_hist = copy.deepcopy(none_val(mt_hist, []))
         TagData.__init__(self, tags=updated_dict({'id':'id'}, tags),
                          default_tags=none_val(default_tags, ['id', 'ra', 'dec']),
                          **kwargs)
@@ -647,6 +648,7 @@ class Catalog(TagData):
         """
         out = ClData()
         if add_header:
+            out.meta['hierarch ClEvaR_ver'] = __version__
             out.meta['name'] = self.name
             out.meta.update({f'hierarch LABEL_{k}':v for k, v in self.labels.items()})
             out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
@@ -732,6 +734,8 @@ class Catalog(TagData):
             Input file.
         """
         data = ClData.read(filename)
+        print('<< ClEvar used in matching: '
+              f'{data.meta.get("ClEvaR_ver", "<0.13.0")} >>')
         # read labels and radius unit from file
         kwargs = {
             'name': data.meta['NAME'],
@@ -740,6 +744,7 @@ class Catalog(TagData):
         }
         kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
                         if 'RADIUS_UNIT' in data.meta else {})
+        # read mt_hist vals
         kwargs['mt_hist'] = []
         for k, value in filter(lambda kv: kv[0][:3]=='MT.', data.meta.items()):
             ind_, key = k.split('.')[1:]
