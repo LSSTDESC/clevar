@@ -11,7 +11,7 @@ class ProximityMatch(Match):
     def __init__(self, ):
         Match.__init__(self)
         self.type = 'Proximity'
-    def multiple(self, cat1, cat2, radius_selection='max'):
+    def multiple(self, cat1, cat2, radius_selection='max', verbose=True):
         """
         Make the one way multiple matching
 
@@ -21,6 +21,8 @@ class ProximityMatch(Match):
             Base catalog
         cat2: clevar.ClCatalog
             Target catalog
+        verbose: bool
+            Print result for individual matches.
         radius_selection: str (optional)
             Case of radius to be used, can be: max, min, self, other.
         """
@@ -53,7 +55,9 @@ class ProximityMatch(Match):
                         i2 = int(cat2.id_dict[id2])
                         cat2['mt_multi_other'][i2].append(cat1['id'][i])
                         self.cat1_mmt[i] = True
-            print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
+            if verbose:
+                print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates",
+                      end='\r')
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
@@ -220,6 +224,7 @@ class ProximityMatch(Match):
                 * `which_radius`: Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
                 * `preference`: Preference to set best match, can be: `more_massive`,
                   `angular_proximity`, `redshift_proximity`, `shared_member_fraction`.
+                * `verbose`: Print result for individual matches (default=`True`).
 
         cosmo: clevar.Cosmology object
             Cosmology object for when radius has physical units
@@ -233,6 +238,7 @@ class ProximityMatch(Match):
             print("\n## ClCatalog 2")
             self.prep_cat_for_match(cat2, cosmo=cosmo, **match_config['catalog2'])
 
+        verbose = match_config.get('verbose', True)
         if match_config['type'] in ('cat1', 'cross'):
             print("\n## Multiple match (catalog 1)")
             if match_config['which_radius'] == 'cat1':
@@ -241,7 +247,7 @@ class ProximityMatch(Match):
                 radius_selection = 'other'
             else:
                 radius_selection = match_config['which_radius']
-            self.multiple(cat1, cat2, radius_selection)
+            self.multiple(cat1, cat2, radius_selection, verbose=verbose)
         if match_config['type'] in ('cat2', 'cross'):
             print("\n## Multiple match (catalog 2)")
             if match_config['which_radius'] == 'cat1':
@@ -250,7 +256,7 @@ class ProximityMatch(Match):
                 radius_selection = 'self'
             else:
                 radius_selection = match_config['which_radius']
-            self.multiple(cat2, cat1, radius_selection)
+            self.multiple(cat2, cat1, radius_selection, verbose=verbose)
 
         if match_config['type'] in ('cat1', 'cross'):
             print("\n## Finding unique matches of catalog 1")

@@ -13,7 +13,7 @@ class MembershipMatch(Match):
         Match.__init__(self)
         self.type = 'Membership'
         self.matched_mems = None
-    def multiple(self, cat1, cat2):
+    def multiple(self, cat1, cat2, verbose=True):
         """
         Make the one way multiple matching
 
@@ -23,6 +23,8 @@ class MembershipMatch(Match):
             Base catalog with members attribute.
         cat2: clevar.ClCatalog
             Target catalog with members attribute.
+        verbose: bool
+            Print result for individual matches.
         """
         if cat1.mt_input is None:
             raise AttributeError('cat1.mt_input is None, run fill_shared_members first.')
@@ -36,7 +38,9 @@ class MembershipMatch(Match):
                 i2 = int(cat2.id_dict[id2])
                 cat2['mt_multi_other'][i2].append(cat1['id'][i])
                 self.cat1_mmt[i] = True
-            print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates", end='\r')
+            if verbose:
+                print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates",
+                      end='\r')
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
@@ -312,6 +316,7 @@ class MembershipMatch(Match):
                   `True` skips matching (and save) of members and fill (and save) of shared members.
                 * `shared_members_file` -  Prefix of file names to save shared members,
                   needed if `shared_members_save` or `shared_members_load` is `True`.
+                * `verbose`: Print result for individual matches (default=`True`).
 
 
         """
@@ -334,12 +339,13 @@ class MembershipMatch(Match):
         if load_shared_member:
             self.load_shared_members(cat1, cat2, match_config['shared_members_file'])
 
+        verbose = match_config.get('verbose', True)
         if match_config['type'] in ('cat1', 'cross'):
             print("\n## Multiple match (catalog 1)")
-            self.multiple(cat1, cat2)
+            self.multiple(cat1, cat2, verbose=verbose)
         if match_config['type'] in ('cat2', 'cross'):
             print("\n## Multiple match (catalog 2)")
-            self.multiple(cat2, cat1)
+            self.multiple(cat2, cat1, verbose=verbose)
 
         preference = match_config.get('preference', 'shared_member_fraction')
         if match_config['type'] in ('cat1', 'cross'):

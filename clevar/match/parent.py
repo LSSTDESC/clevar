@@ -15,7 +15,7 @@ class Match():
         Each method must implement its specifics preparations.
         """
         raise NotImplementedError
-    def multiple(self, cat1, cat2):
+    def multiple(self, cat1, cat2, verbose=True):
         """Makes multiple matchig
 
         Parameters
@@ -24,6 +24,8 @@ class Match():
             Base catalog
         cat2: clevar.ClCatalog
             Target catalog
+        verbose: bool
+            Print result for individual matches.
 
         Note
         ----
