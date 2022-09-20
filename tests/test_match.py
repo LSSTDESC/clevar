@@ -341,6 +341,8 @@ def test_membership():
     mt.save_matches(c1, c2, out_dir='temp', overwrite=True)
     c1_test, c2_test = get_test_data_mem()[:2]
     mt.load_matches(c1_test, c2_test, out_dir='temp')
+    c1_test._set_mt_hist([{}])
+    mt.load_matches(c1_test, c2_test, out_dir='temp')
     for col in c1.data.colnames:
         if col[:3]=='mt_':
             assert_equal(c1[col], c1_test[col])

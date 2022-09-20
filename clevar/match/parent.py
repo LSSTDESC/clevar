@@ -30,21 +30,6 @@ class Match():
             Not implemented in parent class
         """
         raise NotImplementedError
-    def multiple(self, cat1, cat2):
-        """Makes multiple matchig
-
-        Parameters
-        ----------
-        cat1: clevar.ClCatalog
-            Base catalog
-        cat2: clevar.ClCatalog
-            Target catalog
-
-        Note
-        ----
-            Not implemented in parent class
-        """
-        raise NotImplementedError
     def unique(self, cat1, cat2, preference,  minimum_share_fraction=0):
         """Makes unique matchig, requires multiple matching to be made first
 
