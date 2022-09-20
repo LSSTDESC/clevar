@@ -6,5 +6,4 @@ from . import geometry
 from . import utils
 from . import cosmology
 from . import match
-
-__version__ = '0.12.1'
+from .version import __version__

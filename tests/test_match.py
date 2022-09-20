@@ -341,6 +341,8 @@ def test_membership():
     mt.save_matches(c1, c2, out_dir='temp', overwrite=True)
     c1_test, c2_test = get_test_data_mem()[:2]
     mt.load_matches(c1_test, c2_test, out_dir='temp')
+    c1_test._set_mt_hist([{}])
+    mt.load_matches(c1_test, c2_test, out_dir='temp')
     for col in c1.data.colnames:
         if col[:3]=='mt_':
             assert_equal(c1[col], c1_test[col])
@@ -360,7 +362,8 @@ def test_membership_cfg(CosmoClass):
     match_config = {
         'type': 'cross',
         'preference': 'shared_member_fraction',
-        'minimum_share_fraction': 0,
+        'minimum_share_fraction1': 0,
+        'minimum_share_fraction2': 0,
         'match_members_kwargs': {'method':'id'},
         'match_members_save': True,
         'shared_members_save': True,
@@ -397,7 +400,8 @@ def test_membership_cfg(CosmoClass):
     # Check with minimum_share_fraction
     c1._init_match_vals(overwrite=True)
     c2._init_match_vals(overwrite=True)
-    match_config_test['minimum_share_fraction'] = .7
+    match_config_test['minimum_share_fraction1'] = .7
+    match_config_test['minimum_share_fraction2'] = .7
     mt.match_from_config(c1, c2, match_config_test)
     smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
     cmt = ['CL0', 'CL1', 'CL2', None, None]
@@ -406,7 +410,8 @@ def test_membership_cfg(CosmoClass):
     # Check with minimum_share_fraction
     c1._init_match_vals(overwrite=True)
     c2._init_match_vals(overwrite=True)
-    match_config_test['minimum_share_fraction'] = .9
+    match_config_test['minimum_share_fraction1'] = .9
+    match_config_test['minimum_share_fraction2'] = .9
     mt.match_from_config(c1, c2, match_config_test)
     smt = [None, 'CL1', 'CL2', 'CL3', None]
     omt = ['CL0', 'CL1', 'CL2', None, None]
@@ -420,7 +425,8 @@ def test_output_catalog_with_matching():
     match_config = {
         'type': 'cross',
         'preference': 'shared_member_fraction',
-        'minimum_share_fraction': 0,
+        'minimum_share_fraction1': 0,
+        'minimum_share_fraction2': 0,
         'match_members_kwargs': {'method':'id'},
         'match_members_save': False,
         'shared_members_save': False,
@@ -441,7 +447,8 @@ def test_output_matched_catalog():
     match_config = {
         'type': 'cross',
         'preference': 'shared_member_fraction',
-        'minimum_share_fraction': 0,
+        'minimum_share_fraction1': 0,
+        'minimum_share_fraction2': 0,
         'match_members_kwargs': {'method':'id'},
         'match_members_save': False,
         'shared_members_save': False,
