@@ -654,10 +654,10 @@ class Catalog(TagData):
             out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
             for i, mt_step in enumerate(self.mt_hist):
                 for k, v in mt_step.items():
-                    if k=='cosmo':
+                    if k=='cosmo' and v is not None:
                         for s in ('H0', 'Omega_dm0', 'Omega_b0', 'Omega_k0', '='):
                             v = v.replace(s, '')
-                    out.meta[f'hierarch MT.{i}.{k}'] = v
+                    out.meta[f'hierarch MT.{i}.{k}'] = v if v is not None else 'None'
         for col in self.data.colnames:
             if col in ('mt_self', 'mt_other', 'mt_cross'):
                 out[col] = pack_mt_col(self[col])
@@ -751,13 +751,13 @@ class Catalog(TagData):
             ind = int(ind_)
             while len(kwargs['mt_hist'])<=ind:
                 kwargs['mt_hist'].append({})
-            if key=='cosmo':
+            if key=='cosmo' and value is not 'None':
                 cvars = ['Omega_dm0', 'Omega_b0', 'Omega_k0']
                 value = value.split(', ')
                 value = value[:1]+[f'{c}={v}' for c, v in zip(cvars, value[1:])]
                 value = ', '.join(value)
                 value = value.replace("(", "(H0=")
-            kwargs['mt_hist'][ind][key] = value
+            kwargs['mt_hist'][ind][key] = value if value!='None' else None
         return self._read(data, **kwargs)
 
     def save_match(self, filename, overwrite=False):
