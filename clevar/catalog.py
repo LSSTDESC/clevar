@@ -429,6 +429,27 @@ class Catalog(TagData):
     def mt_hist(self):
         return self.__mt_hist
 
+    def show_mt_hist(self, line_max_size=100):
+        steps = []
+        for step in self.mt_hist:
+            lines = [f'{step["func"]}(']
+            len_func = len(lines[0])
+            pref = ""
+            for k, v in filter(lambda x: x[0]!='func', step.items()):
+                arg = f"{k}='{v}'" if isinstance(v, str) else f'{k}={v}'
+                if k=='cats':
+                    c1, c2 = v.split(', ')
+                    arg = f"cat1='{c1}', cat2='{c2}'"
+                if len(lines[-1]+f', {arg}')>line_max_size:
+                    lines[-1] += ','
+                    lines.append(' '*len_func+arg)
+                else:
+                    lines[-1] += f'{pref}{arg}'
+                pref = ', '
+            lines[-1] += ')'
+            steps.append('\n'.join(lines))
+        print('\n\n'.join(steps))
+
     def _set_mt_hist(self, value):
         self.__mt_hist = copy.deepcopy(value)
 
@@ -751,7 +772,7 @@ class Catalog(TagData):
             ind = int(ind_)
             while len(kwargs['mt_hist'])<=ind:
                 kwargs['mt_hist'].append({})
-            if key=='cosmo' and value is not 'None':
+            if key=='cosmo' and value!='None':
                 cvars = ['Omega_dm0', 'Omega_b0', 'Omega_k0']
                 value = value.split(', ')
                 value = value[:1]+[f'{c}={v}' for c, v in zip(cvars, value[1:])]

@@ -77,6 +77,8 @@ def test_proximity(CosmoClass):
     mt.multiple(c2, c1)
     mt.unique(c1, c2, 'angular_proximity')
     mt.unique(c2, c1, 'angular_proximity')
+    c1.show_mt_hist()
+    c2.show_mt_hist()
     c1.cross_match()
     c2.cross_match()
     _test_mt_results(c1, multi_self=mmt, self=smt, cross=smt)
