@@ -1116,6 +1116,7 @@ class MemCatalog(Catalog):
         # create catalog
         Catalog._add_values(self, first_cols=[self.tags['id_cluster']], **columns)
         self.id_dict_list.update(self._make_col_dict_list('id'))
+        self['id_cluster'] = self['id_cluster'].astype(str)
 
     def __getitem__(self, item):
         kwargs = {'name':self.name, 'labels': self.labels}
