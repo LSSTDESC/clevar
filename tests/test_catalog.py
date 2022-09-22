@@ -110,6 +110,7 @@ def test_clcatalog():
     assert_raises(KeyError, c.__getitem__, 'unknown')
     c.mt_input = ClData({'test':[1, 1]})
     c._repr_html_()
+    c.show_mt_hist()
     # test repeated ids
     with pytest.warns(None) as record:
         c0 = ClCatalog(name='test', id=['a', 'a'], z=[0, 0])

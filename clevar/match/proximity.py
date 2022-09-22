@@ -62,7 +62,7 @@ class ProximityMatch(Match):
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
         self.history.append({
-            'step':'multiple', 'cats': f'{cat1.name}, {cat2.name}',
+            'func':'multiple', 'cats': f'{cat1.name}, {cat2.name}',
             'radius_selection':radius_selection})
         cat1._set_mt_hist(self.history)
         cat2._set_mt_hist(self.history)
@@ -154,7 +154,7 @@ class ProximityMatch(Match):
             redshift=cat['z'] if 'z' in cat.tags else None,
             cosmo=cosmo)
         self.history.append({
-            'step':'prep', 'cat': cat.name, 'delta_z': delta_z, 'match_radius': match_radius,
+            'func':'prep_cat_for_match', 'cat': cat.name, 'delta_z': delta_z, 'match_radius': match_radius,
             'n_delta_z': n_delta_z, 'n_match_radius': n_match_radius,
             'cosmo': cosmo if cosmo is None else cosmo.get_desc()})
     def _rescale_z(self, z, zlim, n):
