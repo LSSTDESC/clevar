@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.membership &mdash; ClEvaR 0.13.0 documentation</title>
+  <title>clevar.match.membership &mdash; ClEvaR 0.13.2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.13.2
               </div>
             
           
@@ -276,7 +276,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="p">(</span><span class="n">veclen</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_multi_self&quot;</span><span class="p">])</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span>
         <span class="n">cat1</span><span class="o">.</span><span class="n">remove_multiple_duplicates</span><span class="p">()</span>
         <span class="n">cat2</span><span class="o">.</span><span class="n">remove_multiple_duplicates</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;step&#39;</span><span class="p">:</span><span class="s1">&#39;multiple&#39;</span><span class="p">,</span> <span class="s1">&#39;cats&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;func&#39;</span><span class="p">:</span><span class="s1">&#39;multiple&#39;</span><span class="p">,</span> <span class="s1">&#39;cats&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
         <span class="n">cat1</span><span class="o">.</span><span class="n">_set_mt_hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span>
         <span class="n">cat2</span><span class="o">.</span><span class="n">_set_mt_hist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">)</span></div>
 <div class="viewcode-block" id="MembershipMatch.fill_shared_members"><a class="viewcode-back" href="../../../api/clevar.match.membership.html#clevar.match.membership.MembershipMatch.fill_shared_members">[docs]</a>    <span class="k">def</span> <span class="nf">fill_shared_members</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cat1</span><span class="p">,</span> <span class="n">cat2</span><span class="p">):</span>
@@ -425,9 +425,9 @@
             <span class="n">mem1</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">][</span><span class="n">ind1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem2</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">][</span><span class="n">ind2</span><span class="p">])</span>
             <span class="n">mem2</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">][</span><span class="n">ind2</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mem1</span><span class="p">[</span><span class="s1">&#39;id_cluster&#39;</span><span class="p">][</span><span class="n">ind1</span><span class="p">])</span></div>
         <span class="c1">#self.history.append({</span>
-        <span class="c1">#    &#39;step&#39;:&#39;match_members&#39;, &#39;cat&#39;: cat.name, &#39;method&#39;: method,</span>
+        <span class="c1">#    &#39;func&#39;:&#39;match_members&#39;, &#39;cat&#39;: cat.name, &#39;method&#39;: method,</span>
         <span class="c1">#    &#39;cosmo&#39;: cosmo if cosmo is None else cosmo.get_desc()})</span>
-        <span class="c1">#cfg = {&#39;step&#39;:&#39;match_members&#39;, &#39;cats&#39;: (cat1.name, cat2.name), &#39;method&#39;: method,</span>
+        <span class="c1">#cfg = {&#39;func&#39;:&#39;match_members&#39;, &#39;cats&#39;: (cat1.name, cat2.name), &#39;method&#39;: method,</span>
         <span class="c1">#       &#39;radius&#39;: radius, &#39;cosmo&#39;: cosmo if cosmo is None else cosmo.get_desc()}</span>
         <span class="c1">#cat1.mt_hist.append(cfg)</span>
         <span class="c1">#cat2.mt_hist.append(cfg)</span>

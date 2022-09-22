@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>clevar.match.parent &mdash; ClEvaR 0.13.0 documentation</title>
+  <title>clevar.match.parent &mdash; ClEvaR 0.13.2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.13.2
               </div>
             
           
@@ -302,7 +302,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">cat1_mt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">set_unique</span><span class="p">(</span><span class="n">cat1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">cat2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cat1_mt</span> <span class="o">*=</span> <span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s1">&#39;mt_self&#39;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">)</span> <span class="c1"># In case ang pref removes a match</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;* </span><span class="si">{</span><span class="p">(</span><span class="n">cat1</span><span class="p">[</span><span class="s2">&quot;mt_self&quot;</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">size</span><span class="si">:</span><span class="s1">,</span><span class="si">}</span><span class="s1"> objects matched.&#39;</span><span class="p">)</span>
-        <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;step&#39;</span><span class="p">:</span><span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="s1">&#39;cats&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;preference&#39;</span><span class="p">:</span> <span class="n">preference</span><span class="p">}</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;func&#39;</span><span class="p">:</span><span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="s1">&#39;cats&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">cat1</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">cat2</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;preference&#39;</span><span class="p">:</span> <span class="n">preference</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">preference</span><span class="o">==</span><span class="s1">&#39;shared_member_fraction&#39;</span><span class="p">:</span>
             <span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;minimum_share_fraction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">minimum_share_fraction</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
