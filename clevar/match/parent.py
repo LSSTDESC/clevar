@@ -49,10 +49,12 @@ class Match():
             Minimum share fraction to consider in matches (default=0).
         """
         self.cat1_mt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
-        i_vals = range(cat1.size)
+        if 'mass' in cat1.tags:
+            i_vals = np.argsort(cat1['mass'])[::-1]
+        else:
+            i_vals = range(cat1.size)
         if preference=='more_massive':
             set_unique = lambda cat1, i, cat2: self._match_mpref(cat1, i, cat2)
-            i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1['mass'])][::-1]
         elif preference=='angular_proximity':
             set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'angular_proximity')
         elif preference=='redshift_proximity':
@@ -61,7 +63,6 @@ class Match():
             cat1['mt_frac_self'] = np.zeros(cat1.size)
             cat2['mt_frac_other'] = np.zeros(cat2.size)
             set_unique = lambda cat1, i, cat2: self._match_sharepref(cat1, i, cat2, minimum_share_fraction)
-            i_vals = np.arange(cat1.size, dtype=int)[np.argsort(cat1['mass'])][::-1]
         else:
             raise ValueError("preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'")
         print(f'Unique Matches ({cat1.name})')
