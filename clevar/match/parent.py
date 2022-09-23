@@ -54,17 +54,18 @@ class Match():
         else:
             i_vals = range(cat1.size)
         if preference=='more_massive':
-            set_unique = lambda cat1, i, cat2: self._match_mpref(cat1, i, cat2)
+            set_unique = lambda *args: self._match_mpref(*args)
         elif preference=='angular_proximity':
-            set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'angular_proximity')
+            set_unique = lambda *args: self._match_apref(*args, 'angular_proximity')
         elif preference=='redshift_proximity':
-            set_unique = lambda cat1, i, cat2: self._match_apref(cat1, i, cat2, 'redshift_proximity')
+            set_unique = lambda *args: self._match_apref(*args, 'redshift_proximity')
         elif preference=='shared_member_fraction':
             cat1['mt_frac_self'] = np.zeros(cat1.size)
             cat2['mt_frac_other'] = np.zeros(cat2.size)
-            set_unique = lambda cat1, i, cat2: self._match_sharepref(cat1, i, cat2, minimum_share_fraction)
+            set_unique = lambda *args: self._match_sharepref(*args, minimum_share_fraction)
         else:
-            raise ValueError("preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'")
+            raise ValueError(
+                "preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'")
         print(f'Unique Matches ({cat1.name})')
         for i in i_vals:
             if cat1['mt_self'][i] is None:
@@ -156,6 +157,7 @@ class Match():
             elif dist < self._get_dist_mt(cat1[i1_replace], cat2[i2], MATCH_PREF):
                 cat1['mt_self'][i] = cat2['id'][i2]
                 cat2['mt_other'][i2] = cat1['id'][i]
+                cat1['mt_self'][i1_replace] = None
                 self._match_apref(cat1, i1_replace, cat2, MATCH_PREF)
                 return True
         return False
@@ -186,16 +188,21 @@ class Match():
         shared_frac = cat1.mt_input['share_mems'][i][id2]/cat1.mt_input['nmem'][i]
         if shared_frac<minimum_share_fraction:
             return False
-        cat1['mt_self'][i] = id2
-        cat1['mt_frac_self'][i] = shared_frac
         # fills cat2 mt_other if empty or shared_frac is greater
         i2 = cat2.id_dict[id2]
         id1, id1_replace = cat1['id'][i], cat2['mt_other'][i2]
         share_mems2 = cat2.mt_input['share_mems'][i2]
         if share_mems2[id1]>share_mems2.get(id1_replace, 0):
+            cat1['mt_self'][i] = id2
+            cat1['mt_frac_self'][i] = shared_frac
             cat2['mt_other'][i2] = id1
             cat2['mt_frac_other'][i2] = shared_frac
-        return True
+            if id1_replace is not None:
+                i1_replace = cat1.id_dict[id1_replace]
+                cat1['mt_self'][i1_replace] = None
+                cat1['mt_frac_other'][i1_replace] = 0
+            return True
+        return False
     def _get_dist_mt(self, dat1, dat2, MATCH_PREF):
         """
         Get distance for matching preference
