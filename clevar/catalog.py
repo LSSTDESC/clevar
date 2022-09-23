@@ -755,8 +755,8 @@ class Catalog(TagData):
             Input file.
         """
         data = ClData.read(filename)
-        print('<< ClEvar used in matching: '
-              f'{data.meta.get("ClEvaR_ver", "<0.13.0")} >>')
+        print('    * ClEvar used in matching: '
+              f'{data.meta.get("ClEvaR_ver", "<0.13.0")}')
         # read labels and radius unit from file
         kwargs = {
             'name': data.meta['NAME'],

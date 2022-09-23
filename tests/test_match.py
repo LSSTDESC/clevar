@@ -103,8 +103,10 @@ def test_proximity(CosmoClass):
     mt.unique(c2, c1, 'redshift_proximity')
     mt.cross_match(c1)
     mt.cross_match(c2)
+    smt = ['CL1', 'CL0', 'CL2', None, None]
+    omt = ['CL1', 'CL0', 'CL2', 'CL3', None]
+    _test_mt_results(c1, multi_self=mmt, self=smt, cross=smt, other=omt)
     smt = ['CL1', 'CL0', 'CL2', 'CL3', None]
-    _test_mt_results(c1, multi_self=mmt, self=smt, cross=smt)
     _test_mt_results(c2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
     # Error for unkown preference
     assert_raises(ValueError, mt.unique, c1, c2, 'unknown')
@@ -350,6 +352,27 @@ def test_membership():
             assert_equal(c1[col], c1_test[col])
             assert_equal(c2[col], c2_test[col])
     os.system('rm -rf temp')
+
+    # Test with replacement
+    c1['mt_self'] = None
+    c1['mt_other'] = None
+    c2['mt_self'] = None
+    c2['mt_other'] = None
+    c1['mt_other'][0] = 'CL3'
+    mt.unique(c2, c1, 'shared_member_fraction')
+    mt.unique(c1, c2, 'shared_member_fraction')
+    smt = ['CL0', 'CL1', 'CL2', None, None]
+    omt = ['CL0', 'CL1', 'CL2', 'CL3', None]
+    _test_mt_results(c2, multi_self=mmt2, self=smt[:-1], cross=cmt[:-1], other=omt[:-1])
+
+    # Test with no match
+    c1['mt_self'] = None
+    c1['mt_other'] = None
+    c2['mt_self'] = None
+    c2['mt_other'] = None
+    c2['mass'][-1] = 1.
+    del c2.mt_input['share_mems'][-1]['CL3']
+    mt.unique(c2, c1, 'shared_member_fraction')
 
 def test_membership_cfg(CosmoClass):
     c1, c2 = get_test_data_mem()
