@@ -32,6 +32,7 @@ def _base_cat_test(DataType, kwa=None, **quantities):
     # init data
     c = DataType(**kwa, **quantities)
     test_vals = quantities.get('data', quantities)
+    # test recovery vals
     for k, v in test_vals.items():
         assert k in c.colnames
         assert_equal(c[k], v)
@@ -47,7 +48,13 @@ def _base_cat_test(DataType, kwa=None, **quantities):
     c.write('cat_with_header.fits', overwrite=True)
     assert_raises(ValueError, DataType.read, 'cat_with_header.fits', **kwa, tags='x')
     assert_raises(KeyError, DataType.read, 'cat_with_header.fits', **kwa, full=False)
-    c_read = DataType.read('cat_with_header.fits', **kwa, tags={'ra':'ra'})
+    # make sure tags are working
+    ra_cases = ('ra', 'RA', 'Ra', 'rA')
+    for tags in ({k:v} for k in ra_cases for v in ra_cases):
+        c_read = DataType.read('cat_with_header.fits', **kwa, tags=tags)
+        for col in ra_cases:
+            for col2 in ra_cases:
+                assert (c_read[col]==c_read[col2]).all()
     c_read = DataType.read_full('cat_with_header.fits')
     os.system('rm -f cat_with_header.fits')
     # test removing column
