@@ -242,7 +242,7 @@ class TagData():
         # Add columns
 
         missing = [f"'{dtag}': '{self.tags.get(dtag, None)}'" for dtag in self.default_tags
-                    if dtag in self.tags and self.tags.get(dtag, None) not in data.colnames
+                    if dtag in self.tags and self.tags.get(dtag, None) not in data.namedict
                     and dtag.lower()!='id']
         if len(missing)>0:
             missing = ", ".join(missing)
@@ -258,7 +258,7 @@ class TagData():
                 self._create_id(len(data))
             else:
                 self[self.tags['id']] = data[self.tags['id']]
-                cols.pop(cols.index(self.tags['id']))
+                cols.pop(cols.index(data.namedict[self.tags['id']]))
         for colname in cols:
             self[colname] = data[colname]
 
