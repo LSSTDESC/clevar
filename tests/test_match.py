@@ -354,16 +354,19 @@ def test_membership():
     os.system('rm -rf temp')
 
     # Test with replacement
-    c1['mt_self'] = None
-    c1['mt_other'] = None
-    c2['mt_self'] = None
-    c2['mt_other'] = None
+    c1, c2 = get_test_data_mem()
+    mt.match_members(c1.members, c2.members, method='id')
+    mt.fill_shared_members(c1, c2)
+    mt.multiple(c1, c2)
+    mt.multiple(c2, c1)
     c1['mt_other'][0] = 'CL3'
     mt.unique(c2, c1, 'shared_member_fraction')
     mt.unique(c1, c2, 'shared_member_fraction')
+    c1.cross_match()
+    c2.cross_match()
     smt = ['CL0', 'CL1', 'CL2', None, None]
     omt = ['CL0', 'CL1', 'CL2', 'CL3', None]
-    _test_mt_results(c2, multi_self=mmt2, self=smt[:-1], cross=cmt[:-1], other=omt[:-1])
+    _test_mt_results(c2, multi_self=mmt2, self=smt[:-1], cross=smt[:-1], other=omt[:-1])
 
     # Test with no match
     c1['mt_self'] = None
