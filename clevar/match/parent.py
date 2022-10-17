@@ -62,6 +62,8 @@ class Match():
         elif preference=='shared_member_fraction':
             cat1['mt_frac_self'] = np.zeros(cat1.size)
             cat2['mt_frac_other'] = np.zeros(cat2.size)
+            if 'mt_frac_other' not in cat1.colnames:
+                cat1['mt_frac_other'] = np.zeros(cat1.size)
             set_unique = lambda *args: self._match_sharepref(*args, minimum_share_fraction)
         else:
             raise ValueError(
