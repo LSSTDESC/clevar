@@ -75,6 +75,7 @@ catalog2:
 
 proximity_match:
     type: cross # options are cross, cat1, cat2.
+    verbose: True # print matching info of all clusters to screen
     step1: # Add more steps with the same keys below if required
         which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
         preference: more_massive # options are more_massive, angular_proximity or redshift_proximity.
@@ -95,6 +96,7 @@ proximity_match:
 
 membership_match:
     type: cross # options are cross, cat1, cat2.
+    verbose: True # print matching info of all clusters to screen
     preference: shared_member_fraction # Options: more_massive, angular_proximity, redshift_proximity, shared_member_fraction.
     minimum_share_fraction: 0 # Minimum share fraction to consider in matches.
     match_members: True # Match the members catalogs.
