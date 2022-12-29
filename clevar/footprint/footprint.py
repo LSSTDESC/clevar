@@ -105,6 +105,7 @@ class Footprint(TagData):
         ra, dec = hp.pix2ang(nside, self['pixel'], lonlat=True, nest=nest)
         self['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
         self.pixel_dict.update(self._make_col_dict('pixel'))
+
     def get_map(self, data, bad_val=0):
         '''
         Transforms a internal quantity into a map
@@ -122,9 +123,10 @@ class Footprint(TagData):
             Healpix map with the given values, other pixels are zero
         '''
         return hp.pix2map(self.nside, self['pixel'], self[data], bad_val)
+
     def get_values_in_pixels(self, data, pixels, bad_val, transform=lambda x:x):
         '''
-        Transforms a internal quantity into a map
+        Get values of data in pixel list.
 
         Parameters
         ----------
@@ -146,6 +148,7 @@ class Footprint(TagData):
         '''
         return np.array([transform(self[data][self.pixel_dict[p]])
                         if p in self.pixel_dict else bad_val for p in pixels])
+
     def zmax_masks_from_footprint(self, ra, dec, z):
         '''
         Create a zmax mask for a catalog based on a footprint
@@ -169,10 +172,38 @@ class Footprint(TagData):
         #zmax_vals = self.get_map(self['zmax'])[pixels] old method
         zmax_vals = self.get_values_in_pixels('zmax', pixels, 0)
         return z<=zmax_vals
+
     @classmethod
-    def read(self, filename, nside, tags, nest=False, full=False):
+    def _read(self, data, nside, tags, nest, full):
         """
-        Loads fits file and converst to FootprintZmax object
+        Internal function for reading.
+
+        Parameters
+        ----------
+        data: ClData
+            Data with main columns.
+        nside: int
+            Healpix nside
+        tags: LoweCaseDict, None
+            Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax).
+        nest: bool
+            If ordering is nested
+        full: bool
+            Reads all columns of the catalog
+        """
+        if not full:
+            if not isinstance(tags, dict):
+                raise ValueError(f'tags (={tags}) must be a dictionary.')
+            elif 'pixel' not in tags:
+                raise ValueError(f'pixel must be a key in tags (={tags})')
+            data._check_cols(tags.values())
+            data = data[list(tags.values())]
+        return self(nside=nside, nest=nest, data=data, tags=tags)
+
+    @classmethod
+    def read(self, filename, nside, tags=None, nest=False, full=False):
+        """
+        Loads fits file and convert to Footprint object
 
         Parameters
         ----------
@@ -180,32 +211,67 @@ class Footprint(TagData):
             Name of input file
         nside: int
             Healpix nside
-        pixel_name: str
-            Name of pixel column
-        detfrac_name: str, None
-            Name of detection fraction colum. If None value 1 is assigned.
-        zmax_name:
-            Name of maximum redshit colum. If None value 99 is assigned.
         tags: LoweCaseDict, None
-            Tags for table (required if full=False).
+            Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax).
+            Required if full=False.
+        nest: bool
+            If ordering is nested
         full: bool
             Reads all columns of the catalog
         """
-        if not isinstance(tags, dict):
-            raise ValueError(f'tags (={tags}) must be a dictionary.')
-        elif 'pixel' not in tags:
-            raise ValueError(f'pixel must be a key in tags (={tags})')
-
         data = ClData.read(filename)
-        if not full:
-            data._check_cols(tags.values())
-            data = data[list(tags.values())]
-        return self(nside=nside, nest=nest, data=data, tags=tags)
+        return self._read(data, nside, tags, nest, full)
+
+    @classmethod
+    def read_healsparse(self, filename, tags=None, full=True):
+        """
+        Loads healsparse file and convert to Footprint object
+
+        Parameters
+        ----------
+        filename: str
+            Name of input file
+        tags: LoweCaseDict, None
+            Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax).
+            Required if full=False. If map only has one quantity, it is assumed to be detfrac.
+        full: bool
+            Reads all columns of the catalog
+        """
+        import healsparse as hs
+
+        data = ClData()
+        _tags = {'pixel':'pixel'}
+        _tags.update(tags if tags is not None else {})
+
+        hsp_map = hs.HealSparseMap.read(filename)
+        nside = hsp_map.nside_sparse
+        if hsp_map.dtype.names is None:
+            mask = hsp_map[:]!=hp.UNSEEN
+            data['pixel'] = np.arange(mask.size, dtype=int)[mask]
+            data['detfrac'] = hsp_map[:][mask]
+            if not full:
+                raise ValueError('full must be true for files with only one map!')
+            elif tags is not None:
+                raise ValueError('tags cannot be used for files with only one map!')
+        else:
+            mask = hsp_map[hsp_map.dtype.names[0]][:]!=hp.UNSEEN
+            data['pixel'] = np.arange(mask.size, dtype=int)[mask]
+            for name in hsp_map.dtype.names:
+                data[name] = hsp_map[name][:][mask]
+        del hsp_map
+        return self._read(data, nside, _tags, nest=True, full=full)
+
     def __repr__(self):
-        out = f"FootprintZmax object with {len(self.data):,} pixels\n"
+        out = f"Footprint object with {len(self.data):,} pixels\n"
         out += "zmax: [%g, %g]\n"%(self['zmax'].min(), self['zmax'].max())
         out += "detfrac: [%g, %g]"%(self['detfrac'].min(), self['detfrac'].max())
         return out
+
+    def _repr_html_(self):
+        return (f'<b>Footprint object (nside:</b>{self.nside:,}<b>, nest:</b>{self.nest}<b>)</b>'
+                f'<br><b>tags:</b> {self._prt_tags()}'
+                f'<br>{self._prt_table_tags(self.data)}')
+
     def _get_coverfrac(self, cl_sk, cl_z, aperture_radius, aperture_radius_unit,
                        cosmo=None, wtfunc=lambda pixels, sk: np.ones(len(pixels))):
         '''
@@ -245,6 +311,7 @@ class Footprint(TagData):
         zmax_vals = self.get_values_in_pixels('zmax', pix_list, 0)
         values = detfrac_vals*np.array(cl_z<=zmax_vals, dtype=float)
         return (weights*values).sum()/weights.sum()
+
     def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
                              aperture_radius, aperture_radius_unit, cosmo):
         '''
@@ -275,6 +342,7 @@ class Footprint(TagData):
         return self._get_coverfrac(cl_sk, cl_z, aperture_radius, aperture_radius_unit, cosmo=cosmo,
             wtfunc=lambda pix_list, cl_sk: self._nfw_flatcore_window_func(
                 pix_list, cl_sk, cl_z, cl_radius_mpc, cosmo))
+
     def get_coverfrac(self, cl_ra, cl_dec, cl_z, aperture_radius, aperture_radius_unit,
                       cosmo=None, wtfunc=lambda pixels, sk: np.ones(len(pixels))):
         r'''
@@ -314,6 +382,7 @@ class Footprint(TagData):
         return self._get_coverfrac(SkyCoord(cl_ra*u.deg, cl_dec*u.deg, frame='icrs'),
                                    cl_z, aperture_radius, aperture_radius_unit,
                                    cosmo=cosmo, wtfunc=wtfunc)
+
     def get_coverfrac_nfw2D(self, cl_ra, cl_dec, cl_z, cl_radius, cl_radius_unit,
                             aperture_radius, aperture_radius_unit, cosmo):
         r'''
@@ -358,6 +427,7 @@ class Footprint(TagData):
         return self._get_coverfrac_nfw2D(SkyCoord(cl_ra*u.deg, cl_dec*u.deg, frame='icrs'),
                                          cl_z, cl_radius, cl_radius_unit,
                                          aperture_radius, aperture_radius_unit, cosmo=cosmo)
+
     def _nfw_flatcore_window_func(self, pix_list, cl_sk, cl_z, cl_radius, cosmo):
         '''
         Get aperture function for NFW 2D Profile with a top-hat core
@@ -385,6 +455,7 @@ class Footprint(TagData):
                                               'degrees', 'mpc', cl_z, cosmo)
             )
         return nfw2D_profile_flatcore(R, cl_radius, Rs, Rcore)
+
     def plot(self, data, bad_val=hp.UNSEEN, auto_lim=False, ra_lim=None, dec_lim=None,
              cluster=None, cluster_kwargs=None, cosmo=None, fig=None, figsize=None, **kwargs):
         """
