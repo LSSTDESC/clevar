@@ -35,6 +35,11 @@ jobs:
         git clone https://github.com/LSSTDESC/CCL
         cd CCL
         pip install .
+    - name: Install healsparse from source
+      run: |
+        git clone https://github.com/LSSTDESC/healsparse
+        cd healsparse
+        pip install .
     - name: Run the unit tests
       run: |
         pip install pytest pytest-cov
