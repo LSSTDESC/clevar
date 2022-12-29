@@ -240,6 +240,8 @@ class Footprint(TagData):
         import healsparse as hs
 
         data = ClData()
+        _tags = {'pixel':'pixel'}
+        _tags.update(tags if tags is not None else {})
 
         hsp_map = hs.HealSparseMap.read(filename)
         nside = hsp_map.nside_sparse
@@ -247,13 +249,17 @@ class Footprint(TagData):
             mask = hsp_map[:]!=hp.UNSEEN
             data['pixel'] = np.arange(mask.size, dtype=int)[mask]
             data['detfrac'] = hsp_map[:][mask]
+            if not full:
+                raise ValueError('full must be true for files with only one map!')
+            elif tags is not None:
+                raise ValueError('tags cannot be used for files with only one map!')
         else:
             mask = hsp_map[hsp_map.dtype.names[0]][:]!=hp.UNSEEN
             data['pixel'] = np.arange(mask.size, dtype=int)[mask]
             for name in hsp_map.dtype.names:
                 data[name] = hsp_map[name][:][mask]
         del hsp_map
-        return self._read(data, nside, tags, nest=True, full=full)
+        return self._read(data, nside, _tags, nest=True, full=full)
 
     def __repr__(self):
         out = f"Footprint object with {len(self.data):,} pixels\n"
