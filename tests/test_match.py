@@ -377,6 +377,23 @@ def test_membership():
     del c2.mt_input['share_mems'][-1]['CL3']
     mt.unique(c2, c1, 'shared_member_fraction')
 
+    # Test without replacement
+    c1, c2 = get_test_data_mem()
+    mt.match_members(c1.members, c2.members, method='id')
+    mt.fill_shared_members(c1, c2)
+    mt.multiple(c1, c2)
+    mt.multiple(c2, c1)
+    c2['mt_self'][0] = 'CL0'
+    c1['mt_other'][0] = 'CL0'
+    mt.unique(c2, c1, 'shared_member_fraction')
+    mt.unique(c1, c2, 'shared_member_fraction')
+    c1.cross_match()
+    c2.cross_match()
+    smt = ['CL0', 'CL1', 'CL2', 'CL3', None]
+    _test_mt_results(c2, multi_self=mmt2, self=smt[:-1], cross=smt[:-1], other=smt[:-1])
+    print(c1.members)
+    print(c2.members)
+
 def test_membership_cfg(CosmoClass):
     c1, c2 = get_test_data_mem()
     print(c1.data)

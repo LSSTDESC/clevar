@@ -186,24 +186,31 @@ class Match():
         """
         if len(cat1['mt_multi_self'][i])==0:
             return False
-        id2 = max(cat1.mt_input['share_mems'][i], key=cat1.mt_input['share_mems'][i].get)
-        shared_frac = cat1.mt_input['share_mems'][i][id2]/cat1.mt_input['nmem'][i]
-        if shared_frac<minimum_share_fraction:
-            return False
-        # fills cat2 mt_other if empty or shared_frac is greater
-        i2 = cat2.id_dict[id2]
-        id1, id1_replace = cat1['id'][i], cat2['mt_other'][i2]
-        share_mems2 = cat2.mt_input['share_mems'][i2]
-        if share_mems2[id1]>share_mems2.get(id1_replace, 0):
-            cat1['mt_self'][i] = id2
-            cat1['mt_frac_self'][i] = shared_frac
-            cat2['mt_other'][i2] = id1
-            cat2['mt_frac_other'][i2] = shared_frac
-            if id1_replace is not None:
-                i1_replace = cat1.id_dict[id1_replace]
-                cat1['mt_self'][i1_replace] = None
-                cat1['mt_frac_other'][i1_replace] = 0
-            return True
+        for id2 in sorted(cat1.mt_input['share_mems'][i],
+                          key=cat1.mt_input['share_mems'][i].get,
+                          reverse=True):
+            shared_frac = cat1.mt_input['share_mems'][i][id2]/cat1.mt_input['nmem'][i]
+            if shared_frac<minimum_share_fraction:
+                return False
+            # fills cat2 mt_other if empty or shared_frac is greater
+            i2 = cat2.id_dict[id2]
+            share_mems2 = cat2.mt_input['share_mems'][i2]
+            id1, id1_replace = cat1['id'][i], cat2['mt_other'][i2]
+            if share_mems2[id1]>=share_mems2.get(id1_replace, 0):
+                i1_replace = cat1.id_dict.get(id1_replace)
+                if i1_replace is not None and (
+                        share_mems2[id1]==share_mems2[id1_replace]
+                        and cat1['mass'][i]<=cat1['mass'][i1_replace]):
+                            return False
+                cat1['mt_self'][i] = id2
+                cat1['mt_frac_self'][i] = shared_frac
+                cat2['mt_other'][i2] = id1
+                cat2['mt_frac_other'][i2] = shared_frac
+                if i1_replace is not None:
+                    cat1['mt_self'][i1_replace] = None
+                    cat1['mt_frac_other'][i1_replace] = 0
+                    self._match_sharepref(cat1, i1_replace, cat2, minimum_share_fraction)
+                return True
         return False
     def _get_dist_mt(self, dat1, dat2, MATCH_PREF):
         """

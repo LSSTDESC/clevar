@@ -40,7 +40,7 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python"
         ],
-      install_requires=["astropy>=5.0", "numpy>=1.20", "scipy>=1.4", "healpy"],
+      install_requires=["astropy>=5.0", "numpy>=1.20", "scipy>=1.4", "healpy", "healsparse"],
       python_requires='>'+str(required_py_version)
 )
 
