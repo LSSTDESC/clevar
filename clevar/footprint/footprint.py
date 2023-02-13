@@ -127,6 +127,7 @@ class Footprint(TagData):
             Healpix map with the given values, other pixels are zero
         '''
         return hp.pix2map(self.nside, self['pixel'], self[data], bad_val)
+
     def get_values_in_pixels(self, data, pixels, bad_val, transform=lambda x:x):
         '''
         Get values of data in pixel list.
