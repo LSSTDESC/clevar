@@ -8,7 +8,8 @@ from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology
 from clevar.footprint import Footprint
 from clevar.footprint.artificial import create_footprint
-from numpy.testing import assert_raises, assert_allclose, assert_equal
+from clevar.footprint.nfw_funcs import nfw2D_profile_flatcore, nfw2D_profile_flatcore_unnorm
+from numpy.testing import assert_raises, assert_allclose, assert_equal, assert_almost_equal
 
 def get_test_data():
 
@@ -111,6 +112,24 @@ def test_coverfrac():
         assert_equal(ft.get_coverfrac(0, 0, 0, 5, 'arcmin'), 1)
         assert_equal(ft.get_coverfrac_nfw2D(0, 0, .1, 1, 'mpc', 5, 'arcmin', cosmo), 1)
         assert_raises(TypeError, ft.get_coverfrac, 0, 0, 0, 5, 'mpc')
+
+        assert_equal(ft.get_coverfrac(10, 0, .01, 5, 'arcmin'), 0)
+
+        ft.keep_int_prod = True
+        cf = ft.get_coverfrac(.1, 0, .01, 5, 'arcmin')
+        assert_almost_equal(0.40, cf, 2)
+        cf2 = (ft.temp['values']*ft.temp['weights']).sum()/ft.temp['weights'].sum()
+        assert_almost_equal(cf2, cf, 8)
+
+        cf = ft.get_coverfrac_nfw2D(.1, 0, .01, 1, 'mpc', 5, 'arcmin', cosmo)
+        assert_almost_equal(0.40, cf, 2)
+        cf2 = (ft.temp['values']*ft.temp['weights']).sum()/ft.temp['weights'].sum()
+        assert_almost_equal(cf2, cf, 8)
+
+    R, Rc, Rs, Rcore = np.logspace(-3, 0, 10), 1, .15, .1
+    f1 = nfw2D_profile_flatcore(R, Rc, Rs, Rcore)
+    f2 = nfw2D_profile_flatcore_unnorm(R, Rs, Rcore)
+    assert_allclose(f1/f1.sum(), f2/f2.sum())
 
 def test_artificial_footprint():
 

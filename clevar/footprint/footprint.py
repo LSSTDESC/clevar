@@ -7,7 +7,7 @@ from ..geometry import convert_units, angular_bank, physical_bank
 from ..utils import none_val, hp, updated_dict
 from astropy.coordinates import SkyCoord
 from astropy import units as u
-from .nfw_funcs import nfw2D_profile_flatcore, nfw2D_profile_flatcore_unnorm
+from .nfw_funcs import nfw2D_profile_flatcore_unnorm
 from ..match_metrics import plot_helper as ph
 from ..match_metrics.plot_helper import plt
 
