@@ -7,7 +7,7 @@ from ..geometry import convert_units, angular_bank, physical_bank
 from ..utils import none_val, hp, updated_dict
 from astropy.coordinates import SkyCoord
 from astropy import units as u
-from .nfw_funcs import nfw2D_profile_flatcore
+from .nfw_funcs import nfw2D_profile_flatcore, nfw2D_profile_flatcore_unnorm
 from ..match_metrics import plot_helper as ph
 from ..match_metrics.plot_helper import plt
 
@@ -29,6 +29,9 @@ class Footprint(TagData):
         Number of objects in the catalog
     tags: LoweCaseDict
         Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax)
+    keep_int_prod: bool
+        Keep positions, values and weights used in computation.
+        If true, they are stored in .temp attribute.
     '''
 
     @property
@@ -38,15 +41,15 @@ class Footprint(TagData):
     @property
     def nside(self):
         return self.data.meta['nside']
-    
+
     @property
     def nest(self):
         return self.data.meta['nest']
-    
+
     @nside.setter
     def nside(self, nside):
         self.data.meta['nside'] = nside
-    
+
     @nest.setter
     def nest(self, nest):
         self.data.meta['nest'] = nest
@@ -74,6 +77,7 @@ class Footprint(TagData):
         TagData.__init__(self, tags=tags,
                          default_tags=['pixel', 'detfrac', 'zmax'],
                          **kwargs)
+        self.keep_int_prod = False
 
     def _add_values(self, nside=None, nest=False, **columns):
         '''
@@ -123,10 +127,9 @@ class Footprint(TagData):
             Healpix map with the given values, other pixels are zero
         '''
         return hp.pix2map(self.nside, self['pixel'], self[data], bad_val)
-
     def get_values_in_pixels(self, data, pixels, bad_val, transform=lambda x:x):
         '''
-        Get values of data in pixel list.
+        Transforms a internal quantity into a map
 
         Parameters
         ----------
@@ -306,10 +309,18 @@ class Footprint(TagData):
             radius=convert_units(aperture_radius, aperture_radius_unit, 'radians',
                                  redshift=cl_z, cosmo=cosmo)
             )
-        weights = np.array(wtfunc(pix_list, cl_sk))
-        detfrac_vals = self.get_values_in_pixels('detfrac', pix_list, 0)
         zmax_vals = self.get_values_in_pixels('zmax', pix_list, 0)
+        has_pix = cl_z<=zmax_vals
+        if has_pix.all():
+            return 1.0
+        elif (~has_pix).all():
+            return 0.0
+        detfrac_vals = self.get_values_in_pixels('detfrac', pix_list, 0)
         values = detfrac_vals*np.array(cl_z<=zmax_vals, dtype=float)
+        weights = np.array(wtfunc(pix_list, cl_sk))
+        if self.keep_int_prod:
+            ra, dec = hp.pix2ang(4096, pix_list, nest=self.nest, lonlat=True)
+            self.temp = {'ra':ra, 'dec':dec,'values':values, 'weights': weights}
         return (weights*values).sum()/weights.sum()
 
     def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
@@ -450,11 +461,13 @@ class Footprint(TagData):
         '''
         Rs = 0.15/cosmo['h'] # 0.214Mpc
         Rcore = 0.1/cosmo['h'] # 0.142Mpc
-        R = self.get_values_in_pixels('SkyCoord', pix_list, Rcore,
-            transform=lambda x: convert_units(cl_sk.separation(x).value,
-                                              'degrees', 'mpc', cl_z, cosmo)
-            )
-        return nfw2D_profile_flatcore(R, cl_radius, Rs, Rcore)
+        pix_list_sk = SkyCoord(*[coord*u.deg for coord in
+                                    hp.pix2ang(self.nside, pix_list,
+                                               nest=self.nest, lonlat=True)],
+                               frame='icrs')
+        R = convert_units(cl_sk.separation(pix_list_sk).value,
+                          'degrees', 'mpc', cl_z, cosmo)
+        return nfw2D_profile_flatcore_unnorm(R, Rs, Rcore)
 
     def plot(self, data, bad_val=hp.UNSEEN, auto_lim=False, ra_lim=None, dec_lim=None,
              cluster=None, cluster_kwargs=None, cosmo=None, fig=None, figsize=None, **kwargs):
