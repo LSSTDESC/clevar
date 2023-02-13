@@ -129,7 +129,7 @@ class Footprint(TagData):
         return hp.pix2map(self.nside, self['pixel'], self[data], bad_val)
     def get_values_in_pixels(self, data, pixels, bad_val, transform=lambda x:x):
         '''
-        Transforms a internal quantity into a map
+        Get values of data in pixel list.
 
         Parameters
         ----------
