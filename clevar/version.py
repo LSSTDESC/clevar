@@ -1,2 +1,2 @@
 """Version of ClEvaR"""
-__version__ = '0.13.8'
+__version__ = '0.13.9'
