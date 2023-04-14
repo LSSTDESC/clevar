@@ -350,11 +350,11 @@ class MembershipMatch(Match):
                   needed if `shared_members_save` or `shared_members_load` is `True`.
                 * `verbose`: Print result for individual matches (default=`True`).
                 * `minimum_share_fraction1_unique` (optional) -  Minimum share fraction of
-                catalog 1 to consider in unique matches only. It overwrites
-                `minimum_share_fraction1` in the unique matching step.
+                  catalog 1 to consider in unique matches only. It overwrites
+                  `minimum_share_fraction1` in the unique matching step.
                 * `minimum_share_fraction2_unique` (optional) -  Minimum share fraction of
-                catalog 2 to consider in unique matches only. It overwrites
-                `minimum_share_fraction2` in the unique matching step.
+                  catalog 2 to consider in unique matches only. It overwrites
+                  `minimum_share_fraction2` in the unique matching step.
 
 
         """
