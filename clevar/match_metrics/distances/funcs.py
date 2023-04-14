@@ -5,8 +5,20 @@ Main distances functions, wrapper of catalog_funcs functions
 import numpy as np
 from . import catalog_funcs
 
-def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units='degrees', cosmo=None,
-                     quantity_bins=None, bins=None, log_quantity=False, ax=None, **kwargs):
+
+def central_position(
+    cat1,
+    cat2,
+    matching_type,
+    radial_bins=20,
+    radial_bin_units="degrees",
+    cosmo=None,
+    quantity_bins=None,
+    bins=None,
+    log_quantity=False,
+    ax=None,
+    **kwargs,
+):
     """
     Plot distance between central position of matched clusters, binned by a second quantity.
 
@@ -72,17 +84,37 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
                 * `bins2` (optional): The bin edges along the second dimension.
     """
     legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_quantity else ".2f")
-    kwargs['legend_format'] = kwargs.get('legend_format',
-        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_quantity else f'%{legend_fmt}'%v)
-    kwargs['add_legend'] = kwargs.get('add_legend', True)*(bins is not None)
+    kwargs["legend_format"] = kwargs.get(
+        "legend_format",
+        lambda v: f"10^{{%{legend_fmt}}}" % np.log10(v) if log_quantity else f"%{legend_fmt}" % v,
+    )
+    kwargs["add_legend"] = kwargs.get("add_legend", True) * (bins is not None)
     return catalog_funcs.central_position(
-        cat1, cat2, matching_type, radial_bins=radial_bins,
-        radial_bin_units=radial_bin_units, cosmo=cosmo, col2=quantity_bins,
-        bins2=bins, ax=ax, **kwargs)
+        cat1,
+        cat2,
+        matching_type,
+        radial_bins=radial_bins,
+        radial_bin_units=radial_bin_units,
+        cosmo=cosmo,
+        col2=quantity_bins,
+        bins2=bins,
+        ax=ax,
+        **kwargs,
+    )
 
-def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
-             quantity_bins=None, bins=None, log_quantity=False,
-             ax=None, **kwargs):
+
+def redshift(
+    cat1,
+    cat2,
+    matching_type,
+    redshift_bins=20,
+    normalize=None,
+    quantity_bins=None,
+    bins=None,
+    log_quantity=False,
+    ax=None,
+    **kwargs,
+):
     """
     Plot redshift distance between matched clusters, binned by a second quantity.
 
@@ -147,9 +179,19 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
                 * `bins2` (optional): The bin edges along the second dimension.
     """
     legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_quantity else ".2f")
-    kwargs['legend_format'] = kwargs.get('legend_format',
-        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_quantity else f'%{legend_fmt}'%v)
-    kwargs['add_legend'] = kwargs.get('add_legend', True)*(bins is not None)
+    kwargs["legend_format"] = kwargs.get(
+        "legend_format",
+        lambda v: f"10^{{%{legend_fmt}}}" % np.log10(v) if log_quantity else f"%{legend_fmt}" % v,
+    )
+    kwargs["add_legend"] = kwargs.get("add_legend", True) * (bins is not None)
     return catalog_funcs.redshift(
-        cat1, cat2, matching_type, redshift_bins=redshift_bins,
-        normalize=normalize, col2=quantity_bins, bins2=bins, ax=ax, **kwargs)
+        cat1,
+        cat2,
+        matching_type,
+        redshift_bins=redshift_bins,
+        normalize=normalize,
+        col2=quantity_bins,
+        bins2=bins,
+        ax=ax,
+        **kwargs,
+    )

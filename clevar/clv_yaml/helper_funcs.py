@@ -9,6 +9,8 @@ import numpy as np
 from clevar.catalog import ClData, ClCatalog, MemCatalog
 from clevar import cosmology
 from clevar.utils import none_val, veclen
+
+
 ######################################################################
 ########## Monkeypatching yaml #######################################
 ######################################################################
@@ -26,10 +28,12 @@ def read_yaml(filename):
     config: dict
         Dictionary with yaml file info
     """
-    f = open(filename, 'r')
+    f = open(filename, "r")
     config = yaml.load(f, Loader=yaml.FullLoader)
     f.close()
     return config
+
+
 def write_yaml(config, filename):
     """
     Write yaml file
@@ -41,15 +45,19 @@ def write_yaml(config, filename):
     filename: str
         Name of yaml file
     """
-    f = open(filename, 'w')
+    f = open(filename, "w")
     yaml.dump(config, f)
     f.close()
+
+
 yaml.write = write_yaml
 yaml.read = read_yaml
+
+
 ########################################################################
 ### dict functions #####################################################
 ########################################################################
-def add_dicts_diff(dict1, dict2, pref='', diff_lines=None):
+def add_dicts_diff(dict1, dict2, pref="", diff_lines=None):
     """
     Adds the differences between dictionaries to a list
 
@@ -66,20 +74,19 @@ def add_dicts_diff(dict1, dict2, pref='', diff_lines=None):
         diff_lines = []
     for k in set(k for d in (dict1, dict2) for k in d):
         if k not in dict1:
-            diff_lines.append((f'{pref}[{k}]', 'missing', 'present'))
+            diff_lines.append((f"{pref}[{k}]", "missing", "present"))
             return
         if k not in dict2:
-            diff_lines.append((f'{pref}[{k}]', 'present', 'missing'))
+            diff_lines.append((f"{pref}[{k}]", "present", "missing"))
             return
-        if dict1[k]!=dict2[k]:
+        if dict1[k] != dict2[k]:
             if isinstance(dict1[k], dict):
-                add_dicts_diff(dict1[k], dict2[k], pref=f'{pref}[{k}]',
-                                diff_lines=diff_lines)
+                add_dicts_diff(dict1[k], dict2[k], pref=f"{pref}[{k}]", diff_lines=diff_lines)
             else:
-                diff_lines.append((f'{pref}[{k}]', str(dict1[k]), str(dict2[k])))
-def get_dicts_diff(dict1, dict2, keys=None,
-        header=['Name', 'dict1', 'dict2'],
-        msg=''):
+                diff_lines.append((f"{pref}[{k}]", str(dict1[k]), str(dict2[k])))
+
+
+def get_dicts_diff(dict1, dict2, keys=None, header=["Name", "dict1", "dict2"], msg=""):
     """
     Get all the differences between dictionaries, accounting for nested dictionaries.
     If there are differences, a table with the information is printed.
@@ -102,19 +109,21 @@ def get_dicts_diff(dict1, dict2, keys=None,
     """
     diff_lines = [header]
     if keys is None:
-        keys = set(list(dict1.keys())+list(dict2.keys()))
+        keys = set(list(dict1.keys()) + list(dict2.keys()))
     for k in keys:
-        add_dicts_diff(dict1.get(k, {}), dict2.get(k, {}), pref=f'[{k}]', diff_lines=diff_lines)
-    if len(diff_lines)>1:
+        add_dicts_diff(dict1.get(k, {}), dict2.get(k, {}), pref=f"[{k}]", diff_lines=diff_lines)
+    if len(diff_lines) > 1:
         diff_lines = np.array(diff_lines)
         max_sizes = [max(veclen(l)) for l in diff_lines.T]
-        fmts = f'  %-{max_sizes[0]}s | %{max_sizes[1]}s | %{max_sizes[2]}s'
+        fmts = f"  %-{max_sizes[0]}s | %{max_sizes[1]}s | %{max_sizes[2]}s"
         print(msg)
-        print(fmts%tuple(diff_lines[0]))
+        print(fmts % tuple(diff_lines[0]))
         print(f'  {"-"*max_sizes[0]}-|-{"-"*max_sizes[1]}-|-{"-"*max_sizes[2]}')
         for l in diff_lines[1:]:
-            print(fmts%tuple(l))
+            print(fmts % tuple(l))
     return diff_lines[1:]
+
+
 def deep_update(dict_base, dict_update):
     """
     Update a multi-layer dictionary.
@@ -137,6 +146,8 @@ def deep_update(dict_base, dict_update):
         else:
             dict_base[k] = dict_update[k]
     return dict_base
+
+
 ########################################################################
 def get_input_loop(options_msg, actions):
     """
@@ -151,13 +162,16 @@ def get_input_loop(options_msg, actions):
     """
     loop = True
     while loop:
-        action = input(f'\n{options_msg}\n')
+        action = input(f"\n{options_msg}\n")
         loop = action not in actions
-        prt = print(f'Option {action} not valid. Please choose:') if loop else None
+        prt = print(f"Option {action} not valid. Please choose:") if loop else None
     f, args, kwargs = actions[action]
     return f(*args, **kwargs)
-def loadconf(config_file, load_configs=None, add_new_configs=None,
-             fail_action='ask', check_matching=False):
+
+
+def loadconf(
+    config_file, load_configs=None, add_new_configs=None, fail_action="ask", check_matching=False
+):
     """
     Load configuration from yaml file, creates output directory and config.log.yml
 
@@ -186,41 +200,47 @@ def loadconf(config_file, load_configs=None, add_new_configs=None,
         add_new_configs = []
     if not os.path.isfile(config_file):
         raise ValueError(f'Config file "{config_file}" not found')
-    base_cfg_file = f'{os.path.dirname(__file__)}/base_config.yml'
+    base_cfg_file = f"{os.path.dirname(__file__)}/base_config.yml"
     config = deep_update(yaml.read(base_cfg_file), yaml.read(config_file))
     main_load_configs = ["outpath", "matching_mode"]
     if check_matching:
         main_load_configs += [f"{config['matching_mode']}_match"]
-    config = {k:config[k] for k in main_load_configs+load_configs}
+    config = {k: config[k] for k in main_load_configs + load_configs}
     # Add outpath suffix to differentiate proximity from memebership
-    config['outpath'] += '_'+config['matching_mode']
+    config["outpath"] += "_" + config["matching_mode"]
     # Checks if config is consistent with log file
     log_file = f'{config["outpath"]}/config.log.yml'
-    if not os.path.isdir(config['outpath']):
-        os.mkdir(config['outpath'])
+    if not os.path.isdir(config["outpath"]):
+        os.mkdir(config["outpath"])
         log_config = config
     else:
         log_config = yaml.read(log_file)
         for k in add_new_configs:
             log_config[k] = log_config.get(k, config[k])
-        diff_configs = get_dicts_diff(log_config, config, keys=load_configs,
-                                        header=['Name', 'Saved', 'New'],
-                                        msg='\nConfigurations differs from saved config:\n')
-        if len(diff_configs)>0:
+        diff_configs = get_dicts_diff(
+            log_config,
+            config,
+            keys=load_configs,
+            header=["Name", "Saved", "New"],
+            msg="\nConfigurations differs from saved config:\n",
+        )
+        if len(diff_configs) > 0:
             actions_loop = {
-                'o': (lambda: True, [], {}),
-                'q': (lambda: None, [], {}),
-                }
+                "o": (lambda: True, [], {}),
+                "q": (lambda: None, [], {}),
+            }
             f, args, kwargs = {
-                'ask': (get_input_loop, ['Overwrite(o) and proceed or Quit(q)?', actions_loop], {}),
-                'orverwrite': actions_loop['o'],
-                'quit': actions_loop['q'],
+                "ask": (get_input_loop, ["Overwrite(o) and proceed or Quit(q)?", actions_loop], {}),
+                "orverwrite": actions_loop["o"],
+                "quit": actions_loop["q"],
             }[fail_action]
             if f(*args, **kwargs) is None:
                 return
     deep_update(log_config, config)
     yaml.write(log_config, log_file)
     return config
+
+
 def make_catalog(cat_config):
     """
     Make a clevar.ClCatalog object based on config
@@ -236,9 +256,14 @@ def make_catalog(cat_config):
         ClCatalog based on input config
     """
     return ClCatalog.read(
-        cat_config['file'], name=cat_config['name'], tags=cat_config['columns'],
-        radius_unit=cat_config.get('radius_unit', None),
-        labels=cat_config.get('labels', {}))
+        cat_config["file"],
+        name=cat_config["name"],
+        tags=cat_config["columns"],
+        radius_unit=cat_config.get("radius_unit", None),
+        labels=cat_config.get("labels", {}),
+    )
+
+
 def add_mem_catalog(cat, cat_config):
     """
     Make a clevar.MemCatalog object based on config
@@ -253,8 +278,10 @@ def add_mem_catalog(cat, cat_config):
     clevar.MemCatalog
         MemCatalog based on input config
     """
-    cat.read_members(cat_config['file'], tags=cat_config['columns'])
-    cat.members.labels.update(cat_config.get('labels', {}))
+    cat.read_members(cat_config["file"], tags=cat_config["columns"])
+    cat.members.labels.update(cat_config.get("labels", {}))
+
+
 def make_cosmology(cosmo_config):
     """
     Make a cosmology object based on config
@@ -269,20 +296,22 @@ def make_cosmology(cosmo_config):
     clevar.Cosmology
         Cosmology based on the input config
     """
-    if cosmo_config['backend'].lower()=='astropy':
+    if cosmo_config["backend"].lower() == "astropy":
         CosmoClass = cosmology.AstroPyCosmology
-    elif cosmo_config['backend'].lower()=='ccl':
+    elif cosmo_config["backend"].lower() == "ccl":
         CosmoClass = cosmology.CCLCosmology
     else:
         raise ValueError(f'Cosmology backend "{cosmo_config["backend"]}" not accepted')
     parameters = {
-        'H0': 70.0,
-        'Omega_b0': 0.05,
-        'Omega_dm0': 0.25,
-        'Omega_k0': 0.0,
+        "H0": 70.0,
+        "Omega_b0": 0.05,
+        "Omega_dm0": 0.25,
+        "Omega_k0": 0.0,
     }
-    parameters.update(cosmo_config.get('parameters', {}))
+    parameters.update(cosmo_config.get("parameters", {}))
     return CosmoClass(**parameters)
+
+
 def make_bins(input_val, log=False):
     """
     Make array for bins string input
@@ -301,8 +330,8 @@ def make_bins(input_val, log=False):
     """
     if isinstance(input_val, int):
         return input_val
-    vals = input_val.split(' ')
-    if len(vals)!=3:
+    vals = input_val.split(" ")
+    if len(vals) != 3:
         raise ValueError(f"Values ({input_val}) must be 1 intergers or 3 numbers (xmin, xmax, dx)")
     out = np.arange(*np.array(vals, dtype=float))
     return 10**out if log else out

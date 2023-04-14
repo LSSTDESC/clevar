@@ -32,15 +32,16 @@ def _rec_masks(cat, matching_type, mask=None, mask_unmatched=None):
         Mask for matched clusters (use_mask has to be applied to it).
     """
     # convert matching type to the values expected by get_matching_mask
-    matching_type_conv = matching_type.replace('cat1', 'self').replace('cat2', 'other')
+    matching_type_conv = matching_type.replace("cat1", "self").replace("cat2", "other")
     is_matched = cat.get_matching_mask(matching_type_conv)
     # mask_ to apply mask and mask_unmatched
-    use_mask = none_val(mask, True)*(~(~is_matched*none_val(mask_unmatched, False)))
+    use_mask = none_val(mask, True) * (~(~is_matched * none_val(mask_unmatched, False)))
     return use_mask, is_matched
 
 
-def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
-               mask=None, mask_unmatched=None, **kwargs):
+def _plot_base(
+    pltfunc, cat, col1, col2, bins1, bins2, matching_type, mask=None, mask_unmatched=None, **kwargs
+):
     """
     Adapts local function to use a ArrayFuncs function.
 
@@ -71,12 +72,23 @@ def _plot_base(pltfunc, cat, col1, col2, bins1, bins2, matching_type,
     mask_, is_matched = _rec_masks(cat, matching_type, mask, mask_unmatched)
     # make sure bins stay consistent regardless of mask
     edges1, edges2 = np.histogram2d(cat[col1], cat[col2], bins=(bins1, bins2))[1:]
-    return pltfunc(cat[col1][mask_], cat[col2][mask_], edges1, edges2,
-                   is_matched=is_matched[mask_], **kwargs)
+    return pltfunc(
+        cat[col1][mask_], cat[col2][mask_], edges1, edges2, is_matched=is_matched[mask_], **kwargs
+    )
 
 
-def plot(cat, col1, col2, bins1, bins2, matching_type,
-         xlabel=None, ylabel=None, scale1='linear', **kwargs):
+def plot(
+    cat,
+    col1,
+    col2,
+    bins1,
+    bins2,
+    matching_type,
+    xlabel=None,
+    ylabel=None,
+    scale1="linear",
+    **kwargs,
+):
     """
     Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
 
@@ -137,18 +149,26 @@ def plot(cat, col1, col2, bins1, bins2, matching_type,
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
-    info = _plot_base(
-        array_funcs.plot, cat, col1, col2, bins1, bins2, matching_type,
-        **kwargs)
-    info['ax'].set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
-    info['ax'].set_ylabel(ylabel if ylabel else 'recovery rate')
-    info['ax'].set_xscale(scale1)
-    info['ax'].set_ylim(-.01, 1.05)
+    info = _plot_base(array_funcs.plot, cat, col1, col2, bins1, bins2, matching_type, **kwargs)
+    info["ax"].set_xlabel(xlabel if xlabel else f"${cat.labels[col1]}$")
+    info["ax"].set_ylabel(ylabel if ylabel else "recovery rate")
+    info["ax"].set_xscale(scale1)
+    info["ax"].set_ylim(-0.01, 1.05)
     return info
 
 
-def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
-               xlabel=None, ylabel=None, scale1='linear', **kwargs):
+def plot_panel(
+    cat,
+    col1,
+    col2,
+    bins1,
+    bins2,
+    matching_type,
+    xlabel=None,
+    ylabel=None,
+    scale1="linear",
+    **kwargs,
+):
     """
     Plot recovery rate as lines in panels, with each line binned by bins1
     and each panel is based on the data inside a bins2 bin.
@@ -209,18 +229,33 @@ def plot_panel(cat, col1, col2, bins1, bins2, matching_type,
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
-    info = _plot_base(array_funcs.plot_panel,
-            cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-    ph.nice_panel(info['axes'], xlabel=none_val(xlabel, f'${cat.labels[col1]}$'),
-                  ylabel=none_val(ylabel, 'recovery rate'),
-                  xscale=scale1, yscale='linear')
-    info['axes'].flatten()[0].set_ylim(-.01, 1.05)
+    info = _plot_base(
+        array_funcs.plot_panel, cat, col1, col2, bins1, bins2, matching_type, **kwargs
+    )
+    ph.nice_panel(
+        info["axes"],
+        xlabel=none_val(xlabel, f"${cat.labels[col1]}$"),
+        ylabel=none_val(ylabel, "recovery rate"),
+        xscale=scale1,
+        yscale="linear",
+    )
+    info["axes"].flatten()[0].set_ylim(-0.01, 1.05)
     return info
 
 
-def plot2D(cat, col1, col2, bins1, bins2, matching_type,
-           xlabel=None, ylabel=None, scale1='linear', scale2='linear',
-           **kwargs):
+def plot2D(
+    cat,
+    col1,
+    col2,
+    bins1,
+    bins2,
+    matching_type,
+    xlabel=None,
+    ylabel=None,
+    scale1="linear",
+    scale2="linear",
+    **kwargs,
+):
     """
     Plot recovery rate as in 2D bins.
 
@@ -277,18 +312,29 @@ def plot2D(cat, col1, col2, bins1, bins2, matching_type,
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
-    info = _plot_base(array_funcs.plot2D,
-            cat, col1, col2, bins1, bins2, matching_type, **kwargs)
-    info['ax'].set_xlabel(xlabel if xlabel else f'${cat.labels[col1]}$')
-    info['ax'].set_ylabel(ylabel if ylabel else f'${cat.labels[col2]}$')
-    info['ax'].set_xscale(scale1)
-    info['ax'].set_yscale(scale2)
+    info = _plot_base(array_funcs.plot2D, cat, col1, col2, bins1, bins2, matching_type, **kwargs)
+    info["ax"].set_xlabel(xlabel if xlabel else f"${cat.labels[col1]}$")
+    info["ax"].set_ylabel(ylabel if ylabel else f"${cat.labels[col2]}$")
+    info["ax"].set_xscale(scale1)
+    info["ax"].set_yscale(scale2)
     return info
 
 
-def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=None,
-            auto_lim=False, ra_lim=None, dec_lim=None, recovery_label='Recovery Rate',
-            fig=None, figsize=None, **kwargs):
+def skyplot(
+    cat,
+    matching_type,
+    nside=256,
+    nest=True,
+    mask=None,
+    mask_unmatched=None,
+    auto_lim=False,
+    ra_lim=None,
+    dec_lim=None,
+    recovery_label="Recovery Rate",
+    fig=None,
+    figsize=None,
+    **kwargs,
+):
     """
     Plot recovery rate in healpix pixels.
 
@@ -357,6 +403,16 @@ def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=
     """
     mask_, is_matched = _rec_masks(cat, matching_type, mask, mask_unmatched)
     return array_funcs.skyplot(
-        cat['ra'][mask_], cat['dec'][mask_], is_matched[mask_],
-        nside=nside, nest=nest, auto_lim=auto_lim, ra_lim=ra_lim, dec_lim=dec_lim,
-        recovery_label=recovery_label, fig=fig, figsize=figsize, **kwargs)
+        cat["ra"][mask_],
+        cat["dec"][mask_],
+        is_matched[mask_],
+        nside=nside,
+        nest=nest,
+        auto_lim=auto_lim,
+        ra_lim=ra_lim,
+        dec_lim=dec_lim,
+        recovery_label=recovery_label,
+        fig=fig,
+        figsize=figsize,
+        **kwargs,
+    )

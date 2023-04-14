@@ -9,8 +9,8 @@ from scipy.integrate import quad_vec
 from .. import plot_helper as ph
 from . import catalog_funcs
 
-def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins,
-               transpose=False, **kwargs):
+
+def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins, transpose=False, **kwargs):
     """
     Adapts a ClCatalogFuncs function for main functions using mass and redshift.
 
@@ -36,13 +36,24 @@ def _plot_base(pltfunc, cat, matching_type, redshift_bins, mass_bins,
     -------
     Same as pltfunc
     """
-    args = ('mass', 'z', mass_bins, redshift_bins) if transpose\
-        else ('z', 'mass', redshift_bins, mass_bins)
+    args = (
+        ("mass", "z", mass_bins, redshift_bins)
+        if transpose
+        else ("z", "mass", redshift_bins, mass_bins)
+    )
     return pltfunc(cat, *args, matching_type, **kwargs)
 
 
-def _intrinsic_comp(p_m1_m2, min_mass2, ax, transpose, mass_bins, redshift_bins=None,
-                    max_mass2=1e16, min_mass2_norm=1e12):
+def _intrinsic_comp(
+    p_m1_m2,
+    min_mass2,
+    ax,
+    transpose,
+    mass_bins,
+    redshift_bins=None,
+    max_mass2=1e16,
+    min_mass2_norm=1e12,
+):
     """
     Plots instrinsic completeness given by a mass threshold on the other catalog.
 
@@ -72,31 +83,51 @@ def _intrinsic_comp(p_m1_m2, min_mass2, ax, transpose, mass_bins, redshift_bins=
         p_vals = p_m1_m2(mass_bins[0], lim_mass_vals)
         p_max, arg_max = p_vals.max(), p_vals.argmax()
         p_vals = p_vals[:arg_max]
-        v_min = max(p_vals.min(), p_max*1e-10)
-        min_mass2_norm = lim_mass_vals[:arg_max][p_vals<v_min][-1]
+        v_min = max(p_vals.min(), p_max * 1e-10)
+        min_mass2_norm = lim_mass_vals[:arg_max][p_vals < v_min][-1]
     if max_mass2 is None:
         p_vals = p_m1_m2(mass_bins[-1], lim_mass_vals)
         p_max, arg_max = p_vals.max(), p_vals.argmax()
-        p_vals = p_vals[arg_max+1:]
-        v_min = max(p_vals.min(), p_max*1e-10)
-        max_mass2 = lim_mass_vals[arg_max+1:][p_vals<v_min][0]
+        p_vals = p_vals[arg_max + 1 :]
+        v_min = max(p_vals.min(), p_max * 1e-10)
+        max_mass2 = lim_mass_vals[arg_max + 1 :][p_vals < v_min][0]
     integ = lambda m1, min_mass2: quad_vec(
         lambda logm2: p_m1_m2(m1, 10**logm2),
-        np.log10(min_mass2), np.log10(max_mass2),
-        epsabs=1e-50)[0]
-    comp = lambda m1, m2_th: integ(m1, m2_th)/integ(m1, min_mass2_norm)
+        np.log10(min_mass2),
+        np.log10(max_mass2),
+        epsabs=1e-50,
+    )[0]
+    comp = lambda m1, m2_th: integ(m1, m2_th) / integ(m1, min_mass2_norm)
     if transpose:
-        _kwargs = {'alpha':.2, 'color':'0.3', 'lw':0, 'zorder':0}
+        _kwargs = {"alpha": 0.2, "color": "0.3", "lw": 0, "zorder": 0}
         ax.fill_between(mass_bins, 0, comp(mass_bins, min_mass2), **_kwargs)
     else:
         for m_inf, m_sup, line in zip(mass_bins, mass_bins[1:], ax.lines):
-            _kwargs = {'alpha':.2, 'color':line._color, 'lw':0}
-            ax.fill_between((redshift_bins[0], redshift_bins[-1]), comp(m_inf, min_mass2),
-                            comp(m_sup, min_mass2), **_kwargs)
+            _kwargs = {"alpha": 0.2, "color": line._color, "lw": 0}
+            ax.fill_between(
+                (redshift_bins[0], redshift_bins[-1]),
+                comp(m_inf, min_mass2),
+                comp(m_sup, min_mass2),
+                **_kwargs,
+            )
 
-def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
-         redshift_label=None, mass_label=None, recovery_label=None, p_m1_m2=None,
-         min_mass2=1, max_mass2=None, min_mass2_norm=None, **kwargs):
+
+def plot(
+    cat,
+    matching_type,
+    redshift_bins,
+    mass_bins,
+    transpose=False,
+    log_mass=True,
+    redshift_label=None,
+    mass_label=None,
+    recovery_label=None,
+    p_m1_m2=None,
+    min_mass2=1,
+    max_mass2=None,
+    min_mass2_norm=None,
+    **kwargs,
+):
     """
     Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
 
@@ -173,28 +204,57 @@ def plot(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
-    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass*(not transpose) else ".2f")
-    kwargs['legend_format'] = kwargs.get('legend_format',
-        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_mass*(not transpose)\
-             else f'%{legend_fmt}'%v)
-    info = _plot_base(catalog_funcs.plot, cat, matching_type,
-                      redshift_bins, mass_bins, transpose,
-                      scale1='log' if log_mass*transpose else 'linear',
-                      xlabel=mass_label if transpose else redshift_label,
-                      ylabel=recovery_label,
-                      **kwargs)
+    legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass * (not transpose) else ".2f")
+    kwargs["legend_format"] = kwargs.get(
+        "legend_format",
+        lambda v: f"10^{{%{legend_fmt}}}" % np.log10(v)
+        if log_mass * (not transpose)
+        else f"%{legend_fmt}" % v,
+    )
+    info = _plot_base(
+        catalog_funcs.plot,
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        transpose,
+        scale1="log" if log_mass * transpose else "linear",
+        xlabel=mass_label if transpose else redshift_label,
+        ylabel=recovery_label,
+        **kwargs,
+    )
     if p_m1_m2 is not None:
-        mass_bins = info['data']['edges1'] if transpose else info['data']['edges2']
-        redshift_bins = info['data']['edges2'] if transpose else info['data']['edges1']
-        _intrinsic_comp(p_m1_m2, min_mass2, info['ax'], transpose,
-                        mass_bins, redshift_bins, max_mass2, min_mass2_norm)
+        mass_bins = info["data"]["edges1"] if transpose else info["data"]["edges2"]
+        redshift_bins = info["data"]["edges2"] if transpose else info["data"]["edges1"]
+        _intrinsic_comp(
+            p_m1_m2,
+            min_mass2,
+            info["ax"],
+            transpose,
+            mass_bins,
+            redshift_bins,
+            max_mass2,
+            min_mass2_norm,
+        )
     return info
 
 
-def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
-               redshift_label=None, mass_label=None, recovery_label=None, p_m1_m2=None,
-               min_mass2=1, max_mass2=None, min_mass2_norm=None, **kwargs):
-
+def plot_panel(
+    cat,
+    matching_type,
+    redshift_bins,
+    mass_bins,
+    transpose=False,
+    log_mass=True,
+    redshift_label=None,
+    mass_label=None,
+    recovery_label=None,
+    p_m1_m2=None,
+    min_mass2=1,
+    max_mass2=None,
+    min_mass2_norm=None,
+    **kwargs,
+):
     """
     Plot recovery rate as lines in panels, with each line binned by redshift
     and each panel is based on the data inside a mass bin.
@@ -272,29 +332,53 @@ def plot_panel(cat, matching_type, redshift_bins, mass_bins, transpose=False, lo
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
-    log = log_mass*(not transpose)
-    ph._set_label_format(kwargs, 'label_format', 'label_fmt',
-                         log=log, default_fmt=".1f" if log else ".2f")
-    info = _plot_base(catalog_funcs.plot_panel, cat, matching_type,
-                      redshift_bins, mass_bins, transpose,
-                      scale1='log' if log_mass*transpose else 'linear',
-                      xlabel=mass_label if transpose else redshift_label,
-                      ylabel=recovery_label,
-                      **kwargs)
+    log = log_mass * (not transpose)
+    ph._set_label_format(
+        kwargs, "label_format", "label_fmt", log=log, default_fmt=".1f" if log else ".2f"
+    )
+    info = _plot_base(
+        catalog_funcs.plot_panel,
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        transpose,
+        scale1="log" if log_mass * transpose else "linear",
+        xlabel=mass_label if transpose else redshift_label,
+        ylabel=recovery_label,
+        **kwargs,
+    )
     if p_m1_m2 is not None:
-        for ax, bins2 in zip(info['axes'].flatten(),
-                             zip(info['data']['edges2'],
-                                 info['data']['edges2'][1:])):
-            mass_bins = info['data']['edges1'] if transpose else bins2
-            redshift_bins = bins2 if transpose else info['data']['edges1']
+        for ax, bins2 in zip(
+            info["axes"].flatten(), zip(info["data"]["edges2"], info["data"]["edges2"][1:])
+        ):
+            mass_bins = info["data"]["edges1"] if transpose else bins2
+            redshift_bins = bins2 if transpose else info["data"]["edges1"]
             _intrinsic_comp(
-                p_m1_m2, min_mass2, ax, transpose,
-                mass_bins, redshift_bins, max_mass2, min_mass2_norm)
+                p_m1_m2,
+                min_mass2,
+                ax,
+                transpose,
+                mass_bins,
+                redshift_bins,
+                max_mass2,
+                min_mass2_norm,
+            )
     return info
 
 
-def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_mass=True,
-           redshift_label=None, mass_label=None, recovery_label=None, **kwargs):
+def plot2D(
+    cat,
+    matching_type,
+    redshift_bins,
+    mass_bins,
+    transpose=False,
+    log_mass=True,
+    redshift_label=None,
+    mass_label=None,
+    recovery_label=None,
+    **kwargs,
+):
     """
     Plot recovery rate as in 2D (redshift, mass) bins.
 
@@ -353,18 +437,36 @@ def plot2D(cat, matching_type, redshift_bins, mass_bins, transpose=False, log_ma
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
-    return _plot_base(catalog_funcs.plot2D, cat, matching_type,
-                      redshift_bins, mass_bins, transpose,
-                      scale1='log' if log_mass*transpose else 'linear',
-                      scale2='log' if log_mass*(not transpose) else 'linear',
-                      xlabel=mass_label if transpose else redshift_label,
-                      ylabel=redshift_label if transpose else mass_label,
-                      **kwargs)
+    return _plot_base(
+        catalog_funcs.plot2D,
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        transpose,
+        scale1="log" if log_mass * transpose else "linear",
+        scale2="log" if log_mass * (not transpose) else "linear",
+        xlabel=mass_label if transpose else redshift_label,
+        ylabel=redshift_label if transpose else mass_label,
+        **kwargs,
+    )
 
 
-def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=None,
-            auto_lim=False, ra_lim=None, dec_lim=None, recovery_label='Recovery Rate',
-            fig=None, figsize=None, **kwargs):
+def skyplot(
+    cat,
+    matching_type,
+    nside=256,
+    nest=True,
+    mask=None,
+    mask_unmatched=None,
+    auto_lim=False,
+    ra_lim=None,
+    dec_lim=None,
+    recovery_label="Recovery Rate",
+    fig=None,
+    figsize=None,
+    **kwargs,
+):
     """
     Plot recovery rate in healpix pixels.
 
@@ -432,6 +534,17 @@ def skyplot(cat, matching_type, nside=256, nest=True, mask=None, mask_unmatched=
             * `nc_mt_pix`: Dictionary with the number of matched clusters in each pixel.
     """
     return catalog_funcs.skyplot(
-        cat, matching_type, nside=nside, nest=nest, mask=mask, mask_unmatched=mask_unmatched,
-        auto_lim=auto_lim, ra_lim=ra_lim, dec_lim=dec_lim, recovery_label=recovery_label,
-        fig=fig, figsize=figsize, **kwargs)
+        cat,
+        matching_type,
+        nside=nside,
+        nest=nest,
+        mask=mask,
+        mask_unmatched=mask_unmatched,
+        auto_lim=auto_lim,
+        ra_lim=ra_lim,
+        dec_lim=dec_lim,
+        recovery_label=recovery_label,
+        fig=fig,
+        figsize=figsize,
+        **kwargs,
+    )

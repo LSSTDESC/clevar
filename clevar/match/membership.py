@@ -9,10 +9,11 @@ from ..utils import veclen, str2dataunit
 
 
 class MembershipMatch(Match):
-    def __init__(self, ):
+    def __init__(self):
         Match.__init__(self)
-        self.type = 'Membership'
+        self.type = "Membership"
         self.matched_mems = None
+
     def multiple(self, cat1, cat2, verbose=True):
         """
         Make the one way multiple matching
@@ -27,26 +28,31 @@ class MembershipMatch(Match):
             Print result for individual matches.
         """
         if cat1.mt_input is None:
-            raise AttributeError('cat1.mt_input is None, run fill_shared_members first.')
+            raise AttributeError("cat1.mt_input is None, run fill_shared_members first.")
         if cat2.mt_input is None:
-            raise AttributeError('cat2.mt_input is None, run fill_shared_members first.')
-        self.cat1_mmt = np.zeros(cat1.size, dtype=bool) # To add flag in multi step matching
-        print(f'Finding candidates ({cat1.name})')
-        for i, (share_mems1, nmem1) in enumerate(zip(cat1.mt_input['share_mems'], cat1.mt_input['nmem'])):
+            raise AttributeError("cat2.mt_input is None, run fill_shared_members first.")
+        self.cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
+        print(f"Finding candidates ({cat1.name})")
+        for i, (share_mems1, nmem1) in enumerate(
+            zip(cat1.mt_input["share_mems"], cat1.mt_input["nmem"])
+        ):
             for id2, share_mem in share_mems1.items():
-                cat1['mt_multi_self'][i].append(id2)
+                cat1["mt_multi_self"][i].append(id2)
                 i2 = int(cat2.id_dict[id2])
-                cat2['mt_multi_other'][i2].append(cat1['id'][i])
+                cat2["mt_multi_other"][i2].append(cat1["id"][i])
                 self.cat1_mmt[i] = True
             if verbose:
-                print(f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates",
-                      end='\r')
+                print(
+                    f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates",
+                    end="\r",
+                )
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
-        self.history.append({'func':'multiple', 'cats': f'{cat1.name}, {cat2.name}'})
+        self.history.append({"func": "multiple", "cats": f"{cat1.name}, {cat2.name}"})
         cat1._set_mt_hist(self.history)
         cat2._set_mt_hist(self.history)
+
     def fill_shared_members(self, cat1, cat2):
         """
         Adds shared members dicts and nmem to mt_input in catalogs.
@@ -59,34 +65,42 @@ class MembershipMatch(Match):
             Cluster catalog with members attribute.
         """
         if self.matched_mems is None:
-            raise AttributeError('Members not matched, run match_members before.')
-        if 'pmem' not in cat1.members.tags:
-            cat1.members['pmem'] = 1.
-        if 'pmem' not in cat2.members.tags:
-            cat2.members['pmem'] = 1.
-        cat1.mt_input = ClData({'share_mems': list(map(lambda x: {}, range(cat1.size))),
-                                'nmem': self._comp_nmem(cat1)})
-        cat2.mt_input = ClData({'share_mems': list(map(lambda x: {}, range(cat2.size))),
-                                'nmem': self._comp_nmem(cat2)})
+            raise AttributeError("Members not matched, run match_members before.")
+        if "pmem" not in cat1.members.tags:
+            cat1.members["pmem"] = 1.0
+        if "pmem" not in cat2.members.tags:
+            cat2.members["pmem"] = 1.0
+        cat1.mt_input = ClData(
+            {"share_mems": list(map(lambda x: {}, range(cat1.size))), "nmem": self._comp_nmem(cat1)}
+        )
+        cat2.mt_input = ClData(
+            {"share_mems": list(map(lambda x: {}, range(cat2.size))), "nmem": self._comp_nmem(cat2)}
+        )
         for i1, i2 in self.matched_mems:
-            idcl1, pmem1 = cat1.members['id_cluster'][i1], cat1.members['pmem'][i1]
-            idcl2, pmem2 = cat2.members['id_cluster'][i2], cat2.members['pmem'][i2]
-            self._add_pmem(cat1.mt_input['share_mems'], cat1.id_dict[idcl1], idcl2, pmem1)
-            self._add_pmem(cat2.mt_input['share_mems'], cat2.id_dict[idcl2], idcl1, pmem2)
+            idcl1, pmem1 = cat1.members["id_cluster"][i1], cat1.members["pmem"][i1]
+            idcl2, pmem2 = cat2.members["id_cluster"][i2], cat2.members["pmem"][i2]
+            self._add_pmem(cat1.mt_input["share_mems"], cat1.id_dict[idcl1], idcl2, pmem1)
+            self._add_pmem(cat2.mt_input["share_mems"], cat2.id_dict[idcl2], idcl1, pmem2)
         # sort order in dicts by mass
-        cat1.mt_input['share_mems'] = [self._sort_share_mem_mass(share_mem1, cat2)
-                                        for share_mem1 in cat1.mt_input['share_mems']]
-        cat2.mt_input['share_mems'] = [self._sort_share_mem_mass(share_mem2, cat1)
-                                        for share_mem2 in cat2.mt_input['share_mems']]
+        cat1.mt_input["share_mems"] = [
+            self._sort_share_mem_mass(share_mem1, cat2)
+            for share_mem1 in cat1.mt_input["share_mems"]
+        ]
+        cat2.mt_input["share_mems"] = [
+            self._sort_share_mem_mass(share_mem2, cat1)
+            for share_mem2 in cat2.mt_input["share_mems"]
+        ]
+
     def _sort_share_mem_mass(self, share_mem1, cat2):
         """
         Sorts members in dict by mass (decreasing).
         """
-        if len(share_mem1)==0:
+        if len(share_mem1) == 0:
             return {}
         ids2 = np.array(list(share_mem1.keys()))
-        mass2 = np.array(cat2['mass'][cat2.ids2inds(ids2)])
-        return {id2:share_mem1[id2] for id2 in ids2[mass2.argsort()[::-1]]}
+        mass2 = np.array(cat2["mass"][cat2.ids2inds(ids2)])
+        return {id2: share_mem1[id2] for id2 in ids2[mass2.argsort()[::-1]]}
+
     def _comp_nmem(self, cat):
         """
         Computes number of members for clusters (sum of pmem)
@@ -97,9 +111,10 @@ class MembershipMatch(Match):
             Cluster catalog with members attribute.
         """
         out = np.zeros(cat.size)
-        for ind, pmem in zip(cat.members['ind_cl'], cat.members['pmem']):
+        for ind, pmem in zip(cat.members["ind_cl"], cat.members["pmem"]):
             out[ind] += pmem
         return out
+
     def _add_pmem(self, cat1_share_mems, ind1, cat2_id, pmem1):
         """
         Adds pmem of specific cluster to mt_input['shared_mem'] of another cluster.
@@ -115,7 +130,8 @@ class MembershipMatch(Match):
         pmem1: float
             Pmem of catalog1 galaxy
         """
-        cat1_share_mems[ind1][cat2_id] = cat1_share_mems[ind1].get(cat2_id, 0)+pmem1
+        cat1_share_mems[ind1][cat2_id] = cat1_share_mems[ind1].get(cat2_id, 0) + pmem1
+
     def save_shared_members(self, cat1, cat2, fileprefix, overwrite=False):
         """
         Saves dictionaries of shared members
@@ -132,13 +148,16 @@ class MembershipMatch(Match):
             Overwrite saved files
         """
         if cat1.mt_input is None:
-            raise AttributeError('cat1.mt_input is None cannot save it.')
+            raise AttributeError("cat1.mt_input is None cannot save it.")
         if cat2.mt_input is None:
-            raise AttributeError('cat2.mt_input is None cannot save it.')
-        pickle.dump({c:cat1.mt_input[c] for c in cat1.mt_input.colnames},
-                    open(f'{fileprefix}.1.p', 'wb'))
-        pickle.dump({c:cat2.mt_input[c] for c in cat2.mt_input.colnames},
-                    open(f'{fileprefix}.2.p', 'wb'))
+            raise AttributeError("cat2.mt_input is None cannot save it.")
+        pickle.dump(
+            {c: cat1.mt_input[c] for c in cat1.mt_input.colnames}, open(f"{fileprefix}.1.p", "wb")
+        )
+        pickle.dump(
+            {c: cat2.mt_input[c] for c in cat2.mt_input.colnames}, open(f"{fileprefix}.2.p", "wb")
+        )
+
     def load_shared_members(self, cat1, cat2, fileprefix):
         """
         Load dictionaries of shared members
@@ -152,9 +171,10 @@ class MembershipMatch(Match):
         filename: str
             Prefix of files name
         """
-        cat1.mt_input = ClData(pickle.load(open(f'{fileprefix}.1.p', 'rb')))
-        cat2.mt_input = ClData(pickle.load(open(f'{fileprefix}.2.p', 'rb')))
-    def match_members(self, mem1, mem2, method='id', radius=None, cosmo=None):
+        cat1.mt_input = ClData(pickle.load(open(f"{fileprefix}.1.p", "rb")))
+        cat2.mt_input = ClData(pickle.load(open(f"{fileprefix}.2.p", "rb")))
+
+    def match_members(self, mem1, mem2, method="id", radius=None, cosmo=None):
         """
         Match member catalogs.
         Adds array with indices of matched members `(ind1, ind2)` to self.matched_mems.
@@ -174,31 +194,31 @@ class MembershipMatch(Match):
             For `method='angular_distance'`. Cosmology object for when radius has physical units.
         """
         if mem1 is None:
-            raise AttributeError('members of catalog 1 is None, add members to catalog 1 first.')
+            raise AttributeError("members of catalog 1 is None, add members to catalog 1 first.")
         if mem2 is None:
-            raise AttributeError('members of catalog 2 is None, add members to catalog 2 first.')
-        if method=='id':
+            raise AttributeError("members of catalog 2 is None, add members to catalog 2 first.")
+        if method == "id":
             self._match_members_by_id(mem1, mem2)
-        elif method=='angular_distance':
+        elif method == "angular_distance":
             self._match_members_by_ang(mem1, mem2, radius, cosmo)
-        print(f'{self.matched_mems.size:,} members were matched.')
+        print(f"{self.matched_mems.size:,} members were matched.")
         # Add id_cluster if found in other catalog
-        mem1['match'] = None
-        mem2['match'] = None
+        mem1["match"] = None
+        mem2["match"] = None
         for i in range(mem1.size):
-            mem1['match'][i] = []
+            mem1["match"][i] = []
         for i in range(mem2.size):
-            mem2['match'][i] = []
+            mem2["match"][i] = []
         for ind1, ind2 in self.matched_mems:
-            mem1['match'][ind1].append(mem2['id_cluster'][ind2])
-            mem2['match'][ind2].append(mem1['id_cluster'][ind1])
-        #self.history.append({
+            mem1["match"][ind1].append(mem2["id_cluster"][ind2])
+            mem2["match"][ind2].append(mem1["id_cluster"][ind1])
+        # self.history.append({
         #    'func':'match_members', 'cat': cat.name, 'method': method,
         #    'cosmo': cosmo if cosmo is None else cosmo.get_desc()})
-        #cfg = {'func':'match_members', 'cats': (cat1.name, cat2.name), 'method': method,
+        # cfg = {'func':'match_members', 'cats': (cat1.name, cat2.name), 'method': method,
         #       'radius': radius, 'cosmo': cosmo if cosmo is None else cosmo.get_desc()}
-        #cat1.mt_hist.append(cfg)
-        #cat2.mt_hist.append(cfg)
+        # cat1.mt_hist.append(cfg)
+        # cat2.mt_hist.append(cfg)
 
     def _match_members_by_id(self, mem1, mem2):
         """
@@ -212,10 +232,14 @@ class MembershipMatch(Match):
         mem2: clevar.ClCatalog
             Members of target catalog
         """
-        self.matched_mems = np.array([[ind1, ind2]
-            for ind2, i in enumerate(mem2['id'])
+        self.matched_mems = np.array(
+            [
+                [ind1, ind2]
+                for ind2, i in enumerate(mem2["id"])
                 for ind1 in mem1.id_dict_list.get(i, [])
-                ])
+            ]
+        )
+
     def _match_members_by_ang(self, mem1, mem2, radius, cosmo):
         """
         Match member catalogs.
@@ -236,23 +260,25 @@ class MembershipMatch(Match):
             For `method='angular_distance'`. Cosmology object for when radius has physical units.
         """
         match_config = {
-            'type': 'cross', # options are cross, cat1, cat2
-            'which_radius': 'max', # Case of radius to be used, can be: cat1, cat2, min, max
-            'preference': 'angular_proximity', # options are more_massive, angular_proximity or redshift_proximity
-            'catalog1': {'delta_z':None, 'match_radius': radius},
-            'catalog2': {'delta_z':None, 'match_radius': radius},
-            }
+            "type": "cross",  # options are cross, cat1, cat2
+            "which_radius": "max",  # Case of radius to be used, can be: cat1, cat2, min, max
+            "preference": "angular_proximity",  # options are more_massive, angular_proximity or redshift_proximity
+            "catalog1": {"delta_z": None, "match_radius": radius},
+            "catalog2": {"delta_z": None, "match_radius": radius},
+        }
         mt = ProximityMatch()
         mem1._init_match_vals()
         mem2._init_match_vals()
         mt.match_from_config(mem1, mem2, match_config, cosmo=cosmo)
-        mask1 = mem1.get_matching_mask(match_config['type'])
+        mask1 = mem1.get_matching_mask(match_config["type"])
         self.matched_mems = []
-        for ind1, id2 in zip(np.arange(mem1.size, dtype=int)[mask1],
-                             mem1[f"mt_{match_config['type']}"][mask1]):
+        for ind1, id2 in zip(
+            np.arange(mem1.size, dtype=int)[mask1], mem1[f"mt_{match_config['type']}"][mask1]
+        ):
             for ind2 in mem2.id_dict_list[id2]:
                 self.matched_mems.append([ind1, ind2])
         self.matched_mems = np.array(self.matched_mems)
+
     def save_matched_members(self, filename, overwrite=False):
         """
         Saves the matching results of members
@@ -265,8 +291,9 @@ class MembershipMatch(Match):
             Overwrite saved files
         """
         if self.matched_mems is None:
-            raise AttributeError('self.matched_mems is None cannot save it.')
-        np.savetxt(filename, self.matched_mems, fmt='%d')
+            raise AttributeError("self.matched_mems is None cannot save it.")
+        np.savetxt(filename, self.matched_mems, fmt="%d")
+
     def load_matched_members(self, filename):
         """
         Load matching results of members
@@ -277,6 +304,7 @@ class MembershipMatch(Match):
             Name of file with matching results
         """
         self.matched_mems = np.loadtxt(filename, dtype=int)
+
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
@@ -320,43 +348,43 @@ class MembershipMatch(Match):
 
 
         """
-        if match_config['type'] not in ('cat1', 'cat2', 'cross'):
+        if match_config["type"] not in ("cat1", "cat2", "cross"):
             raise ValueError("config type must be cat1, cat2 or cross")
 
-        load_mt_member = match_config.get('match_members_load', False)
-        if match_config.get('match_members', True) and not load_mt_member:
-            self.match_members(cat1.members, cat2.members, **match_config['match_members_kwargs'])
-        if match_config.get('match_members_save', False) and not load_mt_member:
-            self.save_matched_members(match_config['match_members_file'], overwrite=True)
+        load_mt_member = match_config.get("match_members_load", False)
+        if match_config.get("match_members", True) and not load_mt_member:
+            self.match_members(cat1.members, cat2.members, **match_config["match_members_kwargs"])
+        if match_config.get("match_members_save", False) and not load_mt_member:
+            self.save_matched_members(match_config["match_members_file"], overwrite=True)
         if load_mt_member:
-            self.load_matched_members(match_config['match_members_file'])
+            self.load_matched_members(match_config["match_members_file"])
 
-        load_shared_member = match_config.get('shared_members_load', False)
-        if match_config.get('shared_members_fill', True) and not load_shared_member:
+        load_shared_member = match_config.get("shared_members_load", False)
+        if match_config.get("shared_members_fill", True) and not load_shared_member:
             self.fill_shared_members(cat1, cat2)
-        if match_config.get('shared_members_save', False) and not load_shared_member:
-            self.save_shared_members(cat1, cat2, match_config['shared_members_file'], overwrite=True)
+        if match_config.get("shared_members_save", False) and not load_shared_member:
+            self.save_shared_members(
+                cat1, cat2, match_config["shared_members_file"], overwrite=True
+            )
         if load_shared_member:
-            self.load_shared_members(cat1, cat2, match_config['shared_members_file'])
+            self.load_shared_members(cat1, cat2, match_config["shared_members_file"])
 
-        verbose = match_config.get('verbose', True)
-        if match_config['type'] in ('cat1', 'cross'):
+        verbose = match_config.get("verbose", True)
+        if match_config["type"] in ("cat1", "cross"):
             print("\n## Multiple match (catalog 1)")
             self.multiple(cat1, cat2, verbose=verbose)
-        if match_config['type'] in ('cat2', 'cross'):
+        if match_config["type"] in ("cat2", "cross"):
             print("\n## Multiple match (catalog 2)")
             self.multiple(cat2, cat1, verbose=verbose)
 
-        preference = match_config.get('preference', 'shared_member_fraction')
-        if match_config['type'] in ('cat1', 'cross'):
+        preference = match_config.get("preference", "shared_member_fraction")
+        if match_config["type"] in ("cat1", "cross"):
             print("\n## Finding unique matches of catalog 1")
-            self.unique(cat1, cat2, preference,
-                        match_config.get('minimum_share_fraction1', 0))
-        if match_config['type'] in ('cat2', 'cross'):
+            self.unique(cat1, cat2, preference, match_config.get("minimum_share_fraction1", 0))
+        if match_config["type"] in ("cat2", "cross"):
             print("\n## Finding unique matches of catalog 2")
-            self.unique(cat2, cat1, preference,
-                        match_config.get('minimum_share_fraction2', 0))
+            self.unique(cat2, cat1, preference, match_config.get("minimum_share_fraction2", 0))
 
-        if match_config['type'] == 'cross':
+        if match_config["type"] == "cross":
             self.cross_match(cat1)
             self.cross_match(cat2)

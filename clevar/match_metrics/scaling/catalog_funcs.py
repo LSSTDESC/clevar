@@ -9,8 +9,20 @@ from ...match import get_matched_pairs
 from .. import plot_helper as ph
 from . import array_funcs
 
-_local_args = ('xlabel', 'ylabel', 'xscale', 'yscale', 'add_err', 'add_fit_err',
-              'label1', 'label2', 'scale1', 'scale2', 'mask1', 'mask2')
+_local_args = (
+    "xlabel",
+    "ylabel",
+    "xscale",
+    "yscale",
+    "add_err",
+    "add_fit_err",
+    "label1",
+    "label2",
+    "scale1",
+    "scale2",
+    "mask1",
+    "mask2",
+)
 
 
 def _prep_kwargs(cat1, cat2, matching_type, col, kwargs=None):
@@ -38,25 +50,29 @@ def _prep_kwargs(cat1, cat2, matching_type, col, kwargs=None):
         Matched catalogs
     """
     kwargs_ = updated_dict(kwargs)
-    func_kwargs = {k:v for k, v in kwargs_.items() if k not in _local_args}
-    mt1, mt2 = get_matched_pairs(cat1.raw(), cat2.raw(), matching_type,
-                      mask1=kwargs_.get('mask1', None),
-                      mask2=kwargs_.get('mask2', None))
-    func_kwargs['values1'] = mt1[col]
-    func_kwargs['values2'] = mt2[col]
-    func_kwargs['err1'] = mt1.get(f'{col}_err') if kwargs_.get('add_err', True) else None
-    func_kwargs['err2'] = mt2.get(f'{col}_err') if kwargs_.get('add_err', True) else None
-    func_kwargs['fit_err2'] = mt2.get(f'{col}_err') if kwargs_.get('add_fit_err', True) else None
+    func_kwargs = {k: v for k, v in kwargs_.items() if k not in _local_args}
+    mt1, mt2 = get_matched_pairs(
+        cat1.raw(),
+        cat2.raw(),
+        matching_type,
+        mask1=kwargs_.get("mask1", None),
+        mask2=kwargs_.get("mask2", None),
+    )
+    func_kwargs["values1"] = mt1[col]
+    func_kwargs["values2"] = mt2[col]
+    func_kwargs["err1"] = mt1.get(f"{col}_err") if kwargs_.get("add_err", True) else None
+    func_kwargs["err2"] = mt2.get(f"{col}_err") if kwargs_.get("add_err", True) else None
+    func_kwargs["fit_err2"] = mt2.get(f"{col}_err") if kwargs_.get("add_fit_err", True) else None
     class_kwargs = {
-        'xlabel': kwargs_.get('xlabel', f'${cat1.labels[col]}$'),
-        'ylabel': kwargs_.get('ylabel', f'${cat2.labels[col]}$'),
-        'xscale': kwargs_.get('xscale', 'linear'),
-        'yscale': kwargs_.get('yscale', 'linear'),
+        "xlabel": kwargs_.get("xlabel", f"${cat1.labels[col]}$"),
+        "ylabel": kwargs_.get("ylabel", f"${cat2.labels[col]}$"),
+        "xscale": kwargs_.get("xscale", "linear"),
+        "yscale": kwargs_.get("yscale", "linear"),
     }
-    if kwargs_.get('add_fit', False):
-        xlabel = kwargs_.get('label1', class_kwargs['xlabel'])
-        ylabel = kwargs_.get('label2', class_kwargs['ylabel'])
-        func_kwargs['fit_label_components'] = kwargs_.get('fit_label_components', (xlabel, ylabel))
+    if kwargs_.get("add_fit", False):
+        xlabel = kwargs_.get("label1", class_kwargs["xlabel"])
+        ylabel = kwargs_.get("label2", class_kwargs["ylabel"])
+        func_kwargs["fit_label_components"] = kwargs_.get("fit_label_components", (xlabel, ylabel))
     return class_kwargs, func_kwargs, mt1, mt2
 
 
@@ -71,14 +87,13 @@ def _fmt_plot(ax, **kwargs):
     **kwargs
         Other arguments
     """
-    ax.set_xlabel(kwargs['xlabel'])
-    ax.set_ylabel(kwargs['ylabel'])
-    ax.set_xscale(kwargs['xscale'])
-    ax.set_yscale(kwargs['yscale'])
+    ax.set_xlabel(kwargs["xlabel"])
+    ax.set_ylabel(kwargs["ylabel"])
+    ax.set_xscale(kwargs["xscale"])
+    ax.set_yscale(kwargs["yscale"])
 
 
-def plot(cat1, cat2, matching_type, col, col_color=None,
-         color1=True, color_log=False, **kwargs):
+def plot(cat1, cat2, matching_type, col, col_color=None, color1=True, color_log=False, **kwargs):
     """
     Scatter plot with errorbars. Color can be based on input column.
 
@@ -179,11 +194,12 @@ def plot(cat1, cat2, matching_type, col, col_color=None,
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     if col_color is not None:
-        f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
-        f_kwargs['values_color'] = np.log10(f_kwargs['values_color']
-                                            ) if color_log else f_kwargs['values_color']
+        f_kwargs["values_color"] = mt1[col_color] if color1 else mt2[col_color]
+        f_kwargs["values_color"] = (
+            np.log10(f_kwargs["values_color"]) if color_log else f_kwargs["values_color"]
+        )
     info = array_funcs.plot(**f_kwargs)
-    _fmt_plot(info['ax'], **cl_kwargs)
+    _fmt_plot(info["ax"], **cl_kwargs)
     return info
 
 
@@ -248,16 +264,24 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
             (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
-    f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
-    f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
+    f_kwargs["xscale"] = kwargs.get("xscale", "linear")
+    f_kwargs["yscale"] = kwargs.get("yscale", "linear")
     info = array_funcs.plot_density(**f_kwargs)
-    _fmt_plot(info['ax'], **cl_kwargs)
+    _fmt_plot(info["ax"], **cl_kwargs)
     return info
 
 
-def _get_panel_args(cat1, cat2, matching_type, col,
-    col_panel, bins_panel, panel_cat1=True, log_panel=False,
-    **kwargs):
+def _get_panel_args(
+    cat1,
+    cat2,
+    matching_type,
+    col,
+    col_panel,
+    bins_panel,
+    panel_cat1=True,
+    log_panel=False,
+    **kwargs,
+):
     """
     Prepare args for panel
 
@@ -294,15 +318,25 @@ def _get_panel_args(cat1, cat2, matching_type, col,
         Matched catalogs
     """
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
-    f_kwargs['values_panel'] = mt1[col_panel] if panel_cat1 else mt2[col_panel]
-    f_kwargs['bins_panel'] = autobins(f_kwargs['values_panel'], bins_panel, log_panel)
-    ph._set_label_format(f_kwargs, 'label_format', 'label_fmt', log_panel)
+    f_kwargs["values_panel"] = mt1[col_panel] if panel_cat1 else mt2[col_panel]
+    f_kwargs["bins_panel"] = autobins(f_kwargs["values_panel"], bins_panel, log_panel)
+    ph._set_label_format(f_kwargs, "label_format", "label_fmt", log_panel)
     return cl_kwargs, f_kwargs, mt1, mt2
 
 
 def plot_panel(
-    cat1, cat2, matching_type, col, col_panel, bins_panel, panel_cat1=True,
-    col_color=None, color1=True, log_panel=False, **kwargs):
+    cat1,
+    cat2,
+    matching_type,
+    col,
+    col_panel,
+    bins_panel,
+    panel_cat1=True,
+    col_color=None,
+    color1=True,
+    log_panel=False,
+    **kwargs,
+):
     """
     Scatter plot with errorbars and color based on input with panels
 
@@ -379,17 +413,35 @@ def plot_panel(
             * `plots` (optional): fit and binning plots \
             (see `scaling.catalog_funcs.plot` for more info).
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(cat1, cat2, matching_type, col,
-        col_panel, bins_panel, panel_cat1=panel_cat1, log_panel=log_panel, **kwargs)
+    cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(
+        cat1,
+        cat2,
+        matching_type,
+        col,
+        col_panel,
+        bins_panel,
+        panel_cat1=panel_cat1,
+        log_panel=log_panel,
+        **kwargs,
+    )
     if col_color is not None:
-        f_kwargs['values_color'] = mt1[col_color] if color1 else mt2[col_color]
+        f_kwargs["values_color"] = mt1[col_color] if color1 else mt2[col_color]
     info = array_funcs.plot_panel(**f_kwargs)
-    ph.nice_panel(info['axes'], **cl_kwargs)
+    ph.nice_panel(info["axes"], **cl_kwargs)
     return info
 
 
-def plot_density_panel(cat1, cat2, matching_type, col,
-    col_panel, bins_panel, panel_cat1=True, log_panel=False, **kwargs):
+def plot_density_panel(
+    cat1,
+    cat2,
+    matching_type,
+    col,
+    col_panel,
+    bins_panel,
+    panel_cat1=True,
+    log_panel=False,
+    **kwargs,
+):
     """
     Scatter plot with errorbars and color based on point density with panels
 
@@ -471,12 +523,20 @@ def plot_density_panel(cat1, cat2, matching_type, col,
             (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs = _get_panel_args(
-        cat1, cat2, matching_type, col, col_panel, bins_panel, panel_cat1=panel_cat1,
-        log_panel=log_panel, **kwargs)[:2]
-    f_kwargs['xscale'] = kwargs.get('xscale', 'linear')
-    f_kwargs['yscale'] = kwargs.get('yscale', 'linear')
+        cat1,
+        cat2,
+        matching_type,
+        col,
+        col_panel,
+        bins_panel,
+        panel_cat1=panel_cat1,
+        log_panel=log_panel,
+        **kwargs,
+    )[:2]
+    f_kwargs["xscale"] = kwargs.get("xscale", "linear")
+    f_kwargs["yscale"] = kwargs.get("yscale", "linear")
     info = array_funcs.plot_density_panel(**f_kwargs)
-    ph.nice_panel(info['axes'], **cl_kwargs)
+    ph.nice_panel(info["axes"], **cl_kwargs)
     return info
 
 
@@ -541,21 +601,21 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
             * `axes`: `matplotlib.axes` used in the plot.
     """
     cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
-    f_kwargs.pop('fit_err2', None)
-    f_kwargs.pop('err1', None)
-    f_kwargs.pop('err2', None)
-    f_kwargs['bins1'] = bins1
-    f_kwargs['bins2'] = bins2
-    for key in ['metrics_mode']:
-        if 'metrics_' in key and key in f_kwargs:
-            f_kwargs[key.replace('metrics_', '')] = f_kwargs.pop(key)
+    f_kwargs.pop("fit_err2", None)
+    f_kwargs.pop("err1", None)
+    f_kwargs.pop("err2", None)
+    f_kwargs["bins1"] = bins1
+    f_kwargs["bins2"] = bins2
+    for key in ["metrics_mode"]:
+        if "metrics_" in key and key in f_kwargs:
+            f_kwargs[key.replace("metrics_", "")] = f_kwargs.pop(key)
     info = array_funcs.plot_metrics(**f_kwargs)
-    info['axes'][0].set_ylabel(cat1.name)
-    info['axes'][1].set_ylabel(cat2.name)
-    info['axes'][0].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
-    info['axes'][1].set_xlabel(kwargs.get('label2', cl_kwargs['ylabel']))
-    info['axes'][0].set_xscale(kwargs.get('scale1', cl_kwargs['xscale']))
-    info['axes'][1].set_xscale(kwargs.get('scale2', cl_kwargs['yscale']))
+    info["axes"][0].set_ylabel(cat1.name)
+    info["axes"][1].set_ylabel(cat2.name)
+    info["axes"][0].set_xlabel(kwargs.get("label1", cl_kwargs["xlabel"]))
+    info["axes"][1].set_xlabel(kwargs.get("label2", cl_kwargs["ylabel"]))
+    info["axes"][0].set_xscale(kwargs.get("scale1", cl_kwargs["xscale"]))
+    info["axes"][1].set_xscale(kwargs.get("scale2", cl_kwargs["yscale"]))
     return info
 
 
@@ -648,20 +708,32 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
             (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
-    f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
-    f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
-    f_kwargs['bins1'] = bins1
-    f_kwargs['bins2'] = bins2
+    f_kwargs["xscale"] = kwargs.get("scale1", cl_kwargs["xscale"])
+    f_kwargs["yscale"] = kwargs.get("scale2", cl_kwargs["yscale"])
+    f_kwargs["bins1"] = bins1
+    f_kwargs["bins2"] = bins2
     info = array_funcs.plot_density_metrics(**f_kwargs)
-    xlabel = kwargs.get('label1', cl_kwargs['xlabel'])
-    ylabel = kwargs.get('label2', cl_kwargs['ylabel'])
-    info['axes']['main'].set_xlabel(xlabel)
-    info['axes']['main'].set_ylabel(ylabel)
+    xlabel = kwargs.get("label1", cl_kwargs["xlabel"])
+    ylabel = kwargs.get("label2", cl_kwargs["ylabel"])
+    info["axes"]["main"].set_xlabel(xlabel)
+    info["axes"]["main"].set_ylabel(ylabel)
     return info
 
 
-def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
-              log_vals=False, log_aux=False, transpose=False, **kwargs):
+def plot_dist(
+    cat1,
+    cat2,
+    matching_type,
+    col,
+    bins1=30,
+    bins2=5,
+    col_aux=None,
+    bins_aux=5,
+    log_vals=False,
+    log_aux=False,
+    transpose=False,
+    **kwargs,
+):
     """
     Plot distribution of a cat1 column, binned by the cat2 column in panels,
     with option for a second cat2 column in lines.
@@ -720,29 +792,40 @@ def plot_dist(cat1, cat2, matching_type, col, bins1=30, bins2=5, col_aux=None, b
             * `axes`: `matplotlib.axes` used in the plot.
     """
     f_kwargs, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[1::2]
-    f_kwargs.pop('err1', None)
-    f_kwargs.pop('err2', None)
-    f_kwargs.pop('fit_err2', None)
-    f_kwargs['values_aux'] = None if col_aux is None else mt2[col_aux]
-    f_kwargs['bins1_dist'] = bins1
-    f_kwargs['bins2'] = bins2
-    f_kwargs['bins_aux'] = bins_aux
-    f_kwargs['log_vals'] = log_vals
-    f_kwargs['log_aux'] = log_aux
-    f_kwargs['transpose'] = transpose
-    f_kwargs['panel_label_prefix'] = f'{cat2.labels[col]}\,-\,'
+    f_kwargs.pop("err1", None)
+    f_kwargs.pop("err2", None)
+    f_kwargs.pop("fit_err2", None)
+    f_kwargs["values_aux"] = None if col_aux is None else mt2[col_aux]
+    f_kwargs["bins1_dist"] = bins1
+    f_kwargs["bins2"] = bins2
+    f_kwargs["bins_aux"] = bins_aux
+    f_kwargs["log_vals"] = log_vals
+    f_kwargs["log_aux"] = log_aux
+    f_kwargs["transpose"] = transpose
+    f_kwargs["panel_label_prefix"] = f"{cat2.labels[col]}\,-\,"
     log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
-    ph._set_label_format(f_kwargs, 'panel_label_format', 'panel_label_fmt', log_panel)
-    ph._set_label_format(f_kwargs, 'line_label_format', 'line_label_fmt', log_line)
+    ph._set_label_format(f_kwargs, "panel_label_format", "panel_label_fmt", log_panel)
+    ph._set_label_format(f_kwargs, "line_label_format", "line_label_fmt", log_line)
     info = array_funcs.plot_dist(**f_kwargs)
-    xlabel = kwargs.get('label', f'${cat1.labels[col]}$')
-    for ax in (info['axes'][-1,:] if len(info['axes'].shape)>1 else info['axes']):
+    xlabel = kwargs.get("label", f"${cat1.labels[col]}$")
+    for ax in info["axes"][-1, :] if len(info["axes"].shape) > 1 else info["axes"]:
         ax.set_xlabel(xlabel)
     return info
 
 
-def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
-                   log_vals=False, log_aux=False, transpose=False, mask=None, **kwargs):
+def plot_dist_self(
+    cat,
+    col,
+    bins1=30,
+    bins2=5,
+    col_aux=None,
+    bins_aux=5,
+    log_vals=False,
+    log_aux=False,
+    transpose=False,
+    mask=None,
+    **kwargs,
+):
     """
     Plot distribution of a cat1 column, binned by the same column in panels,
     with option for a second column in lines. Is is useful to compare with plot_dist results.
@@ -800,24 +883,24 @@ def plot_dist_self(cat, col, bins1=30, bins2=5, col_aux=None, bins_aux=5,
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    f_kwargs = {k:v for k, v in kwargs.items() if k not in _local_args}
+    f_kwargs = {k: v for k, v in kwargs.items() if k not in _local_args}
     mask = np.ones(cat.size, dtype=bool) if mask is None else mask
-    f_kwargs['values1'] = cat[col][mask]
-    f_kwargs['values2'] = cat[col][mask]
-    f_kwargs['values_aux'] = None if col_aux is None else cat[col_aux][mask]
-    f_kwargs['bins1_dist'] = bins1
-    f_kwargs['bins2'] = bins2
-    f_kwargs['bins_aux'] = bins_aux
-    f_kwargs['log_vals'] = log_vals
-    f_kwargs['log_aux'] = log_aux
-    f_kwargs['transpose'] = transpose
-    f_kwargs['panel_label_prefix'] = f'{cat.labels[col]}\,-\,'
+    f_kwargs["values1"] = cat[col][mask]
+    f_kwargs["values2"] = cat[col][mask]
+    f_kwargs["values_aux"] = None if col_aux is None else cat[col_aux][mask]
+    f_kwargs["bins1_dist"] = bins1
+    f_kwargs["bins2"] = bins2
+    f_kwargs["bins_aux"] = bins_aux
+    f_kwargs["log_vals"] = log_vals
+    f_kwargs["log_aux"] = log_aux
+    f_kwargs["transpose"] = transpose
+    f_kwargs["panel_label_prefix"] = f"{cat.labels[col]}\,-\,"
     log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
-    ph._set_label_format(f_kwargs, 'panel_label_format', 'panel_label_fmt', log_panel)
-    ph._set_label_format(f_kwargs, 'line_label_format', 'line_label_fmt', log_line)
+    ph._set_label_format(f_kwargs, "panel_label_format", "panel_label_fmt", log_panel)
+    ph._set_label_format(f_kwargs, "line_label_format", "line_label_fmt", log_line)
     info = array_funcs.plot_dist(**f_kwargs)
-    xlabel = kwargs.get('label', f'${cat.labels[col]}$')
-    for ax in (info['axes'][-1,:] if len(info['axes'].shape)>1 else info['axes']):
+    xlabel = kwargs.get("label", f"${cat.labels[col]}$")
+    for ax in info["axes"][-1, :] if len(info["axes"].shape) > 1 else info["axes"]:
         ax.set_xlabel(xlabel)
     return info
 
@@ -888,10 +971,10 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
             (see `scaling.catalog_funcs.plot` for more info).
     """
     cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
-    f_kwargs['xscale'] = kwargs.get('scale1', cl_kwargs['xscale'])
-    f_kwargs['yscale'] = kwargs.get('scale2', cl_kwargs['yscale'])
+    f_kwargs["xscale"] = kwargs.get("scale1", cl_kwargs["xscale"])
+    f_kwargs["yscale"] = kwargs.get("scale2", cl_kwargs["yscale"])
     info = array_funcs.plot_density_dist(**f_kwargs)
-    info['axes']['main'].set_xlabel(kwargs.get('label1', cl_kwargs['xlabel']))
-    info['axes']['main'].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
-    info['axes']['top'][-1].set_ylabel(kwargs.get('label2', cl_kwargs['ylabel']))
+    info["axes"]["main"].set_xlabel(kwargs.get("label1", cl_kwargs["xlabel"]))
+    info["axes"]["main"].set_ylabel(kwargs.get("label2", cl_kwargs["ylabel"]))
+    info["axes"]["top"][-1].set_ylabel(kwargs.get("label2", cl_kwargs["ylabel"]))
     return info
