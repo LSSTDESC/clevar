@@ -45,7 +45,7 @@ jobs:
     - name: Run the unit tests
       run: |
         pip install pytest pytest-cov
-        #pytest tests/ --cov=clevar/
+        pytest tests/ --cov=clevar/
       env:
         DISPLAY: test
     - name: Install Sphinx prereq
