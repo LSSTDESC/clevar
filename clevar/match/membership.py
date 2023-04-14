@@ -14,7 +14,7 @@ class MembershipMatch(Match):
         self.type = "Membership"
         self.matched_mems = None
 
-    def multiple(self, cat1, cat2, verbose=True):
+    def multiple(self, cat1, cat2, minimum_share_fraction=0, verbose=True):
         """
         Make the one way multiple matching
 
@@ -24,6 +24,9 @@ class MembershipMatch(Match):
             Base catalog with members attribute.
         cat2: clevar.ClCatalog
             Target catalog with members attribute.
+        minimum_share_fraction: float
+            Parameter for `preference='shared_member_fraction'`.
+            Minimum share fraction to consider in matches (default=0).
         verbose: bool
             Print result for individual matches.
         """
@@ -36,11 +39,12 @@ class MembershipMatch(Match):
         for i, (share_mems1, nmem1) in enumerate(
             zip(cat1.mt_input["share_mems"], cat1.mt_input["nmem"])
         ):
-            for id2, share_mem in share_mems1.items():
-                cat1["mt_multi_self"][i].append(id2)
+            for id2, num_shared_mem2 in share_mems1.items():
                 i2 = int(cat2.id_dict[id2])
-                cat2["mt_multi_other"][i2].append(cat1["id"][i])
-                self.cat1_mmt[i] = True
+                if num_shared_mem2 / cat2.mt_input["nmem"][i2] >= minimum_share_fraction:
+                    cat1["mt_multi_self"][i].append(id2)
+                    cat2["mt_multi_other"][i2].append(cat1["id"][i])
+                    self.cat1_mmt[i] = True
             if verbose:
                 print(
                     f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates",
@@ -260,9 +264,9 @@ class MembershipMatch(Match):
             For `method='angular_distance'`. Cosmology object for when radius has physical units.
         """
         match_config = {
-            "type": "cross",  # options are cross, cat1, cat2
-            "which_radius": "max",  # Case of radius to be used, can be: cat1, cat2, min, max
-            "preference": "angular_proximity",  # options are more_massive, angular_proximity or redshift_proximity
+            "type": "cross",
+            "which_radius": "max",
+            "preference": "angular_proximity",
             "catalog1": {"delta_z": None, "match_radius": radius},
             "catalog2": {"delta_z": None, "match_radius": radius},
         }
@@ -326,9 +330,9 @@ class MembershipMatch(Match):
                 * `preference` -  Preference to set best match, can be: `more_massive`,
                   `angular_proximity`, `redshift_proximity`, `shared_member_fraction` (default).
                 * `minimum_share_fraction1` -  Minimum share fraction of catalog 1 to consider
-                  in matches (default=0).
+                  in matches (default=0). It is used for both multiple and unique matches.
                 * `minimum_share_fraction2` -  Minimum share fraction of catalog 2 to consider
-                  in matches (default=0).
+                  in matches (default=0). It is used for both multiple and unique matches.
                 * `match_members` -  Match the members catalogs (default=`True`).
                 * `match_members_kwargs` -  `kwargs` used in `match_members(mem1, mem2, **kwargs)`,
                   needed if `match_members=True`.
@@ -345,12 +349,19 @@ class MembershipMatch(Match):
                 * `shared_members_file` -  Prefix of file names to save shared members,
                   needed if `shared_members_save` or `shared_members_load` is `True`.
                 * `verbose`: Print result for individual matches (default=`True`).
+                * `minimum_share_fraction1_unique` (optional) -  Minimum share fraction of
+                catalog 1 to consider in unique matches only. It overwrites
+                `minimum_share_fraction1` in the unique matching step.
+                * `minimum_share_fraction2_unique` (optional) -  Minimum share fraction of
+                catalog 2 to consider in unique matches only. It overwrites
+                `minimum_share_fraction2` in the unique matching step.
 
 
         """
         if match_config["type"] not in ("cat1", "cat2", "cross"):
             raise ValueError("config type must be cat1, cat2 or cross")
 
+        # Match members
         load_mt_member = match_config.get("match_members_load", False)
         if match_config.get("match_members", True) and not load_mt_member:
             self.match_members(cat1.members, cat2.members, **match_config["match_members_kwargs"])
@@ -359,6 +370,7 @@ class MembershipMatch(Match):
         if load_mt_member:
             self.load_matched_members(match_config["match_members_file"])
 
+        # Fill shared members
         load_shared_member = match_config.get("shared_members_load", False)
         if match_config.get("shared_members_fill", True) and not load_shared_member:
             self.fill_shared_members(cat1, cat2)
@@ -369,22 +381,43 @@ class MembershipMatch(Match):
         if load_shared_member:
             self.load_shared_members(cat1, cat2, match_config["shared_members_file"])
 
+        # Multiple match
         verbose = match_config.get("verbose", True)
         if match_config["type"] in ("cat1", "cross"):
             print("\n## Multiple match (catalog 1)")
-            self.multiple(cat1, cat2, verbose=verbose)
+            self.multiple(
+                cat1, cat2, match_config.get("minimum_share_fraction1", 0), verbose=verbose
+            )
         if match_config["type"] in ("cat2", "cross"):
             print("\n## Multiple match (catalog 2)")
-            self.multiple(cat2, cat1, verbose=verbose)
+            self.multiple(
+                cat2, cat1, match_config.get("minimum_share_fraction2", 0), verbose=verbose
+            )
 
+        # Unique match
         preference = match_config.get("preference", "shared_member_fraction")
         if match_config["type"] in ("cat1", "cross"):
             print("\n## Finding unique matches of catalog 1")
-            self.unique(cat1, cat2, preference, match_config.get("minimum_share_fraction1", 0))
+            self.unique(
+                cat1,
+                cat2,
+                preference,
+                match_config.get(
+                    "minimum_share_fraction1_unique", match_config.get("minimum_share_fraction1", 0)
+                ),
+            )
         if match_config["type"] in ("cat2", "cross"):
             print("\n## Finding unique matches of catalog 2")
-            self.unique(cat2, cat1, preference, match_config.get("minimum_share_fraction2", 0))
+            self.unique(
+                cat2,
+                cat1,
+                preference,
+                match_config.get(
+                    "minimum_share_fraction2_unique", match_config.get("minimum_share_fraction2", 0)
+                ),
+            )
 
+        # Cross match
         if match_config["type"] == "cross":
             self.cross_match(cat1)
             self.cross_match(cat2)
