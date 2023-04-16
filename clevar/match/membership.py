@@ -283,7 +283,7 @@ class MembershipMatch(Match):
                 self.matched_mems.append([ind1, ind2])
         self.matched_mems = np.array(self.matched_mems)
 
-    def save_matched_members(self, filename, overwrite=False):
+    def save_matched_members(self, filename):
         """
         Saves the matching results of members
 
