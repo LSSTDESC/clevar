@@ -11,7 +11,8 @@ class NameList(list):
     """
     List without case consideration in `in` function
     """
-    def __contains__(self, item): # implements `in`
+
+    def __contains__(self, item):  # implements `in`
         if isinstance(item, str):
             return item.lower() in (n.lower() for n in self)
         else:
@@ -22,33 +23,46 @@ class LowerCaseDict(dict):
     """
     Dictionary with lowercase keys
     """
+
     @classmethod
     def _k(cls, key):
         return key.lower() if isinstance(key, str) else key
+
     def __init__(self, *args, **kwargs):
         super(LowerCaseDict, self).__init__(*args, **kwargs)
         self._convert_keys()
+
     def __getitem__(self, key):
         return super(LowerCaseDict, self).__getitem__(self.__class__._k(key))
+
     def __setitem__(self, key, value):
         super(LowerCaseDict, self).__setitem__(self.__class__._k(key), value)
+
     def __delitem__(self, key):
         return super(LowerCaseDict, self).__delitem__(self.__class__._k(key))
+
     def __contains__(self, key):
         return super(LowerCaseDict, self).__contains__(self.__class__._k(key))
+
     def pop(self, key, *args, **kwargs):
         return super(LowerCaseDict, self).pop(self.__class__._k(key), *args, **kwargs)
+
     def get(self, key, *args, **kwargs):
         return super(LowerCaseDict, self).get(self.__class__._k(key), *args, **kwargs)
+
     def setdefault(self, key, *args, **kwargs):
         return super(LowerCaseDict, self).setdefault(self.__class__._k(key), *args, **kwargs)
+
     def update(self, E={}, **F):
         super(LowerCaseDict, self).update(self.__class__(E))
         super(LowerCaseDict, self).update(self.__class__(**F))
+
     def _convert_keys(self):
         for k in list(self.keys()):
             v = super(LowerCaseDict, self).pop(k)
             self.__setitem__(k, v)
+
+
 ########################################################################
 ########## Helpful functions ###########################################
 ########################################################################
@@ -95,7 +109,8 @@ def updated_dict(*dict_list):
         updict = none_val(update_dict, {})
         if not isinstance(updict, dict):
             raise ValueError(
-                f'all arguments of updated_dict must be dictionaries or None, got: {updict}')
+                f"all arguments of updated_dict must be dictionaries or None, got: {updict}"
+            )
         out.update(updict)
     return out
 
@@ -118,14 +133,14 @@ def autobins(values, bins, log=False):
     ndarray
         Bins based on values
     """
-    if hasattr(bins, '__len__'):
+    if hasattr(bins, "__len__"):
         bins = np.array(bins)
     elif log:
         logvals = np.log10(values)
-        bins = np.logspace(logvals.min(), logvals.max(), bins+1)
+        bins = np.logspace(logvals.min(), logvals.max(), bins + 1)
         bins[-1] *= 1.0001
     else:
-        bins = np.linspace(values.min(), values.max(), bins+1)
+        bins = np.linspace(values.min(), values.max(), bins + 1)
         bins[-1] *= 1.0001
     return bins
 
@@ -146,12 +161,12 @@ def binmasks(values, bins):
     bin_masks: list
         List of masks for each bin
     """
-    bin_masks = [(values>=b0)*(values<b1) for b0, b1 in zip(bins, bins[1:])]
-    bin_masks[-1] += values==bins[-1]
+    bin_masks = [(values >= b0) * (values < b1) for b0, b1 in zip(bins, bins[1:])]
+    bin_masks[-1] += values == bins[-1]
     return bin_masks
 
 
-def str2dataunit(input_str, units_bank, err_msg=''):
+def str2dataunit(input_str, units_bank, err_msg=""):
     """
     Convert a string to a float with unit.
     ex: '1mpc' -> (1, 'mpc')
@@ -166,7 +181,7 @@ def str2dataunit(input_str, units_bank, err_msg=''):
     for unit in units_bank:
         if unit.lower() in input_str.lower():
             try:
-                return float(input_str.lower().replace(unit.lower(), '')), unit.lower()
+                return float(input_str.lower().replace(unit.lower(), "")), unit.lower()
             except:
                 pass
     raise ValueError(f"Unknown unit of '{input_str}', must be in {units_bank}. {err_msg}")
@@ -214,32 +229,34 @@ def gaussian(value, mean, std):
     float, array
         Value of the gaussian distribution at input `value`.
     """
-    return np.exp(-0.5*(value-mean)**2/std**2)/np.sqrt(2*np.pi)/std
+    return np.exp(-0.5 * (value - mean) ** 2 / std**2) / np.sqrt(2 * np.pi) / std
 
 
 def pack_mt_col(col):
-    return list(map(lambda c: c if c else '', col))
+    return list(map(lambda c: c if c else "", col))
 
 
 def pack_mmt_col(col):
-    return list(map(lambda c: ','.join(c) if c else '', col))
+    return list(map(lambda c: ",".join(c) if c else "", col))
 
 
 def unpack_mt_col(col):
     out = np.array(np.array(col, dtype=str), dtype=np.ndarray)
-    out[out==''] = None
+    out[out == ""] = None
     return out
 
 
 def unpack_mmt_col(col):
     out = np.full(col.size, None)
     for i, c in enumerate(np.array(col, dtype=str)):
-        out[i] = c.split(',') if len(c)>0 else []
+        out[i] = c.split(",") if len(c) > 0 else []
     return out
+
 
 ########################################################################
 ########## Smooth Line #################################################
 ########################################################################
+
 
 def smooth_loop(x, y, scheme=[1, 1]):
     """Loop for smooth line using pixar's algorithm.
@@ -264,26 +281,26 @@ def smooth_loop(x, y, scheme=[1, 1]):
     https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
     """
     # add midpoints
-    xmid = .5*(x[:-1]+x[1:])
-    ymid = interp1d(x, y, kind='linear')(xmid)
-    xsmooth, ysmooth = np.zeros(len(x)+len(xmid)), np.zeros(len(y)+len(ymid))
+    xmid = 0.5 * (x[:-1] + x[1:])
+    ymid = interp1d(x, y, kind="linear")(xmid)
+    xsmooth, ysmooth = np.zeros(len(x) + len(xmid)), np.zeros(len(y) + len(ymid))
     xsmooth[::2] = x
     xsmooth[1::2] = xmid
     ysmooth[::2] = y
     ysmooth[1::2] = ymid
 
     # move
-    n_edge = int(len(scheme)/2)
-    ncrop = 2*n_edge
+    n_edge = int(len(scheme) / 2)
+    ncrop = 2 * n_edge
 
-    xmid_new = np.zeros(xsmooth.size-ncrop)
-    ymid_new = np.zeros(ysmooth.size-ncrop)
+    xmid_new = np.zeros(xsmooth.size - ncrop)
+    ymid_new = np.zeros(ysmooth.size - ncrop)
     i = 0
     for w in scheme:
-        if i == len(scheme)/2:
-            i+=1
-        xmid_new += w*xsmooth[i:xsmooth.size-ncrop+i]
-        ymid_new += w*ysmooth[i:ysmooth.size-ncrop+i]
+        if i == len(scheme) / 2:
+            i += 1
+        xmid_new += w * xsmooth[i : xsmooth.size - ncrop + i]
+        ymid_new += w * ysmooth[i : ysmooth.size - ncrop + i]
         i += 1
 
     xmid_new /= sum(scheme)
@@ -291,6 +308,7 @@ def smooth_loop(x, y, scheme=[1, 1]):
     xsmooth[n_edge:-n_edge] = xmid_new
     ysmooth[n_edge:-n_edge] = ymid_new
     return xsmooth, ysmooth
+
 
 def smooth_line(x, y, n_increase=10, scheme=[1, 2, 1]):
     """Make smooth line using pixar's algorithm.
@@ -316,7 +334,7 @@ def smooth_line(x, y, n_increase=10, scheme=[1, 2, 1]):
     Good description of the method can be found at
     https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
     """
-    if n_increase==0:
+    if n_increase == 0:
         return x, y
     xsmooth, ysmooth = smooth_loop(x, y, scheme=scheme)
     for i in range(1, n_increase):
@@ -333,7 +351,7 @@ import healpy as hp
 
 
 def pix2map(nside, pixels, values, null):
-    '''
+    """
     Convert from pixels, values to map
 
     Parameters
@@ -346,14 +364,14 @@ def pix2map(nside, pixels, values, null):
         Value of map in each pixel
     null: obj
         Value for pixels outside the map
-    '''
-    outmap = np.zeros(12*nside**2)+null
+    """
+    outmap = np.zeros(12 * nside**2) + null
     outmap[pixels] = values
     return outmap
 
 
 def neighbors_of_pixels(nside, pixels, nest=False):
-    '''
+    """
     Get all neighbors of a pixel list
 
     Parameters
@@ -369,8 +387,10 @@ def neighbors_of_pixels(nside, pixels, nest=False):
     ------
     array
         Neighbor pixels
-    '''
+    """
     nbs = np.array(list(set(hp.get_all_neighbours(nside, pixels, nest=nest).flatten())))
-    return nbs[nbs>-1]
+    return nbs[nbs > -1]
+
+
 hp.pix2map = pix2map
 hp.neighbors_of_pixels = neighbors_of_pixels

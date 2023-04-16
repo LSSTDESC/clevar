@@ -8,8 +8,17 @@ from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 
-from .utils import (veclen, none_val, NameList, LowerCaseDict, updated_dict,
-                    pack_mt_col, unpack_mt_col, pack_mmt_col, unpack_mmt_col)
+from .utils import (
+    veclen,
+    none_val,
+    NameList,
+    LowerCaseDict,
+    updated_dict,
+    pack_mt_col,
+    unpack_mt_col,
+    pack_mmt_col,
+    unpack_mmt_col,
+)
 from .version import __version__
 
 
@@ -87,7 +96,7 @@ class ClData(APtable):
         return self[key] if key in self.namedict else default
 
     def _repr_html_(self):
-        return APtable._repr_html_(self[[c for c in self.colnames if c!='SkyCoord']])
+        return APtable._repr_html_(self[[c for c in self.colnames if c != "SkyCoord"]])
 
     @classmethod
     def read(self, *args, **kwargs):
@@ -103,14 +112,12 @@ class ClData(APtable):
             Names of columns to find.
         """
         missing = [f"'{k}'" for k in columns if k not in self.namedict]
-        if len(missing)>0:
+        if len(missing) > 0:
             missing = ", ".join(missing)
-            raise KeyError(
-                f"Column(s) '{missing}' not found "
-                "in catalog {data.colnames}")
+            raise KeyError(f"Column(s) '{missing}' not found " "in catalog {data.colnames}")
 
 
-class TagData():
+class TagData:
     """
     Parent object to implement tag to catalogs.
 
@@ -150,11 +157,11 @@ class TagData():
 
     def __init__(self, tags=None, default_tags=None, **kwargs):
         if tags is not None and not isinstance(tags, dict):
-            raise ValueError('tags must be dict.')
+            raise ValueError("tags must be dict.")
         self.__data = ClData()
         self.__tags = LowerCaseDict(none_val(tags, {}))
         self.__default_tags = NameList(none_val(default_tags, []))
-        if len(kwargs)>0:
+        if len(kwargs) > 0:
             self._add_values(**kwargs)
             # make sure columns don't overwrite tags
             if tags is not None:
@@ -162,22 +169,21 @@ class TagData():
                     self.tag_column(coltag, colname, skip_warn=True)
 
     def __setitem__(self, item, value):
-        """ Adds items to tags if in default_tags"""
+        """Adds items to tags if in default_tags"""
         if isinstance(item, str):
             cname = self.tags.get(item, item)
             if item in self.default_tags:
                 self.tags[item] = self.data.namedict.get(cname, cname)
             self.data[cname] = value
         else:
-            raise ValueError(f'can only set with str item (={item}) argument.')
+            raise ValueError(f"can only set with str item (={item}) argument.")
 
     def _getitem_base(self, item, DataType, **kwargs):
-        """ Base function to also be used by child classes"""
+        """Base function to also be used by child classes"""
 
         # Get one row/col
         if isinstance(item, (str, int, np.int64)):
-            return self.data[self.tags.get(item, item) if isinstance(item, str)
-                             else item]
+            return self.data[self.tags.get(item, item) if isinstance(item, str) else item]
 
         # Get sub cols
         if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
@@ -206,75 +212,81 @@ class TagData():
         return self.data.__str__()
 
     def _prt_tags(self):
-        return ', '.join([f'{v}({k})' for k, v in self.tags.items()])
+        return ", ".join([f"{v}({k})" for k, v in self.tags.items()])
 
     def _prt_table_tags(self, table):
-        tags_inv = {v:f' ({k})' for k, v in self.tags.items() if k!=v}
-        table_list = table._repr_html_().split('<tr>')
-        new_header = '</th>'.join([c+tags_inv.get(c[4:], '') if c[:4]=='<th>' else c
-                                    for c in table_list[1].split('</th>')])
+        tags_inv = {v: f" ({k})" for k, v in self.tags.items() if k != v}
+        table_list = table._repr_html_().split("<tr>")
+        new_header = "</th>".join(
+            [
+                c + tags_inv.get(c[4:], "") if c[:4] == "<th>" else c
+                for c in table_list[1].split("</th>")
+            ]
+        )
         table_list[1] = new_header
-        return '<tr>'.join(table_list)
+        return "<tr>".join(table_list)
 
     def _repr_html_(self):
-        return (f'<b>tags:</b> {self._prt_tags()}'
-                f'<br>{self._prt_table_tags(self.data)}')
+        return f"<b>tags:</b> {self._prt_tags()}" f"<br>{self._prt_table_tags(self.data)}"
 
     def _add_values(self, must_have_id=False, first_cols=None, **columns):
         """Add values for all attributes."""
-        if 'data' in columns:
-            if len(columns)>1:
-                extra_cols = ', '.join([cols for cols in columns if cols!='data'])
-                raise KeyError(f'data and columns (={extra_cols}) cannot be passed together.')
-            if not hasattr(columns['data'], '__getitem__'):
-                raise TypeError('data must be interactable (i. e. have __getitem__ function.)')
-            data = ClData(columns['data'])
+        if "data" in columns:
+            if len(columns) > 1:
+                extra_cols = ", ".join([cols for cols in columns if cols != "data"])
+                raise KeyError(f"data and columns (={extra_cols}) cannot be passed together.")
+            if not hasattr(columns["data"], "__getitem__"):
+                raise TypeError("data must be interactable (i. e. have __getitem__ function.)")
+            data = ClData(columns["data"])
         else:
             # Check all columns have same size
             names = [n for n in columns]
             sizes = [len(v) for v in columns.values()]
-            if any(sizes[0]!=s for s in sizes):
-                raise ValueError(f"Column sizes inconsistent:\n"+
-                    "\n".join([f"{' '*12}{k:10}: {l:,}" for k, l in zip(names, sizes)])
-                    )
+            if any(sizes[0] != s for s in sizes):
+                raise ValueError(
+                    f"Column sizes inconsistent:\n"
+                    + "\n".join([f"{' '*12}{k:10}: {l:,}" for k, l in zip(names, sizes)])
+                )
             data = ClData(columns)
 
         # Add columns
 
-        missing = [f"'{dtag}': '{self.tags.get(dtag, None)}'" for dtag in self.default_tags
-                    if dtag in self.tags and self.tags.get(dtag, None) not in data.namedict
-                    and dtag.lower()!='id']
-        if len(missing)>0:
+        missing = [
+            f"'{dtag}': '{self.tags.get(dtag, None)}'"
+            for dtag in self.default_tags
+            if dtag in self.tags
+            and self.tags.get(dtag, None) not in data.namedict
+            and dtag.lower() != "id"
+        ]
+        if len(missing) > 0:
             missing = ", ".join(missing)
-            raise KeyError(
-                f"Tagged column(s) ({missing}) not found in catalog {data.colnames}")
+            raise KeyError(f"Tagged column(s) ({missing}) not found in catalog {data.colnames}")
 
         cols = list(data.colnames)
         if first_cols:
             for col in first_cols[::-1]:
                 cols.insert(0, cols.pop(cols.index(col)))
         if must_have_id:
-            if self.tags['id'] not in data.namedict:
+            if self.tags["id"] not in data.namedict:
                 self._create_id(len(data))
             else:
-                self[self.tags['id']] = data[self.tags['id']]
-                cols.pop(cols.index(data.namedict[self.tags['id']]))
+                self[self.tags["id"]] = data[self.tags["id"]]
+                cols.pop(cols.index(data.namedict[self.tags["id"]]))
         for colname in cols:
             self[colname] = data[colname]
 
     def _create_id(self, size):
-        id_name = 'id' if self.tags['id']=='id' else f'id ({self.tags["id"]})'
-        warnings.warn(
-            f'{id_name} column missing, additional one is being created.')
-        TagData.__setitem__(self, self.tags['id'], np.array(range(size), dtype=str))
+        id_name = "id" if self.tags["id"] == "id" else f'id ({self.tags["id"]})'
+        warnings.warn(f"{id_name} column missing, additional one is being created.")
+        TagData.__setitem__(self, self.tags["id"], np.array(range(size), dtype=str))
 
     def _make_col_dict(self, colname):
-        return dict(map(lambda v:v[::-1], enumerate(self[colname])))
+        return dict(map(lambda v: v[::-1], enumerate(self[colname])))
 
     def _make_col_dict_list(self, colname):
         dict_list = {}
         for ind, i in enumerate(self[colname]):
-            dict_list[i] = dict_list.get(i, [])+[ind]
+            dict_list[i] = dict_list.get(i, []) + [ind]
         return dict_list
 
     def tag_column(self, colname, coltag, skip_warn=False):
@@ -292,16 +304,16 @@ class TagData():
         """
         if colname not in self.data.namedict:
             raise ValueError(
-                f'setting tag {coltag}:{colname} to column ({colname}) missing in catalog')
-        if coltag in self.data.namedict and coltag.lower()!=colname.lower():
+                f"setting tag {coltag}:{colname} to column ({colname}) missing in catalog"
+            )
+        if coltag in self.data.namedict and coltag.lower() != colname.lower():
             warnings.warn(
-                f'There is a column with the same name as the tag setup.'
-                f' cat[\'{coltag}\'] calls cat[\'{colname}\'] now.'
-                f' To get \'{coltag}\' column, use cat.data[\'{coltag}\'].'
-                )
-        if coltag in self.tags and self.tags.get(coltag, None)!=colname and not skip_warn:
-            warnings.warn(
-                f'tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}')
+                f"There is a column with the same name as the tag setup."
+                f" cat['{coltag}'] calls cat['{colname}'] now."
+                f" To get '{coltag}' column, use cat.data['{coltag}']."
+            )
+        if coltag in self.tags and self.tags.get(coltag, None) != colname and not skip_warn:
+            warnings.warn(f"tag {coltag}:{self.tags[coltag]} being replaced by {coltag}:{colname}")
         self.tags[coltag] = self.data.namedict[colname]
 
     def tag_columns(self, colnames, coltags):
@@ -315,9 +327,10 @@ class TagData():
         coltag: list
             Tag for columns
         """
-        if len(colnames)!=len(coltags):
+        if len(colnames) != len(coltags):
             raise ValueError(
-                f'Size of colnames ({len(colnames)} and coltags {len(coltags)} must be the same.')
+                f"Size of colnames ({len(colnames)} and coltags {len(coltags)} must be the same."
+            )
         for colname, coltag in zip(colnames, coltags):
             self.tag_column(colname, coltag)
 
@@ -343,11 +356,10 @@ class TagData():
         """
         out = ClData()
         if add_header:
-            out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
-        for col in filter(lambda c: c!='SkyCoord', self.data.colnames):
+            out.meta.update({f"hierarch TAG_{k}": v for k, v in self.tags.items()})
+        for col in filter(lambda c: c != "SkyCoord", self.data.colnames):
             out[col] = self[col]
         out.write(filename, overwrite=overwrite)
-
 
     @classmethod
     def read(self, filename, tags=None, full=False):
@@ -365,9 +377,9 @@ class TagData():
         data = ClData.read(filename)
         if not full:
             if tags is None:
-                raise KeyError('If full=False, tags must be provided.')
+                raise KeyError("If full=False, tags must be provided.")
             if not isinstance(tags, dict):
-                raise ValueError('tags must be dict.')
+                raise ValueError("tags must be dict.")
             data._check_cols(tags.values())
             data = data[list(tags.values())]
         return self(data=data, tags=tags)
@@ -385,18 +397,21 @@ class TagData():
         data = ClData.read(filename)
         # read labels and radius unit from file
         kwargs = {
-            'tags': LowerCaseDict({k[4:]:v for k, v in data.meta.items() if k[:4]=='TAG_'}),
+            "tags": LowerCaseDict({k[4:]: v for k, v in data.meta.items() if k[:4] == "TAG_"}),
         }
         return self(data=data, **kwargs)
 
+
 _matching_mask_funcs = {
-    'cross': lambda match: match['mt_cross']!=None,
-    'self': lambda match: match['mt_self']!=None,
-    'other': lambda match: match['mt_other']!=None,
-    'multi_self': lambda match: veclen(match['mt_multi_self'])>0,
-    'multi_other': lambda match: veclen(match['mt_multi_other'])>0,
-    'multi_join': lambda match: (veclen(match['mt_multi_self'])>0)+(veclen(match['mt_multi_other'])>0),
+    "cross": lambda match: match["mt_cross"] != None,
+    "self": lambda match: match["mt_self"] != None,
+    "other": lambda match: match["mt_other"] != None,
+    "multi_self": lambda match: veclen(match["mt_multi_self"]) > 0,
+    "multi_other": lambda match: veclen(match["mt_multi_other"]) > 0,
+    "multi_join": lambda match: (veclen(match["mt_multi_self"]) > 0)
+    + (veclen(match["mt_multi_other"]) > 0),
 }
+
 
 class Catalog(TagData):
     """
@@ -435,88 +450,99 @@ class Catalog(TagData):
             lines = [f'{step["func"]}(']
             len_func = len(lines[0])
             pref = ""
-            for k, v in filter(lambda x: x[0]!='func', step.items()):
-                arg = f"{k}='{v}'" if isinstance(v, str) else f'{k}={v}'
-                if k=='cats':
-                    c1, c2 = v.split(', ')
+            for k, v in filter(lambda x: x[0] != "func", step.items()):
+                arg = f"{k}='{v}'" if isinstance(v, str) else f"{k}={v}"
+                if k == "cats":
+                    c1, c2 = v.split(", ")
                     arg = f"cat1='{c1}', cat2='{c2}'"
-                if len(lines[-1]+f', {arg}')>line_max_size:
-                    lines[-1] += ','
-                    lines.append(' '*len_func+arg)
+                if len(lines[-1] + f", {arg}") > line_max_size:
+                    lines[-1] += ","
+                    lines.append(" " * len_func + arg)
                 else:
-                    lines[-1] += f'{pref}{arg}'
-                pref = ', '
-            lines[-1] += ')'
-            steps.append('\n'.join(lines))
-        print('\n\n'.join(steps))
+                    lines[-1] += f"{pref}{arg}"
+                pref = ", "
+            lines[-1] += ")"
+            steps.append("\n".join(lines))
+        print("\n\n".join(steps))
 
     def _set_mt_hist(self, value):
         self.__mt_hist = copy.deepcopy(value)
 
-    def __init__(self, name, tags=None, labels=None, unique_id=False, default_tags=None,
-                 mt_hist=None, **kwargs):
+    def __init__(
+        self,
+        name,
+        tags=None,
+        labels=None,
+        unique_id=False,
+        default_tags=None,
+        mt_hist=None,
+        **kwargs,
+    ):
         if not isinstance(name, str):
-            raise ValueError('name must be str.')
+            raise ValueError("name must be str.")
         if labels is not None and not isinstance(labels, dict):
-            raise ValueError('labels must be dict.')
+            raise ValueError("labels must be dict.")
         self.unique_id = unique_id
         self.name = name
         self.labels = LowerCaseDict()
         self.__id_dict = {}
         self.__mt_hist = copy.deepcopy(none_val(mt_hist, []))
-        TagData.__init__(self, tags=updated_dict({'id':'id'}, tags),
-                         default_tags=none_val(default_tags, ['id', 'ra', 'dec']),
-                         **kwargs)
+        TagData.__init__(
+            self,
+            tags=updated_dict({"id": "id"}, tags),
+            default_tags=none_val(default_tags, ["id", "ra", "dec"]),
+            **kwargs,
+        )
         self.labels.update(none_val(labels, {}))
 
     def __str__(self):
-        return f'{self.name}:\n{self.data.__str__()}'
+        return f"{self.name}:\n{self.data.__str__()}"
 
     def _repr_html_(self):
-        return (f'<b>{self.name}</b>'
-                f'<br>{TagData._repr_html_(self)}')
+        return f"<b>{self.name}</b>" f"<br>{TagData._repr_html_(self)}"
 
     def __getitem__(self, item):
-        return self._getitem_base(item, Catalog, name=self.name, labels=self.labels,
-                                  mt_hist=self.mt_hist)
+        return self._getitem_base(
+            item, Catalog, name=self.name, labels=self.labels, mt_hist=self.mt_hist
+        )
 
     def __setitem__(self, item, value):
         value_ = value
         if isinstance(item, str):
-            if item[:3]!='mt_':
-                self.labels[item] = self.labels.get(item, f'{item}_{{{self.name}}}')
-            if item.lower()==self.tags['id'].lower():
+            if item[:3] != "mt_":
+                self.labels[item] = self.labels.get(item, f"{item}_{{{self.name}}}")
+            if item.lower() == self.tags["id"].lower():
                 value_ = self._fmt_id_col(value)
-            elif len(self.data.colnames)==0:
+            elif len(self.data.colnames) == 0:
                 if isinstance(value, (int, np.int64)):
-                    raise TypeError('Empty table cannot have column set to scalar value')
+                    raise TypeError("Empty table cannot have column set to scalar value")
                 self._create_id(len(value))
         TagData.__setitem__(self, item, value_)
 
     def _fmt_id_col(self, id_col):
-        id_out = np.array(id_col, dtype=str) # make id a string
+        id_out = np.array(id_col, dtype=str)  # make id a string
         if self.unique_id:
             unique_vals, counts = np.unique(id_out, return_counts=True)
-            if (counts>1).any():
+            if (counts > 1).any():
                 warnings.warn(
-                    f'Repeated ID\'s in {self.tags["id"]} column, adding suffix _r# to them.')
+                    f'Repeated ID\'s in {self.tags["id"]} column, adding suffix _r# to them.'
+                )
                 id_out = np.array(id_out, dtype=np.ndarray)
-                for id_ in unique_vals[counts>1]:
-                    case = id_out==id_
+                for id_ in unique_vals[counts > 1]:
+                    case = id_out == id_
                     fmt = f'_r%0{len(f"{case.sum()}")}d'
-                    id_out[case] += [fmt%(i+1) for i in range(case.sum())]
+                    id_out[case] += [fmt % (i + 1) for i in range(case.sum())]
         return id_out
 
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         TagData._add_values(self, must_have_id=True, **columns)
         self._add_skycoord()
-        self.id_dict.update(self._make_col_dict('id'))
+        self.id_dict.update(self._make_col_dict("id"))
 
     def _add_skycoord(self):
-        if ('ra' in self.tags and 'dec' in self.tags) and \
-                not 'SkyCoord' in self.data.colnames:
-            self['SkyCoord'] = SkyCoord(self['ra']*u.deg, self['dec']*u.deg, frame='icrs')
+        if ("ra" in self.tags and "dec" in self.tags) and not "SkyCoord" in self.data.colnames:
+            self["SkyCoord"] = SkyCoord(self["ra"] * u.deg, self["dec"] * u.deg, frame="icrs")
 
     def _init_match_vals(self, overwrite=False):
         """Fills self.match with default values
@@ -526,10 +552,10 @@ class Catalog(TagData):
         overwrite: bool
             Overwrite values of pre-existing columns.
         """
-        for col in ('mt_self', 'mt_other', 'mt_multi_self', 'mt_multi_other'):
+        for col in ("mt_self", "mt_other", "mt_multi_self", "mt_multi_other"):
             if overwrite or col not in self.data.namedict:
                 self[col] = None
-                if col in ('mt_multi_self', 'mt_multi_other'):
+                if col in ("mt_multi_self", "mt_multi_other"):
                     for i in range(self.size):
                         self[col][i] = []
 
@@ -559,24 +585,26 @@ class Catalog(TagData):
             Skip overwriting warning
         """
         TagData.tag_column(self, colname, coltag, skip_warn=skip_warn)
-        self.labels[coltag] = self.labels.get(coltag, f'{coltag}_{{{self.name}}}')
+        self.labels[coltag] = self.labels.get(coltag, f"{coltag}_{{{self.name}}}")
 
     def remove_multiple_duplicates(self):
         """Removes duplicates in multiple match columns"""
         for i in range(self.size):
-            for col in ('mt_multi_self', 'mt_multi_other'):
+            for col in ("mt_multi_self", "mt_multi_other"):
                 if self[col][i]:
                     self[col][i] = list(set(self[col][i]))
 
     def cross_match(self):
         """Makes cross matches, requires unique matches to be done first."""
-        self['mt_cross'] = None
-        cross_mask = self['mt_self']==self['mt_other']
-        self['mt_cross'][cross_mask] = self['mt_self'][cross_mask]
+        self["mt_cross"] = None
+        cross_mask = self["mt_self"] == self["mt_other"]
+        self["mt_cross"][cross_mask] = self["mt_self"][cross_mask]
 
     def get_matching_mask(self, matching_type):
         if matching_type not in _matching_mask_funcs:
-            raise ValueError(f'matching_type ({matching_type}) must be in {list(_matching_mask_funcs.keys())}')
+            raise ValueError(
+                f"matching_type ({matching_type}) must be in {list(_matching_mask_funcs.keys())}"
+            )
         return _matching_mask_funcs[matching_type](self.data)
 
     def _add_ftpt_mask(self, ftpt, maskname):
@@ -591,8 +619,9 @@ class Catalog(TagData):
         maskname: str
             Name of mask to be added
         """
-        self[f'ft_{maskname}'] = ftpt.zmax_masks_from_footprint(self['ra'], self['dec'],
-            self['z'] if 'z' in self.tags else 1e-10)
+        self[f"ft_{maskname}"] = ftpt.zmax_masks_from_footprint(
+            self["ra"], self["dec"], self["z"] if "z" in self.tags else 1e-10
+        )
 
     def add_ftpt_masks(self, ftpt_self, ftpt_other):
         """
@@ -606,11 +635,12 @@ class Catalog(TagData):
         ftpt_other: clevar.mask.Footprint object
             Footprint of the other catalog
         """
-        self._add_ftpt_mask(ftpt_self, 'self')
-        self._add_ftpt_mask(ftpt_other, 'other')
+        self._add_ftpt_mask(ftpt_self, "self")
+        self._add_ftpt_mask(ftpt_other, "other")
 
-    def add_ftpt_coverfrac(self, ftpt, aperture, aperture_unit, window='flat',
-        cosmo=None, colname=None):
+    def add_ftpt_coverfrac(
+        self, ftpt, aperture, aperture_unit, window="flat", cosmo=None, colname=None
+    ):
         """
         Computes and adds a cover fraction value. It considers zmax and detection fraction
         when available in the footprint.
@@ -632,27 +662,33 @@ class Catalog(TagData):
         colname: str, None
             Name of coverfrac column.
         """
-        num = f'{aperture}'
-        num = f'{aperture:.2f}' if len(num)>6 else num
-        zcol, rcol = self.tags['z'], self.tags['radius']
+        num = f"{aperture}"
+        num = f"{aperture:.2f}" if len(num) > 6 else num
+        zcol, rcol = self.tags["z"], self.tags["radius"]
         window_cfg = {
-            'flat': {
-                'func': ftpt._get_coverfrac,
-                'get_args': lambda c: [c['SkyCoord'], c[zcol], aperture, aperture_unit],
-                'colname': f'{num}_{aperture_unit}',
+            "flat": {
+                "func": ftpt._get_coverfrac,
+                "get_args": lambda c: [c["SkyCoord"], c[zcol], aperture, aperture_unit],
+                "colname": f"{num}_{aperture_unit}",
             },
-            'nfw2D': {
-                'func': ftpt._get_coverfrac_nfw2D,
-                'get_args': lambda c: [c['SkyCoord'], c[zcol], c[rcol],
-                                   self.radius_unit, aperture, aperture_unit],
-                'colname': f'nfw_{num}_{aperture_unit}',
+            "nfw2D": {
+                "func": ftpt._get_coverfrac_nfw2D,
+                "get_args": lambda c: [
+                    c["SkyCoord"],
+                    c[zcol],
+                    c[rcol],
+                    self.radius_unit,
+                    aperture,
+                    aperture_unit,
+                ],
+                "colname": f"nfw_{num}_{aperture_unit}",
             },
         }.get(window, None)
         if window_cfg is None:
             raise ValueError(f"window ({window}) must be either 'flat' of 'nfw2D'")
         self[f"cf_{none_val(colname, window_cfg['colname'])}"] = [
-            window_cfg['func'](*window_cfg['get_args'](c), cosmo=cosmo)
-            for c in self]
+            window_cfg["func"](*window_cfg["get_args"](c), cosmo=cosmo) for c in self
+        ]
 
     def write(self, filename, add_header=True, overwrite=False):
         """
@@ -669,22 +705,22 @@ class Catalog(TagData):
         """
         out = ClData()
         if add_header:
-            out.meta['hierarch ClEvaR_ver'] = __version__
-            out.meta['name'] = self.name
-            out.meta.update({f'hierarch LABEL_{k}':v for k, v in self.labels.items()})
-            out.meta.update({f'hierarch TAG_{k}':v for k, v in self.tags.items()})
+            out.meta["hierarch ClEvaR_ver"] = __version__
+            out.meta["name"] = self.name
+            out.meta.update({f"hierarch LABEL_{k}": v for k, v in self.labels.items()})
+            out.meta.update({f"hierarch TAG_{k}": v for k, v in self.tags.items()})
             for i, mt_step in enumerate(self.mt_hist):
                 for k, v in mt_step.items():
-                    if k=='cosmo' and v is not None:
-                        for s in ('H0', 'Omega_dm0', 'Omega_b0', 'Omega_k0', '='):
-                            v = v.replace(s, '')
-                    out.meta[f'hierarch MT.{i}.{k}'] = v if v is not None else 'None'
+                    if k == "cosmo" and v is not None:
+                        for s in ("H0", "Omega_dm0", "Omega_b0", "Omega_k0", "="):
+                            v = v.replace(s, "")
+                    out.meta[f"hierarch MT.{i}.{k}"] = v if v is not None else "None"
         for col in self.data.colnames:
-            if col in ('mt_self', 'mt_other', 'mt_cross'):
+            if col in ("mt_self", "mt_other", "mt_cross"):
                 out[col] = pack_mt_col(self[col])
-            elif col in ('mt_multi_self', 'mt_multi_other'):
+            elif col in ("mt_multi_self", "mt_multi_other"):
                 out[col] = pack_mmt_col(self[col])
-            elif col=='SkyCoord':
+            elif col == "SkyCoord":
                 pass
             else:
                 out[col] = self[col]
@@ -706,14 +742,14 @@ class Catalog(TagData):
             be the column name in your input file (ex: z='REDSHIFT').
         """
         # out data
-        mt_cols = NameList(('mt_self', 'mt_other', 'mt_cross', 'mt_multi_self', 'mt_multi_other'))
+        mt_cols = NameList(("mt_self", "mt_other", "mt_cross", "mt_multi_self", "mt_multi_other"))
         non_mt_cols = [c for c in data.colnames if c not in mt_cols]
         out = self(data=data[non_mt_cols], **kwargs)
         # matching cols
-        for colname in filter(lambda c:c in mt_cols, data.colnames):
-            if colname in NameList(('mt_self', 'mt_other', 'mt_cross')):
+        for colname in filter(lambda c: c in mt_cols, data.colnames):
+            if colname in NameList(("mt_self", "mt_other", "mt_cross")):
                 out[colname] = unpack_mt_col(data[colname])
-            if colname in NameList(('mt_multi_self', 'mt_multi_other')):
+            if colname in NameList(("mt_multi_self", "mt_multi_other")):
                 out[colname] = unpack_mmt_col(data[colname])
         return out
 
@@ -737,9 +773,9 @@ class Catalog(TagData):
         data = ClData.read(filename)
         if not full:
             if tags is None:
-                raise KeyError('If full=False, tags must be provided.')
+                raise KeyError("If full=False, tags must be provided.")
             if not isinstance(tags, dict):
-                raise ValueError('tags must be dict.')
+                raise ValueError("tags must be dict.")
             data._check_cols(tags.values())
             data = data[list(tags.values())]
         return self._read(data, name=name, labels=labels, tags=tags)
@@ -755,30 +791,30 @@ class Catalog(TagData):
             Input file.
         """
         data = ClData.read(filename)
-        print('    * ClEvar used in matching: '
-              f'{data.meta.get("ClEvaR_ver", "<0.13.0")}')
+        print("    * ClEvar used in matching: " f'{data.meta.get("ClEvaR_ver", "<0.13.0")}')
         # read labels and radius unit from file
         kwargs = {
-            'name': data.meta['NAME'],
-            'labels': LowerCaseDict({k[6:]:v for k, v in data.meta.items() if k[:6]=='LABEL_'}),
-            'tags': LowerCaseDict({k[4:]:v for k, v in data.meta.items() if k[:4]=='TAG_'}),
+            "name": data.meta["NAME"],
+            "labels": LowerCaseDict({k[6:]: v for k, v in data.meta.items() if k[:6] == "LABEL_"}),
+            "tags": LowerCaseDict({k[4:]: v for k, v in data.meta.items() if k[:4] == "TAG_"}),
         }
-        kwargs.update({'radius_unit': data.meta['RADIUS_UNIT']}
-                        if 'RADIUS_UNIT' in data.meta else {})
+        kwargs.update(
+            {"radius_unit": data.meta["RADIUS_UNIT"]} if "RADIUS_UNIT" in data.meta else {}
+        )
         # read mt_hist vals
-        kwargs['mt_hist'] = []
-        for k, value in filter(lambda kv: kv[0][:3]=='MT.', data.meta.items()):
-            ind_, key = k.split('.')[1:]
+        kwargs["mt_hist"] = []
+        for k, value in filter(lambda kv: kv[0][:3] == "MT.", data.meta.items()):
+            ind_, key = k.split(".")[1:]
             ind = int(ind_)
-            while len(kwargs['mt_hist'])<=ind:
-                kwargs['mt_hist'].append({})
-            if key=='cosmo' and value!='None':
-                cvars = ['Omega_dm0', 'Omega_b0', 'Omega_k0']
-                value = value.split(', ')
-                value = value[:1]+[f'{c}={v}' for c, v in zip(cvars, value[1:])]
-                value = ', '.join(value)
+            while len(kwargs["mt_hist"]) <= ind:
+                kwargs["mt_hist"].append({})
+            if key == "cosmo" and value != "None":
+                cvars = ["Omega_dm0", "Omega_b0", "Omega_k0"]
+                value = value.split(", ")
+                value = value[:1] + [f"{c}={v}" for c, v in zip(cvars, value[1:])]
+                value = ", ".join(value)
                 value = value.replace("(", "(H0=")
-            kwargs['mt_hist'][ind][key] = value if value!='None' else None
+            kwargs["mt_hist"][ind][key] = value if value != "None" else None
         return self._read(data, **kwargs)
 
     def save_match(self, filename, overwrite=False):
@@ -792,10 +828,12 @@ class Catalog(TagData):
         overwrite: bool
             Overwrite saved files
         """
-        cols = ['id', 'mt_self', 'mt_other',
-            'mt_multi_self', 'mt_multi_other']
-        cols += [col for col in self.data.colnames
-            if (col[:3]=='mt_' and col not in cols+['mt_cross'])]
+        cols = ["id", "mt_self", "mt_other", "mt_multi_self", "mt_multi_other"]
+        cols += [
+            col
+            for col in self.data.colnames
+            if (col[:3] == "mt_" and col not in cols + ["mt_cross"])
+        ]
         self[cols].write(filename, overwrite=overwrite)
 
     def load_match(self, filename):
@@ -809,9 +847,9 @@ class Catalog(TagData):
         """
         mt = self.read_full(filename)
         for col in mt.data.colnames:
-            if col!='id':
+            if col != "id":
                 self[col] = mt[col]
-        if len(self.mt_hist)>0 and self.mt_hist!=mt.mt_hist:
+        if len(self.mt_hist) > 0 and self.mt_hist != mt.mt_hist:
             warnings.warn(
                 "mt_hist of catalog will be overwritten from loaded file."
                 f"\n\nOriginal content:\n{self.mt_hist}"
@@ -819,7 +857,7 @@ class Catalog(TagData):
             )
         self._set_mt_hist(mt.mt_hist)
         self.cross_match()
-        print(f' * Total objects:    {self.size:,}')
+        print(f" * Total objects:    {self.size:,}")
         print(f' * multiple (self):  {(veclen(self["mt_multi_self"])>0).sum():,}')
         print(f' * multiple (other): {(veclen(self["mt_multi_other"])>0).sum():,}')
         print(f' * unique (self):    {(self["mt_self"]!=None).sum():,}')
@@ -837,7 +875,7 @@ class Catalog(TagData):
         overwrite: bool
             Overwrite saved files
         """
-        out = self.data[['id']+[c for c in self.data.colnames if c[:2] in ('ft', 'cf')]]
+        out = self.data[["id"] + [c for c in self.data.colnames if c[:2] in ("ft", "cf")]]
         out.write(filename, overwrite=overwrite)
 
     def load_footprint_quantities(self, filename):
@@ -851,8 +889,9 @@ class Catalog(TagData):
         """
         ftq = ClData.read(filename)
         for col in ftq.colnames:
-            if col!='id':
+            if col != "id":
                 self[col] = ftq[col]
+
 
 class ClCatalog(Catalog):
     """
@@ -891,37 +930,46 @@ class ClCatalog(Catalog):
         self.members = None
         self.leftover_members = None
         self.radius_unit = radius_unit
-        self.mt_input = kwargs.pop('mt_input', None)
-        members_warning = kwargs.pop('members_warning', True)
-        Catalog.__init__(self, name, labels=labels, tags=tags,
-                         default_tags=['id', 'ra', 'dec', 'mass', 'z',
-                                       'radius', 'zmin', 'zmax', 'z_err'],
-                         unique_id=True, **kwargs)
+        self.mt_input = kwargs.pop("mt_input", None)
+        members_warning = kwargs.pop("members_warning", True)
+        Catalog.__init__(
+            self,
+            name,
+            labels=labels,
+            tags=tags,
+            default_tags=["id", "ra", "dec", "mass", "z", "radius", "zmin", "zmax", "z_err"],
+            unique_id=True,
+            **kwargs,
+        )
         if members is not None:
-            self.add_members(members_catalog=members,
-                             members_warning=members_warning)
+            self.add_members(members_catalog=members, members_warning=members_warning)
 
     def _repr_html_(self):
         # remove SkyCoord from print
-        show_data_cols = [c for c in self.data.colnames if c!='SkyCoord']
+        show_data_cols = [c for c in self.data.colnames if c != "SkyCoord"]
         print_data = self.data[show_data_cols]
         table = self._prt_table_tags(print_data)
         # add mt_input to print
         if self.mt_input is not None:
             for col in self.mt_input.colnames:
                 print_data[col] = self.mt_input[col]
-            table_list = self._prt_table_tags(print_data).split('<thead><tr><th')
-            style = 'text-align:left; background-color:grey; color:white'
-            table_list.insert(1, (
-                f''' colspan={len(show_data_cols)}></th>'''
-                f'''<th colspan={len(self.mt_input.colnames)} style='{style}'>mt_input</th>'''
-                '''</tr></thread>''')
+            table_list = self._prt_table_tags(print_data).split("<thead><tr><th")
+            style = "text-align:left; background-color:grey; color:white"
+            table_list.insert(
+                1,
+                (
+                    f""" colspan={len(show_data_cols)}></th>"""
+                    f"""<th colspan={len(self.mt_input.colnames)} style='{style}'>mt_input</th>"""
+                    """</tr></thread>"""
+                ),
             )
-            table = '<thead><tr><th'.join(table_list)
-        return (f'<b>{self.name}</b>'
-                f'<br></b><b>tags:</b> {self._prt_tags()}'
-                f'<br><b>Radius unit:</b> {self.radius_unit}'
-                f'<br>{table}')
+            table = "<thead><tr><th".join(table_list)
+        return (
+            f"<b>{self.name}</b>"
+            f"<br></b><b>tags:</b> {self._prt_tags()}"
+            f"<br><b>Radius unit:</b> {self.radius_unit}"
+            f"<br>{table}"
+        )
 
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
@@ -929,28 +977,35 @@ class ClCatalog(Catalog):
         self._init_match_vals()
 
     def __getitem__(self, item):
-        kwargs = {'name':self.name, 'labels': self.labels, 'radius_unit': self.radius_unit,
-                  'members_warning': False, 'mt_hist': self.mt_hist}
+        kwargs = {
+            "name": self.name,
+            "labels": self.labels,
+            "radius_unit": self.radius_unit,
+            "members_warning": False,
+            "mt_hist": self.mt_hist,
+        }
         # get one col/row
         if isinstance(item, (str, int, np.int64)):
-            kwargs['item'] = item
+            kwargs["item"] = item
         else:
             # Get sub cols
-            if (isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item)):
+            if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
                 item_nl = NameList(item)
-                kwargs['item'] = [*item, *filter(lambda c: c[:3]=='mt_' and c not in item_nl,
-                                    self.data.colnames)]
-                kwargs['mt_input'] = self.mt_input
-                kwargs['members'] = self.members
+                kwargs["item"] = [
+                    *item,
+                    *filter(lambda c: c[:3] == "mt_" and c not in item_nl, self.data.colnames),
+                ]
+                kwargs["mt_input"] = self.mt_input
+                kwargs["members"] = self.members
             # Get sub rows
             else:
-                kwargs['item'] = item
+                kwargs["item"] = item
                 if self.mt_input is not None:
-                    kwargs['mt_input'] = self.mt_input[item]
+                    kwargs["mt_input"] = self.mt_input[item]
                 if self.members is not None and isinstance(item, (list, np.ndarray)):
                     cl_mask = np.zeros(self.size, dtype=bool)
                     cl_mask[item] = True
-                    kwargs['members'] = self.members[cl_mask[self.members['ind_cl']]]
+                    kwargs["members"] = self.members[cl_mask[self.members["ind_cl"]]]
         return self._getitem_base(DataType=ClCatalog, **kwargs)
 
     def raw(self):
@@ -959,9 +1014,13 @@ class ClCatalog(Catalog):
         """
         if self.members is not None:
             out = ClCatalog(
-                name=self.name, tags=self.tags, labels=self.labels,
-                radius_unit=self.radius_unit, data=self.data,
-                mt_input=self.mt_input)
+                name=self.name,
+                tags=self.tags,
+                labels=self.labels,
+                radius_unit=self.radius_unit,
+                data=self.data,
+                mt_input=self.mt_input,
+            )
         else:
             out = self
         return out
@@ -988,15 +1047,16 @@ class ClCatalog(Catalog):
         data = ClData.read(filename)
         if not full:
             if tags is None:
-                raise KeyError('If full=False, tags must be provided.')
+                raise KeyError("If full=False, tags must be provided.")
             if not isinstance(tags, dict):
-                raise ValueError('tags must be dict.')
+                raise ValueError("tags must be dict.")
             data._check_cols(tags.values())
             data = data[list(tags.values())]
         return self._read(data, name=name, labels=labels, tags=tags, radius_unit=radius_unit)
 
-    def add_members(self, members_consistency=True, members_warning=True,
-                    members_catalog=None, **kwargs):
+    def add_members(
+        self, members_consistency=True, members_warning=True, members_catalog=None, **kwargs
+    ):
         """
         Add members to clusters
 
@@ -1013,32 +1073,41 @@ class ClCatalog(Catalog):
             Arguments to initialize member catalog if members_catalog=None. For details, see:
             https://lsstdesc.org/clevar/compiled-examples/catalogs.html#adding-members-to-cluster-catalogs
         """
-        self.leftover_members = None # clean any previous mem info
+        self.leftover_members = None  # clean any previous mem info
         if members_catalog is None:
-            members = MemCatalog('members', **kwargs)
+            members = MemCatalog("members", **kwargs)
         elif isinstance(members_catalog, MemCatalog):
             members = members_catalog
-            if len(kwargs)>0:
-                warnings.warn(f'leftover input arguments ignored: {kwargs.keys()}')
+            if len(kwargs) > 0:
+                warnings.warn(f"leftover input arguments ignored: {kwargs.keys()}")
         else:
             raise TypeError(
-                f'members_catalog type is {type(members_catalog)},'
-                ' it must be a MemCatalog object.')
-        members['ind_cl'] = [self.id_dict.get(ID, -1) for ID in members['id_cluster']]
+                f"members_catalog type is {type(members_catalog)},"
+                " it must be a MemCatalog object."
+            )
+        members["ind_cl"] = [self.id_dict.get(ID, -1) for ID in members["id_cluster"]]
         if members_consistency:
-            mem_in_cl = members['ind_cl']>=0
+            mem_in_cl = members["ind_cl"] >= 0
             if not all(mem_in_cl):
                 if members_warning:
                     warnings.warn(
-                        'Some galaxies were not members of the cluster catalog.'
-                        ' They are stored in leftover_members attribute.')
+                        "Some galaxies were not members of the cluster catalog."
+                        " They are stored in leftover_members attribute."
+                    )
                     self.leftover_members = members[~mem_in_cl]
-                    self.leftover_members.name = 'leftover members'
+                    self.leftover_members.name = "leftover members"
             members = members[mem_in_cl]
         self.members = members
 
-    def read_members(self, filename, tags=None, labels=None, members_consistency=True,
-                     members_warning=True, full=False):
+    def read_members(
+        self,
+        filename,
+        tags=None,
+        labels=None,
+        members_consistency=True,
+        members_warning=True,
+        full=False,
+    ):
         """Read members catalog from fits file.
 
         Parameters
@@ -1059,8 +1128,11 @@ class ClCatalog(Catalog):
         """
         self.add_members(
             members_catalog=MemCatalog.read(
-                filename, 'members', labels=labels, tags=tags, full=full),
-            members_consistency=members_consistency, members_warning=members_warning)
+                filename, "members", labels=labels, tags=tags, full=full
+            ),
+            members_consistency=members_consistency,
+            members_warning=members_warning,
+        )
 
     def remove_members(self):
         """
@@ -1104,29 +1176,33 @@ class MemCatalog(Catalog):
 
     def __init__(self, name, tags=None, labels=None, **kwargs):
         if tags is not None and not isinstance(tags, dict):
-            raise ValueError('tags must be dict.')
+            raise ValueError("tags must be dict.")
         self.__id_dict_list = {}
-        Catalog.__init__(self, name, labels=labels,
-                         tags=LowerCaseDict(updated_dict({'id_cluster':'id_cluster'}, tags)),
-                         default_tags=['id', 'id_cluster', 'ra', 'dec', 'z', 'radius', 'pmem'],
-                         **kwargs)
+        Catalog.__init__(
+            self,
+            name,
+            labels=labels,
+            tags=LowerCaseDict(updated_dict({"id_cluster": "id_cluster"}, tags)),
+            default_tags=["id", "id_cluster", "ra", "dec", "z", "radius", "pmem"],
+            **kwargs,
+        )
 
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
-        Catalog._add_values(self, first_cols=[self.tags['id_cluster']], **columns)
-        self.id_dict_list.update(self._make_col_dict_list('id'))
-        self['id_cluster'] = self['id_cluster'].astype(str)
+        Catalog._add_values(self, first_cols=[self.tags["id_cluster"]], **columns)
+        self.id_dict_list.update(self._make_col_dict_list("id"))
+        self["id_cluster"] = self["id_cluster"].astype(str)
 
     def __getitem__(self, item):
-        kwargs = {'name':self.name, 'labels': self.labels}
+        kwargs = {"name": self.name, "labels": self.labels}
         # Get sub cols
         if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
             item_nl = NameList(item)
             # also pass main and mt cols
-            main_cols = filter(lambda c: self.tags[c] not in item_nl, ['id', 'id_cluster'])
-            mt_cols = filter(lambda c: c[:3]=='mt_' and c not in item_nl, self.data.colnames)
-            kwargs['item'] = [*item, *main_cols, *mt_cols]
+            main_cols = filter(lambda c: self.tags[c] not in item_nl, ["id", "id_cluster"])
+            mt_cols = filter(lambda c: c[:3] == "mt_" and c not in item_nl, self.data.colnames)
+            kwargs["item"] = [*item, *main_cols, *mt_cols]
         else:
-            kwargs['item'] = item
+            kwargs["item"] = item
         return self._getitem_base(DataType=MemCatalog, **kwargs)

@@ -97,7 +97,7 @@ def redshift(cat1, cat2, matching_type, **kwargs):
                 * `fit`: fitted data
                 * `errorbar`: binned data
     """
-    return catalog_funcs.plot(cat1, cat2, matching_type, col='z', **kwargs)
+    return catalog_funcs.plot(cat1, cat2, matching_type, col="z", **kwargs)
 
 
 def redshift_density(cat1, cat2, matching_type, **kwargs):
@@ -156,7 +156,7 @@ def redshift_density(cat1, cat2, matching_type, **kwargs):
             * `plots` (optional): fit and binning plots \
             (see `scaling.redshift` for more info).
     """
-    return catalog_funcs.plot_density(cat1, cat2, matching_type, col='z', **kwargs)
+    return catalog_funcs.plot_density(cat1, cat2, matching_type, col="z", **kwargs)
 
 
 def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs):
@@ -209,8 +209,16 @@ def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **
             * `plots` (optional): fit and binning plots \
             (see `scaling.redshift` for more info).
     """
-    return catalog_funcs.plot(cat1, cat2, matching_type, col='z', col_color='mass',
-            color1=color1, color_log=log_mass, **kwargs)
+    return catalog_funcs.plot(
+        cat1,
+        cat2,
+        matching_type,
+        col="z",
+        col_color="mass",
+        color1=color1,
+        color_log=log_mass,
+        **kwargs,
+    )
 
 
 def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **kwargs):
@@ -273,10 +281,17 @@ def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **
             * `plots` (optional): fit and binning plots \
             (see `scaling.redshift` for more info).
     """
-    kwargs['label_fmt'] = kwargs.get('label_fmt', '.1f')
-    return catalog_funcs.plot_panel(cat1, cat2, matching_type, col='z',
-            col_panel='mass', bins_panel=mass_bins, log_panel=log_mass,
-            **kwargs)
+    kwargs["label_fmt"] = kwargs.get("label_fmt", ".1f")
+    return catalog_funcs.plot_panel(
+        cat1,
+        cat2,
+        matching_type,
+        col="z",
+        col_panel="mass",
+        bins_panel=mass_bins,
+        log_panel=log_mass,
+        **kwargs,
+    )
 
 
 def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **kwargs):
@@ -352,10 +367,17 @@ def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=
             * `plots` (optional): fit and binning plots \
             (see `scaling.redshift` for more info).
     """
-    kwargs['label_fmt'] = kwargs.get('label_fmt', '.1f')
-    return catalog_funcs.plot_density_panel(cat1, cat2, matching_type, col='z',
-            col_panel='mass', bins_panel=mass_bins, log_panel=log_mass,
-            **kwargs)
+    kwargs["label_fmt"] = kwargs.get("label_fmt", ".1f")
+    return catalog_funcs.plot_density_panel(
+        cat1,
+        cat2,
+        matching_type,
+        col="z",
+        col_panel="mass",
+        bins_panel=mass_bins,
+        log_panel=log_mass,
+        **kwargs,
+    )
 
 
 def redshift_metrics(cat1, cat2, matching_type, **kwargs):
@@ -415,11 +437,12 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    kwargs['mode'] = kwargs.get('mode', 'diff_z')
-    kwargs['metrics_kwargs'] = deep_update(
-        {'std':{'label': '$\sigma_z$'}, 'mean':{'label': '$bias_z$'}},
-        kwargs.get('metrics_kwargs', {}))
-    return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='z', **kwargs)
+    kwargs["mode"] = kwargs.get("mode", "diff_z")
+    kwargs["metrics_kwargs"] = deep_update(
+        {"std": {"label": "$\sigma_z$"}, "mean": {"label": "$bias_z$"}},
+        kwargs.get("metrics_kwargs", {}),
+    )
+    return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col="z", **kwargs)
 
 
 def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
@@ -500,20 +523,30 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
     """
-    kwargs['metrics'] = kwargs.get('metrics', ['std.fill', 'mean'])
-    kwargs['metrics_mode'] = kwargs.get('metrics_mode', 'diff_z')
-    kwargs['metrics_kwargs'] = deep_update(
+    kwargs["metrics"] = kwargs.get("metrics", ["std.fill", "mean"])
+    kwargs["metrics_mode"] = kwargs.get("metrics_mode", "diff_z")
+    kwargs["metrics_kwargs"] = deep_update(
         {
-            'std.fill': {'label':'$\sigma_z$'},
-            'std': {'label':'$\sigma_z$'},
-            'mean': {'label':'$bias_z$'},
+            "std.fill": {"label": "$\sigma_z$"},
+            "std": {"label": "$\sigma_z$"},
+            "mean": {"label": "$bias_z$"},
         },
-        kwargs.get('metrics_kwargs', {}))
-    return catalog_funcs.plot_density_metrics(cat1, cat2, matching_type, col='z', **kwargs)
+        kwargs.get("metrics_kwargs", {}),
+    )
+    return catalog_funcs.plot_density_metrics(cat1, cat2, matching_type, col="z", **kwargs)
 
 
-def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
-              log_mass=True, transpose=False, **kwargs):
+def redshift_dist(
+    cat1,
+    cat2,
+    matching_type,
+    redshift_bins_dist=30,
+    redshift_bins=5,
+    mass_bins=5,
+    log_mass=True,
+    transpose=False,
+    **kwargs,
+):
     """
     Plot distribution of a cat1 redshift, binned by the cat2 redshift (in panels),
     with option for cat2 mass bins (in lines).
@@ -568,20 +601,29 @@ def redshift_dist(cat1, cat2, matching_type, redshift_bins_dist=30, redshift_bin
     kwargs_ = updated_dict(
         kwargs,
         {
-            'col': 'z',
-            'col_aux': 'mass',
-            'bins1': redshift_bins_dist,
-            'bins2': redshift_bins,
-            'bins_aux': mass_bins,
-            'log_vals': False,
-            'log_aux': log_mass,
-            'transpose': transpose,
-            })
+            "col": "z",
+            "col_aux": "mass",
+            "bins1": redshift_bins_dist,
+            "bins2": redshift_bins,
+            "bins_aux": mass_bins,
+            "log_vals": False,
+            "log_aux": log_mass,
+            "transpose": transpose,
+        },
+    )
     return catalog_funcs.plot_dist(cat1, cat2, matching_type, **kwargs_)
 
 
-def redshift_dist_self(cat, redshift_bins_dist=30, redshift_bins=5, mass_bins=5, log_mass=True,
-                       transpose=False, mask=None, **kwargs):
+def redshift_dist_self(
+    cat,
+    redshift_bins_dist=30,
+    redshift_bins=5,
+    mass_bins=5,
+    log_mass=True,
+    transpose=False,
+    mask=None,
+    **kwargs,
+):
     """
     Plot distribution of a cat redshift, binned by redshift (in panels),
     with option for mass bins (in lines).
@@ -637,16 +679,17 @@ def redshift_dist_self(cat, redshift_bins_dist=30, redshift_bins=5, mass_bins=5,
     kwargs_ = updated_dict(
         kwargs,
         {
-        'col': 'z',
-        'col_aux': 'mass',
-        'bins1': redshift_bins_dist,
-        'bins2': redshift_bins,
-        'bins_aux': mass_bins,
-        'log_vals': False,
-        'log_aux': log_mass,
-        'transpose': transpose,
-        'mask': mask,
-    })
+            "col": "z",
+            "col_aux": "mass",
+            "bins1": redshift_bins_dist,
+            "bins2": redshift_bins,
+            "bins_aux": mass_bins,
+            "log_vals": False,
+            "log_aux": log_mass,
+            "transpose": transpose,
+            "mask": mask,
+        },
+    )
     return catalog_funcs.plot_dist_self(cat, **kwargs_)
 
 
@@ -714,7 +757,8 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
             * `plots` (optional): fit and binning plots \
             (see `scaling.redshift` for more info).
     """
-    return catalog_funcs.plot_density_dist(cat1, cat2, matching_type, col='z', **kwargs)
+    return catalog_funcs.plot_density_dist(cat1, cat2, matching_type, col="z", **kwargs)
+
 
 ############################################################################################
 ### Mass Plots #############################################################################
@@ -811,11 +855,16 @@ def mass(cat1, cat2, matching_type, log_mass=True, **kwargs):
                 * `fit`: fitted data
                 * `errorbar`: binned data
     """
-    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
-    return catalog_funcs.plot(cat1, cat2, matching_type, col='mass',
-                              xscale='log' if log_mass else 'linear',
-                              yscale='log' if log_mass else 'linear',
-                              **kwargs)
+    kwargs["fit_log"] = kwargs.get("fit_log", log_mass)
+    return catalog_funcs.plot(
+        cat1,
+        cat2,
+        matching_type,
+        col="mass",
+        xscale="log" if log_mass else "linear",
+        yscale="log" if log_mass else "linear",
+        **kwargs,
+    )
 
 
 def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs):
@@ -869,11 +918,18 @@ def mass_zcolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs)
             * `plots` (optional): fit and binning plots \
             (see `scaling.mass` for more info).
     """
-    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
-    return catalog_funcs.plot(cat1, cat2, matching_type, col='mass', col_color='z',
-                              xscale='log' if log_mass else 'linear',
-                              yscale='log' if log_mass else 'linear',
-                              color1=color1, **kwargs)
+    kwargs["fit_log"] = kwargs.get("fit_log", log_mass)
+    return catalog_funcs.plot(
+        cat1,
+        cat2,
+        matching_type,
+        col="mass",
+        col_color="z",
+        xscale="log" if log_mass else "linear",
+        yscale="log" if log_mass else "linear",
+        color1=color1,
+        **kwargs,
+    )
 
 
 def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
@@ -930,11 +986,16 @@ def mass_density(cat1, cat2, matching_type, log_mass=True, **kwargs):
             * `plots` (optional): fit and binning plots \
             (see `scaling.mass` for more info).
     """
-    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
-    return catalog_funcs.plot_density(cat1, cat2, matching_type, col='mass',
-                                      xscale='log' if log_mass else 'linear',
-                                      yscale='log' if log_mass else 'linear',
-                                      **kwargs)
+    kwargs["fit_log"] = kwargs.get("fit_log", log_mass)
+    return catalog_funcs.plot_density(
+        cat1,
+        cat2,
+        matching_type,
+        col="mass",
+        xscale="log" if log_mass else "linear",
+        yscale="log" if log_mass else "linear",
+        **kwargs,
+    )
 
 
 def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwargs):
@@ -997,14 +1058,21 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
             * `plots` (optional): fit and binning plots \
             (see `scaling.mass` for more info).
     """
-    kwargs['label_format'] = kwargs.get('label_format',
-        lambda v: f'%{kwargs.pop("label_fmt", ".2f")}'%v)
-    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
-    return catalog_funcs.plot_panel(cat1, cat2, matching_type, col='mass',
-                                    col_panel='z', bins_panel=redshift_bins,
-                                    xscale='log' if log_mass else 'linear',
-                                    yscale='log' if log_mass else 'linear',
-                                    **kwargs)
+    kwargs["label_format"] = kwargs.get(
+        "label_format", lambda v: f'%{kwargs.pop("label_fmt", ".2f")}' % v
+    )
+    kwargs["fit_log"] = kwargs.get("fit_log", log_mass)
+    return catalog_funcs.plot_panel(
+        cat1,
+        cat2,
+        matching_type,
+        col="mass",
+        col_panel="z",
+        bins_panel=redshift_bins,
+        xscale="log" if log_mass else "linear",
+        yscale="log" if log_mass else "linear",
+        **kwargs,
+    )
 
 
 def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwargs):
@@ -1080,12 +1148,18 @@ def mass_density_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=Tru
             * `plots` (optional): fit and binning plots \
             (see `scaling.mass` for more info).
     """
-    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
-    return catalog_funcs.plot_density_panel(cat1, cat2, matching_type, col='mass',
-                                            col_panel='z', bins_panel=redshift_bins,
-                                            xscale='log' if log_mass else 'linear',
-                                            yscale='log' if log_mass else 'linear',
-                                            **kwargs)
+    kwargs["fit_log"] = kwargs.get("fit_log", log_mass)
+    return catalog_funcs.plot_density_panel(
+        cat1,
+        cat2,
+        matching_type,
+        col="mass",
+        col_panel="z",
+        bins_panel=redshift_bins,
+        xscale="log" if log_mass else "linear",
+        yscale="log" if log_mass else "linear",
+        **kwargs,
+    )
 
 
 def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
@@ -1148,15 +1222,20 @@ def mass_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    kwargs['mode'] = kwargs.get('mode', 'log')
-    kwargs['metrics'] = kwargs.get('metrics', ['std'])
-    kwargs['metrics_kwargs'] = deep_update(
-        {'std':{'label': r'$\sigma_{\log(M)}$'}},
-        kwargs.get('metrics_kwargs', {}))
-    return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col='mass',
-                                      xscale='log' if log_mass else 'linear',
-                                      yscale='log' if log_mass else 'linear',
-                                      **kwargs)
+    kwargs["mode"] = kwargs.get("mode", "log")
+    kwargs["metrics"] = kwargs.get("metrics", ["std"])
+    kwargs["metrics_kwargs"] = deep_update(
+        {"std": {"label": r"$\sigma_{\log(M)}$"}}, kwargs.get("metrics_kwargs", {})
+    )
+    return catalog_funcs.plot_metrics(
+        cat1,
+        cat2,
+        matching_type,
+        col="mass",
+        xscale="log" if log_mass else "linear",
+        yscale="log" if log_mass else "linear",
+        **kwargs,
+    )
 
 
 def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
@@ -1235,20 +1314,34 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
     """
-    kwargs['metrics_mode'] = kwargs.get('mode', 'log')
-    kwargs['metrics'] = kwargs.get('metrics', ['std'])
-    kwargs['metrics_kwargs'] = deep_update(
-        {'std':{'label': r'$\sigma_{\log(M)}$'}},
-        kwargs.get('metrics_kwargs', {}))
-    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
-    return catalog_funcs.plot_density_metrics(cat1, cat2, matching_type, col='mass',
-                                              xscale='log' if log_mass else 'linear',
-                                              yscale='log' if log_mass else 'linear',
-                                              **kwargs)
+    kwargs["metrics_mode"] = kwargs.get("mode", "log")
+    kwargs["metrics"] = kwargs.get("metrics", ["std"])
+    kwargs["metrics_kwargs"] = deep_update(
+        {"std": {"label": r"$\sigma_{\log(M)}$"}}, kwargs.get("metrics_kwargs", {})
+    )
+    kwargs["fit_log"] = kwargs.get("fit_log", log_mass)
+    return catalog_funcs.plot_density_metrics(
+        cat1,
+        cat2,
+        matching_type,
+        col="mass",
+        xscale="log" if log_mass else "linear",
+        yscale="log" if log_mass else "linear",
+        **kwargs,
+    )
 
 
-def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
-              log_mass=True, transpose=False, **kwargs):
+def mass_dist(
+    cat1,
+    cat2,
+    matching_type,
+    mass_bins_dist=30,
+    mass_bins=5,
+    redshift_bins=5,
+    log_mass=True,
+    transpose=False,
+    **kwargs,
+):
     """
     Plot distribution of a cat1 mass, binned by the cat2 mass (in panels),
     with option for cat2 redshift bins (in lines).
@@ -1303,20 +1396,29 @@ def mass_dist(cat1, cat2, matching_type, mass_bins_dist=30, mass_bins=5, redshif
     kwargs_ = updated_dict(
         kwargs,
         {
-        'col': 'mass',
-        'col_aux': 'z',
-        'bins1': mass_bins_dist,
-        'bins2': mass_bins,
-        'bins_aux': redshift_bins,
-        'log_vals': log_mass,
-        'log_aux': False,
-        'transpose': transpose,
-    })
+            "col": "mass",
+            "col_aux": "z",
+            "bins1": mass_bins_dist,
+            "bins2": mass_bins,
+            "bins_aux": redshift_bins,
+            "log_vals": log_mass,
+            "log_aux": False,
+            "transpose": transpose,
+        },
+    )
     return catalog_funcs.plot_dist(cat1, cat2, matching_type, **kwargs_)
 
 
-def mass_dist_self(cat, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
-                   log_mass=True, transpose=False, mask=None, **kwargs):
+def mass_dist_self(
+    cat,
+    mass_bins_dist=30,
+    mass_bins=5,
+    redshift_bins=5,
+    log_mass=True,
+    transpose=False,
+    mask=None,
+    **kwargs,
+):
     """
     Plot distribution of a cat mass, binned by mass (in panels),
     with option for redshift bins (in lines).
@@ -1372,16 +1474,17 @@ def mass_dist_self(cat, mass_bins_dist=30, mass_bins=5, redshift_bins=5,
     kwargs_ = updated_dict(
         kwargs,
         {
-        'col': 'mass',
-        'col_aux': 'z',
-        'bins1': mass_bins_dist,
-        'bins2': mass_bins,
-        'bins_aux': redshift_bins,
-        'log_vals': log_mass,
-        'log_aux': False,
-        'transpose': transpose,
-        'mask': mask,
-    })
+            "col": "mass",
+            "col_aux": "z",
+            "bins1": mass_bins_dist,
+            "bins2": mass_bins,
+            "bins_aux": redshift_bins,
+            "log_vals": log_mass,
+            "log_aux": False,
+            "transpose": transpose,
+            "mask": mask,
+        },
+    )
     return catalog_funcs.plot_dist_self(cat, **kwargs_)
 
 
@@ -1446,8 +1549,8 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
             * `plots` (optional): fit and binning plots \
             (see `scaling.mass` for more info).
     """
-    kwargs['fit_log'] = kwargs.get('fit_log', True)
-    kwargs['xscale'] = 'log' if log_mass else 'linear'
-    kwargs['yscale'] = 'log' if log_mass else 'linear'
-    kwargs['fit_log'] = kwargs.get('fit_log', log_mass)
-    return catalog_funcs.plot_density_dist(cat1, cat2, matching_type, col='mass', **kwargs)
+    kwargs["fit_log"] = kwargs.get("fit_log", True)
+    kwargs["xscale"] = "log" if log_mass else "linear"
+    kwargs["yscale"] = "log" if log_mass else "linear"
+    kwargs["fit_log"] = kwargs.get("fit_log", log_mass)
+    return catalog_funcs.plot_density_dist(cat1, cat2, matching_type, col="mass", **kwargs)
