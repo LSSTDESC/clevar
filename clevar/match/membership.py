@@ -366,7 +366,7 @@ class MembershipMatch(Match):
         if match_config.get("match_members", True) and not load_mt_member:
             self.match_members(cat1.members, cat2.members, **match_config["match_members_kwargs"])
         if match_config.get("match_members_save", False) and not load_mt_member:
-            self.save_matched_members(match_config["match_members_file"], overwrite=True)
+            self.save_matched_members(match_config["match_members_file"])
         if load_mt_member:
             self.load_matched_members(match_config["match_members_file"])
 
