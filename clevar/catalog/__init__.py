@@ -8,7 +8,7 @@ from astropy.table import Table as APtable
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 
-from .utils import (
+from ..utils import (
     veclen,
     none_val,
     NameList,
@@ -19,7 +19,7 @@ from .utils import (
     pack_mmt_col,
     unpack_mmt_col,
 )
-from .version import __version__
+from ..version import __version__
 
 
 class ClData(APtable):
@@ -514,7 +514,6 @@ class Catalog(TagData):
             **kwargs,
         )
         self.labels.update(none_val(labels, {}))
-        self.radius_unit = None
 
     def __str__(self):
         return f"{self.name}:\n{self.data.__str__()}"
