@@ -38,6 +38,7 @@ class ClData(APtable):
 
     @property
     def namedict(self):
+        """Case independent dictionary with column names"""
         return self.__namedict
 
     def __init__(self, *args, **kwargs):
@@ -60,13 +61,13 @@ class ClData(APtable):
             return super().__getitem__(self.namedict.get(item, item))
 
         # get one row
-        elif isinstance(item, (int, np.int64)):
+        if isinstance(item, (int, np.int64)):
             out = super().__getitem__(item)
             out.namedict = self.namedict
             return out
 
         # Get sub cols
-        elif isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
+        if isinstance(item, (tuple, list)) and all(isinstance(x, str) for x in item):
             item_ = NameList(map(lambda i: self.namedict[i], item))
 
         # Get sub rows
@@ -99,7 +100,8 @@ class ClData(APtable):
         return APtable._repr_html_(self[[c for c in self.colnames if c != "SkyCoord"]])
 
     @classmethod
-    def read(self, *args, **kwargs):
+    def read(cls, *args, **kwargs):
+        """Read data"""
         return ClData(APtable.read(*args, **kwargs))
 
     def _check_cols(self, columns):
@@ -137,22 +139,27 @@ class TagData:
 
     @property
     def tags(self):
+        """Tags of catalog"""
         return self.__tags
 
     @property
     def data(self):
+        """Internal data"""
         return self.__data
 
     @property
     def size(self):
+        """Number of rows"""
         return len(self.data)
 
     @property
     def default_tags(self):
+        """Innate tags"""
         return self.__default_tags
 
     @property
     def colnames(self):
+        """Case independent column names"""
         return NameList(self.data.colnames)
 
     def __init__(self, tags=None, default_tags=None, **kwargs):
@@ -180,6 +187,7 @@ class TagData:
 
     def _getitem_base(self, item, DataType, **kwargs):
         """Base function to also be used by child classes"""
+        # pylint: disable=invalid-name
 
         # Get one row/col
         if isinstance(item, (str, int, np.int64)):
@@ -215,6 +223,7 @@ class TagData:
         return ", ".join([f"{v}({k})" for k, v in self.tags.items()])
 
     def _prt_table_tags(self, table):
+        # pylint: disable=protected-access
         tags_inv = {v: f" ({k})" for k, v in self.tags.items() if k != v}
         table_list = table._repr_html_().split("<tr>")
         new_header = "</th>".join(
@@ -240,12 +249,11 @@ class TagData:
             data = ClData(columns["data"])
         else:
             # Check all columns have same size
-            names = [n for n in columns]
             sizes = [len(v) for v in columns.values()]
             if any(sizes[0] != s for s in sizes):
                 raise ValueError(
-                    f"Column sizes inconsistent:\n"
-                    + "\n".join([f"{' '*12}{k:10}: {l:,}" for k, l in zip(names, sizes)])
+                    "Column sizes inconsistent:\n"
+                    + "\n".join([f"{' '*12}{k:10}: {l:,}" for k, l in zip(columns, sizes)])
                 )
             data = ClData(columns)
 
@@ -338,6 +346,7 @@ class TagData:
         """
         Return the column for key if key is in the dictionary, else default
         """
+        # pylint: disable=arguments-out-of-order
         key_ = self.tags.get(key, key)
         return ClData.get(self.data, key_, default)
 
@@ -362,7 +371,7 @@ class TagData:
         out.write(filename, overwrite=overwrite)
 
     @classmethod
-    def read(self, filename, tags=None, full=False):
+    def read(cls, filename, tags=None, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -374,6 +383,7 @@ class TagData:
         full: bool
             Reads all columns of the catalog
         """
+        # pylint: disable=protected-access
         data = ClData.read(filename)
         if not full:
             if tags is None:
@@ -382,10 +392,10 @@ class TagData:
                 raise ValueError("tags must be dict.")
             data._check_cols(tags.values())
             data = data[list(tags.values())]
-        return self(data=data, tags=tags)
+        return cls(data=data, tags=tags)
 
     @classmethod
-    def read_full(self, filename):
+    def read_full(cls, filename):
         """Read fits file catalog saved by clevar with all information.
         The catalog must contain name information.
 
@@ -399,9 +409,10 @@ class TagData:
         kwargs = {
             "tags": LowerCaseDict({k[4:]: v for k, v in data.meta.items() if k[:4] == "TAG_"}),
         }
-        return self(data=data, **kwargs)
+        return cls(data=data, **kwargs)
 
 
+# pylint: disable=singleton-comparison
 _matching_mask_funcs = {
     "cross": lambda match: match["mt_cross"] != None,
     "self": lambda match: match["mt_self"] != None,
@@ -438,23 +449,32 @@ class Catalog(TagData):
 
     @property
     def id_dict(self):
+        """Dictionary pointing to row number by object id"""
         return self.__id_dict
 
     @property
     def mt_hist(self):
+        """Recorded steps of matching"""
         return self.__mt_hist
 
     def show_mt_hist(self, line_max_size=100):
+        """Prints full matching history
+
+        Parameters
+        ----------
+        line_max_size : int
+            Maximum line width in print.
+        """
         steps = []
         for step in self.mt_hist:
             lines = [f'{step["func"]}(']
             len_func = len(lines[0])
             pref = ""
-            for k, v in filter(lambda x: x[0] != "func", step.items()):
-                arg = f"{k}='{v}'" if isinstance(v, str) else f"{k}={v}"
-                if k == "cats":
-                    c1, c2 = v.split(", ")
-                    arg = f"cat1='{c1}', cat2='{c2}'"
+            for key, value in filter(lambda x: x[0] != "func", step.items()):
+                arg = f"{key}='{value}'" if isinstance(value, str) else f"{key}={value}"
+                if key == "cats":
+                    cat1, cat2 = value.split(", ")
+                    arg = f"cat1='{cat1}', cat2='{cat2}'"
                 if len(lines[-1] + f", {arg}") > line_max_size:
                     lines[-1] += ","
                     lines.append(" " * len_func + arg)
@@ -494,6 +514,7 @@ class Catalog(TagData):
             **kwargs,
         )
         self.labels.update(none_val(labels, {}))
+        self.radius_unit = None
 
     def __str__(self):
         return f"{self.name}:\n{self.data.__str__()}"
@@ -536,12 +557,13 @@ class Catalog(TagData):
 
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
+        # pylint: disable=arguments-differ
         TagData._add_values(self, must_have_id=True, **columns)
         self._add_skycoord()
         self.id_dict.update(self._make_col_dict("id"))
 
     def _add_skycoord(self):
-        if ("ra" in self.tags and "dec" in self.tags) and not "SkyCoord" in self.data.colnames:
+        if ("ra" in self.tags and "dec" in self.tags) and "SkyCoord" not in self.data.colnames:
             self["SkyCoord"] = SkyCoord(self["ra"] * u.deg, self["dec"] * u.deg, frame="icrs")
 
     def _init_match_vals(self, overwrite=False):
@@ -601,6 +623,19 @@ class Catalog(TagData):
         self["mt_cross"][cross_mask] = self["mt_self"][cross_mask]
 
     def get_matching_mask(self, matching_type):
+        """Get mask to keep matched objects only.
+
+        Parameters
+        ----------
+        matching_type : str
+            Type of matching to be considered, options are: cross, self, other, multi_self,
+            multi_other, multi_join.
+
+        Returns
+        -------
+        ndarray
+            Array of booleans to get catalog matched clusters
+        """
         if matching_type not in _matching_mask_funcs:
             raise ValueError(
                 f"matching_type ({matching_type}) must be in {list(_matching_mask_funcs.keys())}"
@@ -662,6 +697,7 @@ class Catalog(TagData):
         colname: str, None
             Name of coverfrac column.
         """
+        # pylint: disable=protected-access
         num = f"{aperture}"
         num = f"{aperture:.2f}" if len(num) > 6 else num
         zcol, rcol = self.tags["z"], self.tags["radius"]
@@ -710,11 +746,11 @@ class Catalog(TagData):
             out.meta.update({f"hierarch LABEL_{k}": v for k, v in self.labels.items()})
             out.meta.update({f"hierarch TAG_{k}": v for k, v in self.tags.items()})
             for i, mt_step in enumerate(self.mt_hist):
-                for k, v in mt_step.items():
-                    if k == "cosmo" and v is not None:
-                        for s in ("H0", "Omega_dm0", "Omega_b0", "Omega_k0", "="):
-                            v = v.replace(s, "")
-                    out.meta[f"hierarch MT.{i}.{k}"] = v if v is not None else "None"
+                for key, value in mt_step.items():
+                    if key == "cosmo" and value is not None:
+                        for string in ("H0", "Omega_dm0", "Omega_b0", "Omega_k0", "="):
+                            value = value.replace(string, "")
+                    out.meta[f"hierarch MT.{i}.{key}"] = value if value is not None else "None"
         for col in self.data.colnames:
             if col in ("mt_self", "mt_other", "mt_cross"):
                 out[col] = pack_mt_col(self[col])
@@ -727,7 +763,7 @@ class Catalog(TagData):
         out.write(filename, overwrite=overwrite)
 
     @classmethod
-    def _read(self, data, **kwargs):
+    def _read(cls, data, **kwargs):
         """Does the main execution for reading catalog.
 
         Parameters
@@ -744,7 +780,7 @@ class Catalog(TagData):
         # out data
         mt_cols = NameList(("mt_self", "mt_other", "mt_cross", "mt_multi_self", "mt_multi_other"))
         non_mt_cols = [c for c in data.colnames if c not in mt_cols]
-        out = self(data=data[non_mt_cols], **kwargs)
+        out = cls(data=data[non_mt_cols], **kwargs)
         # matching cols
         for colname in filter(lambda c: c in mt_cols, data.colnames):
             if colname in NameList(("mt_self", "mt_other", "mt_cross")):
@@ -754,7 +790,7 @@ class Catalog(TagData):
         return out
 
     @classmethod
-    def read(self, filename, name, tags=None, labels=None, full=False):
+    def read(cls, filename, name, tags=None, labels=None, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -770,6 +806,8 @@ class Catalog(TagData):
         full: bool
             Reads all columns of the catalog
         """
+        # pylint: disable=protected-access
+        # pylint: disable=arguments-renamed
         data = ClData.read(filename)
         if not full:
             if tags is None:
@@ -778,10 +816,10 @@ class Catalog(TagData):
                 raise ValueError("tags must be dict.")
             data._check_cols(tags.values())
             data = data[list(tags.values())]
-        return self._read(data, name=name, labels=labels, tags=tags)
+        return cls._read(data, name=name, labels=labels, tags=tags)
 
     @classmethod
-    def read_full(self, filename):
+    def read_full(cls, filename):
         """Read fits file catalog saved by clevar with all information.
         The catalog must contain name information.
 
@@ -803,8 +841,8 @@ class Catalog(TagData):
         )
         # read mt_hist vals
         kwargs["mt_hist"] = []
-        for k, value in filter(lambda kv: kv[0][:3] == "MT.", data.meta.items()):
-            ind_, key = k.split(".")[1:]
+        for step_key, value in filter(lambda kv: kv[0][:3] == "MT.", data.meta.items()):
+            ind_, key = step_key.split(".")[1:]
             ind = int(ind_)
             while len(kwargs["mt_hist"]) <= ind:
                 kwargs["mt_hist"].append({})
@@ -815,7 +853,7 @@ class Catalog(TagData):
                 value = ", ".join(value)
                 value = value.replace("(", "(H0=")
             kwargs["mt_hist"][ind][key] = value if value != "None" else None
-        return self._read(data, **kwargs)
+        return cls._read(data, **kwargs)
 
     def save_match(self, filename, overwrite=False):
         """
@@ -845,18 +883,19 @@ class Catalog(TagData):
         filename: str
             Name of file with matching results
         """
-        mt = self.read_full(filename)
-        for col in mt.data.colnames:
+        mt_data = self.read_full(filename)
+        for col in mt_data.data.colnames:
             if col != "id":
-                self[col] = mt[col]
-        if len(self.mt_hist) > 0 and self.mt_hist != mt.mt_hist:
+                self[col] = mt_data[col]
+        if len(self.mt_hist) > 0 and self.mt_hist != mt_data.mt_hist:
             warnings.warn(
                 "mt_hist of catalog will be overwritten from loaded file."
                 f"\n\nOriginal content:\n{self.mt_hist}"
-                f"\n\nLoaded content:\n{mt.mt_hist}"
+                f"\n\nLoaded content:\n{mt_data.mt_hist}"
             )
-        self._set_mt_hist(mt.mt_hist)
+        self._set_mt_hist(mt_data.mt_hist)
         self.cross_match()
+        # pylint: disable=singleton-comparison
         print(f" * Total objects:    {self.size:,}")
         print(f' * multiple (self):  {(veclen(self["mt_multi_self"])>0).sum():,}')
         print(f' * multiple (other): {(veclen(self["mt_multi_other"])>0).sum():,}')
@@ -1026,7 +1065,7 @@ class ClCatalog(Catalog):
         return out
 
     @classmethod
-    def read(self, filename, name, tags=None, labels=None, radius_unit=None, full=False):
+    def read(cls, filename, name, tags=None, labels=None, radius_unit=None, full=False):
         """Read catalog from fits file. If full=False, only columns in tags are read.
 
         Parameters
@@ -1044,6 +1083,8 @@ class ClCatalog(Catalog):
         full: bool
             Reads all columns of the catalog
         """
+        # pylint: disable=protected-access
+        # pylint: disable=arguments-renamed
         data = ClData.read(filename)
         if not full:
             if tags is None:
@@ -1052,7 +1093,7 @@ class ClCatalog(Catalog):
                 raise ValueError("tags must be dict.")
             data._check_cols(tags.values())
             data = data[list(tags.values())]
-        return self._read(data, name=name, labels=labels, tags=tags, radius_unit=radius_unit)
+        return cls._read(data, name=name, labels=labels, tags=tags, radius_unit=radius_unit)
 
     def add_members(
         self, members_consistency=True, members_warning=True, members_catalog=None, **kwargs
@@ -1172,6 +1213,7 @@ class MemCatalog(Catalog):
 
     @property
     def id_dict_list(self):
+        """Dictionary pointing to row numbers for each object id"""
         return self.__id_dict_list
 
     def __init__(self, name, tags=None, labels=None, **kwargs):
