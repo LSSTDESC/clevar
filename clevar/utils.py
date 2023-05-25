@@ -1,5 +1,7 @@
+"""General utility functions that are used in multiple modules"""
 import numpy as np
 from scipy.interpolate import interp1d
+import healpy as hp
 
 
 ########################################################################
@@ -15,8 +17,7 @@ class NameList(list):
     def __contains__(self, item):  # implements `in`
         if isinstance(item, str):
             return item.lower() in (n.lower() for n in self)
-        else:
-            return list.__contains__(self, item)
+        return list.__contains__(self, item)
 
 
 class LowerCaseDict(dict):
@@ -24,43 +25,45 @@ class LowerCaseDict(dict):
     Dictionary with lowercase keys
     """
 
+    # pylint: disable-msg=protected-access
+
     @classmethod
     def _k(cls, key):
         return key.lower() if isinstance(key, str) else key
 
     def __init__(self, *args, **kwargs):
-        super(LowerCaseDict, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._convert_keys()
 
     def __getitem__(self, key):
-        return super(LowerCaseDict, self).__getitem__(self.__class__._k(key))
+        return super().__getitem__(self.__class__._k(key))
 
     def __setitem__(self, key, value):
-        super(LowerCaseDict, self).__setitem__(self.__class__._k(key), value)
+        super().__setitem__(self.__class__._k(key), value)
 
     def __delitem__(self, key):
-        return super(LowerCaseDict, self).__delitem__(self.__class__._k(key))
+        return super().__delitem__(self.__class__._k(key))
 
     def __contains__(self, key):
-        return super(LowerCaseDict, self).__contains__(self.__class__._k(key))
+        return super().__contains__(self.__class__._k(key))
 
     def pop(self, key, *args, **kwargs):
-        return super(LowerCaseDict, self).pop(self.__class__._k(key), *args, **kwargs)
+        return super().pop(self.__class__._k(key), *args, **kwargs)
 
     def get(self, key, *args, **kwargs):
-        return super(LowerCaseDict, self).get(self.__class__._k(key), *args, **kwargs)
+        return super().get(self.__class__._k(key), *args, **kwargs)
 
     def setdefault(self, key, *args, **kwargs):
-        return super(LowerCaseDict, self).setdefault(self.__class__._k(key), *args, **kwargs)
+        return super().setdefault(self.__class__._k(key), *args, **kwargs)
 
-    def update(self, E={}, **F):
-        super(LowerCaseDict, self).update(self.__class__(E))
-        super(LowerCaseDict, self).update(self.__class__(**F))
+    def update(self, E=None, **F):
+        super().update(self.__class__({} if E is None else E))
+        super().update(self.__class__(**F))
 
     def _convert_keys(self):
-        for k in list(self.keys()):
-            v = super(LowerCaseDict, self).pop(k)
-            self.__setitem__(k, v)
+        for key in list(self.keys()):
+            value = super().pop(key)
+            self[key] = value
 
 
 ########################################################################
@@ -178,6 +181,7 @@ def str2dataunit(input_str, units_bank, err_msg=""):
     unit_bank: list
         Bank of units available.
     """
+    # pylint: disable-msg=bare-except
     for unit in units_bank:
         if unit.lower() in input_str.lower():
             try:
@@ -203,11 +207,11 @@ def deep_update(dict_base, dict_update):
     dict_base: dict
         Updated dictionary (the input dict is also updated)
     """
-    for k, v in dict_update.items():
-        if isinstance(v, dict) and k in dict_base:
-            deep_update(dict_base[k], v)
+    for key, value in dict_update.items():
+        if isinstance(value, dict) and key in dict_base:
+            deep_update(dict_base[key], value)
         else:
-            dict_base[k] = dict_update[k]
+            dict_base[key] = dict_update[key]
     return dict_base
 
 
@@ -233,23 +237,27 @@ def gaussian(value, mean, std):
 
 
 def pack_mt_col(col):
+    """Convert match column for saving catalog"""
     return list(map(lambda c: c if c else "", col))
 
 
 def pack_mmt_col(col):
+    """Convert multiple match column for saving catalog"""
     return list(map(lambda c: ",".join(c) if c else "", col))
 
 
 def unpack_mt_col(col):
+    """Convert match column from saved catalog"""
     out = np.array(np.array(col, dtype=str), dtype=np.ndarray)
     out[out == ""] = None
     return out
 
 
 def unpack_mmt_col(col):
+    """Convert multiple match column from saving catalog"""
     out = np.full(col.size, None)
-    for i, c in enumerate(np.array(col, dtype=str)):
-        out[i] = c.split(",") if len(c) > 0 else []
+    for i, value in enumerate(np.array(col, dtype=str)):
+        out[i] = value.split(",") if len(value) > 0 else []
     return out
 
 
@@ -258,16 +266,16 @@ def unpack_mmt_col(col):
 ########################################################################
 
 
-def smooth_loop(x, y, scheme=[1, 1]):
+def smooth_loop(xvalues, yvalues, scheme=(1, 1)):
     """Loop for smooth line using pixar's algorithm.
 
     Parameters
     ----------
-    x: array
+    xvalues: array
         x values.
-    y: array
+    yvalues: array
         y values.
-    scheme: list
+    scheme: tuple
         Scheme to be used for smoothening. Newton's binomial coefficients work better.
 
     Returns
@@ -281,12 +289,12 @@ def smooth_loop(x, y, scheme=[1, 1]):
     https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
     """
     # add midpoints
-    xmid = 0.5 * (x[:-1] + x[1:])
-    ymid = interp1d(x, y, kind="linear")(xmid)
-    xsmooth, ysmooth = np.zeros(len(x) + len(xmid)), np.zeros(len(y) + len(ymid))
-    xsmooth[::2] = x
+    xmid = 0.5 * (xvalues[:-1] + xvalues[1:])
+    ymid = interp1d(xvalues, yvalues, kind="linear")(xmid)
+    xsmooth, ysmooth = np.zeros(len(xvalues) + len(xmid)), np.zeros(len(yvalues) + len(ymid))
+    xsmooth[::2] = xvalues
     xsmooth[1::2] = xmid
-    ysmooth[::2] = y
+    ysmooth[::2] = yvalues
     ysmooth[1::2] = ymid
 
     # move
@@ -296,11 +304,11 @@ def smooth_loop(x, y, scheme=[1, 1]):
     xmid_new = np.zeros(xsmooth.size - ncrop)
     ymid_new = np.zeros(ysmooth.size - ncrop)
     i = 0
-    for w in scheme:
+    for weight in scheme:
         if i == len(scheme) / 2:
             i += 1
-        xmid_new += w * xsmooth[i : xsmooth.size - ncrop + i]
-        ymid_new += w * ysmooth[i : ysmooth.size - ncrop + i]
+        xmid_new += weight * xsmooth[i : xsmooth.size - ncrop + i]
+        ymid_new += weight * ysmooth[i : ysmooth.size - ncrop + i]
         i += 1
 
     xmid_new /= sum(scheme)
@@ -310,18 +318,18 @@ def smooth_loop(x, y, scheme=[1, 1]):
     return xsmooth, ysmooth
 
 
-def smooth_line(x, y, n_increase=10, scheme=[1, 2, 1]):
+def smooth_line(xvalues, yvalues, n_increase=10, scheme=(1, 2, 1)):
     """Make smooth line using pixar's algorithm.
 
     Parameters
     ----------
-    x: array
+    xvalues: array
         x values.
-    y: array
+    yvalues: array
         y values.
     n_increase: int
         Number of loops for the algorithm.
-    scheme: list
+    scheme: tuple
         Scheme to be used for smoothening. Newton's binomial coefficients work better.
 
     Returns
@@ -335,9 +343,9 @@ def smooth_line(x, y, n_increase=10, scheme=[1, 2, 1]):
     https://www.youtube.com/watch?v=mX0NB9IyYpU&ab_channel=Numberphile
     """
     if n_increase == 0:
-        return x, y
-    xsmooth, ysmooth = smooth_loop(x, y, scheme=scheme)
-    for i in range(1, n_increase):
+        return xvalues, yvalues
+    xsmooth, ysmooth = smooth_loop(xvalues, yvalues, scheme=scheme)
+    for _ in range(1, n_increase):
         xsmooth, ysmooth = smooth_loop(xsmooth, ysmooth, scheme=scheme)
     return xsmooth, ysmooth
 
@@ -345,9 +353,6 @@ def smooth_line(x, y, n_increase=10, scheme=[1, 2, 1]):
 ########################################################################
 ########## Monkeypatching healpy #######################################
 ########################################################################
-
-
-import healpy as hp
 
 
 def pix2map(nside, pixels, values, null):
