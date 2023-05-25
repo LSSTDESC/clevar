@@ -1,8 +1,6 @@
 """ Provide a consistent set of constants to use through clevar """
 from enum import Enum
 import numpy as np
-import astropy.constants as astropyconst
-import astropy.units as u
 
 
 class Constants(Enum):
