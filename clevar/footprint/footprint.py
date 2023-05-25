@@ -1,16 +1,25 @@
-#!/usr/bin/env python
+"""@file footprint.py
+Footprint class
+"""
 import warnings
 import numpy as np
+
+from astropy.coordinates import SkyCoord
+from astropy import units as u
 
 from ..catalog import ClData, TagData, ClCatalog
 from ..geometry import convert_units, angular_bank, physical_bank
 from ..utils import none_val, hp, updated_dict
-from astropy.coordinates import SkyCoord
-from astropy import units as u
 from .nfw_funcs import nfw2D_profile_flatcore_unnorm
 from ..match_metrics import plot_helper as ph
 from ..match_metrics.plot_helper import plt
 
+try:
+    import healsparse as hs
+
+    _HAS_HEALSPARSE = True
+except ImportError:
+    _HAS_HEALSPARSE = False
 
 class Footprint(TagData):
     """
@@ -37,14 +46,17 @@ class Footprint(TagData):
 
     @property
     def pixel_dict(self):
+        """Dictionary relating pixel value to row number."""
         return self.__pixel_dict
 
     @property
     def nside(self):
+        """NSIDE of footprint."""
         return self.data.meta["nside"]
 
     @property
     def nest(self):
+        """If footprint is nested."""
         return self.data.meta["nest"]
 
     @nside.setter
@@ -70,6 +82,7 @@ class Footprint(TagData):
         zmax_vals: array, None
             Zmax, if None is set to 99
         """
+        # pylint: disable=arguments-renamed
         self.__pixel_dict = {}
         tags = updated_dict({"pixel": "pixel"}, tags)
         if len(kwargs) > 0:
@@ -95,6 +108,7 @@ class Footprint(TagData):
         zmax: array
             Zmax. If None, value 99 is assigned.
         """
+        # pylint: disable=arguments-renamed
         if not isinstance(nside, int) or (nside & (nside - 1) != 0) or nside == 0:
             raise ValueError(f"nside (={nside}) must be a power of 2.")
         self.nside = nside
@@ -181,7 +195,7 @@ class Footprint(TagData):
         return z <= zmax_vals
 
     @classmethod
-    def _read(self, data, nside, tags, nest, full):
+    def _read(cls, data, nside, tags, nest, full):
         """
         Internal function for reading.
 
@@ -198,17 +212,18 @@ class Footprint(TagData):
         full: bool
             Reads all columns of the catalog
         """
+        # pylint: disable=protected-access
         if not full:
             if not isinstance(tags, dict):
                 raise ValueError(f"tags (={tags}) must be a dictionary.")
-            elif "pixel" not in tags:
+            if "pixel" not in tags:
                 raise ValueError(f"pixel must be a key in tags (={tags})")
             data._check_cols(tags.values())
             data = data[list(tags.values())]
-        return self(nside=nside, nest=nest, data=data, tags=tags)
+        return cls(nside=nside, nest=nest, data=data, tags=tags)
 
     @classmethod
-    def read(self, filename, nside, tags=None, nest=False, full=False):
+    def read(cls, filename, nside, tags=None, nest=False, full=False):
         """
         Loads fits file and convert to Footprint object
 
@@ -226,11 +241,12 @@ class Footprint(TagData):
         full: bool
             Reads all columns of the catalog
         """
+        # pylint: disable=arguments-renamed
         data = ClData.read(filename)
-        return self._read(data, nside, tags, nest, full)
+        return cls._read(data, nside, tags, nest, full)
 
     @classmethod
-    def read_healsparse(self, filename, tags=None, full=True):
+    def read_healsparse(cls, filename, tags=None, full=True):
         """
         Loads healsparse file and convert to Footprint object
 
@@ -244,7 +260,8 @@ class Footprint(TagData):
         full: bool
             Reads all columns of the catalog
         """
-        import healsparse as hs
+        if not _HAS_HEALSPARSE:
+            raise ImportError("pyccl library missing.")
 
         data = ClData()
         _tags = {"pixel": "pixel"}
@@ -258,7 +275,7 @@ class Footprint(TagData):
             data["detfrac"] = hsp_map[:][mask]
             if not full:
                 raise ValueError("full must be true for files with only one map!")
-            elif tags is not None:
+            if tags is not None:
                 raise ValueError("tags cannot be used for files with only one map!")
         else:
             mask = hsp_map[hsp_map.dtype.names[0]][:] != hp.UNSEEN
@@ -266,13 +283,14 @@ class Footprint(TagData):
             for name in hsp_map.dtype.names:
                 data[name] = hsp_map[name][:][mask]
         del hsp_map
-        return self._read(data, nside, _tags, nest=True, full=full)
+        return cls._read(data, nside, _tags, nest=True, full=full)
 
     def __repr__(self):
-        out = f"Footprint object with {len(self.data):,} pixels\n"
-        out += "zmax: [%g, %g]\n" % (self["zmax"].min(), self["zmax"].max())
-        out += "detfrac: [%g, %g]" % (self["detfrac"].min(), self["detfrac"].max())
-        return out
+        return (
+            f"Footprint object with {len(self.data):,} pixels\n"
+            f"zmax: [{self['zmax'].min():g}, {self['zmax'].max():g}"
+            f"detfrac: [{self['detfrac'].min():g}, {self['detfrac'].max():g}"
+        )
 
     def _repr_html_(self):
         return (
@@ -329,7 +347,7 @@ class Footprint(TagData):
         has_pix = cl_z <= zmax_vals
         if has_pix.all():
             return 1.0
-        elif (~has_pix).all():
+        if (~has_pix).all():
             return 0.0
         detfrac_vals = self.get_values_in_pixels("detfrac", pix_list, 0)
         values = detfrac_vals * np.array(cl_z <= zmax_vals, dtype=float)
@@ -366,6 +384,7 @@ class Footprint(TagData):
         -------
         float
         """
+        # pylint: disable=invalid-name
         cl_radius_mpc = convert_units(cl_radius, cl_radius_unit, "mpc", redshift=cl_z, cosmo=cosmo)
         return self._get_coverfrac(
             cl_sk,
@@ -481,6 +500,7 @@ class Footprint(TagData):
             The NFW 2D function was taken from section 3.1 of arXiv:1104.2089 and was
             validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).
         """
+        # pylint: disable=invalid-name
         return self._get_coverfrac_nfw2D(
             SkyCoord(cl_ra * u.deg, cl_dec * u.deg, frame="icrs"),
             cl_z,
