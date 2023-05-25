@@ -1,4 +1,6 @@
-# Cosmology object abstract superclass
+"""@file parent_class.py
+Cosmology object abstract superclass
+"""
 import numpy as np
 from ..constants import Constants as const
 
@@ -23,16 +25,15 @@ class Cosmology:
     def __getitem__(self, key):
         if isinstance(key, str):
             return self._get_param(key)
-        else:
-            raise TypeError(f"input must be str, not {type(key)}")
+        raise TypeError(f"input must be str, not {type(key)}")
 
-    def __setitem__(self, key, val):
+    def __setitem__(self, key, value):
         if isinstance(key, str):
-            self._set_param(key, val)
+            self._set_param(key, value)
         else:
             raise TypeError(f"key input must be str, not {type(key)}")
 
-    def _init_from_cosmo(self, cosmo):
+    def _init_from_cosmo(self, be_cosmo):
         """
         To be filled in child classes
         """
@@ -44,7 +45,7 @@ class Cosmology:
         """
         raise NotImplementedError
 
-    def _set_param(self, key, val):
+    def _set_param(self, key, value):
         """
         To be filled in child classes
         """
@@ -60,7 +61,9 @@ class Cosmology:
         """
         Returns the Cosmology description.
         """
-        return f"{type(self).__name__}(H0={self['H0']}, Omega_dm0={self['Omega_dm0']}, Omega_b0={self['Omega_b0']}, Omega_k0={self['Omega_k0']})"
+        return (
+            f"{type(self).__name__}(H0={self['H0']}, Omega_dm0={self['Omega_dm0']}, "
+            f"Omega_b0={self['Omega_b0']}, Omega_k0={self['Omega_k0']})")
 
     def set_be_cosmo(self, be_cosmo=None, H0=70.0, Omega_b0=0.05, Omega_dm0=0.25, Omega_k0=0.0):
         """Set the cosmology
@@ -169,7 +172,7 @@ class Cosmology:
         """
         z = np.array(z)
         if np.any(z < 0.0):
-            raise ValueError(f"Cannot convert negative redshift to scale factor")
+            raise ValueError("Cannot convert negative redshift to scale factor")
         return 1.0 / (1.0 + z)
 
     def _get_z_from_a(self, a):
@@ -185,7 +188,7 @@ class Cosmology:
         """
         a = np.array(a)
         if np.any(a > 1.0):
-            raise ValueError(f"Cannot convert invalid scale factor a > 1 to redshift")
+            raise ValueError("Cannot convert invalid scale factor a > 1 to redshift")
         return (1.0 / a) - 1.0
 
     def rad2mpc(self, dist1, redshift):

@@ -1,12 +1,8 @@
-# Functions to model halo profiles
-
-import numpy as np
-import warnings
-
+"""@file astropy.py
+Cosmology using AstroPy
+"""
 from astropy import units
 from astropy.cosmology import LambdaCDM, FlatLambdaCDM
-
-from ..constants import Constants as const
 
 from .parent_class import Cosmology
 
@@ -14,8 +10,18 @@ __all__ = []
 
 
 class AstroPyCosmology(Cosmology):
+    """
+    Cosmology object
+
+    Attributes
+    ----------
+    backend: str
+        Name of back-end used
+    be_cosmo: cosmology library
+        Cosmology library used in the back-end
+    """
     def __init__(self, **kwargs):
-        super(AstroPyCosmology, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         # this tag will be used to check if the cosmology object is accepted by the modeling
         self.backend = "astropy"
@@ -27,11 +33,19 @@ class AstroPyCosmology(Cosmology):
         self.be_cosmo = be_cosmo
 
     def _init_from_params(self, H0, Omega_b0, Omega_dm0, Omega_k0):
-        Om0 = Omega_b0 + Omega_dm0
-        Ob0 = Omega_b0
-        Ode0 = 1.0 - Om0 - Omega_k0
-
-        self.be_cosmo = LambdaCDM(H0=H0, Om0=Om0, Ob0=Ob0, Ode0=Ode0)
+        # pylint: disable=arguments-differ
+        kwargs = {
+            "H0": H0,
+            "Om0": Omega_b0 + Omega_dm0,
+            "Ob0": Omega_b0,
+            "Tcmb0": 2.7255,
+            "Neff": 3.046,
+            "m_nu": ([0.06, 0.0, 0.0] * units.eV),
+        }
+        self.be_cosmo = FlatLambdaCDM(**kwargs)
+        if Omega_k0 != 0.0:
+            kwargs["Ode0"] = self.be_cosmo.Ode0 - Omega_k0
+            self.be_cosmo = LambdaCDM(**kwargs)
 
     def _set_param(self, key, value):
         raise NotImplementedError("Astropy do not support changing parameters")
@@ -39,18 +53,17 @@ class AstroPyCosmology(Cosmology):
     def _get_param(self, key):
         if key == "Omega_m0":
             return self.be_cosmo.Om0
-        elif key == "Omega_b0":
+        if key == "Omega_b0":
             return self.be_cosmo.Ob0
-        elif key == "Omega_dm0":
+        if key == "Omega_dm0":
             return self.be_cosmo.Odm0
-        elif key == "Omega_k0":
+        if key == "Omega_k0":
             return self.be_cosmo.Ok0
-        elif key == "h":
+        if key == "h":
             return self.be_cosmo.H0.to_value() / 100.0
-        elif key == "H0":
+        if key == "H0":
             return self.be_cosmo.H0.to_value()
-        else:
-            raise ValueError(f"Unsupported parameter {key}")
+        raise ValueError(f"Unsupported parameter {key}")
 
     def get_Omega_m(self, z):
         return self.be_cosmo.Om(z)
