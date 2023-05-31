@@ -1,3 +1,6 @@
+"""@file proximity.py
+The ProximityMatch class
+"""
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as spline
 
@@ -8,6 +11,17 @@ from ..utils import veclen, str2dataunit
 
 
 class ProximityMatch(Match):
+    """
+    ProximityMatch Class
+
+    Attributes
+    ----------
+    type : str
+        Type of matching object. Set to "proximity"
+    history : list
+        Steps in the matching
+    """
+
     def __init__(self):
         Match.__init__(self)
         self.type = "Proximity"
@@ -27,16 +41,18 @@ class ProximityMatch(Match):
         radius_selection: str (optional)
             Case of radius to be used, can be: max, min, self, other.
         """
+        # pylint: disable=arguments-renamed
+        # pylint: disable=too-many-locals
         if cat1.mt_input is None:
             raise AttributeError("cat1.mt_input is None, run prep_cat_for_match first.")
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run prep_cat_for_match first.")
-        self.cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
+        self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         ra2, dec2, sk2 = (cat2[c] for c in ("ra", "dec", "SkyCoord"))
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ("ang", "zmin", "zmax"))
         ang2max = ang2.max()
         print(f"Finding candidates ({cat1.name})")
-        for i, (ra1, dec1, sk1, ang1, z1min, z1max) in enumerate(
+        for ind, (ra1, dec1, sk1, ang1, z1min, z1max) in enumerate(
             zip(
                 *(
                     [cat1[c] for c in ("ra", "dec", "SkyCoord")]
@@ -48,13 +64,13 @@ class ProximityMatch(Match):
             mask = (z2max >= z1min) * (z2min <= z1max)
             if mask.any():
                 # makes square crop with radius
-                Da = max(ang2max, ang1)
-                DaCos = Da / np.cos(np.radians(dec1))
+                dist0 = max(ang2max, ang1)
+                dist0_cos = dist0 / np.cos(np.radians(dec1))
                 mask *= (
-                    (ra2 >= ra1 - DaCos)
-                    * (ra2 < ra1 + DaCos)
-                    * (dec2 >= dec1 - Da)
-                    * (dec2 < dec1 + Da)
+                    (ra2 >= ra1 - dist0_cos)
+                    * (ra2 < ra1 + dist0_cos)
+                    * (dec2 >= dec1 - dist0)
+                    * (dec2 < dec1 + dist0)
                 )
                 if mask.any():
                     # makes circular crop
@@ -63,13 +79,13 @@ class ProximityMatch(Match):
                         ang1, ang2[mask], radius_selection=radius_selection
                     )
                     for id2 in cat2["id"][mask][dist <= max_dist]:
-                        cat1["mt_multi_self"][i].append(id2)
-                        i2 = int(cat2.id_dict[id2])
-                        cat2["mt_multi_other"][i2].append(cat1["id"][i])
-                        self.cat1_mmt[i] = True
+                        cat1["mt_multi_self"][ind].append(id2)
+                        ind2 = int(cat2.id_dict[id2])
+                        cat2["mt_multi_other"][ind2].append(cat1["id"][ind])
+                        self._cat1_mmt[ind] = True
             if verbose:
                 print(
-                    f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates",
+                    f"  {ind:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][ind]):,} candidates",
                     end="\r",
                 )
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
@@ -82,6 +98,7 @@ class ProximityMatch(Match):
                 "radius_selection": radius_selection,
             }
         )
+        # pylint: disable=protected-access
         cat1._set_mt_hist(self.history)
         cat2._set_mt_hist(self.history)
 
@@ -116,6 +133,7 @@ class ProximityMatch(Match):
         cosmo: clevar.Cosmology object
             Cosmology object for when radius has physical units
         """
+        # pylint: disable=arguments-differ
         print("## Prep mt_cols")
         cat.mt_input = ClData()
         # Set zmin, zmax
@@ -140,12 +158,12 @@ class ProximityMatch(Match):
         elif isinstance(delta_z, str):
             # zmin/zmax in auxiliar file
             print("* zmin|zmax from aux file")
-            k = 3
-            zv, zvmin, zvmax = np.loadtxt(delta_z)
-            zvmin = self._rescale_z(zv, zvmin, n_delta_z)
-            zvmax = self._rescale_z(zv, zvmax, n_delta_z)
-            cat.mt_input["zmin"] = spline(zv, zvmin, k=k)(cat["z"])
-            cat.mt_input["zmax"] = spline(zv, zvmax, k=k)(cat["z"])
+            order = 3
+            zval, zvmin, zvmax = np.loadtxt(delta_z)
+            zvmin = self._rescale_z(zval, zvmin, n_delta_z)
+            zvmax = self._rescale_z(zval, zvmax, n_delta_z)
+            cat.mt_input["zmin"] = spline(zval, zvmin, k=order)(cat["z"])
+            cat.mt_input["zmax"] = spline(zval, zvmax, k=order)(cat["z"])
         elif isinstance(delta_z, (int, float)):
             # zmin/zmax from sigma_z*(1+z)
             print("* zmin|zmax from config value")
@@ -162,7 +180,10 @@ class ProximityMatch(Match):
                 delta, mtyp = str2dataunit(
                     in_rad_unit[1:],
                     ["b", "c"],
-                    err_msg=f"Mass unit ({in_rad_unit}) must be in format 'm#b' (background) or 'm#c' (critical)",
+                    err_msg=(
+                        f"Mass unit ({in_rad_unit}) must be in format "
+                        "'m#b' (background) or 'm#c' (critical)"
+                    ),
                 )
                 in_rad = cosmo.eval_mass2radius(
                     in_rad, cat["z"], delta, mass_type={"b": "background", "c": "critical"}[mtyp]
@@ -192,8 +213,8 @@ class ProximityMatch(Match):
             }
         )
 
-    def _rescale_z(self, z, zlim, n):
-        """Rescale zmin/zmax by a factor n
+    def _rescale_z(self, z, zlim, n_rescale):
+        """Rescale zmin/zmax by a factor n_rescale
 
         Parameters
         ----------
@@ -201,7 +222,7 @@ class ProximityMatch(Match):
             Redshift value
         zlim: float, array
             Redshift limit
-        n: float
+        n_rescale: float
             Value to rescale zlim
 
         Returns
@@ -209,7 +230,7 @@ class ProximityMatch(Match):
         float, array
             Rescaled z limit
         """
-        return z + n * (zlim - z)
+        return z + n_rescale * (zlim - z)
 
     def _max_mt_distance(self, radius1, radius2, radius_selection):
         """Get maximum angular distance allowed for the matching
@@ -229,18 +250,18 @@ class ProximityMatch(Match):
             Maximum angular distance allowed for matching
         """
         if radius_selection == "self":
-            f1 = np.ones(radius1.size)
-            f2 = np.zeros(radius2.size)
+            coeff1 = np.ones(radius1.size)
+            coeff2 = np.zeros(radius2.size)
         elif radius_selection == "other":
-            f1 = np.zeros(radius1.size)
-            f2 = np.ones(radius2.size)
+            coeff1 = np.zeros(radius1.size)
+            coeff2 = np.ones(radius2.size)
         elif radius_selection == "max":
-            f1 = radius1 >= radius2
-            f2 = radius1 < radius2
+            coeff1 = radius1 >= radius2
+            coeff2 = radius1 < radius2
         elif radius_selection == "min":
-            f1 = radius1 < radius2
-            f2 = radius1 >= radius2
-        return f1 * radius1 + f2 * radius2
+            coeff1 = radius1 < radius2
+            coeff2 = radius1 >= radius2
+        return coeff1 * radius1 + coeff2 * radius2
 
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
@@ -278,21 +299,24 @@ class ProximityMatch(Match):
         verbose = match_config.get("verbose", True)
         if match_config["type"] in ("cat1", "cross"):
             print("\n## Multiple match (catalog 1)")
-            if match_config["which_radius"] == "cat1":
-                radius_selection = "self"
-            elif match_config["which_radius"] == "cat2":
-                radius_selection = "other"
-            else:
-                radius_selection = match_config["which_radius"]
+            radius_selection = {
+                "cat1": "self",
+                "cat2": "other",
+            }.get(
+                match_config["which_radius"],
+                match_config["which_radius"],
+            )
             self.multiple(cat1, cat2, radius_selection, verbose=verbose)
         if match_config["type"] in ("cat2", "cross"):
             print("\n## Multiple match (catalog 2)")
-            if match_config["which_radius"] == "cat1":
-                radius_selection = "other"
-            elif match_config["which_radius"] == "cat2":
-                radius_selection = "self"
-            else:
-                radius_selection = match_config["which_radius"]
+            radius_selection = {
+                "cat1": "other",
+                "cat2": "self",
+            }.get(
+                match_config["which_radius"],
+                match_config["which_radius"],
+            )
+            # pylint: disable=arguments-out-of-order
             self.multiple(cat2, cat1, radius_selection, verbose=verbose)
 
         if match_config["type"] in ("cat1", "cross"):

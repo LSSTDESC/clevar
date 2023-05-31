@@ -13,9 +13,10 @@ class Match:
     def __init__(self):
         self.type = None
         self.history = []
-        self.cat1_mt = None
+        self._cat1_mt = None
+        self._cat1_mmt = None
 
-    def prep_cat_for_match(self, cat):
+    def prep_cat_for_match(self, cat, *args):
         """
         Prepare the catalog for matching, will fill the cat.mt_input object.
         Each method must implement its specifics preparations.
@@ -56,7 +57,7 @@ class Match:
             Parameter for `preference='shared_member_fraction'`.
             Minimum share fraction to consider in matches (default=0).
         """
-        self.cat1_mt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
+        self._cat1_mt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         if "mass" in cat1.tags:
             i_vals = np.argsort(cat1["mass"])[::-1]
         else:
@@ -84,8 +85,8 @@ class Match:
         print(f"Unique Matches ({cat1.name})")
         for ind in i_vals:
             if cat1["mt_self"][ind] is None:
-                self.cat1_mt[ind] = set_unique(cat1, ind, cat2)
-        self.cat1_mt *= cat1.get_matching_mask("self")  # In case ang pref removes a match
+                self._cat1_mt[ind] = set_unique(cat1, ind, cat2)
+        self._cat1_mt *= cat1.get_matching_mask("self")  # In case ang pref removes a match
         print(f'* {cat1.get_matching_mask("self").sum():,}/{cat1.size:,} objects matched.')
         cfg = {"func": "unique", "cats": f"{cat1.name}, {cat2.name}", "preference": preference}
         if preference == "shared_member_fraction":
