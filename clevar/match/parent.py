@@ -4,6 +4,7 @@ The Match class
 import os
 import numpy as np
 
+from ..utils import veclen
 
 class Match:
     """
@@ -41,6 +42,21 @@ class Match:
         """
         raise NotImplementedError
 
+    def _prt_cand_mt(self, cat1, ind1):
+        print(
+            f"  {ind1:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][ind1]):,} candidates",
+            end="\r",
+        )
+
+    def _rm_dup_add_hist(self, cat1, cat2, hist):
+        print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
+        cat1.remove_multiple_duplicates()
+        cat2.remove_multiple_duplicates()
+        self.history.append(hist)
+        # pylint: disable=protected-access
+        cat1._set_mt_hist(self.history)
+        cat2._set_mt_hist(self.history)
+
     def unique(self, cat1, cat2, preference, minimum_share_fraction=0):
         """Makes unique matchig, requires multiple matching to be made first
 
@@ -63,21 +79,29 @@ class Match:
         else:
             i_vals = range(cat1.size)
         if preference == "more_massive":
+
             def set_unique(*args):
-                return  self._match_mpref(*args)
+                return self._match_mpref(*args)
+
         elif preference == "angular_proximity":
+
             def set_unique(*args):
-                return  self._match_apref(*args, "angular_proximity")
+                return self._match_apref(*args, "angular_proximity")
+
         elif preference == "redshift_proximity":
+
             def set_unique(*args):
-                return  self._match_apref(*args, "redshift_proximity")
+                return self._match_apref(*args, "redshift_proximity")
+
         elif preference == "shared_member_fraction":
             cat1["mt_frac_self"] = np.zeros(cat1.size)
             cat2["mt_frac_other"] = np.zeros(cat2.size)
             if "mt_frac_other" not in cat1.colnames:
                 cat1["mt_frac_other"] = np.zeros(cat1.size)
+
             def set_unique(*args):
-                return  self._match_sharepref(*args, minimum_share_fraction)
+                return self._match_sharepref(*args, minimum_share_fraction)
+
         else:
             raise ValueError(
                 "preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'"
@@ -205,7 +229,9 @@ class Match:
         if len(cat1["mt_multi_self"][ind1]) == 0:
             return False
         for id2 in sorted(
-            cat1.mt_input["share_mems"][ind1], key=cat1.mt_input["share_mems"][ind1].get, reverse=True
+            cat1.mt_input["share_mems"][ind1],
+            key=cat1.mt_input["share_mems"][ind1].get,
+            reverse=True,
         ):
             shared_frac = cat1.mt_input["share_mems"][ind1][id2] / cat1.mt_input["nmem"][ind1]
             if shared_frac < minimum_share_fraction:
@@ -257,7 +283,7 @@ class Match:
         raise ValueError(
             "match_pref (={match_pref}) value not accepted."
             " It must be angular_proximity or redshift_proximity"
-            )
+        )
 
     def cross_match(self, cat1):
         """Makes cross matches of catalog, requires unique matches to be done first.

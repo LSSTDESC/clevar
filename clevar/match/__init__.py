@@ -1,8 +1,12 @@
+"""@file __init__.py
+Match package
+"""
+import numpy as np
+
 from ..catalog import ClData
 from .parent import Match
 from .proximity import ProximityMatch
 from .membership import MembershipMatch
-import numpy as np
 
 
 def get_matched_pairs(cat1, cat2, matching_type, mask1=None, mask2=None):
@@ -82,7 +86,7 @@ def output_catalog_with_matching(file_in, file_out, catalog, overwrite=False):
     """
     out = ClData.read(file_in)
     if len(out) != len(catalog):
-        ValueError(
+        raise ValueError(
             f"Input file ({file_in}) size (={len(out)})"
             + f" differs from catalog size (={len(catalog)})."
         )
@@ -121,7 +125,7 @@ def output_matched_catalog(
     """
     c_matched = ClData()
     # match masks
-    m1, m2 = get_matched_masks(cat1, cat2, matching_type)
+    mask1, mask2 = get_matched_masks(cat1, cat2, matching_type)
     # add cat 1 info
     dat1_full = ClData.read(file_in1)
     if len(dat1_full) != len(cat1):
@@ -130,10 +134,10 @@ def output_matched_catalog(
             + f" differs from cat1 size (={len(cat1)})."
         )
     for col in dat1_full.colnames:
-        c_matched[f"cat1_{col}"] = dat1_full[col][m1]
+        c_matched[f"cat1_{col}"] = dat1_full[col][mask1]
     del dat1_full
     if "mt_frac_self" in cat1.data.colnames:
-        c_matched["cat1_mt_frac"] = cat1["mt_frac_self"][m1]
+        c_matched["cat1_mt_frac"] = cat1["mt_frac_self"][mask1]
     # add cat 2 info
     dat2_full = ClData.read(file_in2)
     if len(dat2_full) != len(cat2):
@@ -142,9 +146,9 @@ def output_matched_catalog(
             + f" differs from cat2 size (={len(cat2)})."
         )
     for col in dat2_full.colnames:
-        c_matched[f"cat2_{col}"] = dat2_full[col][m2]
+        c_matched[f"cat2_{col}"] = dat2_full[col][mask2]
     del dat2_full
     if "mt_frac_self" in cat2.data.colnames:
-        c_matched["cat2_mt_frac"] = cat2["mt_frac_self"][m2]
+        c_matched["cat2_mt_frac"] = cat2["mt_frac_self"][mask2]
     # Save
     c_matched.write(file_out, overwrite=overwrite)

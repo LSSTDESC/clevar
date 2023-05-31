@@ -7,7 +7,7 @@ from scipy.interpolate import InterpolatedUnivariateSpline as spline
 from .parent import Match
 from ..geometry import units_bank, convert_units
 from ..catalog import ClData
-from ..utils import veclen, str2dataunit
+from ..utils import str2dataunit
 
 
 class ProximityMatch(Match):
@@ -84,23 +84,13 @@ class ProximityMatch(Match):
                         cat2["mt_multi_other"][ind2].append(cat1["id"][ind1])
                         self._cat1_mmt[ind1] = True
             if verbose:
-                print(
-                    f"  {ind1:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][ind1]):,} candidates",
-                    end="\r",
-                )
-        print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
-        cat1.remove_multiple_duplicates()
-        cat2.remove_multiple_duplicates()
-        self.history.append(
-            {
-                "func": "multiple",
-                "cats": f"{cat1.name}, {cat2.name}",
-                "radius_selection": radius_selection,
-            }
-        )
-        # pylint: disable=protected-access
-        cat1._set_mt_hist(self.history)
-        cat2._set_mt_hist(self.history)
+                self._prt_cand_mt(cat1, ind1)
+        hist = {
+            "func": "multiple",
+            "cats": f"{cat1.name}, {cat2.name}",
+            "radius_selection": radius_selection,
+        }
+        self._rm_dup_add_hist(cat1, cat2, hist)
 
     def prep_cat_for_match(
         self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1, cosmo=None
