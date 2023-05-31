@@ -8,11 +8,10 @@ from astropy.coordinates import SkyCoord
 from astropy import units as u
 
 from ..catalog import ClData, TagData, ClCatalog
-from ..geometry import convert_units, angular_bank, physical_bank
-from ..utils import none_val, hp, updated_dict
+from ..geometry import convert_units, physical_bank
+from ..utils import hp, updated_dict
 from .nfw_funcs import nfw2D_profile_flatcore_unnorm
 from ..match_metrics import plot_helper as ph
-from ..match_metrics.plot_helper import plt
 
 try:
     import healsparse as hs
@@ -20,6 +19,7 @@ try:
     _HAS_HEALSPARSE = True
 except ImportError:
     _HAS_HEALSPARSE = False
+
 
 class Footprint(TagData):
     """
@@ -90,6 +90,7 @@ class Footprint(TagData):
             kwargs["nest"] = nest
         TagData.__init__(self, tags=tags, default_tags=["pixel", "detfrac", "zmax"], **kwargs)
         self.keep_int_prod = False
+        self.temp = None
 
     def _add_values(self, nside=None, nest=False, **columns):
         """
@@ -498,7 +499,7 @@ class Footprint(TagData):
         Notes
         -----
             The NFW 2D function was taken from section 3.1 of arXiv:1104.2089 and was
-            validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).
+            validated with r_scale = 0.15 Mpc/h (0.214 Mpc) and r_core = 0.1 Mpc/h (0.142 Mpc).
         """
         # pylint: disable=invalid-name
         return self._get_coverfrac_nfw2D(
@@ -531,8 +532,9 @@ class Footprint(TagData):
         array
             Value of the aperture function at each pixel
         """
-        Rs = 0.15 / cosmo["h"]  # 0.214Mpc
-        Rcore = 0.1 / cosmo["h"]  # 0.142Mpc
+        # pylint: disable=unused-argument
+        r_scale = 0.15 / cosmo["h"]  # 0.214Mpc
+        r_core = 0.1 / cosmo["h"]  # 0.142Mpc
         pix_list_sk = SkyCoord(
             *[
                 coord * u.deg
@@ -540,8 +542,8 @@ class Footprint(TagData):
             ],
             frame="icrs",
         )
-        R = convert_units(cl_sk.separation(pix_list_sk).value, "degrees", "mpc", cl_z, cosmo)
-        return nfw2D_profile_flatcore_unnorm(R, Rs, Rcore)
+        radius = convert_units(cl_sk.separation(pix_list_sk).value, "degrees", "mpc", cl_z, cosmo)
+        return nfw2D_profile_flatcore_unnorm(radius, r_scale, r_core)
 
     def plot(
         self,
@@ -615,7 +617,8 @@ class Footprint(TagData):
             Figure of the plot. The main can be accessed at fig.axes[0], and the colorbar
             at fig.axes[1].
         """
-        fig, ax, cb = ph.plot_healpix_map(
+        # pylint: disable=too-many-locals
+        fig, axis, cbar = ph.plot_healpix_map(
             self.get_map(data, bad_val),
             nest=self.nest,
             auto_lim=auto_lim,
@@ -626,12 +629,13 @@ class Footprint(TagData):
             figsize=figsize,
             **kwargs,
         )
-        if cb:
-            cb.set_xlabel(data)
-            ax.xaxis.tick_top()
-            ax.xaxis.set_label_position("top")
+        if cbar:
+            cbar.set_xlabel(data)
+            axis.xaxis.tick_top()
+            axis.xaxis.set_label_position("top")
 
-        xlim, ylim = ax.get_xlim(), ax.get_ylim()
+        # pylint: disable=unnecessary-lambda-assignment
+        xlim, ylim = axis.get_xlim(), axis.get_ylim()
         if cluster is not None:
             if isinstance(cluster, ClCatalog):
                 if "radius" in cluster.tags and cluster.radius_unit is not None:
@@ -652,7 +656,7 @@ class Footprint(TagData):
                         cosmo=cosmo,
                     )
                     plt_cl = lambda ra, dec, radius: [
-                        ax.plot(
+                        axis.plot(
                             ra_ + radius_ * sin / np.cos(np.radians(dec_)),
                             dec_ + radius_ * cos,
                             **updated_dict({"color": "b", "lw": 1}, cluster_kwargs),
@@ -673,33 +677,33 @@ class Footprint(TagData):
                     lims_mask = lambda ra, dec: (
                         (ra >= xlim[0]) * (ra < xlim[1]) * (dec >= ylim[0]) * (dec < ylim[1])
                     )
-                    plt_cl = lambda ra, dec, radius: ax.scatter(
+                    plt_cl = lambda ra, dec, radius: axis.scatter(
                         *np.transpose([ra, dec])[lims_mask(ra, dec)].T,
                         **updated_dict({"color": "b", "s": 5}, cluster_kwargs),
                     )
                 # Plot clusters in regular range
                 plt_cl(cluster["ra"], cluster["dec"], rad_deg)
                 # Plot clusters using -180<ra<0
-                if ax.get_xlim()[0] <= 0.0:
-                    ra2, dec2, r2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
+                if axis.get_xlim()[0] <= 0.0:
+                    ra2, dec2, radius2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
                         (cluster["ra"] >= 180)
                     ].T
                     ra2 -= 360.0
-                    plt_cl(ra2, dec2, r2)
+                    plt_cl(ra2, dec2, radius2)
                 # Plot clusters using 180<ra<360
-                if ax.get_xlim()[1] >= 180.0:
-                    ra2, dec2, r2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
+                if axis.get_xlim()[1] >= 180.0:
+                    ra2, dec2, radius2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
                         (cluster["ra"] <= 0)
                     ].T
                     ra2 += 360.0
-                    plt_cl(ra2, dec2, r2)
+                    plt_cl(ra2, dec2, radius2)
                 # Plot clusters using ra>360 (for xlim [360<, >0])
-                if ax.get_xlim()[1] >= 360.0:
-                    ra2, dec2, r2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
+                if axis.get_xlim()[1] >= 360.0:
+                    ra2, dec2, radius2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
                         (cluster["ra"] >= 0)
                     ].T
                     ra2 += 360.0
-                    plt_cl(ra2, dec2, r2)
+                    plt_cl(ra2, dec2, radius2)
             else:
                 raise TypeError(f"cluster argument (={cluster}) must be a ClCatalog.")
 
