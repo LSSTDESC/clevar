@@ -497,13 +497,12 @@ class Catalog(TagData):
             )
         self._set_mt_hist(mt_data.mt_hist)
         self.cross_match()
-        # pylint: disable=singleton-comparison
         print(f" * Total objects:    {self.size:,}")
         print(f' * multiple (self):  {(veclen(self["mt_multi_self"])>0).sum():,}')
         print(f' * multiple (other): {(veclen(self["mt_multi_other"])>0).sum():,}')
-        print(f' * unique (self):    {(self["mt_self"]!=None).sum():,}')
-        print(f' * unique (other):   {(self["mt_other"]!=None).sum():,}')
-        print(f' * cross:            {(self["mt_cross"]!=None).sum():,}')
+        print(f' * unique (self):    {self.get_matching_mask("self").sum():,}')
+        print(f' * unique (other):   {self.get_matching_mask("other").sum():,}')
+        print(f' * cross:            {self.get_matching_mask("cross").sum():,}')
 
     def save_footprint_quantities(self, filename, overwrite=False):
         """

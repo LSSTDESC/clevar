@@ -88,4 +88,4 @@ def test_skyplot():
     matching_type = 'cat1'
     rc.skyplot(cat, matching_type)
     # for monocromatic map
-    rc.skyplot(cat[cat['mt_self']!=None], matching_type, recovery_label=None,)
+    rc.skyplot(cat[cat.get_matching_mask('self')], matching_type, recovery_label=None,)
