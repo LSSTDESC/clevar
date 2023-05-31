@@ -50,6 +50,9 @@ plt.Axes.plot_smooth = lambda *args, **kwargs: _plot_smooth(*args, **kwargs)
 ########################################################################
 ########################################################################
 
+def rm_axis_ticklabels(axis):
+    axis.set_minor_formatter(NullFormatter())
+    axis.set_major_formatter(NullFormatter())
 
 def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     """
