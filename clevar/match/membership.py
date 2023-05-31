@@ -193,9 +193,9 @@ class MembershipMatch(Match):
         filename: str
             Prefix of files name
         """
-        with open(f"{fileprefix}.1.p", "wb") as handle:
+        with open(f"{fileprefix}.1.p", "rb") as handle:
             cat1.mt_input = ClData(pickle.load(handle))
-        with open(f"{fileprefix}.2.p", "wb") as handle:
+        with open(f"{fileprefix}.2.p", "rb") as handle:
             cat2.mt_input = ClData(pickle.load(handle))
 
     def match_members(self, mem1, mem2, method="id", radius=None, cosmo=None):
