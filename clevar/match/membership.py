@@ -56,7 +56,7 @@ class MembershipMatch(Match):
         ):
             for id2, num_shared_mem2 in share_mems1.items():
                 ind2 = int(cat2.id_dict[id2])
-                if num_shared_mem2 / cat2.mt_input["nmem"][ind2] >= minimum_share_fraction:
+                if num_shared_mem2 / nmem1 >= minimum_share_fraction:
                     cat1["mt_multi_self"][ind1].append(id2)
                     cat2["mt_multi_other"][ind2].append(cat1["id"][ind1])
                     self._cat1_mmt[ind1] = True
