@@ -1,14 +1,28 @@
-import numpy as np
+"""@file membership.py
+The MembershipMatch class
+"""
 import pickle
+import numpy as np
 
 from .parent import Match
 from .proximity import ProximityMatch
-from ..geometry import units_bank, convert_units
 from ..catalog import ClData
-from ..utils import veclen, str2dataunit
+from ..utils import veclen
 
 
 class MembershipMatch(Match):
+    """
+    MembershipMatch Class
+
+    Attributes
+    ----------
+    type : str
+        Type of matching object. Set to "Membership"
+    history : list
+        Steps in the matching
+    """
+
+    # pylint: disable=abstract-method
     def __init__(self):
         Match.__init__(self)
         self.type = "Membership"
@@ -30,30 +44,32 @@ class MembershipMatch(Match):
         verbose: bool
             Print result for individual matches.
         """
+        # pylint: disable=arguments-renamed
         if cat1.mt_input is None:
             raise AttributeError("cat1.mt_input is None, run fill_shared_members first.")
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run fill_shared_members first.")
-        self.cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
+        self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         print(f"Finding candidates ({cat1.name})")
-        for i, (share_mems1, nmem1) in enumerate(
+        for ind1, (share_mems1, nmem1) in enumerate(
             zip(cat1.mt_input["share_mems"], cat1.mt_input["nmem"])
         ):
             for id2, num_shared_mem2 in share_mems1.items():
-                i2 = int(cat2.id_dict[id2])
-                if num_shared_mem2 / cat2.mt_input["nmem"][i2] >= minimum_share_fraction:
-                    cat1["mt_multi_self"][i].append(id2)
-                    cat2["mt_multi_other"][i2].append(cat1["id"][i])
-                    self.cat1_mmt[i] = True
+                ind2 = int(cat2.id_dict[id2])
+                if num_shared_mem2 / cat2.mt_input["nmem"][ind2] >= minimum_share_fraction:
+                    cat1["mt_multi_self"][ind1].append(id2)
+                    cat2["mt_multi_other"][ind2].append(cat1["id"][ind1])
+                    self._cat1_mmt[ind1] = True
             if verbose:
                 print(
-                    f"  {i:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][i]):,} candidates",
+                    f"  {ind1:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][ind1]):,} candidates",
                     end="\r",
                 )
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
         self.history.append({"func": "multiple", "cats": f"{cat1.name}, {cat2.name}"})
+        # pylint: disable=protected-access
         cat1._set_mt_hist(self.history)
         cat2._set_mt_hist(self.history)
 
@@ -80,9 +96,9 @@ class MembershipMatch(Match):
         cat2.mt_input = ClData(
             {"share_mems": list(map(lambda x: {}, range(cat2.size))), "nmem": self._comp_nmem(cat2)}
         )
-        for i1, i2 in self.matched_mems:
-            idcl1, pmem1 = cat1.members["id_cluster"][i1], cat1.members["pmem"][i1]
-            idcl2, pmem2 = cat2.members["id_cluster"][i2], cat2.members["pmem"][i2]
+        for ind1, ind2 in self.matched_mems:
+            idcl1, pmem1 = cat1.members["id_cluster"][ind1], cat1.members["pmem"][ind1]
+            idcl2, pmem2 = cat2.members["id_cluster"][ind2], cat2.members["pmem"][ind2]
             self._add_pmem(cat1.mt_input["share_mems"], cat1.id_dict[idcl1], idcl2, pmem1)
             self._add_pmem(cat2.mt_input["share_mems"], cat2.id_dict[idcl2], idcl1, pmem2)
         # sort order in dicts by mass
@@ -136,7 +152,7 @@ class MembershipMatch(Match):
         """
         cat1_share_mems[ind1][cat2_id] = cat1_share_mems[ind1].get(cat2_id, 0) + pmem1
 
-    def save_shared_members(self, cat1, cat2, fileprefix, overwrite=False):
+    def save_shared_members(self, cat1, cat2, fileprefix):
         """
         Saves dictionaries of shared members
 
@@ -148,19 +164,21 @@ class MembershipMatch(Match):
             Cluster catalog with members attribute.
         fileprefix: str
             Prefix for name of files
-        overwrite: bool
-            Overwrite saved files
         """
         if cat1.mt_input is None:
             raise AttributeError("cat1.mt_input is None cannot save it.")
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None cannot save it.")
-        pickle.dump(
-            {c: cat1.mt_input[c] for c in cat1.mt_input.colnames}, open(f"{fileprefix}.1.p", "wb")
-        )
-        pickle.dump(
-            {c: cat2.mt_input[c] for c in cat2.mt_input.colnames}, open(f"{fileprefix}.2.p", "wb")
-        )
+        with open(f"{fileprefix}.1.p", "wb") as handle:
+            pickle.dump(
+                {c: cat1.mt_input[c] for c in cat1.mt_input.colnames},
+                handle,
+            )
+        with open(f"{fileprefix}.2.p", "wb") as handle:
+            pickle.dump(
+                {c: cat2.mt_input[c] for c in cat2.mt_input.colnames},
+                handle,
+            )
 
     def load_shared_members(self, cat1, cat2, fileprefix):
         """
@@ -175,8 +193,10 @@ class MembershipMatch(Match):
         filename: str
             Prefix of files name
         """
-        cat1.mt_input = ClData(pickle.load(open(f"{fileprefix}.1.p", "rb")))
-        cat2.mt_input = ClData(pickle.load(open(f"{fileprefix}.2.p", "rb")))
+        with open(f"{fileprefix}.1.p", "wb") as handle:
+            cat1.mt_input = ClData(pickle.load(handle))
+        with open(f"{fileprefix}.2.p", "wb") as handle:
+            cat2.mt_input = ClData(pickle.load(handle))
 
     def match_members(self, mem1, mem2, method="id", radius=None, cosmo=None):
         """
@@ -270,10 +290,11 @@ class MembershipMatch(Match):
             "catalog1": {"delta_z": None, "match_radius": radius},
             "catalog2": {"delta_z": None, "match_radius": radius},
         }
-        mt = ProximityMatch()
+        prox_mt = ProximityMatch()
+        # pylint: disable=protected-access
         mem1._init_match_vals()
         mem2._init_match_vals()
-        mt.match_from_config(mem1, mem2, match_config, cosmo=cosmo)
+        prox_mt.match_from_config(mem1, mem2, match_config, cosmo=cosmo)
         mask1 = mem1.get_matching_mask(match_config["type"])
         self.matched_mems = []
         for ind1, id2 in zip(
@@ -376,7 +397,9 @@ class MembershipMatch(Match):
             self.fill_shared_members(cat1, cat2)
         if match_config.get("shared_members_save", False) and not load_shared_member:
             self.save_shared_members(
-                cat1, cat2, match_config["shared_members_file"], overwrite=True
+                cat1,
+                cat2,
+                match_config["shared_members_file"],
             )
         if load_shared_member:
             self.load_shared_members(cat1, cat2, match_config["shared_members_file"])
