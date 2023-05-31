@@ -17,7 +17,7 @@ class ProximityMatch(Match):
     Attributes
     ----------
     type : str
-        Type of matching object. Set to "proximity"
+        Type of matching object. Set to "Proximity"
     history : list
         Steps in the matching
     """
@@ -52,7 +52,7 @@ class ProximityMatch(Match):
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ("ang", "zmin", "zmax"))
         ang2max = ang2.max()
         print(f"Finding candidates ({cat1.name})")
-        for ind, (ra1, dec1, sk1, ang1, z1min, z1max) in enumerate(
+        for ind1, (ra1, dec1, sk1, ang1, z1min, z1max) in enumerate(
             zip(
                 *(
                     [cat1[c] for c in ("ra", "dec", "SkyCoord")]
@@ -79,13 +79,13 @@ class ProximityMatch(Match):
                         ang1, ang2[mask], radius_selection=radius_selection
                     )
                     for id2 in cat2["id"][mask][dist <= max_dist]:
-                        cat1["mt_multi_self"][ind].append(id2)
+                        cat1["mt_multi_self"][ind1].append(id2)
                         ind2 = int(cat2.id_dict[id2])
-                        cat2["mt_multi_other"][ind2].append(cat1["id"][ind])
-                        self._cat1_mmt[ind] = True
+                        cat2["mt_multi_other"][ind2].append(cat1["id"][ind1])
+                        self._cat1_mmt[ind1] = True
             if verbose:
                 print(
-                    f"  {ind:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][ind]):,} candidates",
+                    f"  {ind1:,}({cat1.size:,}) - {len(cat1['mt_multi_self'][ind1]):,} candidates",
                     end="\r",
                 )
         print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')

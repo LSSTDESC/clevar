@@ -83,9 +83,9 @@ class Match:
                 "preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'"
             )
         print(f"Unique Matches ({cat1.name})")
-        for ind in i_vals:
-            if cat1["mt_self"][ind] is None:
-                self._cat1_mt[ind] = set_unique(cat1, ind, cat2)
+        for ind1 in i_vals:
+            if cat1["mt_self"][ind1] is None:
+                self._cat1_mt[ind1] = set_unique(cat1, ind1, cat2)
         self._cat1_mt *= cat1.get_matching_mask("self")  # In case ang pref removes a match
         print(f'* {cat1.get_matching_mask("self").sum():,}/{cat1.size:,} objects matched.')
         cfg = {"func": "unique", "cats": f"{cat1.name}, {cat2.name}", "preference": preference}
@@ -117,7 +117,7 @@ class Match:
         """
         raise NotImplementedError
 
-    def _match_mpref(self, cat1, ind, cat2):
+    def _match_mpref(self, cat1, ind1, cat2):
         """
         Make the unique match by mass preference
 
@@ -125,7 +125,7 @@ class Match:
         ----------
         cat1: clevar.ClCatalog
             Base catalog
-        ind: int
+        ind1: int
             Index of the cluster from cat1 to be matched
         cat2: clevar.ClCatalog
             Target catalog
@@ -135,16 +135,16 @@ class Match:
         bool
             Tells if the cluster was matched
         """
-        inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind])
+        inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
         if len(inds2) > 0:
             for ind2 in inds2[np.argsort(cat2["mass"][inds2])][::-1]:
                 if cat2["mt_other"][ind2] is None:
-                    cat1["mt_self"][ind] = cat2["id"][ind2]
-                    cat2["mt_other"][ind2] = cat1["id"][ind]
+                    cat1["mt_self"][ind1] = cat2["id"][ind2]
+                    cat2["mt_other"][ind2] = cat1["id"][ind1]
                     return True
         return False
 
-    def _match_apref(self, cat1, ind, cat2, match_pref):
+    def _match_apref(self, cat1, ind1, cat2, match_pref):
         """
         Make the unique match by angular (or redshift) distance preference
 
@@ -152,7 +152,7 @@ class Match:
         ----------
         cat1: clevar.ClCatalog
             Base catalog
-        ind: int
+        ind1: int
             Index of the cluster from cat1 to be matched
         cat2: clevar.ClCatalog
             Target catalog
@@ -164,24 +164,24 @@ class Match:
         bool
             Tells if the cluster was matched
         """
-        inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind])
-        dists = self._get_dist_mt(cat1[ind], cat2[inds2], match_pref)
+        inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
+        dists = self._get_dist_mt(cat1[ind1], cat2[inds2], match_pref)
         sort_d = np.argsort(dists)
         for dist, ind2 in zip(dists[sort_d], inds2[sort_d]):
             i1_replace = cat1.id_dict[cat2["mt_other"][ind2]] if cat2["mt_other"][ind2] else None
             if i1_replace is None:
-                cat1["mt_self"][ind] = cat2["id"][ind2]
-                cat2["mt_other"][ind2] = cat1["id"][ind]
+                cat1["mt_self"][ind1] = cat2["id"][ind2]
+                cat2["mt_other"][ind2] = cat1["id"][ind1]
                 return True
             if dist < self._get_dist_mt(cat1[i1_replace], cat2[ind2], match_pref):
-                cat1["mt_self"][ind] = cat2["id"][ind2]
-                cat2["mt_other"][ind2] = cat1["id"][ind]
+                cat1["mt_self"][ind1] = cat2["id"][ind2]
+                cat2["mt_other"][ind2] = cat1["id"][ind1]
                 cat1["mt_self"][i1_replace] = None
                 self._match_apref(cat1, i1_replace, cat2, match_pref)
                 return True
         return False
 
-    def _match_sharepref(self, cat1, ind, cat2, minimum_share_fraction=0):
+    def _match_sharepref(self, cat1, ind1, cat2, minimum_share_fraction=0):
         """
         Make the unique match by shared membership fraction preference
 
@@ -189,7 +189,7 @@ class Match:
         ----------
         cat1: clevar.ClCatalog
             Base catalog
-        ind: int
+        ind1: int
             Index of the cluster from cat1 to be matched
         cat2: clevar.ClCatalog
             Target catalog
@@ -202,27 +202,27 @@ class Match:
         bool
             Tells if the cluster was matched
         """
-        if len(cat1["mt_multi_self"][ind]) == 0:
+        if len(cat1["mt_multi_self"][ind1]) == 0:
             return False
         for id2 in sorted(
-            cat1.mt_input["share_mems"][ind], key=cat1.mt_input["share_mems"][ind].get, reverse=True
+            cat1.mt_input["share_mems"][ind1], key=cat1.mt_input["share_mems"][ind1].get, reverse=True
         ):
-            shared_frac = cat1.mt_input["share_mems"][ind][id2] / cat1.mt_input["nmem"][ind]
+            shared_frac = cat1.mt_input["share_mems"][ind1][id2] / cat1.mt_input["nmem"][ind1]
             if shared_frac < minimum_share_fraction:
                 return False
             # fills cat2 mt_other if empty or shared_frac is greater
             ind2 = cat2.id_dict[id2]
             share_mems2 = cat2.mt_input["share_mems"][ind2]
-            id1, id1_replace = cat1["id"][ind], cat2["mt_other"][ind2]
+            id1, id1_replace = cat1["id"][ind1], cat2["mt_other"][ind2]
             if share_mems2[id1] >= share_mems2.get(id1_replace, 0):
                 i1_replace = cat1.id_dict.get(id1_replace)
                 if i1_replace is not None and (
                     share_mems2[id1] == share_mems2[id1_replace]
-                    and cat1["mass"][ind] <= cat1["mass"][i1_replace]
+                    and cat1["mass"][ind1] <= cat1["mass"][i1_replace]
                 ):
                     return False
-                cat1["mt_self"][ind] = id2
-                cat1["mt_frac_self"][ind] = shared_frac
+                cat1["mt_self"][ind1] = id2
+                cat1["mt_frac_self"][ind1] = shared_frac
                 cat2["mt_other"][ind2] = id1
                 cat2["mt_frac_other"][ind2] = shared_frac
                 if i1_replace is not None:
