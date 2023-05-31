@@ -146,7 +146,8 @@ def run(config_file):
             plt.savefig(f"{rec_name}_cat{ind}_panel_mass{rec_suf}.png", dpi=rec_conf["dpi"])
             plt.close(info["fig"])
         # 2D plots
-        kwargs.pop("shape")
+        kwargs.pop("shape", None)
+        kwargs.pop("recovery_label", None)
         kwargs["add_cb"] = rec_conf["add_cb"]
         if any(case in rec_conf["plot_case"] for case in ("2D", "all")):
             # basic
