@@ -122,8 +122,8 @@ def plot(
         plt_kwargs=plt_kwargs,
         lines_kwargs_list=lines_kwargs_list,
         add_legend=add_legend,
-        legend_format=legend_format,
         legend_kwargs=legend_kwargs,
+        legend_format=legend_format,
     )
     return info
 
