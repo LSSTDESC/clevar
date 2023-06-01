@@ -52,6 +52,30 @@ class RedshiftYamlFuncs(MetricYamlFuncs):
             for i in "12"
         }
 
+    def _main(self):
+        # Density Plot
+        if any(case in self.conf["plot_case"] for case in ("density", "all")):
+            self._redshift_density_colors()
+        if any(case in self.conf["plot_case"] for case in ("scaling_metrics", "all")):
+            self._redshift_metrics()
+        if any(case in self.conf["plot_case"] for case in ("density_metrics", "all")):
+            self._redshift_density_metrics()
+        for ind_i, ind_j in ("12", "21"):
+            # z Color Plot
+            if any(case in self.conf["plot_case"] for case in ("masscolor", "all")):
+                self._redshift_z_colors(ind_i)
+            # Panel density Plot
+            if any(case in self.conf["plot_case"] for case in ("density_panel", "all")):
+                self._redshift_density_m_panel(ind_i)
+            # distribution
+            if any(case in self.conf["plot_case"] for case in ("self_distribution", "all")):
+                self._redshift_density_m_self_dist(ind_i)
+            if any(case in self.conf["plot_case"] for case in ("distribution", "all")):
+                self._redshift_density_m_dist(ind_i, ind_j)
+            # Panel density distribution
+            if any(case in self.conf["plot_case"] for case in ("density_dist", "all")):
+                self._redshift_density_z_panel(ind_i, ind_j)
+
     def _redshift_density_colors(self):
         print("\n# Redshift density colors")
         conf = {"fig": plt.figure(figsize=self.conf["figsize"])}
@@ -187,30 +211,6 @@ class RedshiftYamlFuncs(MetricYamlFuncs):
         )
         plt.savefig(f"{self.pref_save}_density_cat{ind_i}_dist.png", dpi=self.conf["dpi"])
         plt.close(conf["fig"])
-
-    def _main(self):
-        # Density Plot
-        if any(case in self.conf["plot_case"] for case in ("density", "all")):
-            self._redshift_density_colors()
-        if any(case in self.conf["plot_case"] for case in ("scaling_metrics", "all")):
-            self._redshift_metrics()
-        if any(case in self.conf["plot_case"] for case in ("density_metrics", "all")):
-            self._redshift_density_metrics()
-        for ind_i, ind_j in ("12", "21"):
-            # z Color Plot
-            if any(case in self.conf["plot_case"] for case in ("masscolor", "all")):
-                self._redshift_z_colors(ind_i)
-            # Panel density Plot
-            if any(case in self.conf["plot_case"] for case in ("density_panel", "all")):
-                self._redshift_density_m_panel(ind_i)
-            # distribution
-            if any(case in self.conf["plot_case"] for case in ("self_distribution", "all")):
-                self._redshift_density_m_self_dist(ind_i)
-            if any(case in self.conf["plot_case"] for case in ("distribution", "all")):
-                self._redshift_density_m_dist(ind_i, ind_j)
-            # Panel density distribution
-            if any(case in self.conf["plot_case"] for case in ("density_dist", "all")):
-                self._redshift_density_z_panel(ind_i, ind_j)
 
 
 def run(config_file):

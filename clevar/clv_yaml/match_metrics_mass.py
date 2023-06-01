@@ -54,6 +54,25 @@ class MassYamlFuncs(MetricYamlFuncs):
             for i in "12"
         }
 
+    def _main(self):
+        if any(case in self.conf["plot_case"] for case in ("density", "all")):
+            self._mass_density_colors()
+        if any(case in self.conf["plot_case"] for case in ("scaling_metrics", "all")):
+            self._mass_metrics()
+        if any(case in self.conf["plot_case"] for case in ("density_metrics", "all")):
+            self._mass_density_metrics()
+        for ind_i, ind_j in ("12", "21"):
+            if any(case in self.conf["plot_case"] for case in ("zcolor", "all")):
+                self._mass_catalog_z_colors(ind_i)
+            if any(case in self.conf["plot_case"] for case in ("density_panel", "all")):
+                self._mass_density_catalog_z_panel(ind_i)
+            if any(case in self.conf["plot_case"] for case in ("self_distribution", "all")):
+                self._mass_density_catalog_m_self_dist(ind_i)
+            if any(case in self.conf["plot_case"] for case in ("distribution", "all")):
+                self._mass_density_catalog_m_dist(ind_i, ind_j)
+            if any(case in self.conf["plot_case"] for case in ("density_dist", "all")):
+                self._mass_density_catalog_m_panel(ind_i, ind_j)
+
     def _mass_density_colors(self):
         print("\n# Mass density colors")
         conf = {"fig": plt.figure(figsize=self.conf["figsize"])}
@@ -188,25 +207,6 @@ class MassYamlFuncs(MetricYamlFuncs):
         )
         plt.savefig(f"{self.pref_save}_density_cat{ind_i}_dist.png", dpi=self.conf["dpi"])
         plt.close(conf["fig"])
-
-    def _main(self):
-        if any(case in self.conf["plot_case"] for case in ("density", "all")):
-            self._mass_density_colors()
-        if any(case in self.conf["plot_case"] for case in ("scaling_metrics", "all")):
-            self._mass_metrics()
-        if any(case in self.conf["plot_case"] for case in ("density_metrics", "all")):
-            self._mass_density_metrics()
-        for ind_i, ind_j in ("12", "21"):
-            if any(case in self.conf["plot_case"] for case in ("zcolor", "all")):
-                self._mass_catalog_z_colors(ind_i)
-            if any(case in self.conf["plot_case"] for case in ("density_panel", "all")):
-                self._mass_density_catalog_z_panel(ind_i)
-            if any(case in self.conf["plot_case"] for case in ("self_distribution", "all")):
-                self._mass_density_catalog_m_self_dist(ind_i)
-            if any(case in self.conf["plot_case"] for case in ("distribution", "all")):
-                self._mass_density_catalog_m_dist(ind_i, ind_j)
-            if any(case in self.conf["plot_case"] for case in ("density_dist", "all")):
-                self._mass_density_catalog_m_panel(ind_i, ind_j)
 
 
 def run(config_file):
