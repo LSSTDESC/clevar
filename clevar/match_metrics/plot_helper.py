@@ -1,3 +1,6 @@
+"""@file clevar/match_metrics/plot_helper.py
+Helper functions for plotting.
+"""
 # Set mpl backend run plots on github actions
 import os
 import matplotlib as mpl
@@ -5,10 +8,13 @@ import matplotlib as mpl
 if os.environ.get("DISPLAY", "") == "test":
     print("no display found. Using non-interactive Agg backend")
     mpl.use("Agg")
+
+# pylint: disable=wrong-import-position
 import pylab as plt
 import numpy as np
 from scipy.interpolate import interp2d
 from matplotlib.ticker import ScalarFormatter, NullFormatter
+
 from ..utils import none_val, hp, updated_dict
 
 ########################################################################
@@ -18,7 +24,7 @@ from ..utils import none_val, hp, updated_dict
 from ..utils import smooth_line
 
 
-def _plot_smooth(self, *args, scheme=[1, 2, 1], n_increase=0, **kwargs):
+def _plot_smooth(self, *args, scheme=(1, 2, 1), n_increase=0, **kwargs):
     """Function to apply loops in plots.
 
     Parameters
@@ -27,7 +33,7 @@ def _plot_smooth(self, *args, scheme=[1, 2, 1], n_increase=0, **kwargs):
         To be used by mpl
     *args
         Main function positional arguments
-    scheme: list
+    scheme: tuple
         Scheme to be used for smoothening. Newton's binomial coefficients work better.
     n_increase: int
         Number of loops for the algorithm.
@@ -43,16 +49,19 @@ def _plot_smooth(self, *args, scheme=[1, 2, 1], n_increase=0, **kwargs):
     )
 
 
-plt.plot_smooth = lambda *args, **kwargs: _plot_smooth(*args, **kwargs)
-plt.Axes.plot_smooth = lambda *args, **kwargs: _plot_smooth(*args, **kwargs)
+plt.plot_smooth = _plot_smooth
+plt.Axes.plot_smooth = _plot_smooth
 
 ########################################################################
 ########################################################################
 ########################################################################
+
 
 def rm_axis_ticklabels(axis):
+    """Remove ticklabels from axis"""
     axis.set_minor_formatter(NullFormatter())
     axis.set_major_formatter(NullFormatter())
+
 
 def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     """
@@ -148,23 +157,30 @@ def add_panel_bin_label(axes, edges_lower, edges_higher, format_func=lambda v: v
     prefix: str
         Prefix to add to labels
     """
-    for ax, vb, vt in zip(axes.flatten(), edges_lower, edges_higher):
+    for ax, val_lower, val_higher in zip(axes.flatten(), edges_lower, edges_higher):
         topax = ax.twiny()
         topax.set_xticks([])
-        topax.set_xlabel(get_bin_label(vb, vt, format_func, prefix))
+        topax.set_xlabel(get_bin_label(val_lower, val_higher, format_func, prefix))
 
 
 def get_density_colors(
-    x, y, xbins, ybins, ax_rotation=0, rotation_resolution=30, xscale="linear", yscale="linear"
+    xvals,
+    yvals,
+    xbins,
+    ybins,
+    ax_rotation=0,
+    rotation_resolution=30,
+    xscale="linear",
+    yscale="linear",
 ):
     """
     Get colors of point based on density
 
     Parameters
     ----------
-    x: array
+    xvals: array
         Values for x coordinate
-    y: array
+    yvals: array
         Values for y coordinate
     xbins: array, int
         Bins for x
@@ -185,26 +201,26 @@ def get_density_colors(
         Density value at location of each point
     """
     # Rotated points around anlgle
-    sr, cr = np.sin(np.radians(ax_rotation)), np.cos(np.radians(ax_rotation))
-    scalefuncs = {"linear": lambda x: x, "log": lambda x: np.log10(x)}
-    x2, y2 = scalefuncs[xscale](x), scalefuncs[yscale](y)
-    x2 = np.array(x2) * cr - np.array(y2) * sr
-    y2 = np.array(x2) * sr + np.array(y2) * cr
+    sin, cos = np.sin(np.radians(ax_rotation)), np.cos(np.radians(ax_rotation))
+    scalefuncs = {"linear": lambda x: x, "log": np.log10}
+    xvals2, yvals2 = scalefuncs[xscale](xvals), scalefuncs[yscale](yvals)
+    xvals2 = np.array(xvals2) * cos - np.array(yvals2) * sin
+    yvals2 = np.array(xvals2) * sin + np.array(yvals2) * cos
     if ax_rotation == 0:
         bins = (xbins, ybins)
     else:
         bins = (
-            np.linspace(x2.min(), x2.max(), rotation_resolution),
-            np.linspace(y2.min(), y2.max(), rotation_resolution),
+            np.linspace(xvals2.min(), xvals2.max(), rotation_resolution),
+            np.linspace(yvals2.min(), yvals2.max(), rotation_resolution),
         )
     # Compute 2D rotated histogram
-    hist, xedges, yedges = np.histogram2d(x2, y2, bins=bins)
+    hist, xedges, yedges = np.histogram2d(xvals2, yvals2, bins=bins)
     hist = hist.T
     # Interpolate histogram
-    xm = 0.5 * (xedges[:-1] + xedges[1:])
-    ym = 0.5 * (yedges[:-1] + yedges[1:])
-    fz = interp2d(xm, ym, hist, kind="cubic")
-    return np.array([fz(*coord)[0] for coord in zip(x2, y2)])
+    xmid = 0.5 * (xedges[:-1] + xedges[1:])
+    ymid = 0.5 * (yedges[:-1] + yedges[1:])
+    funcz = interp2d(xmid, ymid, hist, kind="cubic")
+    return np.array([funcz(*coord)[0] for coord in zip(xvals2, yvals2)])
 
 
 def nice_panel(axes, xlabel=None, ylabel=None, xscale="linear", yscale="linear"):
@@ -266,7 +282,6 @@ def nice_panel(axes, xlabel=None, ylabel=None, xscale="linear", yscale="linear")
                 [f"${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$" for t in yticks],
                 rotation=-45,
             )
-    return
 
 
 def _set_label_format(kwargs, label_format_key, label_fmt_key, log, default_fmt=".2f"):
@@ -435,10 +450,11 @@ def plot_healpix_map(
             nest=nest,
             lonlat=True,
         )
+        # pylint: disable=chained-comparison
         if ra.min() < 180.0 and ra.max() > 180.0:
-            gap_ra = 360.0 - (ra.max() - ra.min())
-            gap_ra2 = ra[ra > 180.0].min() - ra[ra < 180.0].max()
-            if gap_ra2 > gap_ra:
+            if (360.0 - (ra.max() - ra.min())) < (  # crossing 0 gap
+                ra[ra > 180.0].min() - ra[ra < 180.0].max()  # normal gap
+            ):
                 ra[ra > 180.0] -= 360.0
 
         edge = 2 * (hp.nside2resol(nside, arcmin=True) / 60)
@@ -462,9 +478,9 @@ def plot_healpix_map(
         ax.set_aspect("auto")
         fig.set_size_inches(figsize)
 
-    cb = None
+    cbar = None
     if kwargs_["cbar"]:
-        cb = fig.axes[-1]
+        cbar = fig.axes[-1]
 
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
@@ -479,4 +495,4 @@ def plot_healpix_map(
     ax.set_xlabel("RA")
     ax.set_ylabel("DEC")
 
-    return fig, ax, cb
+    return fig, ax, cbar
