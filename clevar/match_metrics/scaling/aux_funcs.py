@@ -1,5 +1,4 @@
 """@file clevar/match_metrics/scaling/aux_funcs.py
-
 Auxiliary functions for scaling array functions.
 """
 import numpy as np

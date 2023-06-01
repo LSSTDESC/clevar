@@ -1,5 +1,4 @@
 """@file clevar/match_metrics/scaling/catalog_funcs.py
-
 Main scaling functions using catalogs, wrapper of array_funcs functions
 """
 import numpy as np
@@ -320,6 +319,7 @@ def _get_panel_args(
     cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
     f_kwargs["values_panel"] = mt1[col_panel] if panel_cat1 else mt2[col_panel]
     f_kwargs["bins_panel"] = autobins(f_kwargs["values_panel"], bins_panel, log_panel)
+    # pylint: disable=protected-access
     ph._set_label_format(f_kwargs, "label_format", "label_fmt", log_panel)
     return cl_kwargs, f_kwargs, mt1, mt2
 
@@ -665,7 +665,8 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
     fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
-        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        Angle (in degrees) for rotation of axis of binning.
+        Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     plt_kwargs: dict, None
@@ -802,8 +803,9 @@ def plot_dist(
     f_kwargs["log_vals"] = log_vals
     f_kwargs["log_aux"] = log_aux
     f_kwargs["transpose"] = transpose
-    f_kwargs["panel_label_prefix"] = f"{cat2.labels[col]}\,-\,"
+    f_kwargs["panel_label_prefix"] = rf"{cat2.labels[col]}\,-\,"
     log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
+    # pylint: disable=protected-access
     ph._set_label_format(f_kwargs, "panel_label_format", "panel_label_fmt", log_panel)
     ph._set_label_format(f_kwargs, "line_label_format", "line_label_fmt", log_line)
     info = array_funcs.plot_dist(**f_kwargs)
@@ -894,8 +896,9 @@ def plot_dist_self(
     f_kwargs["log_vals"] = log_vals
     f_kwargs["log_aux"] = log_aux
     f_kwargs["transpose"] = transpose
-    f_kwargs["panel_label_prefix"] = f"{cat.labels[col]}\,-\,"
+    f_kwargs["panel_label_prefix"] = rf"{cat.labels[col]}\,-\,"
     log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
+    # pylint: disable=protected-access
     ph._set_label_format(f_kwargs, "panel_label_format", "panel_label_fmt", log_panel)
     ph._set_label_format(f_kwargs, "line_label_format", "line_label_fmt", log_line)
     info = array_funcs.plot_dist(**f_kwargs)
@@ -929,7 +932,8 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
     fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
-        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        Angle (in degrees) for rotation of axis of binning.
+        Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     plt_kwargs: dict, None
