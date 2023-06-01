@@ -148,6 +148,23 @@ def deep_update(dict_base, dict_update):
     return dict_base
 
 
+def dict_with_none(dict_in):
+    """
+    Get dict replacing "None" with None.
+
+    Parameters
+    ----------
+    dict_in : dict
+        Input dictionary
+
+    Returns
+    -------
+    dict
+        Dictionary with None instead of "None".
+    """
+    return {k: (None if str(v) == "None" else v) for k, v in dict_in.items()}
+
+
 ########################################################################
 def get_input_loop(options_msg, actions):
     """
