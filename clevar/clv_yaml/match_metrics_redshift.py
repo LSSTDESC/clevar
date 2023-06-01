@@ -5,7 +5,7 @@ import numpy as np
 import pylab as plt
 
 from clevar.match_metrics import scaling
-from .helper_funcs import make_bins
+from .helper_funcs import make_bins, dict_with_none
 from .match_metrics_parent import MetricYamlFuncs
 
 
@@ -38,9 +38,7 @@ class RedshiftYamlFuncs(MetricYamlFuncs):
             self.conf[cat]["fit_redshift_bins_dist"] = make_bins(
                 self.conf[cat]["fit_redshift_bins_dist"]
             )
-            self.conf[cat] = {
-                k: (None if str(v) == "None" else v) for k, v in self.conf[cat].items()
-            }
+            self.conf[cat] = dict_with_none(self.conf[cat])
         ### Plots
         self.kwargs = {k: self.conf[k] for k in ("matching_type", "add_err", "add_cb")}
         self.fit_kwargs = {
@@ -191,8 +189,6 @@ class RedshiftYamlFuncs(MetricYamlFuncs):
         plt.close(conf["fig"])
 
     def _main(self):
-        if self.skip:
-            return
         # Density Plot
         if any(case in self.conf["plot_case"] for case in ("density", "all")):
             self._redshift_density_colors()
