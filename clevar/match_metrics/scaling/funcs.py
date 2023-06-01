@@ -439,7 +439,7 @@ def redshift_metrics(cat1, cat2, matching_type, **kwargs):
     """
     kwargs["mode"] = kwargs.get("mode", "diff_z")
     kwargs["metrics_kwargs"] = deep_update(
-        {"std": {"label": "$\sigma_z$"}, "mean": {"label": "$bias_z$"}},
+        {"std": {"label": r"$\sigma_z$"}, "mean": {"label": "$bias_z$"}},
         kwargs.get("metrics_kwargs", {}),
     )
     return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col="z", **kwargs)
@@ -491,7 +491,8 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
-        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        Angle (in degrees) for rotation of axis of binning.
+        Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     plt_kwargs: dict, None
@@ -527,8 +528,8 @@ def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     kwargs["metrics_mode"] = kwargs.get("metrics_mode", "diff_z")
     kwargs["metrics_kwargs"] = deep_update(
         {
-            "std.fill": {"label": "$\sigma_z$"},
-            "std": {"label": "$\sigma_z$"},
+            "std.fill": {"label": r"$\sigma_z$"},
+            "std": {"label": r"$\sigma_z$"},
             "mean": {"label": "$bias_z$"},
         },
         kwargs.get("metrics_kwargs", {}),
@@ -717,7 +718,8 @@ def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
     fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
-        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        Angle (in degrees) for rotation of axis of binning.
+        Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     plt_kwargs: dict, None
@@ -1284,7 +1286,8 @@ def mass_density_metrics(cat1, cat2, matching_type, log_mass=True, **kwargs):
     fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
-        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        Angle (in degrees) for rotation of axis of binning.
+        Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     plt_kwargs: dict, None
@@ -1514,7 +1517,8 @@ def mass_density_dist(cat1, cat2, matching_type, log_mass=True, **kwargs):
     fig_kwargs: dict, None
         Additional arguments for plt.subplots
     ax_rotation: float
-        Angle (in degrees) for rotation of axis of binning. Overwrites use of (bins1, bins2) on main plot.
+        Angle (in degrees) for rotation of axis of binning.
+        Overwrites use of (bins1, bins2) on main plot.
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     plt_kwargs: dict, None
