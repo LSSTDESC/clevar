@@ -1,5 +1,4 @@
 """@file clevar/match_metrics/distances/catalog_funcs.py
-
 Main distances functions using catalogs.
 """
 import numpy as np
@@ -8,7 +7,6 @@ from ...geometry import convert_units
 from ...match import get_matched_pairs
 from .. import plot_helper as ph
 from ..plot_helper import plt
-from ...utils import none_val
 
 
 def _histograms(
@@ -16,7 +14,6 @@ def _histograms(
     distance_bins,
     quantity2=None,
     bins2=None,
-    log2=False,
     shape="steps",
     ax=None,
     plt_kwargs=None,
@@ -87,7 +84,7 @@ def _histograms(
         info["data"] = {
             key: value
             for value, key in zip(
-                np.histogram(distances, bins=(distance_bins)), ("hist", "distance_bins")
+                np.histogram(distances, bins=distance_bins), ("hist", "distance_bins")
             )
         }
         hist = [info["data"]["hist"]]
@@ -288,12 +285,12 @@ def redshift(
         )
     )
     zl1, zl2 = cat1.labels["z"], cat2.labels["z"]
-    dz = f"{zl1}-{zl2}"
+    dz_label = f"{zl1}-{zl2}"
     dist_labels = {
-        None: f"${dz}$",
-        "cat1": f"$({dz})/(1+{zl1})$",
-        "cat2": f"$({dz})/(1+{zl2})$",
-        "mean": f"$({dz})/(1+z_m)$",
+        None: f"${dz_label}$",
+        "cat1": f"$({dz_label})/(1+{zl1})$",
+        "cat2": f"$({dz_label})/(1+{zl2})$",
+        "mean": f"$({dz_label})/(1+z_m)$",
     }
     info["ax"].set_xlabel(dist_labels[normalize])
     info["ax"].set_ylabel("Number of matches")
