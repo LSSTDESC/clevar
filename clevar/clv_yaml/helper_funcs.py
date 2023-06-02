@@ -27,7 +27,7 @@ def read_yaml(filename):
     config: dict
         Dictionary with yaml file info
     """
-    with open(filename, "r") as file_handle:
+    with open(filename, "r", encoding="UTF-8") as file_handle:
         config = yaml.load(file_handle, Loader=yaml.FullLoader)
     return config
 
@@ -43,7 +43,7 @@ def write_yaml(config, filename):
     filename: str
         Name of yaml file
     """
-    with open(filename, "w") as file_handle:
+    with open(filename, "w", encoding="UTF-8") as file_handle:
         yaml.dump(config, file_handle)
 
 
@@ -251,7 +251,7 @@ def loadconf(
                 "quit": actions_loop["q"],
             }[fail_action]
             if func(*args, **kwargs) is None:
-                return
+                return None
     deep_update(log_config, config)
     yaml.write(log_config, log_file)
     return config
