@@ -1,8 +1,6 @@
 """@file match_proximity.py
 Proximity matching functions for command line execution
 """
-import numpy as np
-import pylab as plt
 import os
 import warnings
 
@@ -59,13 +57,13 @@ def proximity(config_file, overwrite_config, overwrite_files):
     if config is None:
         return
     print("\n# Reading Catalog 1")
-    c1 = make_catalog(config["catalog1"])
+    cat1 = make_catalog(config["catalog1"])
     print("\n# Reading Catalog 2")
-    c2 = make_catalog(config["catalog2"])
+    cat2 = make_catalog(config["catalog2"])
     print("\n# Creating Cosmology")
     cosmo = make_cosmology(config["cosmology"])
     # Run matching
-    mt = clevar.match.ProximityMatch()
+    mt_proximity = clevar.match.ProximityMatch()
     steps = sorted([c for c in config["proximity_match"] if "step" in c])
     for step in steps:
         match_conf = {"type": config["proximity_match"]["type"]}
@@ -82,8 +80,8 @@ def proximity(config_file, overwrite_config, overwrite_files):
                 [f"{k}: {v}" for k, v in match_conf["cosmology"].items()]
             )
             warnings.warn(warn_msg)
-        mt.match_from_config(c1, c2, match_conf, cosmo=cosmo_)
-    save_matching_files(config, mt, c1, c2, overwrite_files)
+        mt_proximity.match_from_config(cat1, cat2, match_conf, cosmo=cosmo_)
+    save_matching_files(config, mt_proximity, cat1, cat2, overwrite_files)
 
 
 def membership(config_file, overwrite_config, overwrite_files):
@@ -108,37 +106,37 @@ def membership(config_file, overwrite_config, overwrite_files):
         return
     match_config = config["membership_match"]
     print("\n# Reading Cluster Catalog 1")
-    c1 = make_catalog(config["catalog1"])
+    cat1 = make_catalog(config["catalog1"])
     print("\n# Reading Cluster Catalog 2")
-    c2 = make_catalog(config["catalog2"])
+    cat2 = make_catalog(config["catalog2"])
     print("\n# Reading Members Catalog 1")
-    add_mem_catalog(c1, config["catalog1"]["members"])
+    add_mem_catalog(cat1, config["catalog1"]["members"])
     print("\n# Reading Members Catalog 2")
-    add_mem_catalog(c2, config["catalog2"]["members"])
+    add_mem_catalog(cat2, config["catalog2"]["members"])
     mem_mt_radius = match_config["match_members_kwargs"].get("radius", "").lower()
     if any(unit in mem_mt_radius for unit in clevar.geometry.physical_bank):
         print("\n# Creating Cosmology")
         match_config["match_members_kwargs"]["cosmo"] = make_cosmology(config["cosmology"])
     # Run matching
-    mt = clevar.match.MembershipMatch()
+    mt_membership = clevar.match.MembershipMatch()
     prt_msg = "# Start membership matching"
     print(f'\n{"#"*len(prt_msg)}\n{prt_msg}\n{"#"*len(prt_msg)}')
-    mt.match_from_config(c1, c2, match_config)
-    save_matching_files(config, mt, c1, c2, overwrite_files)
+    mt_membership.match_from_config(cat1, cat2, match_config)
+    save_matching_files(config, mt_membership, cat1, cat2, overwrite_files)
 
 
-def save_matching_files(config, mt, c1, c2, overwrite_files):
+def save_matching_files(config, mt_obj, cat1, cat2, overwrite_files):
     """Saves internal matching files
 
     Parameters
     ----------
     config: dict
         Configuration of matching
-    mt: clevar.match.Match
+    mt_obj: clevar.match.Match
         Matching object
-    c1: clevar.ClCatalog
+    cat1: clevar.ClCatalog
         Catalog with matching results
-    c2: clevar.ClCatalog
+    cat2: clevar.ClCatalog
         Catalog with matching results
     overwrite_files: bool
         Forces overwrite of matching output files
@@ -153,7 +151,7 @@ def save_matching_files(config, mt, c1, c2, overwrite_files):
         print(f"\n*** File '{out1}' or '{out2}' already exist! ***")
         save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", check_actions)
     if save:
-        mt.save_matches(c1, c2, out_dir=config["outpath"], overwrite=True)
+        mt_obj.save_matches(cat1, cat2, out_dir=config["outpath"], overwrite=True)
 
 
 def write_output(config_file, overwrite_config, overwrite_files):
@@ -181,18 +179,17 @@ def write_output(config_file, overwrite_config, overwrite_files):
         fail_action="orverwrite" if overwrite_config else "ask",
     )
     print("\n# Reading Catalog 1")
-    c1 = make_catalog(config["catalog1"])
+    cat1 = make_catalog(config["catalog1"])
     ftpt_quantities_file1 = f"{config['outpath']}/ftpt_quantities1.fits"
     if os.path.isfile(ftpt_quantities_file1):
-        c1.load_footprint_quantities(ftpt_quantities_file1)
+        cat1.load_footprint_quantities(ftpt_quantities_file1)
     print("\n# Reading Catalog 2")
-    c2 = make_catalog(config["catalog2"])
+    cat2 = make_catalog(config["catalog2"])
     ftpt_quantities_file2 = f"{config['outpath']}/ftpt_quantities2.fits"
     if os.path.isfile(ftpt_quantities_file2):
-        c2.load_footprint_quantities(ftpt_quantities_file2)
+        cat2.load_footprint_quantities(ftpt_quantities_file2)
     print("\n# Adding Matching Info")
-    mt = clevar.match.parent.Match()
-    mt.load_matches(c1, c2, out_dir=config["outpath"])
+    clevar.match.parent.Match().load_matches(cat1, cat2, out_dir=config["outpath"])
     # Save files
     out1, out2 = f'{config["outpath"]}/catalog1.fits', f'{config["outpath"]}/catalog2.fits'
     out_matched = f'{config["outpath"]}/catalog_matched.fits'
@@ -205,21 +202,21 @@ def write_output(config_file, overwrite_config, overwrite_files):
         print(f"\n*** File '{out1}' or '{out2}' or '{out_matched}' already exist! ***")
         save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", check_actions)
     if save:
-        print(f"\n# Saving full {c1.name}")
+        print(f"\n# Saving full {cat1.name}")
         clevar.match.output_catalog_with_matching(
-            config["catalog1"]["file"], out1, c1, overwrite=True
+            config["catalog1"]["file"], out1, cat1, overwrite=True
         )
-        print(f"\n# Saving full {c2.name}")
+        print(f"\n# Saving full {cat2.name}")
         clevar.match.output_catalog_with_matching(
-            config["catalog2"]["file"], out2, c2, overwrite=True
+            config["catalog2"]["file"], out2, cat2, overwrite=True
         )
-        print(f"\n# Saving Matched catalog")
+        print("\n# Saving Matched catalog")
         clevar.match.output_matched_catalog(
             config["catalog1"]["file"],
             config["catalog2"]["file"],
             out_matched,
-            c1,
-            c2,
+            cat1,
+            cat2,
             config[matching_method]["type"],
             overwrite=True,
         )
