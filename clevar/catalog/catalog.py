@@ -257,7 +257,7 @@ class Catalog(TagData):
 
         Parameters
         ----------
-        ftpt: clevar.mask.Footprint object
+        ftpt: clevar.Footprint object
             Footprint
         maskname: str
             Name of mask to be added
@@ -273,9 +273,9 @@ class Catalog(TagData):
 
         Parameters
         ----------
-        ftpt_self: clevar.mask.Footprint object
+        ftpt_self: clevar.Footprint object
             Footprint of this catalog
-        ftpt_other: clevar.mask.Footprint object
+        ftpt_other: clevar.Footprint object
             Footprint of the other catalog
         """
         self._add_ftpt_mask(ftpt_self, "self")
@@ -290,9 +290,9 @@ class Catalog(TagData):
 
         Parameters
         ----------
-        ftpt: clevar.mask.Footprint object
+        ftpt: clevar.Footprint object
             Footprint used to compute the coverfration
-        ftpt_other: clevar.mask.Footprint object
+        ftpt_other: clevar.Footprint object
             Footprint of the other catalog
         raduis: float
             Radial aperture to compute the coverfraction

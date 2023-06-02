@@ -89,7 +89,7 @@ def fill_holes(ftpt, neighbor_fill, nest=False):
 
     Parameters
     ----------
-    ftpt: clevar.mask.Footprint object
+    ftpt: clevar.Footprint object
         Footprint
     pixels: numpy array
         Array with indices of healpy pixels of the footprint
@@ -100,7 +100,7 @@ def fill_holes(ftpt, neighbor_fill, nest=False):
 
     Returns
     -------
-    ftpt: clevar.mask.Footprint object
+    ftpt: clevar.Footprint object
         Footprint with holes filled
     """
     all_neighbors = hp.neighbors_of_pixels(ftpt.nside, ftpt["pixel"], nest=nest)
@@ -135,7 +135,7 @@ def fill_holes_conv(ftpt, neighbor_fill, nest=False):
 
     Returns
     -------
-    ftpt: clevar.mask.Footprint object
+    ftpt: clevar.Footprint object
         Footprint with holes filled
     """
     if neighbor_fill is not None:
