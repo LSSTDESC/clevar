@@ -93,31 +93,6 @@ def none_val(value, none_value):
     return value if value is not None else none_value
 
 
-def updated_dict(*dict_list):
-    """
-    Returns an dictionary with updated values if new dictionaries are not none
-
-    Parameters
-    ----------
-    *dict_list: positional arguments
-        Lists of dictionary with updated values
-
-    Returns
-    -------
-    dict
-        Updated dictionary
-    """
-    out = {}
-    for update_dict in dict_list:
-        updict = none_val(update_dict, {})
-        if not isinstance(updict, dict):
-            raise ValueError(
-                f"all arguments of updated_dict must be dictionaries or None, got: {updict}"
-            )
-        out.update(updict)
-    return out
-
-
 def autobins(values, bins, log=False):
     """
     Get bin values automatically from bins, values
@@ -191,30 +166,6 @@ def str2dataunit(input_str, units_bank, err_msg=""):
     raise ValueError(f"Unknown unit of '{input_str}', must be in {units_bank}. {err_msg}")
 
 
-def deep_update(dict_base, dict_update):
-    """
-    Update a multi-layer dictionary.
-
-    Parameters
-    ----------
-    dict_base: dict
-        Dictionary to be updated
-    dict_update: dict
-        Dictionary with the updates
-
-    Returns
-    -------
-    dict_base: dict
-        Updated dictionary (the input dict is also updated)
-    """
-    for key, value in dict_update.items():
-        if isinstance(value, dict) and key in dict_base:
-            deep_update(dict_base[key], value)
-        else:
-            dict_base[key] = dict_update[key]
-    return dict_base
-
-
 def gaussian(value, mean, std):
     """
     Gaussian function.
@@ -259,6 +210,144 @@ def unpack_mmt_col(col):
     for i, value in enumerate(np.array(col, dtype=str)):
         out[i] = value.split(",") if len(value) > 0 else []
     return out
+
+
+########################################################################
+### dict functions #####################################################
+########################################################################
+def deep_update(dict_base, dict_update):
+    """
+    Update a multi-layer dictionary.
+
+    Parameters
+    ----------
+    dict_base: dict
+        Dictionary to be updated
+    dict_update: dict
+        Dictionary with the updates
+
+    Returns
+    -------
+    dict_base: dict
+        Updated dictionary (the input dict is also updated)
+    """
+    for key, value in dict_update.items():
+        if isinstance(value, dict) and key in dict_base:
+            deep_update(dict_base[key], value)
+        else:
+            dict_base[key] = dict_update[key]
+    return dict_base
+
+
+def dict_with_none(dict_in):
+    """
+    Get dict replacing "None" with None.
+
+    Parameters
+    ----------
+    dict_in : dict
+        Input dictionary
+
+    Returns
+    -------
+    dict
+        Dictionary with None instead of "None".
+    """
+    return {k: (None if str(v) == "None" else v) for k, v in dict_in.items()}
+
+
+def updated_dict(*dict_list):
+    """
+    Returns an dictionary with updated values if new dictionaries are not none
+
+    Parameters
+    ----------
+    *dict_list: positional arguments
+        Lists of dictionary with updated values
+
+    Returns
+    -------
+    dict
+        Updated dictionary
+    """
+    out = {}
+    for update_dict in dict_list:
+        updict = none_val(update_dict, {})
+        if not isinstance(updict, dict):
+            raise ValueError(
+                f"all arguments of updated_dict must be dictionaries or None, got: {updict}"
+            )
+        out.update(updict)
+    return out
+
+
+def add_dicts_diff(dict1, dict2, pref="", diff_lines=None):
+    """
+    Adds the differences between dictionaries to a list
+
+    Parameters
+    ----------
+    dict1, dict2: dict
+        Dictionaies to be compared
+    pref: str
+        Prefix to be added in output
+    diff_lines: list, None
+        List where differences will be appended to. If None, it is a new list.
+    """
+    if diff_lines is None:
+        diff_lines = []
+    for key in set(k for d in (dict1, dict2) for k in d):
+        if key not in dict1:
+            diff_lines.append((f"{pref}[{key}]", "missing", "present"))
+            return
+        if key not in dict2:
+            diff_lines.append((f"{pref}[{key}]", "present", "missing"))
+            return
+        if dict1[key] != dict2[key]:
+            if isinstance(dict1[key], dict):
+                add_dicts_diff(dict1[key], dict2[key], pref=f"{pref}[{key}]", diff_lines=diff_lines)
+            else:
+                diff_lines.append((f"{pref}[{key}]", str(dict1[key]), str(dict2[key])))
+
+
+def get_dicts_diff(dict1, dict2, keys=None, header=("Name", "dict1", "dict2"), msg=""):
+    """
+    Get all the differences between dictionaries, accounting for nested dictionaries.
+    If there are differences, a table with the information is printed.
+
+    Parameters
+    ----------
+    dict1, dict2: dict
+        Dictionaries to be compared
+    keys: list, None
+        List of keys to be compared. If None, all keys are compared
+    header: tuple
+        Header for differences table
+    msg: str
+        Message printed before the differences
+
+    Returns
+    -------
+    diff_lines:
+        List of dictionaries differences
+    """
+    diff_lines = [header]
+    if keys is None:
+        keys = set(list(dict1.keys()) + list(dict2.keys()))
+    for key in keys:
+        add_dicts_diff(
+            dict1.get(key, {}), dict2.get(key, {}), pref=f"[{key}]", diff_lines=diff_lines
+        )
+    if len(diff_lines) > 1:
+        diff_lines = np.array(diff_lines)
+        max_sizes = [max(veclen(l)) for l in diff_lines.T]
+        fmts = f"  %-{max_sizes[0]}s | %{max_sizes[1]}s | %{max_sizes[2]}s"
+        print(msg)
+        print(fmts % tuple(diff_lines[0]))
+        print(f'  {"-"*max_sizes[0]}-|-{"-"*max_sizes[1]}-|-{"-"*max_sizes[2]}')
+        for line in diff_lines[1:]:
+            print(fmts % tuple(line))
+    return diff_lines[1:]
 
 
 ########################################################################
