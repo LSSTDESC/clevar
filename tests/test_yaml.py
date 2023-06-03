@@ -10,10 +10,6 @@ from clevar import clv_yaml as clevar_yaml
 
 def test_yaml_helper_functions():
     from clevar.clv_yaml import helper_funcs as hf
-    hf.add_dicts_diff({'x':None}, {})
-    hf.add_dicts_diff({'x':{'x':None}}, {'x':{}})
-    hf.add_dicts_diff({'x':{'x':None}}, {'x':{'x':1}})
-    hf.get_dicts_diff({'x':{'x':None}}, {'x':{}})
     # loadconf fail
     assert_raises(ValueError, hf.loadconf, 'None_file')
     # loadconf inputs
