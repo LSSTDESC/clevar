@@ -119,3 +119,4 @@ def test_m_density_dist():
                   fit_statistics='unknown')
     info = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True, fit_bins1=2, fit_bins2=3,
                                      fit_statistics='mode')
+    info = scaling.mass_density_dist(c1, c2, 'cat1', add_fit=True, fit_bins1=[1e16,1e18], fit_bins2=3)
