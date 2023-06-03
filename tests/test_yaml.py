@@ -190,8 +190,8 @@ def test_yaml_plots():
     # Metrics
     clevar_yaml.match_metrics_distances(config_file)
     clevar_yaml.match_metrics_mass(config_file)
-    clevar_yaml.match_metrics_recovery_rate(config_file)
     clevar_yaml.match_metrics_redshift(config_file)
+    clevar_yaml.match_metrics_recovery_rate(config_file)
     # Create different config for skiping run
     config_diff = {}
     config_diff.update(config)
@@ -202,8 +202,8 @@ def test_yaml_plots():
     mock.builtins.input = lambda _: 'q'
     clevar_yaml.match_metrics_distances('cfg.yml')
     clevar_yaml.match_metrics_mass('cfg.yml')
-    clevar_yaml.match_metrics_recovery_rate('cfg.yml')
     clevar_yaml.match_metrics_redshift('cfg.yml')
+    clevar_yaml.match_metrics_recovery_rate('cfg.yml')
     mock.builtins.input = original_input
     # cleanup
     base_matched_files_cleanup(config_file, 'proximity')
