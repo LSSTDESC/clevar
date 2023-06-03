@@ -21,14 +21,14 @@ def get_test_data():
         'z': np.ones(100),
         'radius': np.ones(100),
     }
-    c1 = ClCatalog('Cat1', radius_unit='mpc', **{k:v[::2] for k, v in input0.items()})
-    c2 = ClCatalog('Cat2', radius_unit='mpc', **{k:v[1::2] for k, v in input0.items()})
-    return c1, c2
+    cat1 = ClCatalog('Cat1', radius_unit='mpc', **{k:v[::2] for k, v in input0.items()})
+    cat2 = ClCatalog('Cat2', radius_unit='mpc', **{k:v[1::2] for k, v in input0.items()})
+    return cat1, cat2
 
 def test_footprint():
 
     os.system('rm -f hsp_map.fits')
-    c1, c2 = get_test_data()
+    cat1, cat2 = get_test_data()
     cosmo = AstroPyCosmology()
 
     # Gen footprint
@@ -37,9 +37,9 @@ def test_footprint():
     assert_raises(ValueError, Footprint, nside=7, pixel=range(10))
     assert_raises(KeyError, Footprint, nside=32, detfrac=range(10))
     nside = 128
-    pixels1 = hp.ang2pix(nside, c1['ra'], c1['dec'], lonlat=True)
+    pixels1 = hp.ang2pix(nside, cat1['ra'], cat1['dec'], lonlat=True)
     ftpt1 = Footprint(nside=nside, pixel=list(set(pixels1)))
-    pixels2 = hp.ang2pix(nside, c2['ra'], c2['dec'], lonlat=True)
+    pixels2 = hp.ang2pix(nside, cat2['ra'], cat2['dec'], lonlat=True)
     ftpt2 = Footprint(nside=nside, pixel=list(set(pixels2)))
 
     # Footprint functions
@@ -88,15 +88,15 @@ def test_footprint():
 
     # Add quantities to catalog
 
-    c1.add_ftpt_masks(ftpt1, ftpt2)
-    c1.add_ftpt_coverfrac(ftpt2, 1, 'mpc', cosmo=cosmo)
-    c1.add_ftpt_coverfrac(ftpt2, 1, 'mpc', cosmo=cosmo, window='flat')
-    assert_raises(ValueError, c1.add_ftpt_coverfrac, ftpt2, 1, 'mpc', window='unknown')
+    cat1.add_ftpt_masks(ftpt1, ftpt2)
+    cat1.add_ftpt_coverfrac(ftpt2, 1, 'mpc', cosmo=cosmo)
+    cat1.add_ftpt_coverfrac(ftpt2, 1, 'mpc', cosmo=cosmo, window='flat')
+    assert_raises(ValueError, cat1.add_ftpt_coverfrac, ftpt2, 1, 'mpc', window='unknown')
 
     # save footprint quantities of catalog
 
-    c1.save_footprint_quantities('cat1_ftq.fits', overwrite=True)
-    c1.load_footprint_quantities('cat1_ftq.fits')
+    cat1.save_footprint_quantities('cat1_ftq.fits', overwrite=True)
+    cat1.load_footprint_quantities('cat1_ftq.fits')
     os.system('rm -f cat1_ftq.fits')
 
 def test_coverfrac():
@@ -133,37 +133,37 @@ def test_coverfrac():
 
 def test_artificial_footprint():
 
-    c1, c2 = get_test_data()
+    cat1, cat2 = get_test_data()
     cosmo = AstroPyCosmology()
 
     # baseline footprint
 
     nside = 128
-    pixels1 = hp.ang2pix(nside, c1['ra'], c1['dec'], lonlat=True)
+    pixels1 = hp.ang2pix(nside, cat1['ra'], cat1['dec'], lonlat=True)
     ftpt1 = Footprint(nside=nside, pixel=list(set(pixels1)))
 
     # Artificial footprint
 
-    ftpt_test = create_footprint(c1['ra'], c1['dec'], nside=nside)
+    ftpt_test = create_footprint(cat1['ra'], cat1['dec'], nside=nside)
     assert_equal(sorted(ftpt1['pixel']), sorted(ftpt_test['pixel']))
 
     # Other functions
 
-    ftpt_test = create_footprint(c1['ra'], c1['dec'], nside=None, min_density=2, neighbor_fill=None)
+    ftpt_test = create_footprint(cat1['ra'], cat1['dec'], nside=None, min_density=2, neighbor_fill=None)
     assert_equal(ftpt_test.nside, 16)
-    ftpt_test2 = create_footprint(c1['ra'], c1['dec'], nside=None, min_density=2, neighbor_fill=5)
+    ftpt_test2 = create_footprint(cat1['ra'], cat1['dec'], nside=None, min_density=2, neighbor_fill=5)
     assert(ftpt_test['pixel'].size<ftpt_test2['pixel'].size)
-    assert_raises(ValueError, create_footprint, c1['ra'], c1['dec'], nside=None, min_density=0)
+    assert_raises(ValueError, create_footprint, cat1['ra'], cat1['dec'], nside=None, min_density=0)
 
 def test_plot_footprint():
 
-    c1, c2 = get_test_data()
+    cat1, cat2 = get_test_data()
     cosmo = AstroPyCosmology()
     nside = 128
 
     # Plot with 165<ra<195
 
-    pixels1 = hp.ang2pix(nside, c1['ra']+165, c1['dec'], lonlat=True)
+    pixels1 = hp.ang2pix(nside, cat1['ra']+165, cat1['dec'], lonlat=True)
     ftpt1 = Footprint(nside=nside, pixel=list(set(pixels1)))
     ftpt1.plot('detfrac', auto_lim=True)
     ftpt1.plot('detfrac', figsize=(3, 3))
@@ -171,24 +171,24 @@ def test_plot_footprint():
 
     # Plot with 350<ra<20
 
-    pixels1 = hp.ang2pix(nside, c1['ra']+350, c1['dec'], lonlat=True)
+    pixels1 = hp.ang2pix(nside, cat1['ra']+350, cat1['dec'], lonlat=True)
     ftpt1 = Footprint(nside=nside, pixel=list(set(pixels1)))
     ftpt1.plot('detfrac', auto_lim=True)
 
     # Plot with clusters
 
     assert_raises(TypeError, ftpt1.plot, 'detfrac', cluster='not a cluster')
-    assert_raises(TypeError, ftpt1.plot, 'detfrac', cluster=c1)
+    assert_raises(TypeError, ftpt1.plot, 'detfrac', cluster=cat1)
 
     # plot with radius
 
-    ftpt1.plot('detfrac', cluster=c1, cosmo=cosmo)
-    c1.radius_unit = None
+    ftpt1.plot('detfrac', cluster=cat1, cosmo=cosmo)
+    cat1.radius_unit = None
 
     # plot with scatter
 
-    ftpt1.plot('detfrac', cluster=c1, cosmo=cosmo)
+    ftpt1.plot('detfrac', cluster=cat1, cosmo=cosmo)
 
     # plot with ra_min>180, ra_max<180
 
-    ftpt1.plot('detfrac', cluster=c1, cosmo=cosmo, ra_lim=[350, 10], dec_lim=[0, 30])
+    ftpt1.plot('detfrac', cluster=cat1, cosmo=cosmo, ra_lim=[350, 10], dec_lim=[0, 30])

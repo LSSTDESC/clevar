@@ -21,24 +21,24 @@ class _test_data():
     input2 = {k:v[:4] for k, v in input1.items()}
     input2['z'][:2] = [.3, .2]
     input2['mass'][:3] = input2['mass'][:3][::-1]
-    c1 = ClCatalog('Cat1', **input1)
-    c2 = ClCatalog('Cat2', **input2)
+    cat1 = ClCatalog('Cat1', **input1)
+    cat2 = ClCatalog('Cat2', **input2)
     cosmo = CosmoClass()
     mt = ProximityMatch()
     mt_config1 = {'delta_z':.2, 'match_radius': '1 mpc', 'cosmo':cosmo}
     mt_config2 = {'delta_z':.2, 'match_radius': '1 arcsec'}
-    mt.prep_cat_for_match(c1, **mt_config1)
-    mt.prep_cat_for_match(c2, **mt_config2)
-    mt.multiple(c1, c2)
-    mt.multiple(c2, c1)
-    mt.unique(c1, c2, 'angular_proximity')
-    mt.unique(c2, c1, 'angular_proximity')
+    mt.prep_cat_for_match(cat1, **mt_config1)
+    mt.prep_cat_for_match(cat2, **mt_config2)
+    mt.multiple(cat1, cat2)
+    mt.multiple(cat2, cat1)
+    mt.unique(cat1, cat2, 'angular_proximity')
+    mt.unique(cat2, cat1, 'angular_proximity')
 
 ##############################
 ### Test #####################
 ##############################
 def test_plot():
-    cat = _test_data.c1
+    cat = _test_data.cat1
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e16]
@@ -60,7 +60,7 @@ def test_plot():
 
 
 def test_plot_panel():
-    cat = _test_data.c1
+    cat = _test_data.cat1
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
@@ -74,7 +74,7 @@ def test_plot_panel():
 
 
 def test_plot2D():
-    cat = _test_data.c1
+    cat = _test_data.cat1
     matching_type = 'cat1'
     redshift_bins = [0, 0.5, 1]
     mass_bins = [1e13, 1e14, 1e15, 1e16]
@@ -84,7 +84,7 @@ def test_plot2D():
 
 
 def test_skyplot():
-    cat = _test_data.c1
+    cat = _test_data.cat1
     matching_type = 'cat1'
     rc.skyplot(cat, matching_type)
     # for monocromatic map
