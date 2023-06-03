@@ -4,7 +4,8 @@ Matching metrics parent functions for command line execution
 import numpy as np
 import pylab as plt
 
-from .helper_funcs import loadconf, make_catalog, make_bins, dict_with_none
+from ..utils import dict_with_none
+from .helper_funcs import loadconf, make_catalog, make_bins
 
 
 class MetricYamlFuncs:
