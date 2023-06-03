@@ -337,7 +337,7 @@ def _add_bindata_and_powlawfit_array(ax, values1, values2, err2=None, **kwargs):
     use_kwargs.update(
         {
             "err2": use_kwargs.get("err2", err2),
-            "add_bindata": use_kwargs.get("add_bindata", use_kwargs.get("add_fit", False)),
+            "add_bindata": kwargs.get("add_bindata", kwargs.get("add_fit", False)),
             "add_fit": kwargs.get("add_fit", False),
         }
     )
