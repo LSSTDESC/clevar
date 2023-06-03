@@ -1,11 +1,10 @@
 """@file match_metrics_distances.py
 Matching metrics - distances functions for command line execution
 """
-import numpy as np
 import pylab as plt
 
 from clevar.match_metrics import distances
-from .helper_funcs import make_bins, dict_with_none, make_cosmology
+from .helper_funcs import make_cosmology
 from .match_metrics_parent import MetricYamlFuncs
 
 
@@ -26,17 +25,7 @@ class DistancesYamlFuncs(MetricYamlFuncs):
     def _set_individual_conf(self, general_conf):
         # prep general_confurations
         self.conf.update(general_conf["mt_metrics_distances"])
-        # Format values
-        self.conf["figsize"] = np.array(self.conf["figsize"].split(" "), dtype=float) / 2.54
-        self.conf["dpi"] = int(self.conf["dpi"])
-        for cat in ("catalog1", "catalog2"):
-            self.conf[cat]["redshift_bins"] = make_bins(self.conf[cat]["redshift_bins"])
-            self.conf[cat]["mass_bins"] = make_bins(
-                self.conf[cat]["mass_bins"], self.conf[cat]["log_mass"]
-            )
-            self.conf[cat] = dict_with_none(self.conf[cat])
-        ### Plots
-        # Central distances
+        self._set_basic_conf()
         self.kwargs = {
             "matching_type": self.conf["matching_type"],
             "shape": self.conf["line_type"],

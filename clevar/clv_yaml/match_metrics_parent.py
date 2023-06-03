@@ -41,6 +41,16 @@ class MetricYamlFuncs:
     def _set_individual_conf(self, general_conf):
         raise NotImplementedError("Not Implemented")
 
+    def _set_basic_conf(self):
+        self.conf["figsize"] = np.array(self.conf["figsize"].split(" "), dtype=float) / 2.54
+        self.conf["dpi"] = int(self.conf["dpi"])
+        for cat in ("catalog1", "catalog2"):
+            self.conf[cat]["redshift_bins"] = make_bins(self.conf[cat]["redshift_bins"])
+            self.conf[cat]["mass_bins"] = make_bins(
+                self.conf[cat]["mass_bins"], self.conf[cat]["log_mass"]
+            )
+            self.conf[cat] = dict_with_none(self.conf[cat])
+
     def __call__(self):
         if self.skip:
             return
@@ -163,7 +173,7 @@ class ScalingYamlFuncs(MetricYamlFuncs):
         plt.close(conf["fig"])
 
     def _plot_density_metrics(self):
-        print("\n# Mass density metrics")
+        print(f"\n# {self.self_name} density metrics")
         conf = self._core_density_metrics(
             self.cats["1"],
             self.cats["2"],
@@ -181,7 +191,7 @@ class ScalingYamlFuncs(MetricYamlFuncs):
         plt.close(conf["fig"])
 
     def _plot_other_colors(self, ind_i):
-        print(f"\n# Mass (catalog {ind_i} {self.other_name} colors)")
+        print(f"\n# {self.self_name} (catalog {ind_i} {self.other_name} colors)")
         conf = {"fig": plt.figure(figsize=self.conf["figsize"])}
         ax = plt.axes()
         self._core_other_color(
@@ -201,7 +211,7 @@ class ScalingYamlFuncs(MetricYamlFuncs):
         plt.close(conf["fig"])
 
     def _plot_density_other_panel(self, ind_i):
-        print(f"\n# Mass density (catalog {ind_i} {self.other_name} panel)")
+        print(f"\n# {self.self_name} density (catalog {ind_i} {self.other_name} panel)")
         conf = self._core_density_other_panel(
             self.cats["1"],
             self.cats["2"],
@@ -225,7 +235,7 @@ class ScalingYamlFuncs(MetricYamlFuncs):
         plt.close(conf["fig"])
 
     def _plot_dist_self(self, ind_i):
-        print(f"\n# Mass density (catalog {ind_i} self dist)")
+        print(f"\n# {self.self_name} density (catalog {ind_i} self dist)")
         conf = self._core_dist_self(
             self.cats[ind_i],
             **{
@@ -246,7 +256,7 @@ class ScalingYamlFuncs(MetricYamlFuncs):
         plt.close(conf["fig"])
 
     def _plot_dist(self, ind_i, ind_j):
-        print(f"\n# Mass density (catalog {ind_i}-{ind_j} dist)")
+        print(f"\n# {self.self_name} density (catalog {ind_i}-{ind_j} dist)")
         conf = self._core_dist(
             self.cats[ind_i],
             self.cats[ind_j],
@@ -270,7 +280,7 @@ class ScalingYamlFuncs(MetricYamlFuncs):
         plt.close(conf["fig"])
 
     def _plot_density_dist(self, ind_i, ind_j):
-        print(f"\n# Mass density (catalog {ind_i}-{ind_j} {self.other_name} panel)")
+        print(f"\n# {self.self_name} density (catalog {ind_i}-{ind_j} {self.other_name} panel)")
         conf = self._core_density_dist(
             self.cats[ind_i],
             self.cats[ind_j],
