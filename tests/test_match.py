@@ -15,6 +15,7 @@ def test_parent():
     assert_raises(NotImplementedError, mt.prep_cat_for_match, None)
     assert_raises(NotImplementedError, mt.multiple, None, None)
     assert_raises(NotImplementedError, mt.match_from_config, None, None, None, None)
+    assert_raises(ValueError, mt._get_dist_mt, None, None, 'unknown match')
 
 def _test_mt_results(cat, multi_self, self, cross, multi_other=None, other=None):
     multi_other = multi_self if multi_other is None else multi_other
