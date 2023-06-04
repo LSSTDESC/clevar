@@ -178,6 +178,12 @@ def test_m_density_dist():
     info = scaling.mass_density_dist(
         cat1, cat2, "cat1", add_fit=True, fit_bins1=2, fit_bins2=3, fit_statistics="mode"
     )
-    info = scaling.mass_density_dist(
+    scaling.mass_density_dist(
         cat1, cat2, "cat1", add_fit=True, fit_bins1=[1e16, 1e18], fit_bins2=3
     )
+    # run fit functions
+    for key, value in info["fit"].items():
+        if "dist" in key:
+            value(1e14, 1e14)
+        elif key[:4]=="func":
+            value(1e14)
