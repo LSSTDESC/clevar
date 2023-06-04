@@ -7,26 +7,46 @@ from numpy.testing import assert_raises, assert_allclose, assert_equal
 from unittest import mock
 
 from clevar import clv_yaml as clevar_yaml
+from clevar.clv_yaml import match_metrics_parent as metric_parent
+
+
+def test_yaml_parent():
+    assert_raises(
+        NotImplementedError, metric_parent.MetricYamlFuncs._set_individual_conf, None, None
+    )
+    assert_raises(NotImplementedError, metric_parent.MetricYamlFuncs._main, None)
+    assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_density, None)
+    assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_metrics, None)
+    assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_density_metrics, None)
+    assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_other_color, None)
+    assert_raises(
+        NotImplementedError, metric_parent.ScalingYamlFuncs._core_density_other_panel, None
+    )
+    assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_dist_self, None)
+    assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_dist, None)
+    assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_density_dist, None)
+
 
 def test_yaml_helper_functions():
     from clevar.clv_yaml import helper_funcs as hf
+
     # loadconf fail
     assert_raises(ValueError, hf.loadconf, 'None_file')
     # loadconf inputs
-        # create yml and log.yml
-    os.system("rm -r temp")
-    yaml.write({'outpath':'temp', 'matching_mode':'proximity', 'test':{'val':1}}, 'cfg.yml')
+    # create yml and log.yml
+    os.system('rm -r temp')
+    yaml.write({'outpath': 'temp', 'matching_mode': 'proximity', 'test': {'val': 1}}, 'cfg.yml')
     hf.loadconf('cfg.yml')
-        # change yml
-    yaml.write({'outpath':'temp',  'matching_mode':'proximity','test':{'val':2}}, 'cfg.yml')
-        # test options
+    # change yml
+    yaml.write({'outpath': 'temp', 'matching_mode': 'proximity', 'test': {'val': 2}}, 'cfg.yml')
+    # test options
     hf.loadconf('cfg.yml', ['test'], fail_action='orverwrite')
-    os.system("rm cfg.yml")
-    os.system("rm -r temp")
+    os.system('rm cfg.yml')
+    os.system('rm -r temp')
     # cosmology
-    hf.make_cosmology({'backend':'astropy'})
-    hf.make_cosmology({'backend':'ccl'})
-    assert_raises(ValueError, hf.make_cosmology, {'backend':'unknown'})
+    hf.make_cosmology({'backend': 'astropy'})
+    hf.make_cosmology({'backend': 'ccl'})
+    assert_raises(ValueError, hf.make_cosmology, {'backend': 'unknown'})
     # make_bins
     hf.make_bins(3, log=False)
     hf.make_bins('0 1 3', log=False)
