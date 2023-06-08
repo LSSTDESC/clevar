@@ -1,6 +1,7 @@
 """@file clevar/match_metrics/scaling/aux_funcs.py
 Auxiliary functions for scaling array functions.
 """
+import warnings
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.stats import binned_statistic
@@ -139,6 +140,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     add_bindata = kwargs.get("add_bindata", False)
     add_fit = kwargs.get("add_fit", False)
     if ((not add_bindata) and (not add_fit)) or len(values1) <= 1:
+        warnings.warn("Too few data points for fit!")
         return info
     mode = kwargs.get("statistics", "mode")
     bins1 = kwargs.get("bins1", 10)
@@ -337,7 +339,7 @@ def _add_bindata_and_powlawfit_array(ax, values1, values2, err2=None, **kwargs):
     use_kwargs.update(
         {
             "err2": use_kwargs.get("err2", err2),
-            "add_bindata": use_kwargs.get("add_bindata", use_kwargs.get("add_fit", False)),
+            "add_bindata": kwargs.get("add_bindata", kwargs.get("add_fit", False)),
             "add_fit": kwargs.get("add_fit", False),
         }
     )

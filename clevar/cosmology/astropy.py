@@ -20,6 +20,7 @@ class AstroPyCosmology(Cosmology):
     be_cosmo: cosmology library
         Cosmology library used in the back-end
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

@@ -5,6 +5,7 @@ wrapper of catalog_funcs functions
 from ...utils import deep_update, updated_dict
 from . import catalog_funcs
 
+
 def redshift(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on input

@@ -985,7 +985,9 @@ def plot_density_dist(
     )
     # Bindata and fit
     info.update(_add_bindata_and_powlawfit_array(info["axes"]["main"], values1, values2, **kwargs))
-    if kwargs.get("add_bindata", False) and info.get("plots", {}).get("errorbar", False):
+    if kwargs.get("add_bindata", kwargs.get("add_fit", False)) and info.get("plots", {}).get(
+        "errorbar", False
+    ):
         # pylint: disable=protected-access
         color = info["plots"]["errorbar"].lines[0]._color
         lines = info["plots"]["errorbar"].lines

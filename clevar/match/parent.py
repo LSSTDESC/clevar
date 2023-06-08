@@ -6,6 +6,7 @@ import numpy as np
 
 from ..utils import veclen
 
+
 class Match:
     """
     Matching Class
