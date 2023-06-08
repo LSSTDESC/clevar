@@ -4,18 +4,15 @@ Cosmology using CCL
 
 import numpy as np
 
-try:
-    import pyccl as ccl
-
-    _HAS_CCL = True
-except ImportError:
-    _HAS_CCL = False
+from .. import optional_libs as ol
 
 from ..constants import Constants as const
 
 from .parent_class import Cosmology
 
 __all__ = []
+
+ccl = ol.ccl
 
 
 def _patch_rho_crit_to_cd2018(rho_crit_external):
@@ -47,7 +44,7 @@ class CCLCosmology(Cosmology):
     """
 
     def __init__(self, **kwargs):
-        if not _HAS_CCL:
+        if ol.ccl is None:
             raise ImportError("pyccl library missing.")
 
         super().__init__(**kwargs)

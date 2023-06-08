@@ -4,12 +4,22 @@ import numpy as np
 import healpy as hp
 import healsparse as hs
 
+import clevar
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology
 from clevar.footprint import Footprint
 from clevar.footprint.artificial import create_footprint
 from clevar.footprint.nfw_funcs import nfw2D_profile_flatcore, nfw2D_profile_flatcore_unnorm
 from numpy.testing import assert_raises, assert_allclose, assert_equal, assert_almost_equal
+
+def test_installation_healsparse():
+
+    hs_safe = clevar.optional_libs.hs
+    clevar.optional_libs.hs = None
+    assert_raises(ImportError,
+        Footprint.read_healsparse,
+        None, tags=None, full=True)
+    clevar.optional_libs.hs = hs_safe
 
 def get_test_data():
 

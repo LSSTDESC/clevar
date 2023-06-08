@@ -9,16 +9,11 @@ from astropy import units as u
 
 from ..catalog import ClData, TagData, ClCatalog
 from ..geometry import convert_units, physical_bank
-from ..utils import hp, updated_dict
+from ..utils import hp, updated_dict, import_safe
 from .nfw_funcs import nfw2D_profile_flatcore_unnorm
 from ..match_metrics import plot_helper as ph
 
-try:
-    import healsparse as hs
-
-    _HAS_HEALSPARSE = True
-except ImportError:
-    _HAS_HEALSPARSE = False
+from .. import optional_libs as ol
 
 
 class Footprint(TagData):
@@ -261,14 +256,14 @@ class Footprint(TagData):
         full: bool
             Reads all columns of the catalog
         """
-        if not _HAS_HEALSPARSE:
+        if ol.hs is None:  # _HAS_HEALSPARSE:
             raise ImportError("pyccl library missing.")
 
         data = ClData()
         _tags = {"pixel": "pixel"}
         _tags.update(tags if tags is not None else {})
 
-        hsp_map = hs.HealSparseMap.read(filename)
+        hsp_map = ol.hs.HealSparseMap.read(filename)
         nside = hsp_map.nside_sparse
         if hsp_map.dtype.names is None:
             mask = hsp_map[:] != hp.UNSEEN

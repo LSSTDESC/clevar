@@ -1,7 +1,16 @@
 """General utility functions that are used in multiple modules"""
+import importlib
+
 import numpy as np
 from scipy.interpolate import interp1d
 import healpy as hp
+
+
+def import_safe(libname):
+    try:
+        return importlib.import_module(libname)
+    except ImportError:
+        return None
 
 
 ########################################################################
