@@ -5,13 +5,13 @@ from numpy.testing import assert_raises, assert_allclose, assert_equal
 import clevar
 from clevar.cosmology.parent_class import Cosmology
 
-def test_installation_pyccl():
 
+def test_installation_pyccl():
     ccl_safe = clevar.optional_libs.ccl
     clevar.optional_libs.ccl = None
-    assert_raises(ImportError,
-        clevar.cosmology.CCLCosmology)
+    assert_raises(ImportError, clevar.cosmology.CCLCosmology)
     clevar.optional_libs.ccl = ccl_safe
+
 
 def test_class():
     """Unit tests abstract class and unimplemented methdods"""

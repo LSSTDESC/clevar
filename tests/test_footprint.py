@@ -12,14 +12,13 @@ from clevar.footprint.artificial import create_footprint
 from clevar.footprint.nfw_funcs import nfw2D_profile_flatcore, nfw2D_profile_flatcore_unnorm
 from numpy.testing import assert_raises, assert_allclose, assert_equal, assert_almost_equal
 
-def test_installation_healsparse():
 
+def test_installation_healsparse():
     hs_safe = clevar.optional_libs.hs
     clevar.optional_libs.hs = None
-    assert_raises(ImportError,
-        Footprint.read_healsparse,
-        None, tags=None, full=True)
+    assert_raises(ImportError, Footprint.read_healsparse, None, tags=None, full=True)
     clevar.optional_libs.hs = hs_safe
+
 
 def get_test_data():
     ra_vals = np.linspace(0, 30, 10)
