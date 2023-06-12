@@ -925,7 +925,6 @@ def plot_density_dist(
             (see `scaling.array_funcs.plot` for more info).
     """
     # pylint: disable=too-many-locals
-    # Fig
     info = {"fig": plt.figure(**updated_dict({"figsize": (8, 6)}, fig_kwargs)), "axes": {}}
     left, bottom, right, top = fig_pos
     fmain, fgap, fcb = fig_frac

@@ -7,6 +7,18 @@ import healpy as hp
 
 
 def import_safe(libname):
+    """Safe importing library
+
+    Parameters
+    ----------
+    libname : str
+        Name of library
+
+    Returns
+    -------
+    library, None
+        Library if import is successful
+    """
     try:
         return importlib.import_module(libname)
     except ImportError:

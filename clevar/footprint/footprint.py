@@ -9,10 +9,9 @@ from astropy import units as u
 
 from ..catalog import ClData, TagData, ClCatalog
 from ..geometry import convert_units, physical_bank
-from ..utils import hp, updated_dict, import_safe
+from ..utils import hp, updated_dict
 from .nfw_funcs import nfw2D_profile_flatcore_unnorm
 from ..match_metrics import plot_helper as ph
-
 from .. import optional_libs as ol
 
 
