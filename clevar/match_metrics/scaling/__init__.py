@@ -1,7 +1,10 @@
+"""@file __init__.py
+scaling package
+"""
 from . import array_funcs as ArrayFuncs
 from . import catalog_funcs as ClCatalogFuncs
 
-from .funcs import (
+from .funcs_redshift import (
     redshift,
     redshift_density,
     redshift_masscolor,
@@ -12,6 +15,9 @@ from .funcs import (
     redshift_dist,
     redshift_dist_self,
     redshift_density_dist,
+)
+
+from .funcs_mass import (
     mass,
     mass_zcolor,
     mass_density,

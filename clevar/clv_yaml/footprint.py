@@ -1,13 +1,15 @@
 """@file footprint.py
 Footprint functions for command line execution
 """
-import numpy as np
-import pylab as plt
 import os
-import warnings
 
 import clevar
 from .helper_funcs import loadconf, make_catalog, make_cosmology, get_input_loop
+
+_check_actions = {
+    "o": (lambda: True, [], {}),
+    "q": (lambda: False, [], {}),
+}
 
 
 def artificial(config_file, overwrite_config, overwrite_files, case):
@@ -32,22 +34,18 @@ def artificial(config_file, overwrite_config, overwrite_files, case):
     )
     if config is None:
         return
-    check_actions = {
-        "o": (lambda: True, [], {}),
-        "q": (lambda: False, [], {}),
-    }
     if case in ("1", "both"):
         print("\n# Creating footprint 1")
         save = True
         ftpt_cfg1 = config["catalog1"]["footprint"]
         if os.path.isfile(ftpt_cfg1["file"]) and not overwrite_files:
             print(f"\n*** File '{ftpt_cfg1['file']}' already exist! ***")
-            save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", check_actions)
+            save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", _check_actions)
         if save:
             print("\n# Reading Catalog 1")
-            c1 = make_catalog(config["catalog1"])
+            cat1 = make_catalog(config["catalog1"])
             ftpt1 = clevar.footprint.create_artificial_footprint(
-                c1["ra"], c1["dec"], nside=ftpt_cfg1["nside"], nest=ftpt_cfg1["nest"]
+                cat1["ra"], cat1["dec"], nside=ftpt_cfg1["nside"], nest=ftpt_cfg1["nest"]
             )  # min_density=2, neighbor_fill=None
             ftpt1[["pixel"]].write(ftpt_cfg1["file"], overwrite=True)
     if case in ("2", "both"):
@@ -56,14 +54,14 @@ def artificial(config_file, overwrite_config, overwrite_files, case):
         ftpt_cfg2 = config["catalog2"]["footprint"]
         if os.path.isfile(ftpt_cfg2["file"]) and not overwrite_files:
             print(f"\n*** File '{ftpt_cfg2['file']}' already exist! ***")
-            save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", check_actions)
+            save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", _check_actions)
         if save:
             print("\n# Reading Catalog 2")
-            c2 = make_catalog(config["catalog2"])
+            cat2 = make_catalog(config["catalog2"])
             ftpt2 = clevar.footprint.create_artificial_footprint(
-                c2["ra"], c2["dec"], nside=ftpt_cfg2["nside"], nest=ftpt_cfg2["nest"]
+                cat2["ra"], cat2["dec"], nside=ftpt_cfg2["nside"], nest=ftpt_cfg2["nest"]
             )  # min_density=2, neighbor_fill=None
-            out = ftpt2[["pixel"]].write(ftpt_cfg2["file"], overwrite=True)
+            ftpt2[["pixel"]].write(ftpt_cfg2["file"], overwrite=True)
 
 
 def prep_ftpt_config(config):
@@ -81,20 +79,20 @@ def prep_ftpt_config(config):
         kwargs to instanciate clevar.footprint.Footprint
     """
     kwargs = {"tags": {}}
-    for k, v in config.items():
-        if k == "file":
-            kwargs["filename"] = v
-        elif k in ("nside", "nest"):
-            kwargs[k] = v
-        elif v == "None":
+    for key, value in config.items():
+        if key == "file":
+            kwargs["filename"] = value
+        elif key in ("nside", "nest"):
+            kwargs[key] = value
+        elif value == "None":
             pass
         else:
-            kwargs["tags"][k] = v
+            kwargs["tags"][key] = value
     return kwargs
 
 
 def make_masks(config_file, overwrite_config, overwrite_files, case):
-    """Main plot function
+    """Makes footprint masks for catalogs
 
     Parameters
     ----------
@@ -113,84 +111,100 @@ def make_masks(config_file, overwrite_config, overwrite_files, case):
         load_configs=["catalog1", "catalog2", "cosmology", "masks"],
         fail_action="orverwrite" if overwrite_config else "ask",
     )
-    check_actions = {
-        "o": (lambda: True, [], {}),
-        "q": (lambda: False, [], {}),
-    }
     print("\n# Creating Cosmology")
     cosmo = make_cosmology(config["cosmology"])
     # Read footprints
-    ftpt_cfg1 = config["catalog1"]["footprint"]
     ftpt1 = (
-        clevar.Footprint.read(**prep_ftpt_config(ftpt_cfg1))
-        if ftpt_cfg1["file"] != "None"
+        clevar.Footprint.read(**prep_ftpt_config(config["catalog1"]["footprint"]))
+        if config["catalog1"]["footprint"]["file"] != "None"
         else None
     )
-    ftpt_cfg2 = config["catalog2"]["footprint"]
     ftpt2 = (
-        clevar.Footprint.read(**prep_ftpt_config(ftpt_cfg2))
-        if ftpt_cfg2["file"] != "None"
+        clevar.Footprint.read(**prep_ftpt_config(config["catalog2"]["footprint"]))
+        if config["catalog2"]["footprint"]["file"] != "None"
         else None
     )
     # Catalog 1
-    ftpt_quantities_file1 = f"{config['outpath']}/ftpt_quantities1.fits"
     if case in ("1", "both"):
         print("\n# Creating masks for catalog 1")
-        save = True
         print("\n# Reading Catalog 1")
-        c1 = make_catalog(config["catalog1"])
-        for cf_name, mask_cfg in config["masks"]["catalog1"].items():
-            if cf_name[:12] == "in_footprint":
-                print(f"\n# Adding footprint mask: {mask_cfg}")
-                ftpt = {"self": ftpt1, "other": ftpt2}[mask_cfg["which_footprint"]]
-                c1._add_ftpt_mask(ftpt, maskname=mask_cfg["name"])
-            if cf_name[:13] == "coverfraction":
-                aperture, aperture_unit = clevar.utils.str2dataunit(
-                    mask_cfg["aperture"], clevar.geometry.units_bank
-                )
-                ftpt = {"self": ftpt1, "other": ftpt2}[mask_cfg["which_footprint"]]
-                print(f"\n# Adding coverfrac: {mask_cfg}")
-                c1.add_ftpt_coverfrac(
-                    ftpt,
-                    aperture,
-                    aperture_unit,
-                    window=mask_cfg["window_function"],
-                    colname=mask_cfg["name"],
-                    cosmo=cosmo,
-                )
-        if os.path.isfile(ftpt_quantities_file1) and not overwrite_files:
-            print(f"\n*** File '{ftpt_quantities_file1}' already exist! ***")
-            save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", check_actions)
-        if save:
-            c1.save_footprint_quantities(ftpt_quantities_file1, overwrite=True)
+        _make_mask(
+            config["catalog1"],
+            f"{config['outpath']}/ftpt_quantities1.fits",
+            config["masks"]["catalog1"],
+            ftpt1,
+            ftpt2,
+            cosmo,
+            overwrite_files,
+        )
     # Catalog 2
-    ftpt_quantities_file2 = f"{config['outpath']}/ftpt_quantities2.fits"
     if case in ("2", "both"):
         print("\n# Creating masks for catalog 2")
-        save = True
         print("\n# Reading Catalog 2")
-        c2 = make_catalog(config["catalog2"])
-        for cf_name, mask_cfg in config["masks"]["catalog2"].items():
-            if cf_name[:12] == "in_footprint":
-                print(f"\n# Adding footprint mask: {mask_cfg}")
-                ftpt = {"self": ftpt2, "other": ftpt1}[mask_cfg["which_footprint"]]
-                c2._add_ftpt_mask(ftpt, maskname=mask_cfg["name"])
-            if cf_name[:13] == "coverfraction":
-                aperture, aperture_unit = clevar.utils.str2dataunit(
-                    mask_cfg["aperture"], clevar.geometry.units_bank
-                )
-                ftpt = {"self": ftpt2, "other": ftpt1}[mask_cfg["which_footprint"]]
-                print(f"\n# Adding coverfrac: {mask_cfg}")
-                c2.add_ftpt_coverfrac(
-                    ftpt,
-                    aperture,
-                    aperture_unit,
-                    window=mask_cfg["window_function"],
-                    colname=mask_cfg["name"],
-                    cosmo=cosmo,
-                )
-        if os.path.isfile(ftpt_quantities_file2) and not overwrite_files:
-            print(f"\n*** File '{ftpt_quantities_file2}' already exist! ***")
-            save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", check_actions)
-        if save:
-            c2.save_footprint_quantities(ftpt_quantities_file2, overwrite=True)
+        _make_mask(
+            config["catalog2"],
+            f"{config['outpath']}/ftpt_quantities2.fits",
+            config["masks"]["catalog2"],
+            ftpt2,
+            ftpt1,
+            cosmo,
+            overwrite_files,
+        )
+
+
+def _make_mask(
+    cat_filename,
+    ftpt_quantities_filename,
+    masks_config,
+    ftpt_self,
+    ftpt_other,
+    cosmo,
+    overwrite_files,
+):
+    """Makes footprint masks for catalog
+
+    Parameters
+    ----------
+    cat_filename : str
+        Name of catalog file
+    ftpt_quantities_filename : str
+        Name of footprint quantities file
+    masks_config : dict
+        Configuration for masks
+    ftpt_self : clevar.Footprint object
+        Footprint of this catalog
+    ftpt_other : clevar.Footprint object
+        Footprint of the other catalog
+    cosmo : clevar.Cosmology object
+        Cosmology
+    overwrite_files: bool
+        Forces overwrite of output files
+    """
+    ftpts = {"self": ftpt_self, "other": ftpt_other}
+    cat = make_catalog(cat_filename)
+    for cf_name, mask_cfg in masks_config.items():
+        if cf_name[:12] == "in_footprint":
+            print(f"\n# Adding footprint mask: {mask_cfg}")
+            # pylint: disable=protected-access
+            cat._add_ftpt_mask(ftpts[mask_cfg["which_footprint"]], maskname=mask_cfg["name"])
+        if cf_name[:13] == "coverfraction":
+            aperture, aperture_unit = clevar.utils.str2dataunit(
+                mask_cfg["aperture"], clevar.geometry.units_bank
+            )
+            print(f"\n# Adding coverfrac: {mask_cfg}")
+            cat.add_ftpt_coverfrac(
+                ftpts[mask_cfg["which_footprint"]],
+                aperture,
+                aperture_unit,
+                window=mask_cfg["window_function"],
+                colname=mask_cfg["name"],
+                cosmo=cosmo,
+            )
+
+    save = True
+    if os.path.isfile(ftpt_quantities_filename) and not overwrite_files:
+        print(f"\n*** File '{ftpt_quantities_filename}' already exist! ***")
+        save = get_input_loop("Overwrite(o) and proceed or Quit(q)?", _check_actions)
+
+    if save:
+        cat.save_footprint_quantities(ftpt_quantities_filename, overwrite=True)

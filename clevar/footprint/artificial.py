@@ -1,6 +1,7 @@
-#!/usr/bin/env python
+"""@file artificial.py
+Functions to create artificial footprints
+"""
 import numpy as np
-import os, sys
 from ..utils import hp
 from .footprint import Footprint
 
@@ -72,14 +73,14 @@ def nside_from_density(ra, dec, min_density, nest=False):
     nside = 2
     pixel = hp.ang2pix(nside, ra, dec, lonlat=True, nest=nest)
     pixel_set = np.array(list(set(pixel)))
-    for n in range(2, 12):
+    for power in range(2, 12):
         print(f"NSIDE({nside}) -> {pixel.size/pixel_set.size} clusters per pixel")
         if pixel.size / pixel_set.size < min_density:
             return nside, pixel_set
-        nside = 2**n
+        nside = 2**power
         pixel = hp.ang2pix(nside, ra, dec, lonlat=True, nest=nest)
         pixel_set = np.array(list(set(pixel)))
-    raise ValueError(f"NSIDE required > {2**n}")
+    raise ValueError(f"NSIDE required > {2**power}")
 
 
 def fill_holes(ftpt, neighbor_fill, nest=False):
@@ -88,7 +89,7 @@ def fill_holes(ftpt, neighbor_fill, nest=False):
 
     Parameters
     ----------
-    ftpt: clevar.mask.Footprint object
+    ftpt: clevar.Footprint object
         Footprint
     pixels: numpy array
         Array with indices of healpy pixels of the footprint
@@ -99,7 +100,7 @@ def fill_holes(ftpt, neighbor_fill, nest=False):
 
     Returns
     -------
-    ftpt: clevar.mask.Footprint object
+    ftpt: clevar.Footprint object
         Footprint with holes filled
     """
     all_neighbors = hp.neighbors_of_pixels(ftpt.nside, ftpt["pixel"], nest=nest)
@@ -134,7 +135,7 @@ def fill_holes_conv(ftpt, neighbor_fill, nest=False):
 
     Returns
     -------
-    ftpt: clevar.mask.Footprint object
+    ftpt: clevar.Footprint object
         Footprint with holes filled
     """
     if neighbor_fill is not None:

@@ -1,32 +1,14 @@
-"""@file clevar/match_metrics/scaling/catalog_funcs.py
-Main scaling functions using catalogs, wrapper of array_funcs functions
+"""@file clevar/match_metrics/scaling/funcs_redshift.py
+Main scaling functions for redshift plots,
+wrapper of catalog_funcs functions
 """
-import numpy as np
-
-from ...utils import autobins, updated_dict
-from ...match import get_matched_pairs
-from .. import plot_helper as ph
-from . import array_funcs
-
-_local_args = (
-    "xlabel",
-    "ylabel",
-    "xscale",
-    "yscale",
-    "add_err",
-    "add_fit_err",
-    "label1",
-    "label2",
-    "scale1",
-    "scale2",
-    "mask1",
-    "mask2",
-)
+from ...utils import deep_update, updated_dict
+from . import catalog_funcs
 
 
-def _prep_kwargs(cat1, cat2, matching_type, col, kwargs=None):
+def redshift(cat1, cat2, matching_type, **kwargs):
     """
-    Prepare kwargs into args for this class and args for function
+    Scatter plot with errorbars and color based on input
 
     Parameters
     ----------
@@ -34,82 +16,6 @@ def _prep_kwargs(cat1, cat2, matching_type, col, kwargs=None):
         ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
-    kwargs: dict, None
-        Input arguments
-
-    Returns
-    -------
-    class_kwargs: dict
-        Arguments for class
-    func_kwargs: dict
-        Arguments for function
-    mp: clevar.match.MatchedPairs
-        Matched catalogs
-    """
-    kwargs_ = updated_dict(kwargs)
-    func_kwargs = {k: v for k, v in kwargs_.items() if k not in _local_args}
-    mt1, mt2 = get_matched_pairs(
-        cat1.raw(),
-        cat2.raw(),
-        matching_type,
-        mask1=kwargs_.get("mask1", None),
-        mask2=kwargs_.get("mask2", None),
-    )
-    func_kwargs["values1"] = mt1[col]
-    func_kwargs["values2"] = mt2[col]
-    func_kwargs["err1"] = mt1.get(f"{col}_err") if kwargs_.get("add_err", True) else None
-    func_kwargs["err2"] = mt2.get(f"{col}_err") if kwargs_.get("add_err", True) else None
-    func_kwargs["fit_err2"] = mt2.get(f"{col}_err") if kwargs_.get("add_fit_err", True) else None
-    class_kwargs = {
-        "xlabel": kwargs_.get("xlabel", f"${cat1.labels[col]}$"),
-        "ylabel": kwargs_.get("ylabel", f"${cat2.labels[col]}$"),
-        "xscale": kwargs_.get("xscale", "linear"),
-        "yscale": kwargs_.get("yscale", "linear"),
-    }
-    if kwargs_.get("add_fit", False):
-        xlabel = kwargs_.get("label1", class_kwargs["xlabel"])
-        ylabel = kwargs_.get("label2", class_kwargs["ylabel"])
-        func_kwargs["fit_label_components"] = kwargs_.get("fit_label_components", (xlabel, ylabel))
-    return class_kwargs, func_kwargs, mt1, mt2
-
-
-def _fmt_plot(ax, **kwargs):
-    """
-    Format plot (scale and label of ax)
-
-    Parameters
-    ----------
-    ax: matplotlib.axes
-        Ax to add plot.
-    **kwargs
-        Other arguments
-    """
-    ax.set_xlabel(kwargs["xlabel"])
-    ax.set_ylabel(kwargs["ylabel"])
-    ax.set_xscale(kwargs["xscale"])
-    ax.set_yscale(kwargs["yscale"])
-
-
-def plot(cat1, cat2, matching_type, col, col_color=None, color1=True, color_log=False, **kwargs):
-    """
-    Scatter plot with errorbars. Color can be based on input column.
-
-    Parameters
-    ----------
-    cat1, cat2: clevar.ClCatalog
-        ClCatalogs with matching information.
-    matching_type: str
-        Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
-    col_color: str, None
-        Name of column for color
-    color1: bool
-        Use catalog 1 for color. If false uses catalog 2
-    color_log: bool
-        Use log of col_color
     add_err: bool
         Add errorbars
     mask1, mask2: array, None
@@ -121,37 +27,32 @@ def plot(cat1, cat2, matching_type, col, col_color=None, color1=True, color_log=
         Ax to add plot. If equals `None`, one is created.
     plt_kwargs: dict, None
         Additional arguments for pylab.scatter
-    add_cb: bool
-        Plot colorbar
-    cb_kwargs: dict, None
-        Colorbar arguments
     err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     xlabel, ylabel: str
-        Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
-    xscale, yscale: str
-        Scale for x/y axis.
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
+
+    Other Parameters
+    ----------------
     add_bindata: bool
         Plot binned data used for fit (default=False).
     add_fit: bool
         Fit and plot binned dat (default=False).
-    fit_err2: array, None
-        Error of catalog 2 component (set to err2 if not provided).
-    fit_log: bool
-        Bin and fit in log values (default=False).
+    add_fit_err: bool
+        Use redshift errors of catalog 2 in fit (default=True).
     fit_statistics: str
         Statistics to be used in fit (default=mean). Options are:
 
-            * `individual` : Use each point
-            * `mode` : Use mode of catalog 2 component distribution in each catalog 1 component \
-            bin, requires bins2.
-            * `mean` : Use mean of catalog 2 component distribution in each catalog 1 component \
-            bin, requires bins2.
+            * `individual` - Use each point.
+            * `mode` - Use mode of catalog 2 redshift distribution in each catalog 1 redshift bin,\
+            requires fit_bins2.
+            * `mean` - Use mean of catalog 2 redshift distribution in each catalog 1 redshift bin,\
+            requires fit_bins2.
 
     fit_bins1: array, None
-        Bins for catalog 1 component (default=10).
+        Bins for redshift of catalog 1 (default=10).
     fit_bins2: array, None
-        Bins for catalog 2 component (default=30).
+        Bins for redshift of catalog 2 (default=30).
     fit_legend_kwargs: dict, None
         Additional arguments for plt.legend.
     fit_bindata_kwargs: dict, None
@@ -159,7 +60,7 @@ def plot(cat1, cat2, matching_type, col, col_color=None, color1=True, color_log=
     fit_plt_kwargs: dict, None
         Additional arguments for plot of fit pylab.scatter.
     fit_label_components: tuple (of strings)
-        Names of fitted components in fit line label, default=(xlabel, ylabel)
+        Names of fitted components in fit line label, default=(xlabel, ylabel).
 
     Returns
     -------
@@ -191,18 +92,10 @@ def plot(cat1, cat2, matching_type, col, col_color=None, color1=True, color_log=
                 * `fit`: fitted data
                 * `errorbar`: binned data
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
-    if col_color is not None:
-        f_kwargs["values_color"] = mt1[col_color] if color1 else mt2[col_color]
-        f_kwargs["values_color"] = (
-            np.log10(f_kwargs["values_color"]) if color_log else f_kwargs["values_color"]
-        )
-    info = array_funcs.plot(**f_kwargs)
-    _fmt_plot(info["ax"], **cl_kwargs)
-    return info
+    return catalog_funcs.plot(cat1, cat2, matching_type, col="z", **kwargs)
 
 
-def plot_density(cat1, cat2, matching_type, col, **kwargs):
+def redshift_density(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on point density
 
@@ -215,7 +108,7 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
     col: str
         Name of column to be plotted
     bins1, bins2: array, None
-        Bins for component x and y (for density colors).
+        Bins for redshift of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
     mask1, mask2: array, None
@@ -238,15 +131,11 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
     rotation_resolution: int
         Number of bins to be used when ax_rotation!=0.
     xlabel, ylabel: str
-        Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
     xscale, yscale: str
         Scale for x/y axis.
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
@@ -256,87 +145,78 @@ def plot_density(cat1, cat2, matching_type, col, **kwargs):
             * `ax`: ax used in the plot.
             * `ax_cb` (optional): ax of colorbar
             * `binned_data` (optional): input data for fitting \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
     """
-    cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
-    f_kwargs["xscale"] = kwargs.get("xscale", "linear")
-    f_kwargs["yscale"] = kwargs.get("yscale", "linear")
-    info = array_funcs.plot_density(**f_kwargs)
-    _fmt_plot(info["ax"], **cl_kwargs)
-    return info
+    return catalog_funcs.plot_density(cat1, cat2, matching_type, col="z", **kwargs)
 
 
-def _get_panel_args(
-    cat1,
-    cat2,
-    matching_type,
-    col,
-    col_panel,
-    bins_panel,
-    panel_cat1=True,
-    log_panel=False,
-    **kwargs,
-):
+def redshift_masscolor(cat1, cat2, matching_type, log_mass=True, color1=True, **kwargs):
     """
-    Prepare args for panel
+    Scatter plot with errorbars and color based on input
 
     Parameters
     ----------
-    panel_plot_function: function
-        Plot function
     cat1, cat2: clevar.ClCatalog
         ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
-    col_panel: str
-        Name of column to make panels
-    bins_panel: array, int
-        Bins to make panels
-    panel_cat1: bool
-        Used catalog 1 for col_panel. If false uses catalog 2
-    log_panel: bool
-        Scale of the panel values
+    log_mass: bool
+        Log scale for mass
+    color1: bool
+        Use catalog 1 for color. If false uses catalog 2
     add_err: bool
         Add errorbars
-    **kwargs
-        Other arguments
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
+
+    Other Parameters
+    ----------------
+    ax: matplotlib.axes, None
+        Ax to add plot. If equals `None`, one is created.
+    plt_kwargs: dict, None
+        Additional arguments for pylab.scatter
+    add_cb: bool
+        Plot colorbar
+    cb_kwargs: dict, None
+        Colorbar arguments
+    err_kwargs: dict, None
+        Additional arguments for pylab.errorbar
+    xlabel, ylabel: str
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
+    **fit_kwargs:
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
-    class_kwargs: dict
-        Arguments for class
-    func_kwargs: dict
-        Arguments for function
-    mp: clevar.match.MatchedPairs
-        Matched catalogs
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `ax_cb` (optional): ax of colorbar
+            * `binned_data` (optional): input data for fitting \
+            (see `scaling.redshift` for more info).
+            * `fit` (optional): fitting output dictionary \
+            (see `scaling.redshift` for more info).
+            * `plots` (optional): fit and binning plots \
+            (see `scaling.redshift` for more info).
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)
-    f_kwargs["values_panel"] = mt1[col_panel] if panel_cat1 else mt2[col_panel]
-    f_kwargs["bins_panel"] = autobins(f_kwargs["values_panel"], bins_panel, log_panel)
-    # pylint: disable=protected-access
-    ph._set_label_format(f_kwargs, "label_format", "label_fmt", log_panel)
-    return cl_kwargs, f_kwargs, mt1, mt2
+    return catalog_funcs.plot(
+        cat1,
+        cat2,
+        matching_type,
+        col="z",
+        col_color="mass",
+        color1=color1,
+        color_log=log_mass,
+        **kwargs,
+    )
 
 
-def plot_panel(
-    cat1,
-    cat2,
-    matching_type,
-    col,
-    col_panel,
-    bins_panel,
-    panel_cat1=True,
-    col_color=None,
-    color1=True,
-    log_panel=False,
-    **kwargs,
-):
+def redshift_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on input with panels
 
@@ -346,20 +226,12 @@ def plot_panel(
         ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
-    col_panel: str
-        Name of column to make panels
-    bins_panel: array, int
-        Bins to make panels
+    mass_bins: int, array, int
+        Mass bins to make panels
+    log_mass: bool
+        Log scale for mass
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
-    col_color: str, None
-        Name of column for color.
-    color1: bool
-        Use catalog 1 for color. If false uses catalog 2
-    log_panel: bool
-        Scale of the panel values
     add_err: bool
         Add errorbars
     mask1, mask2: array, None
@@ -369,10 +241,6 @@ def plot_panel(
     ----------------
     plt_kwargs: dict, None
         Additional arguments for pylab.scatter
-    add_cb: bool
-        Plot colorbar
-    cb_kwargs: dict, None
-        Colorbar arguments
     err_kwargs: dict, None
         Additional arguments for pylab.errorbar
     panel_kwargs_list: list, None
@@ -386,17 +254,13 @@ def plot_panel(
     add_label: bool
         Add bin label to panel
     label_format: function
-        Function
+        Function to format the values of the bins
+    label_fmt: str
+        Format the values of binedges (ex: '.2f')
     xlabel, ylabel: str
-        Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
-    xscale, yscale: str
-        Scale for x/y axis.
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
@@ -405,43 +269,27 @@ def plot_panel(
 
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
-            * `ax_cb` (optional): ax of colorbar
             * `binned_data` (optional): input data for fitting \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
     """
-    cl_kwargs, f_kwargs, mt1, mt2 = _get_panel_args(
+    kwargs["label_fmt"] = kwargs.get("label_fmt", ".1f")
+    return catalog_funcs.plot_panel(
         cat1,
         cat2,
         matching_type,
-        col,
-        col_panel,
-        bins_panel,
-        panel_cat1=panel_cat1,
-        log_panel=log_panel,
+        col="z",
+        col_panel="mass",
+        bins_panel=mass_bins,
+        log_panel=log_mass,
         **kwargs,
     )
-    if col_color is not None:
-        f_kwargs["values_color"] = mt1[col_color] if color1 else mt2[col_color]
-    info = array_funcs.plot_panel(**f_kwargs)
-    ph.nice_panel(info["axes"], **cl_kwargs)
-    return info
 
 
-def plot_density_panel(
-    cat1,
-    cat2,
-    matching_type,
-    col,
-    col_panel,
-    bins_panel,
-    panel_cat1=True,
-    log_panel=False,
-    **kwargs,
-):
+def redshift_density_masspanel(cat1, cat2, matching_type, mass_bins=5, log_mass=True, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with panels
 
@@ -451,18 +299,14 @@ def plot_density_panel(
         ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
-    col_panel: str
-        Name of column to make panels
-    bins_panel: array, int
-        Bins to make panels
+    mass_bins: int, array, int
+        Mass bins to make panels
+    log_mass: bool
+        Log scale for mass
     panel_cat1: bool
         Used catalog 1 for col_panel. If false uses catalog 2
     bins1, bins2: array, None
-        Bins for component x and y (for density colors).
-    log_panel: bool
-        Scale of the panel values
+        Bins for redshift of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
     mask1, mask2: array, None
@@ -496,16 +340,12 @@ def plot_density_panel(
         Add bin label to panel
     label_format: function
         Function to format the values of the bins
+    label_fmt: str
+        Format the values of binedges (ex: '.2f')
     xlabel, ylabel: str
-        Label of x/y axis (default=cat1.labels[col]/cat2.labels[col]).
-    xscale, yscale: str
-        Scale for x/y axis.
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
+        Label of x/y axis (default=cat1.labels['z']/cat2.labels['z']).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
@@ -516,31 +356,26 @@ def plot_density_panel(
             * `axes`: `matplotlib.axes` used in the plot.
             * `ax_cb` (optional): ax of colorbar
             * `binned_data` (optional): input data for fitting \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
     """
-    cl_kwargs, f_kwargs = _get_panel_args(
+    kwargs["label_fmt"] = kwargs.get("label_fmt", ".1f")
+    return catalog_funcs.plot_density_panel(
         cat1,
         cat2,
         matching_type,
-        col,
-        col_panel,
-        bins_panel,
-        panel_cat1=panel_cat1,
-        log_panel=log_panel,
+        col="z",
+        col_panel="mass",
+        bins_panel=mass_bins,
+        log_panel=log_mass,
         **kwargs,
-    )[:2]
-    f_kwargs["xscale"] = kwargs.get("xscale", "linear")
-    f_kwargs["yscale"] = kwargs.get("yscale", "linear")
-    info = array_funcs.plot_density_panel(**f_kwargs)
-    ph.nice_panel(info["axes"], **cl_kwargs)
-    return info
+    )
 
 
-def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
+def redshift_metrics(cat1, cat2, matching_type, **kwargs):
     """
     Plot metrics.
 
@@ -550,12 +385,10 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
         ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
     bins1, bins2: array, None
-        Bins for component of catalog 1 and 2.
-    mode: str
-        Mode to run (default=`simple`). Options are:
+        Bins for redshift of catalog 1 and 2.
+    metrics_mode: str
+        Mode to run metrics (default=`diff_z`). Options are:
 
             * `simple` : metrics for `values2`.
             * `log` : metrics for `log10(values2)`.
@@ -564,7 +397,7 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
             * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
 
     metrics: list
-        List of mettrics to be plotted (default=[`mean`, `std`]). Possibilities are:
+        List of mettrics to be plotted (default=[`std.fill`, `mean`]). Possibilities are:
 
             * `mean` : compute the mean of values for points within each bin.
             * `std` : compute the standard deviation within each bin.
@@ -575,22 +408,21 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
             * `max` : compute the maximum of values for point within each bin.
             * `p_#` : compute half the width where a percentile of data is found. Number must be
               between 0-100 (ex: `p_68`, `p_95`, `p_99`).
-
     mask1, mask2: array, None
         Masks for clusters 1(2), must have size=cat1(2).size
 
     Other Parameters
     ----------------
-    metrics_kwargs: dict, None
-        Dictionary of dictionary configs for each metric plots.
     fig_kwargs: dict, None
         Additional arguments for plt.subplots
+    metrics_kwargs: dict, None
+        Dictionary of dictionary configs for each metric plots.
     legend_kwargs: dict, None
         Additional arguments for plt.legend
     label1, label2: str
-        Label for catalog 1/2 components.
+        Label for catalog 1/2 redshifts.
     scale1, scale2: str
-        Scale of catalog 1/2 components.
+        Scale of catalog 1/2 redshifts.
 
     Returns
     -------
@@ -600,26 +432,15 @@ def plot_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
-    f_kwargs.pop("fit_err2", None)
-    f_kwargs.pop("err1", None)
-    f_kwargs.pop("err2", None)
-    f_kwargs["bins1"] = bins1
-    f_kwargs["bins2"] = bins2
-    for key in ["metrics_mode"]:
-        if "metrics_" in key and key in f_kwargs:
-            f_kwargs[key.replace("metrics_", "")] = f_kwargs.pop(key)
-    info = array_funcs.plot_metrics(**f_kwargs)
-    info["axes"][0].set_ylabel(cat1.name)
-    info["axes"][1].set_ylabel(cat2.name)
-    info["axes"][0].set_xlabel(kwargs.get("label1", cl_kwargs["xlabel"]))
-    info["axes"][1].set_xlabel(kwargs.get("label2", cl_kwargs["ylabel"]))
-    info["axes"][0].set_xscale(kwargs.get("scale1", cl_kwargs["xscale"]))
-    info["axes"][1].set_xscale(kwargs.get("scale2", cl_kwargs["yscale"]))
-    return info
+    kwargs["mode"] = kwargs.get("mode", "diff_z")
+    kwargs["metrics_kwargs"] = deep_update(
+        {"std": {"label": r"$\sigma_z$"}, "mean": {"label": "$bias_z$"}},
+        kwargs.get("metrics_kwargs", {}),
+    )
+    return catalog_funcs.plot_metrics(cat1, cat2, matching_type, col="z", **kwargs)
 
 
-def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **kwargs):
+def redshift_density_metrics(cat1, cat2, matching_type, **kwargs):
     """
     Scatter plot with errorbars and color based on point density with scatter and bias panels
 
@@ -632,9 +453,9 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
     col: str
         Name of column to be plotted
     bins1, bins2: array, None
-        Bins for component x and y.
+        Bins for redshift of catalog 1 and 2.
     metrics_mode: str
-        Mode to run metrics (default=`simple`). Options are:
+        Mode to run metrics (default=`diff_z`). Options are:
 
             * `simple` : metrics for `values2`.
             * `log` : metrics for `log10(values2)`.
@@ -643,7 +464,7 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
             * `diff_z` : metrics for `(values2-values1)/(1+values1)`.
 
     metrics: list
-        List of mettrics to be plotted (default=[`mean`, `std`]). Possibilities are:
+        List of mettrics to be plotted (default=[`std.fill`, `mean`]). Possibilities are:
 
             * `mean` : compute the mean of values for points within each bin.
             * `std` : compute the standard deviation within each bin.
@@ -686,12 +507,8 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
     fig_frac: tuple
         Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
         and have values: [0, 1]. Colorbar is only used with add_cb key.
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
 
     Returns
     -------
@@ -701,43 +518,34 @@ def plot_density_metrics(cat1, cat2, matching_type, col, bins1=30, bins2=30, **k
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
             * `metrics`: dictionary with the plots for each metric.
-            * `binned_data` (optional): input data for fitting \
-            (see `scaling.catalog_funcs.plot` for more info).
-            * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
-            * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
     """
-    cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
-    f_kwargs["xscale"] = kwargs.get("scale1", cl_kwargs["xscale"])
-    f_kwargs["yscale"] = kwargs.get("scale2", cl_kwargs["yscale"])
-    f_kwargs["bins1"] = bins1
-    f_kwargs["bins2"] = bins2
-    info = array_funcs.plot_density_metrics(**f_kwargs)
-    xlabel = kwargs.get("label1", cl_kwargs["xlabel"])
-    ylabel = kwargs.get("label2", cl_kwargs["ylabel"])
-    info["axes"]["main"].set_xlabel(xlabel)
-    info["axes"]["main"].set_ylabel(ylabel)
-    return info
+    kwargs["metrics"] = kwargs.get("metrics", ["std.fill", "mean"])
+    kwargs["metrics_mode"] = kwargs.get("metrics_mode", "diff_z")
+    kwargs["metrics_kwargs"] = deep_update(
+        {
+            "std.fill": {"label": r"$\sigma_z$"},
+            "std": {"label": r"$\sigma_z$"},
+            "mean": {"label": "$bias_z$"},
+        },
+        kwargs.get("metrics_kwargs", {}),
+    )
+    return catalog_funcs.plot_density_metrics(cat1, cat2, matching_type, col="z", **kwargs)
 
 
-def plot_dist(
+def redshift_dist(
     cat1,
     cat2,
     matching_type,
-    col,
-    bins1=30,
-    bins2=5,
-    col_aux=None,
-    bins_aux=5,
-    log_vals=False,
-    log_aux=False,
+    redshift_bins_dist=30,
+    redshift_bins=5,
+    mass_bins=5,
+    log_mass=True,
     transpose=False,
     **kwargs,
 ):
     """
-    Plot distribution of a cat1 column, binned by the cat2 column in panels,
-    with option for a second cat2 column in lines.
+    Plot distribution of a cat1 redshift, binned by the cat2 redshift (in panels),
+    with option for cat2 mass bins (in lines).
 
     Parameters
     ----------
@@ -745,20 +553,14 @@ def plot_dist(
         ClCatalogs with matching information.
     matching_type: str
         Type of matching to be considered. Must be in: 'cross', 'cat1', 'cat2'
-    col: str
-        Name of column to be plotted
-    bins1: array, int
-        Bins for distribution of the cat1 column.
-    bins2: array, int
-        Bins for cat2 column (for panels/lines).
-    col_aux: array
-        Auxiliary colum of cat2 (to bin data in lines/panels).
-    bins_aux: array, int
-        Bins for component aux
-    log_vals: bool
-        Log scale for values (and int bins)
-    log_aux: bool
-        Log scale for aux values (and int bins)
+    redshift_bins_dist: array, int
+        Bins for distribution of the cat1 redshift
+    redshift_bins: array, int
+        Bins for cat2 redshift
+    mass_bins: array, int
+        Bins for cat2 mass
+    log_mass: bool
+        Log scale for mass
     transpose: bool
         Invert lines and panels
 
@@ -792,68 +594,53 @@ def plot_dist(
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    f_kwargs, mt2 = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[1::2]
-    f_kwargs.pop("err1", None)
-    f_kwargs.pop("err2", None)
-    f_kwargs.pop("fit_err2", None)
-    f_kwargs["values_aux"] = None if col_aux is None else mt2[col_aux]
-    f_kwargs["bins1_dist"] = bins1
-    f_kwargs["bins2"] = bins2
-    f_kwargs["bins_aux"] = bins_aux
-    f_kwargs["log_vals"] = log_vals
-    f_kwargs["log_aux"] = log_aux
-    f_kwargs["transpose"] = transpose
-    f_kwargs["panel_label_prefix"] = rf"{cat2.labels[col]}\,-\,"
-    log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
-    # pylint: disable=protected-access
-    ph._set_label_format(f_kwargs, "panel_label_format", "panel_label_fmt", log_panel)
-    ph._set_label_format(f_kwargs, "line_label_format", "line_label_fmt", log_line)
-    info = array_funcs.plot_dist(**f_kwargs)
-    xlabel = kwargs.get("label", f"${cat1.labels[col]}$")
-    for ax in info["axes"][-1, :] if len(info["axes"].shape) > 1 else info["axes"]:
-        ax.set_xlabel(xlabel)
-    return info
+    kwargs_ = updated_dict(
+        kwargs,
+        {
+            "col": "z",
+            "col_aux": "mass",
+            "bins1": redshift_bins_dist,
+            "bins2": redshift_bins,
+            "bins_aux": mass_bins,
+            "log_vals": False,
+            "log_aux": log_mass,
+            "transpose": transpose,
+        },
+    )
+    return catalog_funcs.plot_dist(cat1, cat2, matching_type, **kwargs_)
 
 
-def plot_dist_self(
+def redshift_dist_self(
     cat,
-    col,
-    bins1=30,
-    bins2=5,
-    col_aux=None,
-    bins_aux=5,
-    log_vals=False,
-    log_aux=False,
+    redshift_bins_dist=30,
+    redshift_bins=5,
+    mass_bins=5,
+    log_mass=True,
     transpose=False,
     mask=None,
     **kwargs,
 ):
     """
-    Plot distribution of a cat1 column, binned by the same column in panels,
-    with option for a second column in lines. Is is useful to compare with plot_dist results.
+    Plot distribution of a cat redshift, binned by redshift (in panels),
+    with option for mass bins (in lines).
+    Is is useful to compare with redshift_dist results.
 
     Parameters
     ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
     cat: clevar.ClCatalog
-        Input catalog
-    col: str
-        Name of column to be plotted
-    bins1: array, int
-        Bins for distribution of the cat1 column.
-    bins2: array, int
-        Bins for cat2 column (for panels/lines).
-    col_aux: array
-        Auxiliary colum of cat2 (to bin data in lines/panels).
-    bins_aux: array, int
-        Bins for component aux
-    log_vals: bool
-        Log scale for values (and int bins)
-    log_aux: bool
-        Log scale for aux values (and int bins)
+        Input Catalog
+    redshift_bins_dist: array, int
+        Bins for distribution of redshift
+    redshift_bins: array, int
+        Bins for redshift panels
+    mass_bins: array, int
+        Bins for mass
+    log_mass: bool
+        Log scale for mass
     transpose: bool
         Invert lines and panels
-    mask: ndarray
-        Mask for catalog
 
     Other Parameters
     ----------------
@@ -885,32 +672,26 @@ def plot_dist_self(
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: `matplotlib.axes` used in the plot.
     """
-    f_kwargs = {k: v for k, v in kwargs.items() if k not in _local_args}
-    mask = np.ones(cat.size, dtype=bool) if mask is None else mask
-    f_kwargs["values1"] = cat[col][mask]
-    f_kwargs["values2"] = cat[col][mask]
-    f_kwargs["values_aux"] = None if col_aux is None else cat[col_aux][mask]
-    f_kwargs["bins1_dist"] = bins1
-    f_kwargs["bins2"] = bins2
-    f_kwargs["bins_aux"] = bins_aux
-    f_kwargs["log_vals"] = log_vals
-    f_kwargs["log_aux"] = log_aux
-    f_kwargs["transpose"] = transpose
-    f_kwargs["panel_label_prefix"] = rf"{cat.labels[col]}\,-\,"
-    log_panel, log_line = (log_aux, log_vals) if transpose else (log_vals, log_aux)
-    # pylint: disable=protected-access
-    ph._set_label_format(f_kwargs, "panel_label_format", "panel_label_fmt", log_panel)
-    ph._set_label_format(f_kwargs, "line_label_format", "line_label_fmt", log_line)
-    info = array_funcs.plot_dist(**f_kwargs)
-    xlabel = kwargs.get("label", f"${cat.labels[col]}$")
-    for ax in info["axes"][-1, :] if len(info["axes"].shape) > 1 else info["axes"]:
-        ax.set_xlabel(xlabel)
-    return info
+    kwargs_ = updated_dict(
+        kwargs,
+        {
+            "col": "z",
+            "col_aux": "mass",
+            "bins1": redshift_bins_dist,
+            "bins2": redshift_bins,
+            "bins_aux": mass_bins,
+            "log_vals": False,
+            "log_aux": log_mass,
+            "transpose": transpose,
+            "mask": mask,
+        },
+    )
+    return catalog_funcs.plot_dist_self(cat, **kwargs_)
 
 
-def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
+def redshift_density_dist(cat1, cat2, matching_type, **kwargs):
     """
-    Scatter plot with errorbars and color based on point density with distribution panels.
+    Scatter plot with errorbars and color based on point density with scatter and bias panels
 
     Parameters
     ----------
@@ -921,7 +702,7 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
     col: str
         Name of column to be plotted
     bins1, bins2: array, None
-        Bins for component x and y (for density colors).
+        Bins for redshift of catalogs 1 and 2 (for density colors).
     add_err: bool
         Add errorbars
     mask1, mask2: array, None
@@ -953,12 +734,11 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
     fig_frac: tuple
         Sizes of each panel in the figure. Must be in the format (main_panel, gap, colorbar)
         and have values: [0, 1]. Colorbar is only used with add_cb key.
-    add_bindata: bool
-        Plot binned data used for fit (default=False).
-    add_fit: bool
-        Fit and plot binned dat (default=False).
     **fit_kwargs:
-        Other fit arguments (see `fit_*` paramters in `scaling.catalog_funcs.plot` for more info).
+        Other fit arguments (see `fit_*` paramters in `scaling.redshift` for more info).
+    vline_kwargs: dict, None
+        Arguments for vlines marking bins in main plot, used in plt.axvline.
+
 
     Returns
     -------
@@ -968,17 +748,10 @@ def plot_density_dist(cat1, cat2, matching_type, col, **kwargs):
             * `fig`: `matplotlib.figure.Figure` object.
             * `axes`: dictionary with each ax of the plot.
             * `binned_data` (optional): input data for fitting \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
             * `fit` (optional): fitting output dictionary \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
             * `plots` (optional): fit and binning plots \
-            (see `scaling.catalog_funcs.plot` for more info).
+            (see `scaling.redshift` for more info).
     """
-    cl_kwargs, f_kwargs = _prep_kwargs(cat1, cat2, matching_type, col, kwargs)[:2]
-    f_kwargs["xscale"] = kwargs.get("scale1", cl_kwargs["xscale"])
-    f_kwargs["yscale"] = kwargs.get("scale2", cl_kwargs["yscale"])
-    info = array_funcs.plot_density_dist(**f_kwargs)
-    info["axes"]["main"].set_xlabel(kwargs.get("label1", cl_kwargs["xlabel"]))
-    info["axes"]["main"].set_ylabel(kwargs.get("label2", cl_kwargs["ylabel"]))
-    info["axes"]["top"][-1].set_ylabel(kwargs.get("label2", cl_kwargs["ylabel"]))
-    return info
+    return catalog_funcs.plot_density_dist(cat1, cat2, matching_type, col="z", **kwargs)

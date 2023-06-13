@@ -122,8 +122,8 @@ def plot(
         plt_kwargs=plt_kwargs,
         lines_kwargs_list=lines_kwargs_list,
         add_legend=add_legend,
-        legend_format=legend_format,
         legend_kwargs=legend_kwargs,
+        legend_format=legend_format,
     )
     return info
 
@@ -187,10 +187,10 @@ def plot_panel(
                 * `matched`: Counts of matched clusters in bins.
     """
     info = {"data": get_recovery_rate(values1, values2, bins1, bins2, is_matched)}
-    nj = int(np.ceil(np.sqrt(info["data"]["edges2"][:-1].size)))
-    ni = int(np.ceil(info["data"]["edges2"][:-1].size / float(nj)))
+    ncol = int(np.ceil(np.sqrt(info["data"]["edges2"][:-1].size)))
+    nrow = int(np.ceil(info["data"]["edges2"][:-1].size / float(ncol)))
     fig, axes = plt.subplots(
-        ni, nj, **updated_dict({"sharex": True, "sharey": True, "figsize": (8, 6)}, fig_kwargs)
+        nrow, ncol, **updated_dict({"sharex": True, "sharey": True, "figsize": (8, 6)}, fig_kwargs)
     )
     info.update({"fig": fig, "axes": axes})
     for ax, rec_line, p_kwargs in zip(
@@ -267,11 +267,13 @@ def plot2D(
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
+    # pylint: disable=too-many-locals
+    # pylint: disable=invalid-name
     info = {
         "data": get_recovery_rate(values1, values2, bins1, bins2, is_matched),
         "ax": plt.axes() if ax is None else ax,
     }
-    c = info["ax"].pcolor(
+    pcolor = info["ax"].pcolor(
         info["data"]["edges1"],
         info["data"]["edges2"],
         info["data"]["recovery"].T,
@@ -290,7 +292,7 @@ def plot2D(
                         xpos, ypos, rf"$\frac{{{matched:.0f}}}{{{total:.0f}}}$", **num_kwargs_
                     )
     if add_cb:
-        info["cb"] = plt.colorbar(c, **updated_dict({"ax": info["ax"]}, cb_kwargs))
+        info["cb"] = plt.colorbar(pcolor, **updated_dict({"ax": info["ax"]}, cb_kwargs))
     return info
 
 
@@ -371,10 +373,11 @@ def skyplot(
             * `nc_pix`: Dictionary with the number of clusters in each pixel.
             * `nc_mt_pix`: Dictionary with the number of matched clusters in each pixel.
     """
+    # pylint: disable=too-many-locals
     all_pix, mt_pix = {}, {}
-    for pix, mt in zip(hp.ang2pix(nside, ra, dec, nest=nest, lonlat=True), is_matched):
+    for pix, is_mt in zip(hp.ang2pix(nside, ra, dec, nest=nest, lonlat=True), is_matched):
         all_pix[pix] = all_pix.get(pix, 0) + 1
-        mt_pix[pix] = mt_pix.get(pix, 0) + mt
+        mt_pix[pix] = mt_pix.get(pix, 0) + is_mt
     map_ = np.full(hp.nside2npix(nside), np.nan)
     map_[list(all_pix.keys())] = np.divide(list(mt_pix.values()), list(all_pix.values()))
 
@@ -383,7 +386,7 @@ def skyplot(
     if vmin == vmax:
         kwargs_["min"] = vmin - 1e-10
         kwargs_["max"] = vmax + 1e-10
-    fig, ax, cb = ph.plot_healpix_map(
+    fig, _, cbar = ph.plot_healpix_map(
         map_,
         nest=nest,
         auto_lim=auto_lim,
@@ -395,8 +398,8 @@ def skyplot(
         **updated_dict(kwargs_, kwargs),
     )
 
-    if cb:
-        cb.set_xlabel(recovery_label)
+    if cbar:
+        cbar.set_xlabel(recovery_label)
 
     info = {"fig": fig, "nc_pix": all_pix, "nc_mt_pix": mt_pix}
     return info

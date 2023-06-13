@@ -312,6 +312,7 @@ def plot2D(
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
+    # pylint: disable=invalid-name
     info = _plot_base(array_funcs.plot2D, cat, col1, col2, bins1, bins2, matching_type, **kwargs)
     info["ax"].set_xlabel(xlabel if xlabel else f"${cat.labels[col1]}$")
     info["ax"].set_ylabel(ylabel if ylabel else f"${cat.labels[col2]}$")

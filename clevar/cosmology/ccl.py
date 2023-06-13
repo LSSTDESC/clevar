@@ -1,13 +1,18 @@
-# Functions to model halo profiles
+"""@file ccl.py
+Cosmology using CCL
+"""
 
 import numpy as np
-import warnings
+
+from .. import optional_libs as ol
 
 from ..constants import Constants as const
 
 from .parent_class import Cosmology
 
 __all__ = []
+
+ccl = ol.ccl
 
 
 def _patch_rho_crit_to_cd2018(rho_crit_external):
@@ -27,27 +32,38 @@ def _patch_rho_crit_to_cd2018(rho_crit_external):
 
 
 class CCLCosmology(Cosmology):
+    """
+    Cosmology object
+
+    Attributes
+    ----------
+    backend: str
+        Name of back-end used
+    be_cosmo: cosmology library
+        Cosmology library used in the back-end
+    """
+
     def __init__(self, **kwargs):
-        import pyccl as ccl
+        if ol.ccl is None:
+            raise ImportError("pyccl library missing.")
 
-        self.ccl = ccl
-
-        super(CCLCosmology, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         # this tag will be used to check if the cosmology object is accepted by the modeling
         self.backend = "ccl"
 
-        assert isinstance(self.be_cosmo, self.ccl.Cosmology)
+        assert isinstance(self.be_cosmo, ccl.Cosmology)
 
         # cor factor for sigma_critical
-        self.cor_factor = _patch_rho_crit_to_cd2018(self.ccl.physical_constants.RHO_CRITICAL)
+        self.cor_factor = _patch_rho_crit_to_cd2018(ccl.physical_constants.RHO_CRITICAL)
 
     def _init_from_cosmo(self, be_cosmo):
-        assert isinstance(be_cosmo, self.ccl.Cosmology)
+        assert isinstance(be_cosmo, ccl.Cosmology)
         self.be_cosmo = be_cosmo
 
     def _init_from_params(self, H0, Omega_b0, Omega_dm0, Omega_k0):
-        self.be_cosmo = self.ccl.Cosmology(
+        # pylint: disable=arguments-differ
+        self.be_cosmo = ccl.Cosmology(
             Omega_c=Omega_dm0,
             Omega_b=Omega_b0,
             Omega_k=Omega_k0,
@@ -65,28 +81,27 @@ class CCLCosmology(Cosmology):
 
     def _get_param(self, key):
         if key == "Omega_m0":
-            return self.ccl.omega_x(self.be_cosmo, 1.0, "matter")
-        elif key == "Omega_b0":
+            return ccl.omega_x(self.be_cosmo, 1.0, "matter")
+        if key == "Omega_b0":
             return self.be_cosmo["Omega_b"]
-        elif key == "Omega_dm0":
+        if key == "Omega_dm0":
             return self.be_cosmo["Omega_c"]
-        elif key == "Omega_k0":
+        if key == "Omega_k0":
             return self.be_cosmo["Omega_k"]
-        elif key == "h":
+        if key == "h":
             return self.be_cosmo["h"]
-        elif key == "H0":
+        if key == "H0":
             return self.be_cosmo["h"] * 100.0
-        else:
-            raise ValueError(f"Unsupported parameter {key}")
+        raise ValueError(f"Unsupported parameter {key}")
 
     def get_Omega_m(self, z):
-        return self.ccl.omega_x(self.be_cosmo, 1.0 / (1.0 + z), "matter")
+        return ccl.omega_x(self.be_cosmo, 1.0 / (1.0 + z), "matter")
 
     def get_E2(self, z):
         a = 1.0 / (1.0 + z)
-        return (self.ccl.h_over_h0(self.be_cosmo, a)) ** 2
+        return (ccl.h_over_h0(self.be_cosmo, a)) ** 2
 
     def eval_da_z1z2(self, z1, z2):
         a1 = 1.0 / (1.0 + z1)
         a2 = 1.0 / (1.0 + z2)
-        return np.vectorize(self.ccl.angular_diameter_distance)(self.be_cosmo, a1, a2)
+        return np.vectorize(ccl.angular_diameter_distance)(self.be_cosmo, a1, a2)

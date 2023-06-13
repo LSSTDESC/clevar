@@ -91,18 +91,24 @@ def _intrinsic_comp(
         p_vals = p_vals[arg_max + 1 :]
         v_min = max(p_vals.min(), p_max * 1e-10)
         max_mass2 = lim_mass_vals[arg_max + 1 :][p_vals < v_min][0]
-    integ = lambda m1, min_mass2: quad_vec(
-        lambda logm2: p_m1_m2(m1, 10**logm2),
-        np.log10(min_mass2),
-        np.log10(max_mass2),
-        epsabs=1e-50,
-    )[0]
-    comp = lambda m1, m2_th: integ(m1, m2_th) / integ(m1, min_mass2_norm)
+
+    def integ(mass1, min_mass2):
+        return quad_vec(
+            lambda logm2: p_m1_m2(mass1, 10**logm2),
+            np.log10(min_mass2),
+            np.log10(max_mass2),
+            epsabs=1e-50,
+        )[0]
+
+    def comp(mass1, m2_th):
+        return integ(mass1, m2_th) / integ(mass1, min_mass2_norm)
+
     if transpose:
         _kwargs = {"alpha": 0.2, "color": "0.3", "lw": 0, "zorder": 0}
         ax.fill_between(mass_bins, 0, comp(mass_bins, min_mass2), **_kwargs)
     else:
         for m_inf, m_sup, line in zip(mass_bins, mass_bins[1:], ax.lines):
+            # pylint: disable=protected-access
             _kwargs = {"alpha": 0.2, "color": line._color, "lw": 0}
             ax.fill_between(
                 (redshift_bins[0], redshift_bins[-1]),
@@ -333,6 +339,7 @@ def plot_panel(
                 * `matched`: Counts of matched clusters in bins.
     """
     log = log_mass * (not transpose)
+    # pylint: disable=protected-access
     ph._set_label_format(
         kwargs, "label_format", "label_fmt", log=log, default_fmt=".1f" if log else ".2f"
     )
@@ -376,7 +383,6 @@ def plot2D(
     log_mass=True,
     redshift_label=None,
     mass_label=None,
-    recovery_label=None,
     **kwargs,
 ):
     """
@@ -408,8 +414,6 @@ def plot2D(
         Label for mass.
     redshift_label: str
         Label for redshift.
-    recovery_label: str
-        Label for recovery rate.
     plt_kwargs: dict, None
         Additional arguments for pylab.pcolor.
     add_cb: bool
@@ -437,6 +441,7 @@ def plot2D(
                 * `counts`: Counts of all clusters in bins.
                 * `matched`: Counts of matched clusters in bins.
     """
+    # pylint: disable=invalid-name
     return _plot_base(
         catalog_funcs.plot2D,
         cat,
@@ -533,6 +538,7 @@ def skyplot(
             * `nc_pix`: Dictionary with the number of clusters in each pixel.
             * `nc_mt_pix`: Dictionary with the number of matched clusters in each pixel.
     """
+    # pylint: disable=R0801
     return catalog_funcs.skyplot(
         cat,
         matching_type,
