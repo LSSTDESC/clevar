@@ -76,6 +76,7 @@ def add_grid(ax, major_lw=0.5, minor_lw=0.1):
     minor_lw: float
         Line width of minor axes
     """
+    ax.minorticks_on()
     ax.xaxis.grid(True, which="major", lw=major_lw)
     ax.yaxis.grid(True, which="major", lw=major_lw)
     ax.xaxis.grid(True, which="minor", lw=minor_lw)
