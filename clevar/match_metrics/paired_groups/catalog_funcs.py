@@ -147,6 +147,45 @@ def get_fragmentation_overmerging_numbers_binned(
     return numbers1[1:], numbers2[1:]
 
 
+def get_groups_counts(cat1, cat2, mask1=None, mask2=None):
+    """Get number of clusters in each group.
+
+    Parameters
+    ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    mask_group1, mask_group2: array, None
+        Masks for groups in catalog 1(2).
+
+    Retruns
+    -------
+    counts1: array
+        Numbers of objects in each group per cluster for catalog1.
+    counts2: array
+        Numbers of objects in each group per cluster for catalog2.
+    """
+    if mask1 is None:
+        mask1 = np.ones(cat1.size, dtype=bool)
+    if mask2 is None:
+        mask2 = np.ones(cat2.size, dtype=bool)
+
+    msk1 = mask1 * (cat1["group"] > 0)
+    msk2 = mask1 * (cat2["group"] > 0)
+
+    counts1 = np.zeros(msk1.size)
+    counts2 = np.zeros(msk2.size)
+
+    ct1, ct2 = array_funcs.get_groups_counts(
+        group1=cat1["group"][msk1],
+        group2=cat2["group"][msk2],
+    )
+
+    counts1[msk1] = ct1
+    counts2[msk2] = ct2
+
+    return counts1, counts2
+
+
 #############################################
 #### Plots ##################################
 #############################################
