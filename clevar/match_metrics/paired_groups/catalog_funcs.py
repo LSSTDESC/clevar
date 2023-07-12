@@ -18,6 +18,15 @@ def _find_grup(cat1, cat2, group_id1, group_id2, mask1, mask2, id1):
 
 
 def add_grups(cat1, cat2, mask1=None, mask2=None):
+    """Finds groups and adds group id to catalogs
+
+    Parameters
+    ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
+    """
     cat1["group"] = -1
     cat2["group"] = -1
     if mask1 is None:
@@ -52,6 +61,25 @@ def get_fragmentation_overmerging_numbers(
     mask_group1_exclusive=False,
     mask_group2_exclusive=False,
 ):
+    """Get number of clusters with fragmentation and overmerging.
+
+    Parameters
+    ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    mask_group1, mask_group2: array, None
+        Masks for groups in catalog 1(2).
+    mask_group1_exclusive, mask_group2_exclusive: bool
+        If true, groups with any masked members are excluded,
+        else only groups with all masked members are excluded.
+
+    Retruns
+    -------
+    number1: array
+        Numbers of objects with configuration: 1->1, n->n, n->(<n), n->(>n).
+    number2: array
+        Numbers of objects with configuration: 1->1, n->n, n->(>n), n->(<n).
+    """
     if mask_group1 is None:
         mask_group1 = np.ones(cat1.size, dtype=bool)
     if mask_group2 is None:
@@ -85,6 +113,27 @@ def get_fragmentation_overmerging_numbers_binned(
     bins1,
     mask_group1_exclusive=False,
 ):
+    """Get number of clusters with fragmentation and overmerging in bins.
+
+    Parameters
+    ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    quantity1: str
+        Column of catalog 1 to bin the data
+    bins1: array
+        Bins for quantity1
+    mask_group1_exclusive: bool
+        If true, only groups no masked members are kept in bins,
+        else groups with any unmasked members are kept in bins.
+
+    Retruns
+    -------
+    numbers1: 2d array
+        Numbers of objects in bins with configuration: 1->1, n->n, n->(<n), n->(>n).
+    numbers2: 2d array
+        Numbers of objects in bins with configuration: 1->1, n->n, n->(>n), n->(<n).
+    """
     numbers1, numbers2 = np.ones(4), np.ones(4)
     for v_lower, v_upper in zip(bins1, bins1[1:]):
         numbers = get_fragmentation_overmerging_numbers(
@@ -110,26 +159,30 @@ def _get_fragmentation_overmerging_data(
     bins1,
     mask_group1_exclusive=False,
 ):
-    """
-    Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
+    """Get fragmentation and overmerging data.
 
     Parameters
     ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    quantity1: str
+        Column of catalog 1 to bin the data
+    bins1: array
+        Bins for quantity1
+    mask_group1_exclusive: bool
+        If true, only groups no masked members are kept in bins,
+        else groups with any unmasked members are kept in bins.
 
     Returns
     -------
-    info: dict
-        Information of data in the plots, it contains the sections:
+    dict
+        Binned data used in the plot. It has the sections:
 
-            * `ax`: ax used in the plot.
-            * `data`: Binned data used in the plot. It has the sections:
-
-                * `recovery`: Recovery rate binned with (bin1, bin2).\
-                bins where no cluster was found have nan value.
-                * `edges1`: The bin edges along the first dimension.
-                * `edges2`: The bin edges along the second dimension.
-                * `counts`: Counts of all clusters in bins.
-                * `matched`: Counts of matched clusters in bins.
+            * `numbers1` (2d array): Numbers of objects in bins with configuration:
+            1->1, n->n, n->(<n), n->(>n).
+            * `numbers2` (2d array): Numbers of objects in bins with configuration:
+            1->1, n->n, n->(>n), n->(<n).
+            * `bins_mid` (array): mid values of bins
     """
     numbers1, numbers2 = get_fragmentation_overmerging_numbers_binned(
         cat1,
@@ -157,11 +210,17 @@ def plot_fragmentation_overmerging_fraction(
     lines_kwargs_list=None,
     legend_kwargs=None,
 ):
-    """
-    Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
+    """Plot fraction of clusters with fragmentation and overmerging.
 
     Parameters
     ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    mask_group1, mask_group2: array, None
+        Masks for groups in catalog 1(2).
+    mask_group1_exclusive, mask_group2_exclusive: bool
+        If true, groups with any masked members are excluded,
+        else only groups with all masked members are excluded.
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
@@ -180,12 +239,12 @@ def plot_fragmentation_overmerging_fraction(
             * `ax`: ax used in the plot.
             * `data`: Binned data used in the plot. It has the sections:
 
-                * `recovery`: Recovery rate binned with (bin1, bin2).\
-                bins where no cluster was found have nan value.
-                * `edges1`: The bin edges along the first dimension.
-                * `edges2`: The bin edges along the second dimension.
-                * `counts`: Counts of all clusters in bins.
-                * `matched`: Counts of matched clusters in bins.
+                * `numbers1` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(<n), n->(>n).
+                * `numbers2` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(>n), n->(<n).
+                * `bins_mid` (array): mid values of bins
+
     """
     data = _get_fragmentation_overmerging_data(
         cat1=cat1,
@@ -195,7 +254,7 @@ def plot_fragmentation_overmerging_fraction(
         mask_group1_exclusive=mask_group1_exclusive,
     )
     # pylint: disable=protected-access
-    info = array_funcs._plot_fragmentation_overmerging_fraction(
+    info = array_funcs.plot_fragmentation_overmerging_fraction(
         data=data,
         ax=ax,
         plt_kwargs=plt_kwargs,
@@ -218,11 +277,17 @@ def plot_fragmentation_overmerging_ratio(
     lines_kwargs_list=None,
     legend_kwargs=None,
 ):
-    """
-    Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
+    """Plot ratio of cluster2/cluster1 counts in samples: total, with fraction and overmerging.
 
     Parameters
     ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    mask_group1, mask_group2: array, None
+        Masks for groups in catalog 1(2).
+    mask_group1_exclusive, mask_group2_exclusive: bool
+        If true, groups with any masked members are excluded,
+        else only groups with all masked members are excluded.
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
@@ -241,12 +306,12 @@ def plot_fragmentation_overmerging_ratio(
             * `ax`: ax used in the plot.
             * `data`: Binned data used in the plot. It has the sections:
 
-                * `recovery`: Recovery rate binned with (bin1, bin2).\
-                bins where no cluster was found have nan value.
-                * `edges1`: The bin edges along the first dimension.
-                * `edges2`: The bin edges along the second dimension.
-                * `counts`: Counts of all clusters in bins.
-                * `matched`: Counts of matched clusters in bins.
+                * `numbers1` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(<n), n->(>n).
+                * `numbers2` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(>n), n->(<n).
+                * `bins_mid` (array): mid values of bins
+
     """
     data = _get_fragmentation_overmerging_data(
         cat1=cat1,
@@ -256,7 +321,7 @@ def plot_fragmentation_overmerging_ratio(
         mask_group1_exclusive=mask_group1_exclusive,
     )
     # pylint: disable=protected-access
-    info = array_funcs._plot_fragmentation_overmerging_ratio(
+    info = array_funcs.plot_fragmentation_overmerging_ratio(
         data=data,
         ax=ax,
         plt_kwargs=plt_kwargs,
@@ -278,14 +343,22 @@ def plot_fragmentation_overmerging(
     plt_kwargs=None,
     lines_kwargs_list=None,
     legend_kwargs=None,
+    fig_kwargs=None,
 ):
-    """
-    Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
+    """Plot fraction of clusters with fragmentation and overmerging,
+    and ratio of cluster2/cluster1 counts in samples: total, with fraction and overmerging.
 
     Parameters
     ----------
-    ax: matplotlib.axes
-        Ax to add plot
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    mask_group1, mask_group2: array, None
+        Masks for groups in catalog 1(2).
+    mask_group1_exclusive, mask_group2_exclusive: bool
+        If true, groups with any masked members are excluded,
+        else only groups with all masked members are excluded.
+    fig: matplotlib.figure.Figure, None
+        Matplotlib figure object. If not provided a new one is created.
     plt_kwargs: dict, None
         Additional arguments for pylab.plot
     lines_kwargs_list: list, None
@@ -293,24 +366,26 @@ def plot_fragmentation_overmerging(
         Must have same size as len(bins2)-1
     legend_kwargs: dict, None
         Additional arguments for pylab.legend
+    fig_kwargs: dict, None
+        Additional arguments for plt.subplots
 
     Returns
     -------
     info: dict
         Information of data in the plots, it contains the sections:
 
-            * `ax`: ax used in the plot.
+            * `fig` (matplotlib.pyplot.figure): Figure of the plot.
             * `data`: Binned data used in the plot. It has the sections:
 
-                * `recovery`: Recovery rate binned with (bin1, bin2).\
-                bins where no cluster was found have nan value.
-                * `edges1`: The bin edges along the first dimension.
-                * `edges2`: The bin edges along the second dimension.
-                * `counts`: Counts of all clusters in bins.
-                * `matched`: Counts of matched clusters in bins.
+                * `numbers1` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(<n), n->(>n).
+                * `numbers2` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(>n), n->(<n).
+                * `bins_mid` (array): mid values of bins
+
     """
     if fig is None:
-        fig = plt.subplots(2, sharex=True)[0]
+        fig = plt.subplots(2, **updated_dict({"sharex": True}, fig_kwargs))[0]
     data = _get_fragmentation_overmerging_data(
         cat1=cat1,
         cat2=cat2,
@@ -321,14 +396,14 @@ def plot_fragmentation_overmerging(
     info = {"data": data, "fig": fig}
 
     # pylint: disable=protected-access
-    array_funcs._plot_fragmentation_overmerging_fraction(
+    array_funcs.plot_fragmentation_overmerging_fraction(
         data=data,
         ax=fig.axes[0],
         plt_kwargs=plt_kwargs,
         lines_kwargs_list=lines_kwargs_list,
     )
 
-    array_funcs._plot_fragmentation_overmerging_ratio(
+    array_funcs.plot_fragmentation_overmerging_ratio(
         data=data,
         ax=fig.axes[1],
         plt_kwargs=plt_kwargs,

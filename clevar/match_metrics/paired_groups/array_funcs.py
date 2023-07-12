@@ -10,6 +10,20 @@ from .. import plot_helper as ph
 
 
 def get_groups_2dhistoram(group1, group2):
+    """Get the histogram for the number of groups with a given number of members.
+
+    Parameters
+    ----------
+    group1, group2: array
+        Id of group per cluster.
+
+    Returns
+    -------
+    hist: 2d array
+        Histogram 2d
+    bins1, bins2: array
+        Number of group members for catalog 1(2).
+    """
     nmax = group1.max()
     group_bins = np.arange(1, nmax + 2)
     groups_sizes1 = np.histogram(
@@ -33,19 +47,98 @@ def get_groups_2dhistoram(group1, group2):
     )
 
 
-def _get_matrix_split_numbers(hist):
-    size1, size2 = hist.shape
+def get_groups_counts(group1, group2):
+    """Get number of clusters in each group.
+
+    Parameters
+    ----------
+    group1, group2: array
+        Id of group per cluster.
+
+    Retruns
+    -------
+    counts1: array
+        Numbers of objects in each group per cluster for catalog1.
+    counts2: array
+        Numbers of objects in each group per cluster for catalog2.
+    """
+    nmax = group1.max()
+    group_bins = np.arange(1, nmax + 2)
+    groups_sizes1 = np.histogram(
+        group1,
+        bins=group_bins,
+    )[0]
+    groups_sizes2 = np.histogram(
+        group2,
+        bins=group_bins,
+    )[0]
+    inds1 = (
+        np.digitize(
+            group1,
+            bins=group_bins,
+        )
+        - 1
+    )
+    inds2 = (
+        np.digitize(
+            group2,
+            bins=group_bins,
+        )
+        - 1
+    )
+
+    counts1 = np.zeros(group1.size)
+    counts2 = np.zeros(group2.size)
+
+    counts1 = groups_sizes1[inds1]
+    counts2 = groups_sizes2[inds2]
+
+    return counts1, counts2
+
+
+def _get_matrix_split_numbers(matrix):
+    """Get number of objects in matrix split by the diagonal.
+
+    Parameters
+    ----------
+    matrix: array 2d
+        Matrix
+
+    Retruns
+    -------
+    array
+        Numbers in matrix from: first cell, diagonal (minus first cell), above diagonal,
+        below diagonal.
+    """
+    size1, size2 = matrix.shape
     return np.array(
         [
-            hist[0, 0],
-            np.diag(hist)[1:].sum(),
-            hist[np.triu_indices(n=size1, k=1, m=size2)].sum(),
-            hist[np.tril_indices(n=size1, k=-1, m=size2)].sum(),
+            matrix[0, 0],
+            np.diag(matrix)[1:].sum(),
+            matrix[np.triu_indices(n=size1, k=1, m=size2)].sum(),
+            matrix[np.tril_indices(n=size1, k=-1, m=size2)].sum(),
         ]
     )
 
 
 def _get_groups_to_keep(group, mask_group, mask_group_exclusive=False):
+    """Get ids of groups to keep given a mask.
+
+    Parameters
+    ----------
+    group: array
+        Id of group per cluster.
+    mask_group: array, None
+        Masks for groups in catalog.
+    mask_group_exclusive: bool
+        If true, groups with any masked members are excluded,
+        else only groups with all masked members are excluded.
+
+    Returns
+    -------
+    array
+        Ids of groups to keep
+    """
     if mask_group_exclusive:
         groups_keep = np.ones(group.max(), dtype=bool)
         groups_keep[group[~mask_group] - 1] = False
@@ -67,17 +160,18 @@ _frag_overm_labels = [
 ]
 
 
-def _plot_fragmentation_overmerging_fraction(
+def plot_fragmentation_overmerging_fraction(
     data,
     ax=None,
     plt_kwargs=None,
     lines_kwargs_list=None,
 ):
-    """
-    Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
+    """Plot fraction of clusters with fragmentation and overmerging.
 
     Parameters
     ----------
+    data: dict
+        Binned data used in the plot. Must contain `numbers1`, `numbers2`, `bins_mid`.
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
@@ -85,6 +179,8 @@ def _plot_fragmentation_overmerging_fraction(
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
+    legend_kwargs: dict, None
+        Additional arguments for pylab.legend
 
     Returns
     -------
@@ -94,12 +190,12 @@ def _plot_fragmentation_overmerging_fraction(
             * `ax`: ax used in the plot.
             * `data`: Binned data used in the plot. It has the sections:
 
-                * `recovery`: Recovery rate binned with (bin1, bin2).\
-                bins where no cluster was found have nan value.
-                * `edges1`: The bin edges along the first dimension.
-                * `edges2`: The bin edges along the second dimension.
-                * `counts`: Counts of all clusters in bins.
-                * `matched`: Counts of matched clusters in bins.
+                * `numbers1` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(<n), n->(>n).
+                * `numbers2` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(>n), n->(<n).
+                * `bins_mid` (array): mid values of bins
+
     """
     info = {
         "data": data,
@@ -121,17 +217,18 @@ def _plot_fragmentation_overmerging_fraction(
     return info
 
 
-def _plot_fragmentation_overmerging_ratio(
+def plot_fragmentation_overmerging_ratio(
     data,
     ax=None,
     plt_kwargs=None,
     lines_kwargs_list=None,
 ):
-    """
-    Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
+    """Plot ratio of cluster2/cluster1 counts in samples: total, with fraction and overmerging.
 
     Parameters
     ----------
+    data: dict
+        Binned data used in the plot. Must contain `numbers1`, `numbers2`, `bins_mid`.
     ax: matplotlib.axes
         Ax to add plot
     plt_kwargs: dict, None
@@ -139,6 +236,8 @@ def _plot_fragmentation_overmerging_ratio(
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
+    legend_kwargs: dict, None
+        Additional arguments for pylab.legend
 
     Returns
     -------
@@ -148,12 +247,12 @@ def _plot_fragmentation_overmerging_ratio(
             * `ax`: ax used in the plot.
             * `data`: Binned data used in the plot. It has the sections:
 
-                * `recovery`: Recovery rate binned with (bin1, bin2).\
-                bins where no cluster was found have nan value.
-                * `edges1`: The bin edges along the first dimension.
-                * `edges2`: The bin edges along the second dimension.
-                * `counts`: Counts of all clusters in bins.
-                * `matched`: Counts of matched clusters in bins.
+                * `numbers1` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(<n), n->(>n).
+                * `numbers2` (2d array): Numbers of objects in bins with configuration:
+                1->1, n->n, n->(>n), n->(<n).
+                * `bins_mid` (array): mid values of bins
+
     """
     info = {
         "data": data,
