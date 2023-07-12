@@ -10,6 +10,7 @@ from .catalog_funcs import (
     plot_fragmentation_overmerging_fraction,
     plot_fragmentation_overmerging_ratio,
     plot_fragmentation_overmerging,
+    plot_groups_hist,
 )
 
 from .array_funcs import get_groups_2dhistoram

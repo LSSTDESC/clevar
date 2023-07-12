@@ -456,3 +456,55 @@ def plot_fragmentation_overmerging(
     fig.axes[1].set_xlabel(f"${cat1.labels[quantity1]}$")
 
     return info
+
+
+def plot_groups_hist(
+    cat1,
+    cat2,
+    fig_kwargs=None,
+    pcolor_kwargs=None,
+    text_kwargs=None,
+    add_cb=True,
+):
+    """Plots numbers of clusters with different number of group pairings.
+
+    Parameters
+    ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    fig_kwargs: dict, None
+        Additional arguments for plt.subplots
+    pcolor_kwargs: dict, None
+        Additional arguments for pylab.pcolor
+    text_kwargs: dict, None
+        Additional arguments for pylab.text
+    add_cb: bool
+        Plot colorbar
+
+    Returns
+    -------
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig` (matplotlib.pyplot.figure): Figure of the plot. The main can be accessed at\
+            `info['fig'].axes[0]`, and the colorbar at `info['fig'].axes[1]`.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `values1` (array): Number of group members for catalog 1.
+                * `values2` (array): Number of group members for catalog 2.
+                * `table` (2d array): Numbers of groups in by (`values1`, `values2`).
+
+
+    """
+    info = array_funcs.plot_groups_hist(
+        groups1=cat1["group"][cat1["group"] > 0],
+        groups2=cat2["group"][cat2["group"] > 0],
+        fig_kwargs=fig_kwargs,
+        pcolor_kwargs=pcolor_kwargs,
+        text_kwargs=text_kwargs,
+        add_cb=add_cb,
+    )
+    ax = info["fig"].axes[0]
+    ax.set_xlabel(f"# of members in groups ({cat1.name})")
+    ax.set_ylabel(f"# of members in groups ({cat2.name})")
+    return info

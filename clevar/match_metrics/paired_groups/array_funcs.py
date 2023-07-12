@@ -3,6 +3,7 @@
 Functions that use arrays.
 """
 import numpy as np
+from matplotlib import colors
 
 from ..plot_helper import plt
 from ...utils import none_val, updated_dict
@@ -277,4 +278,121 @@ def plot_fragmentation_overmerging_ratio(
             l_kwargs,
         )
         info["ax"].plot(data["bins_mid"], line, **kwargs)
+    return info
+
+
+def plot_groups_hist(
+    groups1,
+    groups2,
+    fig_kwargs=None,
+    pcolor_kwargs=None,
+    text_kwargs=None,
+    add_cb=True,
+):
+    """Plots numbers of clusters with different number of group pairings.
+
+    Parameters
+    ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with multiple matching information.
+    fig_kwargs: dict, None
+        Additional arguments for plt.subplots
+    pcolor_kwargs: dict, None
+        Additional arguments for pylab.pcolor
+    text_kwargs: dict, None
+        Additional arguments for pylab.text
+    add_cb: bool
+        Plot colorbar
+
+    Returns
+    -------
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig` (matplotlib.pyplot.figure): Figure of the plot. The main can be accessed at\
+            `info['fig'].axes[0]`, and the colorbar at `info['fig'].axes[1]`.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `values1` (array): Number of group members for catalog 1.
+                * `values2` (array): Number of group members for catalog 2.
+                * `table` (2d array): Numbers of groups in by (`values1`, `values2`).
+
+
+    """
+    hist, vals1, vals2 = get_groups_2dhistoram(
+        groups1,
+        groups2,
+    )
+
+    # f0 = 1.3
+    # figsize=(10*f0, 8*f0))
+    info = {
+        "data": {
+            "values1": vals1[:-1],
+            "values2": vals2[:-1],
+            "table": hist,
+        },
+        "fig": plt.figure(**updated_dict({}, fig_kwargs)),
+    }
+
+    # Format sizes for square cells
+    frac = 0.8 * (vals1[-1] / vals2[-1])
+    if frac > 1:
+        frac1, frac2 = 1, 1 / frac
+    else:
+        frac1, frac2 = frac, 1
+
+    if add_cb:
+        ax_args = [[0.1, 0.1, 0.8 * frac1, 0.8 * frac2]]
+    else:
+        ax_args = [[0.1, 0.1, 0.9 * frac1, 0.9 * frac2]]
+    ax = info["fig"].add_axes(*ax_args)
+
+    col1 = ax.pcolor(
+        vals1,
+        vals2,
+        hist.T,
+        norm=colors.LogNorm(vmin=1, vmax=hist.max()),
+        **updated_dict({}, pcolor_kwargs),
+    )
+
+    if add_cb:
+        plt.colorbar(
+            col1,
+            cax=info["fig"].add_axes([0.1 + 0.82 * frac1, 0.1, 0.05 * frac1, 0.8 * frac2]),
+        )
+
+    ax.set_xticks(vals1[:-1] + 0.5)
+    ax.set_yticks(vals2[:-1] + 0.5)
+
+    _tex_kwargs = updated_dict(
+        {
+            "fontsize": 8,
+            "horizontalalignment": "center",
+            "verticalalignment": "center",
+        },
+        text_kwargs,
+    )
+    # add numbers
+    _ = [
+        [
+            ax.text(val1 + 0.5, val2 + 0.5, f"{num:,.0f}", **_tex_kwargs)
+            for val1, num in zip(vals1, tb_line)
+            if num > 0
+        ]
+        for val2, tb_line in zip(vals2, hist.T)
+    ]
+
+    ax.set_xticklabels(vals1[:-1])
+    ax.set_yticklabels(vals2[:-1])
+
+    ax.set_xticks(vals1, minor=True)
+    ax.set_yticks(vals2, minor=True)
+    ax.tick_params(which="major", length=0)
+    ax.tick_params(which="minor", length=3)
+    ax.grid(lw=0.1, which="minor")
+
+    diag = (1, min(vals1[-1], vals2[-1]))
+    ax.plot(diag, diag, ls="--", c="r", lw=0.5)
+
     return info
