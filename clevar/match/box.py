@@ -73,7 +73,16 @@ class BoxMatch(SpatialMatch):
             mask = (z2max >= z1min) * (z2min <= z1max)
             if mask.any():
                 # makes square crop with intersection
-                mask *= self.mask_intersection(ra1min, ra1max, dec1min, dec1max, ra2min, ra2max, dec2min, dec2max)
+                mask[mask] *= self.mask_intersection(
+                    ra1min,
+                    ra1max,
+                    dec1min,
+                    dec1max,
+                    ra2min[mask],
+                    ra2max[mask],
+                    dec2min[mask],
+                    dec2max[mask],
+                )
                 if mask.any():
                     area1, area2, intersection, outter = self._compute_areas(
                         *(
@@ -102,15 +111,46 @@ class BoxMatch(SpatialMatch):
         }
         self._rm_dup_add_hist(cat1, cat2, hist)
 
+    def mask_intersection(self, ra1min, ra1max, dec1min, dec1max, ra2min, ra2max, dec2min, dec2max):
+        """Mask clusters without intersection
+
+        Return
+        ------
+        mask
+            If clusters have intersection
+        """
+        mask = ra1min <= ra2max
+        if not mask.any():
+            return mask
+        mask *= ra2min <= ra1max
+        if not mask.any():
+            return mask
+        mask *= dec1min <= dec2max
+        if not mask.any():
+            return mask
+        mask *= dec2min <= dec1max
+        if not mask.any():
+            return mask
+        return mask
+
+    def _compute_area(self, ra_min, ra_max, dec_min, dec_max):
+        return (ra_max - ra_min) * (dec_max - dec_min)
+
     def _compute_areas(self, ra1min, ra1max, dec1min, dec1max, ra2min, ra2max, dec2min, dec2max):
-        area1 = (ra1max - ra1min) * (dec1max - dec1min)
-        area2 = (ra2max - ra2min) * (dec2max - dec2min)
+        area1 = self._compute_area(ra1max, ra1min, dec1max, dec1min)
+        area2 = self._compute_area(ra2max, ra2min, dec2max, dec2min)
         # areas
-        intersection = (np.min([ra1max, ra2max], axis=0) - np.max([ra1min, ra2min], axis=0)) * (
-            np.min([dec1max, dec2max], axis=0) - np.max([dec1min, dec2min], axis=0)
+        intersection = self._compute_area(
+            np.max([ra1min, ra2min], axis=0),
+            np.min([ra1max, ra2max], axis=0),
+            np.max([dec1min, dec2min], axis=0),
+            np.min([dec1max, dec2max], axis=0),
         )
-        outter = (np.max([ra1max, ra2max], axis=0) - np.min([ra1min, ra2min], axis=0)) * (
-            np.max([dec1max, dec2max], axis=0) - np.min([dec1min, dec2min], axis=0)
+        outter = self._compute_area(
+            np.min([ra1min, ra2min], axis=0),
+            np.max([ra1max, ra2max], axis=0),
+            np.min([dec1min, dec2min], axis=0),
+            np.max([dec1max, dec2max], axis=0),
         )
         return area1, area2, intersection, outter
 

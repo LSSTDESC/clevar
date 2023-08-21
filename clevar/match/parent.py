@@ -103,6 +103,11 @@ class Match:
             def set_unique(*args):
                 return self._match_sharepref(*args, minimum_share_fraction)
 
+        elif preference == "giou":
+
+            def set_unique(*args):
+                return self._match_gioupref(*args)
+
         else:
             raise ValueError(
                 "preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'"
@@ -163,6 +168,49 @@ class Match:
         inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
         if len(inds2) > 0:
             for ind2 in inds2[np.argsort(cat2["mass"][inds2])][::-1]:
+                if cat2["mt_other"][ind2] is None:
+                    cat1["mt_self"][ind1] = cat2["id"][ind2]
+                    cat2["mt_other"][ind2] = cat1["id"][ind1]
+                    return True
+        return False
+
+    def _match_gioupref(self, cat1, ind1, cat2):
+        """
+        Make the unique match by gIoU preference
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        ind1: int
+            Index of the cluster from cat1 to be matched
+        cat2: clevar.ClCatalog
+            Target catalog
+
+        Returns
+        -------
+        bool
+            Tells if the cluster was matched
+        """
+        inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
+        if len(inds2) > 0:
+            area1, area2, intersection, outter = self._compute_areas(
+                *(
+                    [
+                        cat1["ra_min"][ind1],
+                        cat1["ra_max"][ind1],
+                        cat1["dec_min"][ind1],
+                        cat1["dec_max"][ind1],
+                    ]
+                    * np.ones(inds2.size)[:, None]
+                ).T,  # for vec computation
+                cat2["ra_min"][inds2],
+                cat2["ra_max"][inds2],
+                cat2["dec_min"][inds2],
+                cat2["dec_max"][inds2],
+            )
+            giou = self._compute_giou(area1, area2, intersection, outter)
+            for ind2 in inds2[np.argsort(giou)][::-1]:
                 if cat2["mt_other"][ind2] is None:
                     cat1["mt_self"][ind1] = cat2["id"][ind2]
                     cat2["mt_other"][ind2] = cat1["id"][ind1]
