@@ -73,12 +73,7 @@ class BoxMatch(SpatialMatch):
             mask = (z2max >= z1min) * (z2min <= z1max)
             if mask.any():
                 # makes square crop with intersection
-                mask[mask] = (
-                    (ra2max[mask] >= ra1min)
-                    * (ra2min[mask] <= ra1max)
-                    * (dec2max[mask] >= dec1min)
-                    * (dec2min[mask] <= dec1max)
-                )
+                mask *= self.mask_intersection(ra1min, ra1max, dec1min, dec1max, ra2min, ra2max, dec2min, dec2max)
                 if mask.any():
                     area1, area2, intersection, outter = self._compute_areas(
                         *(
