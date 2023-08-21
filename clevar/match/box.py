@@ -24,7 +24,14 @@ class BoxMatch(SpatialMatch):
         self.type = "Box"
 
     def multiple(
-        self, cat1, cat2, metric="GIoU", metric_cut=0.5, share_area_frac=0.5, verbose=True
+        self,
+        cat1,
+        cat2,
+        metric="GIoU",
+        metric_cut=0.5,
+        share_area_frac=0.5,
+        verbose=True,
+        detailed_print_only=False,
     ):
         """
         Make the one way multiple matching
@@ -35,14 +42,16 @@ class BoxMatch(SpatialMatch):
             Base catalog
         cat2: clevar.ClCatalog
             Target catalog
-        verbose: bool
-            Print result for individual matches.
         metric: str (optional)
             Metric to be used for matching. Can be: GIoU (generalized Intersection over Union).
         metric_cut: float
             Minimum value of metric for match.
         share_area_frac: float
             Minimum relative size of area for match.
+        verbose: bool
+            Print result for individual matches.
+        detailed_print_only: bool
+            Only prints detailed comparisons for matching, does not register matches in catalogs.
         """
         # pylint: disable=arguments-renamed
         # pylint: disable=too-many-locals
@@ -69,9 +78,11 @@ class BoxMatch(SpatialMatch):
                 *(cat1.mt_input[c] for c in ("zmin", "zmax")),
             )
         ):
+            self._detailed_print(0, locals())
             # crop in redshift range
             mask = (z2max >= z1min) * (z2min <= z1max)
             if mask.any():
+                self._detailed_print(1, locals())
                 # makes square crop with intersection
                 mask[mask] *= self.mask_intersection(
                     ra1min,
@@ -84,6 +95,7 @@ class BoxMatch(SpatialMatch):
                     dec2max[mask],
                 )
                 if mask.any():
+                    self._detailed_print(2, locals())
                     area1, area2, intersection, outter = self._compute_areas(
                         *(
                             [ra1min, ra1max, dec1min, dec1max] * np.ones(mask.sum())[:, None]
@@ -94,22 +106,82 @@ class BoxMatch(SpatialMatch):
                         dec2max[mask],
                     )
                     # makes metric crop
-                    for id2 in cat2["id"][mask][
-                        (get_metric_value(area1, area2, intersection, outter) >= metric_cut)
-                        * (area1 / area2 >= share_area_frac)
-                        * (area2 / area1 >= share_area_frac)
-                    ]:
-                        cat1["mt_multi_self"][ind1].append(id2)
-                        ind2 = int(cat2.id_dict[id2])
-                        cat2["mt_multi_other"][ind2].append(cat1["id"][ind1])
-                        self._cat1_mmt[ind1] = True
+                    metric_value = get_metric_value(area1, area2, intersection, outter)
+                    self._detailed_print(3, locals())
+                    if not detailed_print_only:
+                        for id2 in cat2["id"][mask][
+                            (metric_value >= metric_cut)
+                            * (area1 / area2 >= share_area_frac)
+                            * (area2 / area1 >= share_area_frac)
+                        ]:
+                            cat1["mt_multi_self"][ind1].append(id2)
+                            ind2 = int(cat2.id_dict[id2])
+                            cat2["mt_multi_other"][ind2].append(cat1["id"][ind1])
+                            self._cat1_mmt[ind1] = True
+                else:
+                    self._detailed_print(4, locals())
+            else:
+                self._detailed_print(5, locals())
             if verbose:
                 self._prt_cand_mt(cat1, ind1)
-        hist = {
-            "func": "multiple",
-            "cats": f"{cat1.name}, {cat2.name}",
-        }
-        self._rm_dup_add_hist(cat1, cat2, hist)
+        if not detailed_print_only:
+            hist = {
+                "func": "multiple",
+                "cats": f"{cat1.name}, {cat2.name}",
+            }
+            self._rm_dup_add_hist(cat1, cat2, hist)
+
+    def _detailed_print(self, i, locs):
+        if not locs["detailed_print_only"]:
+            return
+        if i == 0:
+            print(
+                "\n\nCluster:",
+                "(",
+                ", ".join([f"{locs[v]:.4f}" for v in ("ra1min", "ra1max", "dec1min", "dec1max")]),
+                ") (",
+                ", ".join([f"{locs[v]:.4f}" for v in ("z1min", "z1max")]),
+                ")",
+                f"( area: {self._compute_area(locs['ra1min'], locs['ra1max'], locs['dec1min'], locs['dec1max'])*3600:.2f} arcmin2 )",
+            )
+        elif i == 1:
+            print(f" * z pass: {locs['mask'].sum():,}")
+        elif i == 2:
+            print(f" * intersection pass: {locs['mask'].sum():,}")
+        elif i == 3:
+            for val in zip(
+                locs["cat2"]["id"][locs["mask"]],
+                locs["ra2min"][locs["mask"]],
+                locs["ra2max"][locs["mask"]],
+                locs["dec2min"][locs["mask"]],
+                locs["dec2max"][locs["mask"]],
+                locs["area1"],
+                locs["area2"],
+                locs["intersection"],
+                locs["outter"],
+                locs["metric_value"],
+                locs["metric_value"] >= locs["metric_cut"],
+                locs["area1"] / locs["area2"] >= locs["share_area_frac"],
+                locs["area2"] / locs["area1"] >= locs["share_area_frac"],
+            ):
+                print("   Candidate:", val[0])
+                print(f"        Pass   : {bool(np.prod(val[10:]))} (", *val[10:], ")")
+                print(
+                    "        Areas  :",
+                    ", ".join([f"{v*3600:.2f}" for v in val[6:9]]),
+                    f"arcmin2 ( {locs['metric']}: {val[9]:.2g} )",
+                )
+                print(
+                    "        Coords : (",
+                    ", ".join([f"{v:.4f}" for v in val[1:5]]),
+                    ")",
+                )
+        elif i == 4:
+            print(" * intersection fail")
+        elif i == 5:
+            print(" * z fail!")
+        else:
+            raise ValueError(f"i={i} invalid!")
 
     def mask_intersection(self, ra1min, ra1max, dec1min, dec1max, ra2min, ra2max, dec2min, dec2max):
         """Mask clusters without intersection
