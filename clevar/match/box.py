@@ -6,6 +6,13 @@ import numpy as np
 from .spatial import SpatialMatch
 from ..catalog import ClData
 
+_area_type_funcs = {
+    "min": lambda area1, area2: np.min([area1, area2], axis=0),
+    "max": lambda area1, area2: np.max([area1, area2], axis=0),
+    "self": lambda area1, area2: area1,
+    "other": lambda area1, area2: area2,
+}
+
 
 class BoxMatch(SpatialMatch):
     """
@@ -59,13 +66,20 @@ class BoxMatch(SpatialMatch):
             raise AttributeError("cat1.mt_input is None, run prep_cat_for_match first.")
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run prep_cat_for_match first.")
+
         if metric == "GIoU":
 
             def get_metric_value(*args):
                 return self._compute_giou(*args)
 
+        elif metric[:3] == "IoA" and metric[3:] in ("min", "max", "self", "other"):
+
+            def get_metric_value(*args):
+                return self._compute_intersection_over_area(*args, area_type=metric[3:])
+
         else:
             raise ValueError("metric must be GIoU.")
+
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         ra2min, ra2max, dec2min, dec2max = (
             cat2[c] for c in ("ra_min", "ra_max", "dec_min", "dec_max")
@@ -229,6 +243,9 @@ class BoxMatch(SpatialMatch):
     def _compute_giou(self, area1, area2, intersection, outter):
         union = area1 + area2 - intersection
         return intersection / union + union / outter - 1.0
+
+    def _compute_intersection_over_area(self, area1, area2, intersection, outter, area_type):
+        return intersection / _area_type_funcs[area_type](area1, area2)
 
     def prep_cat_for_match(
         self,
