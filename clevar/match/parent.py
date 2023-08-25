@@ -115,32 +115,41 @@ class Match:
             def set_unique(*args):
                 return self._match_sharepref(*args, minimum_share_fraction)
 
-        elif self.type == "box":
+        elif self.type == "Box":
             valid_pref_vals += ["gIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
 
             if preference == "gIoU":
 
-                def set_unique(*args):
-                    return self._match_box_metrics_pref(*args, self._compute_giou)
+                def metric_func(*args):
+                    return self._compute_giou(*args)
 
             elif preference[:3] == "IoA" and preference[3:] in ("min", "max", "self", "other"):
 
-                def set_unique(*args):
-                    return self._match_box_metrics_pref(
-                        *args,
-                        lambda *args_: self._compute_intersection_over_area(
-                            *args_, area_type=preference[3:]
-                        ),
-                    )
+                def metric_func(*args):
+                    return self._compute_intersection_over_area(*args, area_type=preference[3:])
 
             else:
                 valid_pref = False
+
+            if valid_pref:
+
+                def set_unique(*args):
+                    return self._match_box_metrics_pref(
+                        *args, preference=preference, metric_func=metric_func
+                    )
+
+                for col in (f"mt_self_{preference}", f"mt_other_{preference}"):
+                    if col not in cat1.colnames:
+                        cat1[col] = np.ones(cat1.size) * -99.0
+                col = f"mt_other_{preference}"
+                if col not in cat2.colnames:
+                    cat2[col] = np.ones(cat2.size) * -99.0
 
         else:
             valid_pref = False
 
         if not valid_pref:
-            raise ValueError("preference must be in: " ", ".join(valid_pref_vals))
+            raise ValueError("preference must be in: " + ", ".join(valid_pref_vals))
 
         # Run matching
         print(f"Unique Matches ({cat1.name})")
@@ -207,7 +216,7 @@ class Match:
                     return True
         return False
 
-    def _match_box_metrics_pref(self, cat1, ind1, cat2, metric_func):
+    def _match_box_metrics_pref(self, cat1, ind1, cat2, preference, metric_func):
         """
         Make the unique match by gIoU preference
 
@@ -244,10 +253,13 @@ class Match:
                     cat2["dec_max"][inds2],
                 )
             )
-            for ind2 in inds2[np.argsort(metric)][::-1]:
+            for i_sort in np.argsort(metric)[::-1]:
+                ind2 = inds2[i_sort]
                 if cat2["mt_other"][ind2] is None:
                     cat1["mt_self"][ind1] = cat2["id"][ind2]
                     cat2["mt_other"][ind2] = cat1["id"][ind1]
+                    cat1[f"mt_self_{preference}"][ind1] = metric[i_sort]
+                    cat2[f"mt_other_{preference}"][ind2] = metric[i_sort]
                     return True
         return False
 
