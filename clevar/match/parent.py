@@ -116,9 +116,9 @@ class Match:
                 return self._match_sharepref(*args, minimum_share_fraction)
 
         elif self.type == "Box":
-            valid_pref_vals += ["gIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
+            valid_pref_vals += ["GIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
 
-            if preference == "gIoU":
+            if preference.lower() == "giou":
 
                 def metric_func(*args):
                     return self._compute_giou(*args)
@@ -218,7 +218,7 @@ class Match:
 
     def _match_box_metrics_pref(self, cat1, ind1, cat2, preference, metric_func):
         """
-        Make the unique match by gIoU preference
+        Make the unique match by GIoU preference
 
         Parameters
         ----------
