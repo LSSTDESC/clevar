@@ -4,13 +4,13 @@ The ProximityMatch class
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as spline
 
-from .parent import Match
+from .spatial import SpatialMatch
 from ..geometry import units_bank, convert_units
 from ..catalog import ClData
 from ..utils import str2dataunit
 
 
-class ProximityMatch(Match):
+class ProximityMatch(SpatialMatch):
     """
     ProximityMatch Class
 
@@ -23,7 +23,7 @@ class ProximityMatch(Match):
     """
 
     def __init__(self):
-        Match.__init__(self)
+        SpatialMatch.__init__(self)
         self.type = "Proximity"
 
     def multiple(self, cat1, cat2, radius_selection="max", verbose=True):
@@ -125,72 +125,13 @@ class ProximityMatch(Match):
         """
         # pylint: disable=arguments-differ
         print("## Prep mt_cols")
-        cat.mt_input = ClData()
+        if cat.mt_input is None:
+            cat.mt_input = ClData()
         # Set zmin, zmax
-        if delta_z is None:
-            # No z use
-            print("* zmin|zmax set to -1|10")
-            cat.mt_input["zmin"] = -1 * np.ones(cat.size)
-            cat.mt_input["zmax"] = 10 * np.ones(cat.size)
-        elif delta_z == "cat":
-            # Values from catalog
-            if "zmin" in cat.tags and "zmax" in cat.tags:
-                print("* zmin|zmax from cat cols (zmin, zmax)")
-                cat.mt_input["zmin"] = self._rescale_z(cat["z"], cat["zmin"], n_delta_z)
-                cat.mt_input["zmax"] = self._rescale_z(cat["z"], cat["zmax"], n_delta_z)
-            # create zmin/zmax if not there
-            elif "z_err" in cat.tags:
-                print("* zmin|zmax from cat cols (err)")
-                cat.mt_input["zmin"] = cat["z"] - n_delta_z * cat["z_err"]
-                cat.mt_input["zmax"] = cat["z"] + n_delta_z * cat["z_err"]
-            else:
-                raise ValueError("ClCatalog must contain zmin, zmax or z_err for this matching.")
-        elif isinstance(delta_z, str):
-            # zmin/zmax in auxiliar file
-            print("* zmin|zmax from aux file")
-            order = 3
-            zval, zvmin, zvmax = np.loadtxt(delta_z)
-            zvmin = self._rescale_z(zval, zvmin, n_delta_z)
-            zvmax = self._rescale_z(zval, zvmax, n_delta_z)
-            cat.mt_input["zmin"] = spline(zval, zvmin, k=order)(cat["z"])
-            cat.mt_input["zmax"] = spline(zval, zvmax, k=order)(cat["z"])
-        elif isinstance(delta_z, (int, float)):
-            # zmin/zmax from sigma_z*(1+z)
-            print("* zmin|zmax from config value")
-            cat.mt_input["zmin"] = cat["z"] - delta_z * n_delta_z * (1.0 + cat["z"])
-            cat.mt_input["zmax"] = cat["z"] + delta_z * n_delta_z * (1.0 + cat["z"])
-
+        self._prep_z_for_match(cat, delta_z, n_delta_z)
         # Set angular radius
-        if match_radius == "cat":
-            print("* ang radius from cat")
-            in_rad, in_rad_unit = cat["radius"], cat.radius_unit
-            # when mass is passed to radius: m#b or m#c - background/critical
-            if in_rad_unit.lower() != "mpc" and in_rad_unit[0].lower() == "m":
-                print(f"    * Converting mass ({in_rad_unit}) ->radius")
-                delta, mtyp = str2dataunit(
-                    in_rad_unit[1:],
-                    ["b", "c"],
-                    err_msg=(
-                        f"Mass unit ({in_rad_unit}) must be in format "
-                        "'m#b' (background) or 'm#c' (critical)"
-                    ),
-                )
-                in_rad = cosmo.eval_mass2radius(
-                    in_rad, cat["z"], delta, mass_type={"b": "background", "c": "critical"}[mtyp]
-                )
-                in_rad_unit = "mpc"
-        else:
-            print("* ang radius from set scale")
-            in_rad, in_rad_unit = str2dataunit(match_radius, units_bank.keys())
-            in_rad *= np.ones(cat.size)
-        # convert to degrees
-        cat.mt_input["ang"] = convert_units(
-            in_rad * n_match_radius,
-            in_rad_unit,
-            "degrees",
-            redshift=cat["z"] if "z" in cat.tags else None,
-            cosmo=cosmo,
-        )
+        self._prep_radius_for_match(cat, match_radius, n_match_radius=n_match_radius, cosmo=cosmo)
+        # add conf to history of matching
         self.history.append(
             {
                 "func": "prep_cat_for_match",
@@ -203,24 +144,6 @@ class ProximityMatch(Match):
             }
         )
 
-    def _rescale_z(self, z, zlim, n_rescale):
-        """Rescale zmin/zmax by a factor n_rescale
-
-        Parameters
-        ----------
-        z: float, array
-            Redshift value
-        zlim: float, array
-            Redshift limit
-        n_rescale: float
-            Value to rescale zlim
-
-        Returns
-        -------
-        float, array
-            Rescaled z limit
-        """
-        return z + n_rescale * (zlim - z)
 
     def _max_mt_distance(self, radius1, radius2, radius_selection):
         """Get maximum angular distance allowed for the matching

@@ -813,6 +813,7 @@ class MemCatalog(Catalog):
     def __init__(self, name, tags=None, labels=None, **kwargs):
         if tags is not None and not isinstance(tags, dict):
             raise ValueError("tags must be dict.")
+        self.mt_input = kwargs.pop("mt_input", None)
         self.__id_dict_list = {}
         Catalog.__init__(
             self,
