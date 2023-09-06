@@ -7,6 +7,7 @@ from ..catalog import ClData
 from .parent import Match
 from .proximity import ProximityMatch
 from .membership import MembershipMatch
+from .box import BoxMatch
 
 
 def get_matched_pairs(cat1, cat2, matching_type, mask1=None, mask2=None):

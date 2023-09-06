@@ -75,10 +75,22 @@ class Match:
             Minimum share fraction to consider in matches (default=0).
         """
         self._cat1_mt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
+
+        # set order to match catalogs
         if "mass" in cat1.tags:
             i_vals = np.argsort(cat1["mass"])[::-1]
         else:
             i_vals = range(cat1.size)
+
+        # set funtion to be used for matching
+        valid_pref = True
+        valid_pref_vals = [
+            "more_massive",
+            "angular_proximity",
+            "redshift_proximity",
+            "shared_member_fraction",
+        ]
+
         if preference == "more_massive":
 
             def set_unique(*args):
@@ -103,16 +115,51 @@ class Match:
             def set_unique(*args):
                 return self._match_sharepref(*args, minimum_share_fraction)
 
+        elif self.type == "Box":
+            valid_pref_vals += ["GIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
+
+            if preference.lower() == "giou":
+
+                def metric_func(*args):
+                    return self._compute_giou(*args)
+
+            elif preference[:3] == "IoA" and preference[3:] in ("min", "max", "self", "other"):
+
+                def metric_func(*args):
+                    return self._compute_intersection_over_area(*args, area_type=preference[3:])
+
+            else:
+                valid_pref = False
+
+            if valid_pref:
+
+                def set_unique(*args):
+                    return self._match_box_metrics_pref(
+                        *args, preference=preference, metric_func=metric_func
+                    )
+
+                for col in (f"mt_self_{preference}", f"mt_other_{preference}"):
+                    if col not in cat1.colnames:
+                        cat1[col] = np.ones(cat1.size) * -99.0
+                col = f"mt_other_{preference}"
+                if col not in cat2.colnames:
+                    cat2[col] = np.ones(cat2.size) * -99.0
+
         else:
-            raise ValueError(
-                "preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'"
-            )
+            valid_pref = False
+
+        if not valid_pref:
+            raise ValueError("preference must be in: " + ", ".join(valid_pref_vals))
+
+        # Run matching
         print(f"Unique Matches ({cat1.name})")
         for ind1 in i_vals:
             if cat1["mt_self"][ind1] is None:
                 self._cat1_mt[ind1] = set_unique(cat1, ind1, cat2)
         self._cat1_mt *= cat1.get_matching_mask("self")  # In case ang pref removes a match
         print(f'* {cat1.get_matching_mask("self").sum():,}/{cat1.size:,} objects matched.')
+
+        # Add match conf to history
         cfg = {"func": "unique", "cats": f"{cat1.name}, {cat2.name}", "preference": preference}
         if preference == "shared_member_fraction":
             cfg["minimum_share_fraction"] = minimum_share_fraction
@@ -166,6 +213,53 @@ class Match:
                 if cat2["mt_other"][ind2] is None:
                     cat1["mt_self"][ind1] = cat2["id"][ind2]
                     cat2["mt_other"][ind2] = cat1["id"][ind1]
+                    return True
+        return False
+
+    def _match_box_metrics_pref(self, cat1, ind1, cat2, preference, metric_func):
+        """
+        Make the unique match by GIoU preference
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        ind1: int
+            Index of the cluster from cat1 to be matched
+        cat2: clevar.ClCatalog
+            Target catalog
+
+        Returns
+        -------
+        bool
+            Tells if the cluster was matched
+        """
+        inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
+        if len(inds2) > 0:
+            metric = metric_func(
+                *self._compute_areas(
+                    *(
+                        [
+                            cat1["ra_min"][ind1],
+                            cat1["ra_max"][ind1],
+                            cat1["dec_min"][ind1],
+                            cat1["dec_max"][ind1],
+                        ]
+                        * np.ones(inds2.size)[:, None]
+                    ).T,  # for vec computation
+                    cat2["ra_min"][inds2],
+                    cat2["ra_max"][inds2],
+                    cat2["dec_min"][inds2],
+                    cat2["dec_max"][inds2],
+                )
+            )
+            for i_sort in np.argsort(metric)[::-1]:
+                ind2 = inds2[i_sort]
+                if cat2["mt_other"][ind2] is None:
+                    cat1["mt_self"][ind1] = cat2["id"][ind2]
+                    cat2["mt_other"][ind2] = cat1["id"][ind1]
+                    cat1[f"mt_self_{preference}"][ind1] = metric[i_sort]
+                    cat2[f"mt_other_{preference}"][ind2] = metric[i_sort]
                     return True
         return False
 

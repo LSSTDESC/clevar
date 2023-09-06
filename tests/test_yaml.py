@@ -2,12 +2,14 @@
 """ Tests for match.py """
 import os
 import numpy as np
+import pytest
 import yaml
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 from unittest import mock
 
 from clevar import clv_yaml as clevar_yaml
 from clevar.clv_yaml import match_metrics_parent as metric_parent
+from clevar import optional_libs
 
 
 def test_yaml_parent():
@@ -43,10 +45,6 @@ def test_yaml_helper_functions():
     hf.loadconf("cfg.yml", ["test"], fail_action="orverwrite")
     os.system("rm cfg.yml")
     os.system("rm -r temp")
-    # cosmology
-    hf.make_cosmology({"backend": "astropy"})
-    hf.make_cosmology({"backend": "ccl"})
-    assert_raises(ValueError, hf.make_cosmology, {"backend": "unknown"})
     # make_bins
     hf.make_bins(3, log=False)
     hf.make_bins("0 1 3", log=False)
@@ -58,6 +56,13 @@ def test_yaml_helper_functions():
         hf.get_input_loop(options_msg="test", actions={"pass": (lambda x: "ok", [0], {})}), "ok"
     )
     mock.builtins.input = original_input
+    # cosmology
+    hf.make_cosmology({"backend": "astropy"})
+    if optional_libs.ccl is None:
+        pytest.skip(f"Missing backend CCL.")
+    else:
+        hf.make_cosmology({"backend": "ccl"})
+    assert_raises(ValueError, hf.make_cosmology, {"backend": "unknown"})
 
 
 def create_base_matched_files(config_file, matching_mode):
@@ -123,13 +128,13 @@ def test_yaml_funcs_prox():
     # Match, used diff cosmology and overwrite
     # 1
     print("############ Fail cfg check #########")
-    config["proximity_match"]["step1"]["cosmology"] = {"backend": "CCL"}
+    config["proximity_match"]["step1"]["cosmology"] = {"backend": "astropy"}
     yaml.write(config, "cfg.yml")
     original_input = mock.builtins.input
     mock.builtins.input = lambda _: "q"
     clevar_yaml.match("cfg.yml", overwrite_config=False, overwrite_files=False)
     # 2
-    config["cosmology"] = {"backend": "CCL"}
+    config["cosmology"] = {"backend": "astropy"}
     yaml.write(config, "cfg.yml")
     mock.builtins.input = lambda _: "o"
     clevar_yaml.match("cfg.yml", overwrite_config=False, overwrite_files=False)
