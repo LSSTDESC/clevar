@@ -144,7 +144,6 @@ class ProximityMatch(SpatialMatch):
             }
         )
 
-
     def _max_mt_distance(self, radius1, radius2, radius_selection):
         """Get maximum angular distance allowed for the matching
 

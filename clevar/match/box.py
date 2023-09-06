@@ -79,7 +79,7 @@ class BoxMatch(SpatialMatch):
 
         else:
             valid_pref_vals = ["GIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
-            raise ValueError("metric must be in:"+", ".join(valid_pref_vals))
+            raise ValueError("metric must be in:" + ", ".join(valid_pref_vals))
 
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         ra2min, ra2max, dec2min, dec2max = (

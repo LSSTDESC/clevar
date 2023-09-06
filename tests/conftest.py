@@ -9,7 +9,7 @@ from clevar import optional_libs
 @pytest.fixture(scope="module", params=[AstroPyCosmology, CCLCosmology])
 def CosmoClass(request):
     param = request.param
-    if optional_libs.ccl is None and param==CCLCosmology:
+    if optional_libs.ccl is None and param == CCLCosmology:
         pytest.skip(f"Missing backend '{param}'.")
     return param
 
