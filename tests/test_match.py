@@ -675,6 +675,41 @@ def test_box_cfg(CosmoClass):
     _test_mt_results(cat1, multi_self=mmt, self=smt, cross=smt)
     _test_mt_results(cat2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
 
+def test_box_detailed_print(CosmoClass):
+    cosmo = CosmoClass()
+    mt = BoxMatch()
+    assert_raises(ValueError, mt._detailed_print, None, {"detailed_print_only":True})
+    # prep data
+    input1, input2 = get_test_data_box()
+    cat1 = ClCatalog("Cat1", **input1)[:1]
+    cat2 = ClCatalog("Cat2", **input2)
+    mt.prep_cat_for_match(cat1, delta_z=None)
+    mt.prep_cat_for_match(cat2, delta_z=None)
+    # success match
+    mt.multiple(
+        cat1, cat2,
+        metric_cut=0.5,
+        detailed_print_only=True,
+        )
+    # fail match on redshift
+    cat2["z"] += 1
+    mt.prep_cat_for_match(cat1, delta_z=0.2)
+    mt.prep_cat_for_match(cat2, delta_z=0.2)
+    mt.multiple(
+        cat1, cat2,
+        metric_cut=0.5,
+        detailed_print_only=True,
+        )
+    # fail match on intersection
+    cat1["ra_min"] += 100
+    mt.prep_cat_for_match(cat1, delta_z=None)
+    mt.prep_cat_for_match(cat2, delta_z=None)
+    mt.multiple(
+        cat1, cat2,
+        metric_cut=0.5,
+        detailed_print_only=True,
+        )
+
 def test_output_catalog_with_matching():
     # input data
     cat1, cat2 = get_test_data_mem()
