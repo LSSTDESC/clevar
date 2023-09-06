@@ -67,7 +67,7 @@ class BoxMatch(SpatialMatch):
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run prep_cat_for_match first.")
 
-        if metric == "GIoU":
+        if metric.lower() == "giou":
 
             def get_metric_value(*args):
                 return self._compute_giou(*args)
@@ -78,7 +78,8 @@ class BoxMatch(SpatialMatch):
                 return self._compute_intersection_over_area(*args, area_type=metric[3:])
 
         else:
-            raise ValueError("metric must be GIoU.")
+            valid_pref_vals = ["GIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
+            raise ValueError("metric must be in:"+", ".join(valid_pref_vals))
 
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         ra2min, ra2max, dec2min, dec2max = (
@@ -320,33 +321,18 @@ class BoxMatch(SpatialMatch):
             raise ValueError("config type must be cat1, cat2 or cross")
         if match_config["type"] in ("cat1", "cross"):
             print("\n## ClCatalog 1")
-            self.prep_cat_for_match(cat1, cosmo=cosmo, **match_config["catalog1"])
+            self.prep_cat_for_match(cat1, **match_config["catalog1"])
         if match_config["type"] in ("cat2", "cross"):
             print("\n## ClCatalog 2")
-            self.prep_cat_for_match(cat2, cosmo=cosmo, **match_config["catalog2"])
+            self.prep_cat_for_match(cat2, **match_config["catalog2"])
 
         verbose = match_config.get("verbose", True)
         if match_config["type"] in ("cat1", "cross"):
             print("\n## Multiple match (catalog 1)")
-            radius_selection = {
-                "cat1": "self",
-                "cat2": "other",
-            }.get(
-                match_config["which_radius"],
-                match_config["which_radius"],
-            )
-            self.multiple(cat1, cat2, radius_selection, verbose=verbose)
+            self.multiple(cat1, cat2, verbose=verbose)
         if match_config["type"] in ("cat2", "cross"):
             print("\n## Multiple match (catalog 2)")
-            radius_selection = {
-                "cat1": "other",
-                "cat2": "self",
-            }.get(
-                match_config["which_radius"],
-                match_config["which_radius"],
-            )
-            # pylint: disable=arguments-out-of-order
-            self.multiple(cat2, cat1, radius_selection, verbose=verbose)
+            self.multiple(cat2, cat1, verbose=verbose)
 
         if match_config["type"] in ("cat1", "cross"):
             print("\n## Finding unique matches of catalog 1")
