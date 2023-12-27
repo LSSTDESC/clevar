@@ -36,7 +36,7 @@ class BoxMatch(SpatialMatch):
         cat2,
         metric="GIoU",
         metric_cut=0.5,
-        share_area_frac=0.5,
+        rel_area=0.5,
         verbose=True,
         detailed_print_only=False,
     ):
@@ -53,7 +53,7 @@ class BoxMatch(SpatialMatch):
             Metric to be used for matching. Can be: GIoU (generalized Intersection over Union).
         metric_cut: float
             Minimum value of metric for match.
-        share_area_frac: float
+        rel_area: float
             Minimum relative size of area for match.
         verbose: bool
             Print result for individual matches.
@@ -126,8 +126,8 @@ class BoxMatch(SpatialMatch):
                     if not detailed_print_only:
                         for id2 in cat2["id"][mask][
                             (metric_value >= metric_cut)
-                            * (area1 / area2 >= share_area_frac)
-                            * (area2 / area1 >= share_area_frac)
+                            * (area1 / area2 >= rel_area)
+                            * (area2 / area1 >= rel_area)
                         ]:
                             cat1["mt_multi_self"][ind1].append(id2)
                             ind2 = int(cat2.id_dict[id2])
@@ -176,8 +176,8 @@ class BoxMatch(SpatialMatch):
                 locs["outter"],
                 locs["metric_value"],
                 locs["metric_value"] >= locs["metric_cut"],
-                locs["area1"] / locs["area2"] >= locs["share_area_frac"],
-                locs["area2"] / locs["area1"] >= locs["share_area_frac"],
+                locs["area1"] / locs["area2"] >= locs["rel_area"],
+                locs["area2"] / locs["area1"] >= locs["rel_area"],
             ):
                 print("   Candidate:", val[0])
                 print(f"        Pass   : {bool(np.prod(val[10:]))} (", *val[10:], ")")
