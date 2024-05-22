@@ -29,6 +29,9 @@ class BoxMatch(SpatialMatch):
     def __init__(self):
         SpatialMatch.__init__(self)
         self.type = "Box"
+        self._valid_unique_preference_vals += ["GIoU"] + [
+            f"IoA{end}" for end in ("min", "max", "self", "other")
+        ]
 
     def multiple(
         self,
@@ -50,7 +53,9 @@ class BoxMatch(SpatialMatch):
         cat2: clevar.ClCatalog
             Target catalog
         metric: str (optional)
-            Metric to be used for matching. Can be: GIoU (generalized Intersection over Union).
+            Metric to be used for matching. Can be:
+            "GIoU" (generalized Intersection over Union);
+            "IoA*" (Intersection over Area, with area choice in ["min", "max", "self", "other"]);
         metric_cut: float
             Minimum value of metric for match.
         rel_area: float
@@ -67,19 +72,10 @@ class BoxMatch(SpatialMatch):
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run prep_cat_for_match first.")
 
-        if metric.lower() == "giou":
-
-            def get_metric_value(*args):
-                return self._compute_giou(*args)
-
-        elif metric[:3] == "IoA" and metric[3:] in ("min", "max", "self", "other"):
-
-            def get_metric_value(*args):
-                return self._compute_intersection_over_area(*args, area_type=metric[3:])
-
-        else:
-            valid_pref_vals = ["GIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
-            raise ValueError("metric must be in:" + ", ".join(valid_pref_vals))
+        valid_metric_vals = ["GIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
+        if metric not in valid_metric_vals:
+            raise ValueError("metric must be in:" + ", ".join(valid_metric_vals))
+        self._set_metric_function(preference)
 
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         ra2min, ra2max, dec2min, dec2max = (
@@ -121,7 +117,7 @@ class BoxMatch(SpatialMatch):
                         dec2max[mask],
                     )
                     # makes metric crop
-                    metric_value = get_metric_value(area1, area2, intersection, outter)
+                    metric_value = self._get_metric(area1, area2, intersection, outter)
                     self._detailed_print(3, locals())
                     if not detailed_print_only:
                         for id2 in cat2["id"][mask][
@@ -150,6 +146,10 @@ class BoxMatch(SpatialMatch):
         if not locs["detailed_print_only"]:
             return
         if i == 0:
+            area = (
+                self._compute_area(locs["ra1min"], locs["ra1max"], locs["dec1min"], locs["dec1max"])
+                * 3600
+            )
             print(
                 "\n\nCluster:",
                 "(",
@@ -157,7 +157,7 @@ class BoxMatch(SpatialMatch):
                 ") (",
                 ", ".join([f"{locs[v]:.4f}" for v in ("z1min", "z1max")]),
                 ")",
-                f"( area: {self._compute_area(locs['ra1min'], locs['ra1max'], locs['dec1min'], locs['dec1max'])*3600:.2f} arcmin2 )",
+                f"( area: {area:.2f} arcmin2 )",
             )
         elif i == 1:
             print(f" * z pass: {locs['mask'].sum():,}")
@@ -246,6 +246,7 @@ class BoxMatch(SpatialMatch):
         return intersection / union + union / outter - 1.0
 
     def _compute_intersection_over_area(self, area1, area2, intersection, outter, area_type):
+        # pylint: disable=unused-argument
         return intersection / _area_type_funcs[area_type](area1, area2)
 
     def prep_cat_for_match(
@@ -294,6 +295,76 @@ class BoxMatch(SpatialMatch):
             }
         )
 
+    def _get_metric(self, preference):
+        # pylint: disable=method-hidden
+        raise NotImplementedError
+
+    def _set_metric_function(self, preference):
+        if preference.lower() == "giou":
+            self._get_metric = self._compute_giou
+
+        elif preference[:3] == "IoA" and preference[3:] in ("min", "max", "self", "other"):
+            self._get_metric = lambda *args: self._compute_intersection_over_area(
+                *args, area_type=preference[3:]
+            )
+
+    def _set_unique_matching_function(self, preference, **kwargs):
+        self._set_metric_function(preference)
+
+        def set_unique(*args):
+            return self._match_box_metrics_pref(
+                *args, preference=preference, metric_func=self._get_metric
+            )
+
+        return set_unique
+
+    def _match_box_metrics_pref(self, cat1, ind1, cat2, preference, metric_func):
+        """
+        Make the unique match by GIoU preference
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        ind1: int
+            Index of the cluster from cat1 to be matched
+        cat2: clevar.ClCatalog
+            Target catalog
+
+        Returns
+        -------
+        bool
+            Tells if the cluster was matched
+        """
+        inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
+        if len(inds2) > 0:
+            metric = metric_func(
+                *self._compute_areas(
+                    *(
+                        [
+                            cat1["ra_min"][ind1],
+                            cat1["ra_max"][ind1],
+                            cat1["dec_min"][ind1],
+                            cat1["dec_max"][ind1],
+                        ]
+                        * np.ones(inds2.size)[:, None]
+                    ).T,  # for vec computation
+                    cat2["ra_min"][inds2],
+                    cat2["ra_max"][inds2],
+                    cat2["dec_min"][inds2],
+                    cat2["dec_max"][inds2],
+                )
+            )
+            for i_sort in np.argsort(metric)[::-1]:
+                ind2 = inds2[i_sort]
+                if cat2["mt_other"][ind2] is None:
+                    cat1["mt_self"][ind1] = cat2["id"][ind2]
+                    cat2["mt_other"][ind2] = cat1["id"][ind1]
+                    cat1[f"mt_self_{preference}"][ind1] = metric[i_sort]
+                    cat2[f"mt_other_{preference}"][ind2] = metric[i_sort]
+                    return True
+        return False
+
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
@@ -334,13 +405,4 @@ class BoxMatch(SpatialMatch):
             print("\n## Multiple match (catalog 2)")
             self.multiple(cat2, cat1, verbose=verbose)
 
-        if match_config["type"] in ("cat1", "cross"):
-            print("\n## Finding unique matches of catalog 1")
-            self.unique(cat1, cat2, match_config["preference"])
-        if match_config["type"] in ("cat2", "cross"):
-            print("\n## Finding unique matches of catalog 2")
-            self.unique(cat2, cat1, match_config["preference"])
-
-        if match_config["type"] == "cross":
-            self.cross_match(cat1)
-            self.cross_match(cat2)
+        self._unique_match_from_config(cat1, cat2, match_config)

@@ -21,6 +21,8 @@ class SpatialMatch(Match):
         Steps in the matching
     """
 
+    # pylint: disable=abstract-method
+
     def __init__(self):
         Match.__init__(self)
         self.type = "Spatial"
@@ -153,3 +155,31 @@ class SpatialMatch(Match):
             redshift=cat["z"] if "z" in cat.tags else None,
             cosmo=cosmo,
         )
+
+    def _unique_match_from_config(self, cat1, cat2, match_config):
+        """
+        Make matching of catalogs based on a configuration dictionary
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
+        match_config: dict
+            Dictionary with the matching configuration. Keys must be:
+
+                * `type`: type of matching, can be: `cat1`, `cat2`, `cross`.
+                * `preference`: Preference to set best match, can be: `more_massive`,
+                  `angular_proximity`, `redshift_proximity`, `shared_member_fraction`.
+        """
+        if match_config["type"] in ("cat1", "cross"):
+            print("\n## Finding unique matches of catalog 1")
+            self.unique(cat1, cat2, match_config["preference"])
+        if match_config["type"] in ("cat2", "cross"):
+            print("\n## Finding unique matches of catalog 2")
+            self.unique(cat2, cat1, match_config["preference"])
+
+        if match_config["type"] == "cross":
+            self.cross_match(cat1)
+            self.cross_match(cat2)

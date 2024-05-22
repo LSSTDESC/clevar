@@ -2,12 +2,9 @@
 The ProximityMatch class
 """
 import numpy as np
-from scipy.interpolate import InterpolatedUnivariateSpline as spline
 
 from .spatial import SpatialMatch
-from ..geometry import units_bank, convert_units
 from ..catalog import ClData
-from ..utils import str2dataunit
 
 
 class ProximityMatch(SpatialMatch):
@@ -175,6 +172,9 @@ class ProximityMatch(SpatialMatch):
             coeff2 = radius1 >= radius2
         return coeff1 * radius1 + coeff2 * radius2
 
+    def _set_unique_matching_function(self, preference, **kwargs):
+        pass
+
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
@@ -231,13 +231,4 @@ class ProximityMatch(SpatialMatch):
             # pylint: disable=arguments-out-of-order
             self.multiple(cat2, cat1, radius_selection, verbose=verbose)
 
-        if match_config["type"] in ("cat1", "cross"):
-            print("\n## Finding unique matches of catalog 1")
-            self.unique(cat1, cat2, match_config["preference"])
-        if match_config["type"] in ("cat2", "cross"):
-            print("\n## Finding unique matches of catalog 2")
-            self.unique(cat2, cat1, match_config["preference"])
-
-        if match_config["type"] == "cross":
-            self.cross_match(cat1)
-            self.cross_match(cat2)
+        self._unique_match_from_config(cat1, cat2, match_config)
