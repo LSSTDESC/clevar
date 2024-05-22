@@ -23,6 +23,7 @@ def test_parent():
     assert_raises(NotImplementedError, mt.multiple, None, None)
     assert_raises(NotImplementedError, mt.match_from_config, None, None, None, None)
     assert_raises(ValueError, mt._get_dist_mt, None, None, "unknown match")
+    assert_raises(NotImplementedError, mt._set_unique_matching_function, None)
 
 
 def test_spatial():
@@ -555,6 +556,7 @@ def test_box(CosmoClass):
     print(cat2.data)
     cosmo = CosmoClass()
     mt = BoxMatch()
+    assert_raises(NotImplementedError, mt._get_metric, None)
     # test mask intersection
     res = np.zeros(2, dtype=bool)
     for i, add in enumerate([1, -1, 1, -1]):
