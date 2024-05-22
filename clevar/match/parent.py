@@ -70,6 +70,24 @@ class Match:
         # pylint: disable=unused-argument
         raise NotImplementedError
 
+    def _init_matching_extra_cols(self, cat1, cat2, preference):
+
+        if preference == "shared_member_fraction":
+            cat1["mt_frac_self"] = np.zeros(cat1.size)
+            cat2["mt_frac_other"] = np.zeros(cat2.size)
+            if "mt_frac_other" not in cat1.colnames:
+                cat1["mt_frac_other"] = np.zeros(cat1.size)
+        elif (preference.lower() == "giou") or (
+            preference[:3] == "IoA" and preference[3:] in ("min", "max", "self", "other")
+        ):
+            for col in (f"mt_self_{preference}", f"mt_other_{preference}"):
+                if col not in cat1.colnames:
+                    cat1[col] = np.ones(cat1.size) * -99.0
+            col = f"mt_other_{preference}"
+            if col not in cat2.colnames:
+                cat2[col] = np.ones(cat2.size) * -99.0
+
+
     def unique(self, cat1, cat2, preference, minimum_share_fraction=0):
         """Makes unique matchig, requires multiple matching to be made first
 
@@ -117,6 +135,7 @@ class Match:
             set_unique = self._set_unique_matching_function(
                 preference, minimum_share_fraction=minimum_share_fraction
             )
+            self._init_matching_extra_cols(cat1, cat2, preference)
 
         # Run matching
         print(f"Unique Matches ({cat1.name})")

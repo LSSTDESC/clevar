@@ -172,9 +172,6 @@ class ProximityMatch(SpatialMatch):
             coeff2 = radius1 >= radius2
         return coeff1 * radius1 + coeff2 * radius2
 
-    def _set_unique_matching_function(self, preference, **kwargs):
-        pass
-
     def match_from_config(self, cat1, cat2, match_config, cosmo=None):
         """
         Make matching of catalogs based on a configuration dictionary
