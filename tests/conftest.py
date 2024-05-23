@@ -3,11 +3,15 @@ import pytest
 import importlib
 import os
 from clevar.cosmology import AstroPyCosmology, CCLCosmology
+from clevar import optional_libs
 
 
 @pytest.fixture(scope="module", params=[AstroPyCosmology, CCLCosmology])
 def CosmoClass(request):
-    return request.param
+    param = request.param
+    if optional_libs.ccl is None and param == CCLCosmology:
+        pytest.skip(f"Missing backend '{param}'.")
+    return param
 
 
 @pytest.fixture(

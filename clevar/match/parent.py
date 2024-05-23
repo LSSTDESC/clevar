@@ -18,6 +18,14 @@ class Match:
         self._cat1_mt = None
         self._cat1_mmt = None
 
+        # internal values for unique matching
+        self._valid_unique_preference_vals = [
+            "more_massive",
+            "angular_proximity",
+            "redshift_proximity",
+            "shared_member_fraction",
+        ]
+
     def prep_cat_for_match(self, cat, *args):
         """
         Prepare the catalog for matching, will fill the cat.mt_input object.
@@ -58,6 +66,26 @@ class Match:
         cat1._set_mt_hist(self.history)
         cat2._set_mt_hist(self.history)
 
+    def _set_unique_matching_function(self, preference, **kwargs):
+        # pylint: disable=unused-argument
+        raise NotImplementedError
+
+    def _init_matching_extra_cols(self, cat1, cat2, preference):
+        if preference == "shared_member_fraction":
+            cat1["mt_frac_self"] = np.zeros(cat1.size)
+            cat2["mt_frac_other"] = np.zeros(cat2.size)
+            if "mt_frac_other" not in cat1.colnames:
+                cat1["mt_frac_other"] = np.zeros(cat1.size)
+        elif (preference.lower() == "giou") or (
+            preference[:3] == "IoA" and preference[3:] in ("min", "max", "self", "other")
+        ):
+            for col in (f"mt_self_{preference}", f"mt_other_{preference}"):
+                if col not in cat1.colnames:
+                    cat1[col] = np.ones(cat1.size) * -99.0
+            col = f"mt_other_{preference}"
+            if col not in cat2.colnames:
+                cat2[col] = np.ones(cat2.size) * -99.0
+
     def unique(self, cat1, cat2, preference, minimum_share_fraction=0):
         """Makes unique matchig, requires multiple matching to be made first
 
@@ -75,10 +103,13 @@ class Match:
             Minimum share fraction to consider in matches (default=0).
         """
         self._cat1_mt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
+
+        # set order to match catalogs
         if "mass" in cat1.tags:
             i_vals = np.argsort(cat1["mass"])[::-1]
         else:
             i_vals = range(cat1.size)
+
         if preference == "more_massive":
 
             def set_unique(*args):
@@ -94,25 +125,25 @@ class Match:
             def set_unique(*args):
                 return self._match_apref(*args, "redshift_proximity")
 
-        elif preference == "shared_member_fraction":
-            cat1["mt_frac_self"] = np.zeros(cat1.size)
-            cat2["mt_frac_other"] = np.zeros(cat2.size)
-            if "mt_frac_other" not in cat1.colnames:
-                cat1["mt_frac_other"] = np.zeros(cat1.size)
-
-            def set_unique(*args):
-                return self._match_sharepref(*args, minimum_share_fraction)
-
         else:
-            raise ValueError(
-                "preference must be 'more_massive', 'angular_proximity' or 'redshift_proximity'"
+            if preference.lower() not in [v.lower() for v in self._valid_unique_preference_vals]:
+                raise ValueError(
+                    "preference must be in: " + ", ".join(self._valid_unique_preference_vals)
+                )
+            set_unique = self._set_unique_matching_function(
+                preference, minimum_share_fraction=minimum_share_fraction
             )
+            self._init_matching_extra_cols(cat1, cat2, preference)
+
+        # Run matching
         print(f"Unique Matches ({cat1.name})")
         for ind1 in i_vals:
             if cat1["mt_self"][ind1] is None:
                 self._cat1_mt[ind1] = set_unique(cat1, ind1, cat2)
         self._cat1_mt *= cat1.get_matching_mask("self")  # In case ang pref removes a match
         print(f'* {cat1.get_matching_mask("self").sum():,}/{cat1.size:,} objects matched.')
+
+        # Add match conf to history
         cfg = {"func": "unique", "cats": f"{cat1.name}, {cat2.name}", "preference": preference}
         if preference == "shared_member_fraction":
             cfg["minimum_share_fraction"] = minimum_share_fraction

@@ -26,6 +26,7 @@ class MembershipMatch(Match):
         Match.__init__(self)
         self.type = "Membership"
         self.matched_mems = None
+        self._valid_unique_preference_vals += ["shared_member_fraction"]
 
     def multiple(self, cat1, cat2, minimum_share_fraction=0, verbose=True):
         """
@@ -142,6 +143,12 @@ class MembershipMatch(Match):
             Pmem of catalog1 galaxy
         """
         cat1_share_mems[ind1][cat2_id] = cat1_share_mems[ind1].get(cat2_id, 0) + pmem1
+
+    def _set_unique_matching_function(self, preference, **kwargs):
+        def set_unique(*args):
+            return self._match_sharepref(*args, kwargs["minimum_share_fraction"])
+
+        return set_unique
 
     def save_shared_members(self, cat1, cat2, fileprefix):
         """

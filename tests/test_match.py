@@ -6,9 +6,11 @@ from numpy.testing import assert_raises, assert_allclose, assert_equal
 
 from clevar.catalog import ClCatalog, MemCatalog
 from clevar.match.parent import Match
+from clevar.match.spatial import SpatialMatch
 from clevar.match import (
     ProximityMatch,
     MembershipMatch,
+    BoxMatch,
     output_catalog_with_matching,
     output_matched_catalog,
     get_matched_pairs,
@@ -17,6 +19,15 @@ from clevar.match import (
 
 def test_parent():
     mt = Match()
+    assert_raises(NotImplementedError, mt.prep_cat_for_match, None)
+    assert_raises(NotImplementedError, mt.multiple, None, None)
+    assert_raises(NotImplementedError, mt.match_from_config, None, None, None, None)
+    assert_raises(ValueError, mt._get_dist_mt, None, None, "unknown match")
+    assert_raises(NotImplementedError, mt._set_unique_matching_function, None)
+
+
+def test_spatial():
+    mt = SpatialMatch()
     assert_raises(NotImplementedError, mt.prep_cat_for_match, None)
     assert_raises(NotImplementedError, mt.multiple, None, None)
     assert_raises(NotImplementedError, mt.match_from_config, None, None, None, None)
@@ -492,6 +503,253 @@ def test_membership_cfg(CosmoClass):
     cmt = [None, "CL1", "CL2", None, None]
     _test_mt_results(cat1, multi_self=mmt1, self=smt, cross=cmt, other=omt)
     _test_mt_results(cat2, multi_self=mmt2, self=omt[:-1], cross=cmt[:-1], other=smt[:-1])
+
+
+def get_test_data_box():
+    input1 = {
+        "id": [f"CL{i}" for i in range(5)],
+        "ra": np.array([0.0, 0.0001, 0.00011, 25, 20]),
+        "dec": np.array([0.0, 0, 0, 0, 0]),
+        "z": [0.2, 0.3, 0.25, 0.4, 0.35],
+        "mass": [10**13.5, 10**13.4, 10**13.3, 10**13.8, 10**14],
+    }
+    input1["ra_min"] = input1["ra"] - 1 / 60.0
+    input1["ra_max"] = input1["ra"] + 1 / 60.0
+    input1["dec_min"] = input1["dec"] - 1 / 60.0
+    input1["dec_max"] = input1["dec"] + 1 / 60.0
+    input2 = {k: v[:4] for k, v in input1.items()}
+    input2["z"][:2] = [0.3, 0.2]
+    input2["mass"][:3] = input2["mass"][:3][::-1]
+    return input1, input2
+
+
+def _validate_unique_matching(
+    mt,
+    cat1,
+    cat2,
+    match_preference,
+    mmt1,
+    smt1,
+    omt1,
+    mmt2,
+    smt2,
+    omt2,
+):
+    for col in ("mt_self", "mt_other"):
+        cat1[col] = None
+        cat2[col] = None
+    mt.unique(cat1, cat2, match_preference)
+    mt.unique(cat2, cat1, match_preference)
+    cat1.show_mt_hist()
+    cat2.show_mt_hist()
+    cat1.cross_match()
+    cat2.cross_match()
+    _test_mt_results(cat1, multi_self=mmt1, self=smt1, cross=smt1, other=omt1)
+    _test_mt_results(cat2, multi_self=mmt2, self=omt2, cross=smt2, other=omt2)
+
+
+def test_box(CosmoClass):
+    input1, input2 = get_test_data_box()
+    cat1 = ClCatalog("Cat1", **input1)
+    cat2 = ClCatalog("Cat2", **input2)
+    print(cat1.data)
+    print(cat2.data)
+    cosmo = CosmoClass()
+    mt = BoxMatch()
+    assert_raises(NotImplementedError, mt._get_metric, None)
+    # test mask intersection
+    res = np.zeros(2, dtype=bool)
+    for i, add in enumerate([1, -1, 1, -1]):
+        args = np.zeros((8, 2))
+        args[i] += add
+        print(args)
+        assert_equal(mt.mask_intersection(*args), res)
+    # test missing data
+    assert_raises(AttributeError, mt.multiple, cat1, cat2)
+    cat1.mt_input = "xx"
+    assert_raises(AttributeError, mt.multiple, cat1, cat2)
+    cat1.mt_input = None
+    # init match
+    mt_config1 = {"delta_z": 0.2}
+    mt_config2 = {"delta_z": 0.2}
+    mt.prep_cat_for_match(cat1, **mt_config1)
+    mt.prep_cat_for_match(cat2, **mt_config2)
+    # Check multiple match
+    assert_raises(ValueError, mt.multiple, cat1, cat2, metric="unknown")
+    mmt = [
+        ["CL0", "CL1", "CL2"],
+        ["CL0", "CL1", "CL2"],
+        ["CL0", "CL1", "CL2"],
+        ["CL3"],
+        [],
+    ]
+    for metric in ("GIoU", "IoAmin", "IoAmax", "IoAself", "IoAother"):
+        mt.multiple(cat1, cat2, metric=metric)
+        mt.multiple(cat2, cat1, metric=metric)
+    # Check unique with different preferences
+    smt = ["CL0", "CL1", "CL2", "CL3", None]
+    for pref in ("angular_proximity", "GIoU", "IoAmin", "IoAmax", "IoAself", "IoAother"):
+        print(pref)
+        _validate_unique_matching(
+            mt,
+            cat1,
+            cat2,
+            pref,
+            mmt,
+            smt,
+            smt,
+            mmt[:-1],
+            smt[:-1],
+            smt[:-1],
+        )
+    # Check unique with mass preference
+    smt = ["CL2", "CL1", "CL0", "CL3", None]
+    _validate_unique_matching(
+        mt,
+        cat1,
+        cat2,
+        "more_massive",
+        mmt,
+        smt,
+        smt,
+        mmt[:-1],
+        smt[:-1],
+        smt[:-1],
+    )
+    # Check unique with z preference
+    cat2["mt_other"][0] = "CL3"  # to force a replacement
+    smt = ["CL1", "CL0", "CL2", "CL3", None]
+    omt = ["CL1", "CL0", "CL2", "CL3", None]
+    _validate_unique_matching(
+        mt,
+        cat1,
+        cat2,
+        "redshift_proximity",
+        mmt,
+        smt,
+        omt,
+        mmt[:-1],
+        omt[:-1],
+        smt[:-1],
+    )
+    # Error for unkown preference
+    assert_raises(ValueError, mt.unique, cat1, cat2, "unknown")
+    # Check save and load matching
+    mt.save_matches(cat1, cat2, out_dir="temp", overwrite=True)
+    cat1_v2 = ClCatalog("Cat1", **input1)
+    cat2_v2 = ClCatalog("Cat2", **input2)
+    mt.load_matches(cat1_v2, cat2_v2, out_dir="temp")
+    for col in ("mt_self", "mt_other", "mt_multi_self", "mt_multi_other"):
+        assert_equal(cat1[col], cat1_v2[col])
+        assert_equal(cat2[col], cat2_v2[col])
+    os.system("rm -rf temp")
+    # Other config of prep for matching
+    # No redshift use
+    mt.prep_cat_for_match(cat1, delta_z=None)
+    assert all(cat1.mt_input["zmin"] < cat1["z"].min())
+    assert all(cat1.mt_input["zmax"] > cat1["z"].max())
+    # missing all zmin/zmax info in catalog
+    # zmin/zmax in catalog
+    cat1["zmin"] = cat1["z"] - 0.2
+    cat1["zmax"] = cat1["z"] + 0.2
+    cat1["z_err"] = 0.1
+    mt.prep_cat_for_match(cat1, delta_z="cat")
+    assert_allclose(cat1.mt_input["zmin"], cat1["zmin"])
+    assert_allclose(cat1.mt_input["zmax"], cat1["zmax"])
+    # z_err in catalog
+    del cat1["zmin"], cat1["zmax"]
+    mt.prep_cat_for_match(cat1, delta_z="cat")
+    assert_allclose(cat1.mt_input["zmin"], cat1["z"] - cat1["z_err"])
+    assert_allclose(cat1.mt_input["zmax"], cat1["z"] + cat1["z_err"])
+    # zmin/zmax from aux file
+    zv = np.linspace(0, 5, 10)
+    np.savetxt("zvals.dat", [zv, zv - 0.22, zv + 0.33])
+    mt.prep_cat_for_match(cat1, delta_z="zvals.dat")
+    assert_allclose(cat1.mt_input["zmin"], cat1["z"] - 0.22)
+    assert_allclose(cat1.mt_input["zmax"], cat1["z"] + 0.33)
+    os.system("rm -rf zvals.dat")
+
+
+def test_box_cfg(CosmoClass):
+    input1, input2 = get_test_data_box()
+    cat1 = ClCatalog("Cat1", **input1)
+    cat2 = ClCatalog("Cat2", **input2)
+    print(cat1.data)
+    print(cat2.data)
+    # init match
+    mt = BoxMatch()
+    # test wrong matching config
+    assert_raises(ValueError, mt.match_from_config, cat1, cat2, {"type": "unknown"})
+    ### test 0 ###
+    mt_config = {
+        "type": "cross",
+        "preference": "GIoU",
+        "catalog1": {
+            "delta_z": 0.2,
+        },
+        "catalog2": {
+            "delta_z": 0.2,
+        },
+    }
+    # Check multiple match
+    mmt = [
+        ["CL0", "CL1", "CL2"],
+        ["CL0", "CL1", "CL2"],
+        ["CL0", "CL1", "CL2"],
+        ["CL3"],
+        [],
+    ]
+    smt = ["CL0", "CL1", "CL2", "CL3", None]
+    ### test 0 ###
+    mt.match_from_config(cat1, cat2, mt_config)
+    # Check match
+    _test_mt_results(cat1, multi_self=mmt, self=smt, cross=smt)
+    _test_mt_results(cat2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
+    ### test 1 ###
+    cat1._init_match_vals(overwrite=True)
+    cat2._init_match_vals(overwrite=True)
+    mt.match_from_config(cat1, cat2, mt_config)
+    _test_mt_results(cat1, multi_self=mmt, self=smt, cross=smt)
+    _test_mt_results(cat2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
+
+
+def test_box_detailed_print(CosmoClass):
+    cosmo = CosmoClass()
+    mt = BoxMatch()
+    assert_raises(ValueError, mt._detailed_print, None, {"detailed_print_only": True})
+    # prep data
+    input1, input2 = get_test_data_box()
+    cat1 = ClCatalog("Cat1", **input1)[:1]
+    cat2 = ClCatalog("Cat2", **input2)
+    mt.prep_cat_for_match(cat1, delta_z=None)
+    mt.prep_cat_for_match(cat2, delta_z=None)
+    # success match
+    mt.multiple(
+        cat1,
+        cat2,
+        metric_cut=0.5,
+        detailed_print_only=True,
+    )
+    # fail match on redshift
+    cat2["z"] += 1
+    mt.prep_cat_for_match(cat1, delta_z=0.2)
+    mt.prep_cat_for_match(cat2, delta_z=0.2)
+    mt.multiple(
+        cat1,
+        cat2,
+        metric_cut=0.5,
+        detailed_print_only=True,
+    )
+    # fail match on intersection
+    cat1["ra_min"] += 100
+    mt.prep_cat_for_match(cat1, delta_z=None)
+    mt.prep_cat_for_match(cat2, delta_z=None)
+    mt.multiple(
+        cat1,
+        cat2,
+        metric_cut=0.5,
+        detailed_print_only=True,
+    )
 
 
 def test_output_catalog_with_matching():
