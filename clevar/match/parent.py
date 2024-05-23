@@ -71,7 +71,6 @@ class Match:
         raise NotImplementedError
 
     def _init_matching_extra_cols(self, cat1, cat2, preference):
-
         if preference == "shared_member_fraction":
             cat1["mt_frac_self"] = np.zeros(cat1.size)
             cat2["mt_frac_other"] = np.zeros(cat2.size)
@@ -86,7 +85,6 @@ class Match:
             col = f"mt_other_{preference}"
             if col not in cat2.colnames:
                 cat2[col] = np.ones(cat2.size) * -99.0
-
 
     def unique(self, cat1, cat2, preference, minimum_share_fraction=0):
         """Makes unique matchig, requires multiple matching to be made first
