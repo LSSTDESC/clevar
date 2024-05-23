@@ -66,10 +66,10 @@ def _base_cat_test(DataType, kwa=None, **quantities):
     # test warnings
     c["ra"] = 1.0
     c.tag_column("ra", "newtag")
-    with pytest.warns(None) as record:
+    with pytest.warns() as record:
         c.tag_column("z", "newtag")
     assert f"{record._list[0].message}" == "tag newtag:ra being replaced by newtag:z"
-    with pytest.warns(None) as record:
+    with pytest.warns() as record:
         c.tag_column("dec", "z")
     assert f"{record._list[0].message}" == (
         "There is a column with the same name as the tag setup."
@@ -100,11 +100,11 @@ def test_catalog():
     assert_raises(TypeError, c_._add_values, data=1)
     assert_raises(KeyError, c_._add_values, data=[1], mass=[1])
     # Check creation of id col
-    with pytest.warns(None) as record:
+    with pytest.warns() as record:
         c_no_id = Catalog(name="no id", ra=[1, 2])
     assert f"{record._list[0].message}" == "id column missing, additional one is being created."
     assert_equal(c_no_id["id"], ["0", "1"])
-    with pytest.warns(None) as record:
+    with pytest.warns() as record:
         c_no_id = Catalog(name="no id")
         c_no_id["ra"] = [1, 2]
     assert f"{record._list[0].message}" == "id column missing, additional one is being created."
@@ -126,7 +126,7 @@ def test_clcatalog():
     c._repr_html_()
     c.show_mt_hist()
     # test repeated ids
-    with pytest.warns(None) as record:
+    with pytest.warns() as record:
         c0 = ClCatalog(name="test", id=["a", "a"], z=[0, 0])
     assert f"{record._list[0].message}" == "Repeated ID's in id column, adding suffix _r# to them."
     assert_equal(c0["id"], ["a_r1", "a_r2"])
