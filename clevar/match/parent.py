@@ -115,15 +115,10 @@ class Match:
             def set_unique(*args):
                 return self._match_mpref(*args)
 
-        elif preference == "angular_proximity":
+        elif preference in ("angular_proximity", "redshift_proximity"):
 
             def set_unique(*args):
-                return self._match_apref(*args, "angular_proximity")
-
-        elif preference == "redshift_proximity":
-
-            def set_unique(*args):
-                return self._match_apref(*args, "redshift_proximity")
+                return self._match_apref(*args, preference)
 
         else:
             if preference.lower() not in [v.lower() for v in self._valid_unique_preference_vals]:
