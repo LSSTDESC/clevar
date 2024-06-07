@@ -17,6 +17,8 @@ class Match:
         self.history = []
         self._cat1_mt = None
         self._cat1_mmt = None
+        self._sorted1 = None
+        self._sorted2 = None
 
         # internal values for unique matching
         self._valid_unique_preference_vals = [
@@ -106,24 +108,23 @@ class Match:
 
         # set order to match catalogs
         if "mass" in cat1.tags:
-            i_vals = np.argsort(cat1["mass"])[::-1]
+            self._sorted1 = np.argsort(cat1["mass"])[::-1]
         else:
-            i_vals = range(cat1.size)
+            self._sorted1 = np.arange(cat1.size, dtype=int)
+        if "mass" in cat2.tags:
+            self._sorted2 = np.argsort(cat2["mass"])[::-1]
+        else:
+            self._sorted2 = np.arange(cat2.size, dtype=int)
 
         if preference == "more_massive":
 
             def set_unique(*args):
                 return self._match_mpref(*args)
 
-        elif preference == "angular_proximity":
+        elif preference in ("angular_proximity", "redshift_proximity"):
 
             def set_unique(*args):
-                return self._match_apref(*args, "angular_proximity")
-
-        elif preference == "redshift_proximity":
-
-            def set_unique(*args):
-                return self._match_apref(*args, "redshift_proximity")
+                return self._match_apref(*args, preference)
 
         else:
             if preference.lower() not in [v.lower() for v in self._valid_unique_preference_vals]:
@@ -137,7 +138,7 @@ class Match:
 
         # Run matching
         print(f"Unique Matches ({cat1.name})")
-        for ind1 in i_vals:
+        for ind1 in self._sorted1:
             if cat1["mt_self"][ind1] is None:
                 self._cat1_mt[ind1] = set_unique(cat1, ind1, cat2)
         self._cat1_mt *= cat1.get_matching_mask("self")  # In case ang pref removes a match
@@ -193,7 +194,7 @@ class Match:
         """
         inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
         if len(inds2) > 0:
-            for ind2 in inds2[np.argsort(cat2["mass"][inds2])][::-1]:
+            for ind2 in self._sorted2[np.isin(self._sorted2, inds2)]:
                 if cat2["mt_other"][ind2] is None:
                     cat1["mt_self"][ind1] = cat2["id"][ind2]
                     cat2["mt_other"][ind2] = cat1["id"][ind1]
