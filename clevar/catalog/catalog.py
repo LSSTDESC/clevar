@@ -731,7 +731,7 @@ class ClCatalog(Catalog):
                     )
                     self.leftover_members = members[~mem_in_cl]
                     self.leftover_members.name = "leftover members"
-            members = members[mem_in_cl]
+                members = members[mem_in_cl]
         self.members = members
 
     def read_members(
