@@ -135,6 +135,7 @@ def test_clcatalog():
     empty_list = np.array([None for i in range(c.size)], dtype=np.ndarray)
     for i in range(c.size):
         empty_list[i] = []
+    c._init_match_vals()
     for n in ("self", "other"):
         assert all(c[f"mt_{n}"] == None)
         assert_equal(c[f"mt_multi_{n}"], empty_list)
