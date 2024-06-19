@@ -44,6 +44,10 @@ class ProximityMatch(SpatialMatch):
             raise AttributeError("cat1.mt_input is None, run prep_cat_for_match first.")
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run prep_cat_for_match first.")
+
+        cat1._init_match_vals()
+        cat2._init_match_vals()
+
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         ra2, dec2, sk2 = (cat2[c] for c in ("ra", "dec", "SkyCoord"))
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ("ang", "zmin", "zmax"))

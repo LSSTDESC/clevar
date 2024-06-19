@@ -49,6 +49,10 @@ class MembershipMatch(Match):
             raise AttributeError("cat1.mt_input is None, run fill_shared_members first.")
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run fill_shared_members first.")
+
+        cat1._init_match_vals()
+        cat2._init_match_vals()
+
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         print(f"Finding candidates ({cat1.name})")
         for ind1, (share_mems1, nmem1) in enumerate(

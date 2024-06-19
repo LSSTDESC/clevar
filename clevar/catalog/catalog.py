@@ -614,7 +614,6 @@ class ClCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
-        self._init_match_vals()
 
     def __getitem__(self, item):
         kwargs = {

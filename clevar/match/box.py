@@ -72,6 +72,9 @@ class BoxMatch(SpatialMatch):
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run prep_cat_for_match first.")
 
+        cat1._init_match_vals()
+        cat2._init_match_vals()
+
         valid_metric_vals = ["GIoU"] + [f"IoA{end}" for end in ("min", "max", "self", "other")]
         if metric not in valid_metric_vals:
             raise ValueError("metric must be in:" + ", ".join(valid_metric_vals))
