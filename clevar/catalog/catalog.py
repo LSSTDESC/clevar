@@ -474,7 +474,7 @@ class Catalog(TagData):
             for col in self.data.colnames
             if (col[:3] == "mt_" and col not in cols + ["mt_cross"])
         ]
-        self[cols].write(filename, overwrite=overwrite)
+        self.raw()[cols].write(filename, overwrite=overwrite)
 
     def load_match(self, filename):
         """
@@ -532,6 +532,11 @@ class Catalog(TagData):
             if col != "id":
                 self[col] = ftq[col]
 
+    def raw(self):
+        """
+        Get a copy of the catalog.
+        """
+        return self
 
 class ClCatalog(Catalog):
     """
