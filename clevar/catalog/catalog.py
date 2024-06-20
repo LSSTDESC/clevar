@@ -474,7 +474,7 @@ class Catalog(TagData):
             for col in self.data.colnames
             if (col[:3] == "mt_" and col not in cols + ["mt_cross"])
         ]
-        self[cols].write(filename, overwrite=overwrite)
+        self.raw()[cols].write(filename, overwrite=overwrite)
 
     def load_match(self, filename):
         """
@@ -532,6 +532,11 @@ class Catalog(TagData):
             if col != "id":
                 self[col] = ftq[col]
 
+    def raw(self):
+        """
+        Get a copy of the catalog.
+        """
+        return self
 
 class ClCatalog(Catalog):
     """
@@ -614,7 +619,6 @@ class ClCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
-        self._init_match_vals()
 
     def __getitem__(self, item):
         kwargs = {
@@ -731,7 +735,7 @@ class ClCatalog(Catalog):
                     )
                     self.leftover_members = members[~mem_in_cl]
                     self.leftover_members.name = "leftover members"
-            members = members[mem_in_cl]
+                members = members[mem_in_cl]
         self.members = members
 
     def read_members(

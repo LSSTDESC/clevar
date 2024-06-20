@@ -109,6 +109,10 @@ def test_catalog():
         c_no_id["ra"] = [1, 2]
     assert f"{record._list[0].message}" == "id column missing, additional one is being created."
     assert_equal(c_no_id["id"], ["0", "1"])
+    # test raw
+    c_raw = c_no_id.raw()
+    for col in c_no_id.colnames:
+        assert_equal(c_no_id[col], c_raw[col])
 
 
 def test_clcatalog():
@@ -135,6 +139,7 @@ def test_clcatalog():
     empty_list = np.array([None for i in range(c.size)], dtype=np.ndarray)
     for i in range(c.size):
         empty_list[i] = []
+    c._init_match_vals()
     for n in ("self", "other"):
         assert all(c[f"mt_{n}"] == None)
         assert_equal(c[f"mt_multi_{n}"], empty_list)
