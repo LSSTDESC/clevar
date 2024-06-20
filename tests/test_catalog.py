@@ -109,6 +109,10 @@ def test_catalog():
         c_no_id["ra"] = [1, 2]
     assert f"{record._list[0].message}" == "id column missing, additional one is being created."
     assert_equal(c_no_id["id"], ["0", "1"])
+    # test raw
+    c_raw = c_no_id.raw()
+    for col in c_no_id.colnames:
+        assert_equal(c_no_id[col], c_raw[col])
 
 
 def test_clcatalog():
