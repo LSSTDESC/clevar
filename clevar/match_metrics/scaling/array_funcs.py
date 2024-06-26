@@ -222,7 +222,8 @@ def plot_density(
     """
     # pylint: disable=unused-argument
     # pylint: disable=possibly-unused-variable
-    values_color = (
+    _kwargs = locals()
+    _kwargs["values_color"] = (
         ph.get_density_colors(
             values1,
             values2,
@@ -236,7 +237,8 @@ def plot_density(
         if len(values1) > 0
         else None
     )
-    return plot(**locals())
+    _kwargs.update(_kwargs.pop('kwargs'))
+    return plot(**_kwargs)
 
 
 def plot_panel(
@@ -321,10 +323,12 @@ def plot_panel(
             (see `scaling.array_funcs.plot` for more info).
     """
     # pylint: disable=unused-argument
+    _kwargs = locals()
+    _kwargs.update(_kwargs.pop('kwargs'))
     return _plot_panel(
         # _plot_panel arguments
         plot_function=plot,
-        **locals(),
+        **_kwargs,
     )
 
 
@@ -423,9 +427,11 @@ def plot_density_panel(
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
     # pylint: disable=unused-argument
+    _kwargs = locals()
+    _kwargs.update(_kwargs.pop('kwargs'))
     return _plot_panel(
         plot_function=plot_density,
-        **locals(),
+        **_kwargs,
     )
 
 
