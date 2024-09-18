@@ -260,6 +260,12 @@ class TagData:
             missing = ", ".join(missing)
             raise KeyError(f"Tagged column(s) ({missing}) not found in catalog {data.colnames}")
 
+        self.__data = data
+        if must_have_id:
+            if self.tags["id"] not in data.namedict:
+                self._create_id(len(data))
+        return
+
         cols = list(data.colnames)
         if first_cols:
             for col in first_cols[::-1]:
@@ -279,6 +285,7 @@ class TagData:
         TagData.__setitem__(self, self.tags["id"], np.array(range(size), dtype=str))
 
     def _make_col_dict(self, colname):
+        return dict(zip(self[colname], np.arange(self.size, dtype=int)))
         return dict(map(lambda v: v[::-1], enumerate(self[colname])))
 
     def _make_col_dict_list(self, colname):
