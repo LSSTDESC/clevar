@@ -31,7 +31,15 @@ _matching_mask_funcs = {
     "multi_join": lambda match: (veclen(match["mt_multi_self"]) > 0)
     + (veclen(match["mt_multi_other"]) > 0),
 }
+import time #INFO
+import inspect #INFO
+class _INFO:
+    def __init__(self): #INFO
+        self.LEVEL = 0 #INFO
+    def print(self, text): #INFO
+        print("  "*self.LEVEL+text) #INFO
 
+INFO = _INFO()
 
 class Catalog(TagData):
     """
@@ -166,9 +174,17 @@ class Catalog(TagData):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # pylint: disable=arguments-differ
+        _LNAME, _EXEC, INFO.LEVEL = "Catalog."+inspect.currentframe().f_code.co_name, 0, INFO.LEVEL+1
+        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         TagData._add_values(self, must_have_id=True, **columns)
+        INFO.print(f" {time.time()-t0:.4f} seconds")
+        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         self._add_skycoord()
+        INFO.print(f" {time.time()-t0:.4f} seconds")
+        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         self.id_dict.update(self._make_col_dict("id"))
+        INFO.print(f" {time.time()-t0:.4f} seconds")
+        INFO.LEVEL -= 1
 
     def _add_skycoord(self):
         if ("ra" in self.tags and "dec" in self.tags) and "SkyCoord" not in self.data.colnames:
@@ -386,16 +402,22 @@ class Catalog(TagData):
             the name is used in the Catalog data and the value must
             be the column name in your input file (ex: z='REDSHIFT').
         """
+        _LNAME, _EXEC, INFO.LEVEL = "Catalog."+inspect.currentframe().f_code.co_name, 0, INFO.LEVEL+1
+        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         # out data
         mt_cols = NameList(("mt_self", "mt_other", "mt_cross", "mt_multi_self", "mt_multi_other"))
         non_mt_cols = [c for c in data.colnames if c not in mt_cols]
         out = cls(data=data[non_mt_cols], **kwargs)
+        INFO.print(f" {time.time()-t0:.4f} seconds")
+        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         # matching cols
         for colname in filter(lambda c: c in mt_cols, data.colnames):
             if colname in NameList(("mt_self", "mt_other", "mt_cross")):
                 out[colname] = unpack_mt_col(data[colname])
             if colname in NameList(("mt_multi_self", "mt_multi_other")):
                 out[colname] = unpack_mmt_col(data[colname])
+        INFO.print(f" {time.time()-t0:.4f} seconds")
+        INFO.LEVEL -= 1
         return out
 
     @classmethod
@@ -417,7 +439,11 @@ class Catalog(TagData):
         """
         # pylint: disable=protected-access
         # pylint: disable=arguments-renamed
+        _LNAME, _EXEC, INFO.LEVEL = "Catalog."+inspect.currentframe().f_code.co_name, 0, INFO.LEVEL+1
+        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         data = TagData._read_data(filename, tags=tags, full=full)
+        INFO.print(f" {time.time()-t0:.4f} seconds")
+        INFO.LEVEL -= 1
         return cls._read(data, name=name, labels=labels, tags=tags)
 
     @classmethod
@@ -831,8 +857,14 @@ class MemCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
+        _LNAME, _EXEC, INFO.LEVEL = self.__class__.__name__+"."+inspect.currentframe().f_code.co_name, 0, INFO.LEVEL+1
+        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         Catalog._add_values(self, first_cols=[self.tags["id_cluster"]], **columns)
+        INFO.print(f" {time.time()-t0:.4f} seconds")
+        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         self["id_cluster"] = self["id_cluster"].astype(str)
+        INFO.print(f" {time.time()-t0:.4f} seconds")
+        INFO.LEVEL -= 1
 
     def __getitem__(self, item):
         kwargs = {"name": self.name, "labels": self.labels}
