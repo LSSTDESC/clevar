@@ -175,13 +175,13 @@ class Catalog(TagData):
         """Add values for all attributes. If id is not provided, one is created"""
         # pylint: disable=arguments-differ
         _LNAME, _EXEC, INFO.LEVEL = "Catalog."+inspect.currentframe().f_code.co_name, 0, INFO.LEVEL+1
-        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
+        INFO.print(f"{_LNAME}.{_EXEC} (TagData._add_values)");t0 = time.time();_EXEC += 1
         TagData._add_values(self, must_have_id=True, **columns)
         INFO.print(f" {time.time()-t0:.4f} seconds")
-        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
+        INFO.print(f"{_LNAME}.{_EXEC} (_add_sk_coord)");t0 = time.time();_EXEC += 1
         self._add_skycoord()
         INFO.print(f" {time.time()-t0:.4f} seconds")
-        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
+        INFO.print(f"{_LNAME}.{_EXEC} (make id_dict col)");t0 = time.time();_EXEC += 1
         self.id_dict.update(self._make_col_dict("id"))
         INFO.print(f" {time.time()-t0:.4f} seconds")
         INFO.LEVEL -= 1
@@ -750,6 +750,7 @@ class ClCatalog(Catalog):
                 f"members_catalog type is {type(members_catalog)},"
                 " it must be a MemCatalog object."
             )
+        print("ADD ind_cl")
         members["ind_cl"] = [self.id_dict.get(ID, -1) for ID in members["id_cluster"]]
         if members_consistency:
             mem_in_cl = members["ind_cl"] >= 0
@@ -861,9 +862,10 @@ class MemCatalog(Catalog):
         INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
         Catalog._add_values(self, first_cols=[self.tags["id_cluster"]], **columns)
         INFO.print(f" {time.time()-t0:.4f} seconds")
-        INFO.print(f"{_LNAME}.{_EXEC}");t0 = time.time();_EXEC += 1
-        self["id_cluster"] = self["id_cluster"].astype(str)
-        INFO.print(f" {time.time()-t0:.4f} seconds")
+        if not np.issubdtype(self["id_cluster"].dtype, np.str_):
+            INFO.print(f"{_LNAME}.{_EXEC} (make id cluster col a str)");t0 = time.time();_EXEC += 1
+            self["id_cluster"] = self["id_cluster"].astype(str)
+            INFO.print(f" {time.time()-t0:.4f} seconds")
         INFO.LEVEL -= 1
 
     def __getitem__(self, item):
