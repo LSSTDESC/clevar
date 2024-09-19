@@ -363,7 +363,7 @@ class TagData:
         filename: str
             Name of file
         add_header: bool
-            Saves catalog name and labels.
+            Saves catalog name.
         overwrite: bool
             Overwrite saved files
         """
@@ -426,7 +426,7 @@ class TagData:
             Input file.
         """
         data = ClData.read(filename)
-        # read labels and radius unit from file
+        # read tags from file
         kwargs = {
             "tags": LowerCaseDict({k[4:]: v for k, v in data.meta.items() if k[:4] == "TAG_"}),
         }
