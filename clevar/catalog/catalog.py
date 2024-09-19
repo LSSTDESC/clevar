@@ -734,7 +734,7 @@ class ClCatalog(Catalog):
         elif "data" in kwargs:
             data = kwargs["data"]
         else:
-            data = ClData(**kwargs)
+            data = ClData(kwargs)
 
         # get id_cluster column
         data["ind_cl"] = [self.id_dict.get(ID, -1) for ID in data[id_cluster_colname]]
