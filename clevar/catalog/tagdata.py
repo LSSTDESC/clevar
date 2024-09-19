@@ -281,6 +281,11 @@ class TagData:
         if must_have_id and self.tags["id"] not in data.namedict:
             self._create_id(len(data))
 
+        for name in self.colnames:
+            if name in self.default_tags:
+                colname = self.tags.get(name, name)
+                self.tag_column(colname, name)
+
     def _create_id(self, size):
         id_name = "id" if self.tags["id"] == "id" else f'id ({self.tags["id"]})'
         warnings.warn(f"{id_name} column missing, additional one is being created.")
