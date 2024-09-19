@@ -726,6 +726,11 @@ class ClCatalog(Catalog):
         if isinstance(members_catalog, MemCatalog):
             data = members_catalog.data
             id_cluster_colname = members_catalog.get("id_cluster", "id_cluster")
+        elif members_catalog is not None:
+            raise TypeError(
+                f"members_catalog type is {type(members_catalog)},"
+                " it must be a MemCatalog object."
+            )
         elif "data" in kwargs:
             data = kwargs["data"]
         else:
