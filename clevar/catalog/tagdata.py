@@ -142,6 +142,8 @@ class TagData:
         List of keys that generate tags automatically.
     colnames: NameList
         Names of columns in data.
+    must_have_id: bool
+        If id must be included in data.
     """
 
     @property
@@ -169,12 +171,13 @@ class TagData:
         """Case independent column names"""
         return NameList(self.data.colnames)
 
-    def __init__(self, tags=None, default_tags=None, **kwargs):
+    def __init__(self, tags=None, default_tags=None, must_have_id=False, **kwargs):
         if tags is not None and not isinstance(tags, dict):
             raise ValueError("tags must be dict.")
         self.__data = ClData()
         self.__tags = LowerCaseDict(none_val(tags, {}))
         self.__default_tags = NameList(none_val(default_tags, []))
+        self.must_have_id = must_have_id
         if len(kwargs) > 0:
             self._add_values(**kwargs)
             # make sure columns don't overwrite tags
@@ -189,6 +192,12 @@ class TagData:
             if item in self.default_tags:
                 self.tags[item] = self.data.namedict.get(cname, cname)
             self.data[cname] = value
+            if (
+                self.must_have_id
+                and self.tags["id"] not in self.data.namedict
+                and len(self.data.namedict) == 1
+            ):
+                self._create_id(self.size)
         else:
             raise ValueError(f"can only set with str item (={item}) argument.")
 
@@ -245,7 +254,7 @@ class TagData:
     def _repr_html_(self):
         return f"<b>tags:</b> {self._prt_tags()}" f"<br>{self._prt_table_tags(self.data)}"
 
-    def _add_values(self, must_have_id=False, **columns):
+    def _add_values(self, **columns):
         """Add values for all attributes."""
         if "data" in columns:
             if len(columns) > 1:
@@ -278,7 +287,7 @@ class TagData:
             raise KeyError(f"Tagged column(s) ({missing}) not found in catalog {data.colnames}")
 
         self.__data = data
-        if must_have_id and self.tags["id"] not in data.namedict:
+        if self.must_have_id and self.tags["id"] not in data.namedict:
             self._create_id(len(data))
 
         for name in self.colnames:

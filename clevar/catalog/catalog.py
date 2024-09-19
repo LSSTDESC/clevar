@@ -120,6 +120,7 @@ class Catalog(TagData):
             self,
             tags=updated_dict({"id": "id"}, tags),
             default_tags=none_val(default_tags, ["id", "ra", "dec"]),
+            must_have_id=True,
             **kwargs,
         )
         self.labels.update(none_val(labels, {}))
@@ -159,7 +160,7 @@ class Catalog(TagData):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # pylint: disable=arguments-differ
-        TagData._add_values(self, must_have_id=True, **columns)
+        TagData._add_values(self, **columns)
         self._add_skycoord()
         self.id_dict.update(self._make_col_dict("id"))
 
