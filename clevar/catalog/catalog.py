@@ -779,9 +779,8 @@ class ClCatalog(Catalog):
         full: bool
             Reads all columns of the catalog
         """
-        data = TagData._read_data(filename, tags=tags, full=full)
         self.add_members(
-            data=data,
+            data=TagData._read_data(filename, tags=tags, full=full),
             members_catalog=None,
             members_consistency=members_consistency,
             members_warning=members_warning,
