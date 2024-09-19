@@ -1,7 +1,6 @@
 """@file catalog.py
 The ClCatalog and MemCatalog classes
 """
-import inspect  # INFO
 import warnings
 import copy
 import numpy as np
@@ -18,7 +17,6 @@ from ..utils import (
     unpack_mt_col,
     pack_mmt_col,
     unpack_mmt_col,
-    INFO, Timer,
 )
 from ..version import __version__
 from .tagdata import ClData, TagData
@@ -33,8 +31,6 @@ _matching_mask_funcs = {
     "multi_join": lambda match: (veclen(match["mt_multi_self"]) > 0)
     + (veclen(match["mt_multi_other"]) > 0),
 }
-
-INFO.LEVEL = 0
 
 
 class Catalog(TagData):
@@ -170,17 +166,9 @@ class Catalog(TagData):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # pylint: disable=arguments-differ
-        INFOtime = Timer("Catalog." + inspect.currentframe().f_code.co_name)
-        INFOtime.title(" (TagData._add_values)")
         TagData._add_values(self, must_have_id=True, **columns)
-        INFOtime.time()
-        INFOtime.title(" (_add_sk_coord)")
         self._add_skycoord()
-        INFOtime.time()
-        INFOtime.title(" (make id_dict col)")
         self.id_dict.update(self._make_col_dict("id"))
-        INFOtime.time()
-        INFOtime.end()
 
     def _add_skycoord(self):
         if ("ra" in self.tags and "dec" in self.tags) and "SkyCoord" not in self.data.colnames:
@@ -398,22 +386,16 @@ class Catalog(TagData):
             the name is used in the Catalog data and the value must
             be the column name in your input file (ex: z='REDSHIFT').
         """
-        INFOtime = Timer("Catalog." + inspect.currentframe().f_code.co_name)
-        INFOtime.title("")
         # out data
         mt_cols = NameList(("mt_self", "mt_other", "mt_cross", "mt_multi_self", "mt_multi_other"))
         non_mt_cols = [c for c in data.colnames if c not in mt_cols]
         out = cls(data=data[non_mt_cols], **kwargs)
-        INFOtime.time()
-        INFOtime.title("")
         # matching cols
         for colname in filter(lambda c: c in mt_cols, data.colnames):
             if colname in NameList(("mt_self", "mt_other", "mt_cross")):
                 out[colname] = unpack_mt_col(data[colname])
             if colname in NameList(("mt_multi_self", "mt_multi_other")):
                 out[colname] = unpack_mmt_col(data[colname])
-        INFOtime.time()
-        INFOtime.end()
         return out
 
     @classmethod
@@ -435,11 +417,7 @@ class Catalog(TagData):
         """
         # pylint: disable=protected-access
         # pylint: disable=arguments-renamed
-        INFOtime = Timer("Catalog." + inspect.currentframe().f_code.co_name)
-        INFOtime.title("")
         data = TagData._read_data(filename, tags=tags, full=full)
-        INFOtime.time()
-        INFOtime.end()
         return cls._read(data, name=name, labels=labels, tags=tags)
 
     @classmethod
@@ -735,12 +713,9 @@ class ClCatalog(Catalog):
             Arguments to initialize member catalog if members_catalog=None. For details, see:
             https://lsstdesc.org/clevar/compiled-examples/catalogs.html#adding-members-to-cluster-catalogs
         """
-        INFOtime = Timer(self.__class__.__name__ + "." + inspect.currentframe().f_code.co_name)
         self.leftover_members = None  # clean any previous mem info
-        ttot = 0
 
         # extract data for MemCatalog creation
-        INFOtime.title(" (extract data)")
         id_cluster_colname = kwargs.get("tags", {}).get("id_cluster", "id_cluster")
         tags = kwargs.pop("tags", None)
         labels = kwargs.pop("labels", None)
@@ -751,18 +726,13 @@ class ClCatalog(Catalog):
             data = kwargs["data"]
         else:
             data = ClData(**kwargs)
-        ttot += INFOtime.time()
 
         # get id_cluster column
-        INFOtime.title(" (get_ind_cl)")
         data["ind_cl"] = [self.id_dict.get(ID, -1) for ID in data[id_cluster_colname]]
         mem_in_cl = data["ind_cl"] >= 0
-        ttot += INFOtime.time()
-        INFOtime.title(" (check if already MemCat)")
         if isinstance(members_catalog, MemCatalog) and (not members_consistency or mem_in_cl.all()):
             self.members = members_catalog
             return
-        ttot += INFOtime.time()
 
         if members_consistency:
             if not mem_in_cl.all():
@@ -771,23 +741,16 @@ class ClCatalog(Catalog):
                         "Some galaxies were not members of the cluster catalog."
                         " They are stored in leftover_members attribute."
                     )
-                INFOtime.title(" (make leftover members)")
                 self.leftover_members = MemCatalog(
                     "leftover members", labels=labels, tags=tags, data=data[~mem_in_cl]
                 )
-                ttot += INFOtime.time()
-                INFOtime.title(" (clean leftover members)")
                 data = data[mem_in_cl]
-                ttot += INFOtime.time()
-        INFOtime.title(" (make members)")
         self.members = MemCatalog(
             "members",
             labels=labels,
             tags=tags,
             data=data,
         )
-        ttot += INFOtime.time()
-        INFOtime.end()
 
     def read_members(
         self,
@@ -816,11 +779,7 @@ class ClCatalog(Catalog):
         full: bool
             Reads all columns of the catalog
         """
-        INFOtime = Timer(self.__class__.__name__ + "." + inspect.currentframe().f_code.co_name)
-        INFOtime.title(" (read data)")
         data = TagData._read_data(filename, tags=tags, full=full)
-        INFOtime.time()
-        INFOtime.title(" (add mems)")
         self.add_members(
             data=data,
             members_catalog=None,
@@ -829,8 +788,6 @@ class ClCatalog(Catalog):
             tags=tags,
             labels=labels,
         )
-        INFOtime.time()
-        INFOtime.end()
 
     def remove_members(self):
         """
@@ -890,15 +847,9 @@ class MemCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
-        INFOtime = Timer(self.__class__.__name__ + "." + inspect.currentframe().f_code.co_name)
-        INFOtime.title("")
         Catalog._add_values(self, first_cols=[self.tags["id_cluster"]], **columns)
-        INFOtime.time()
         if not np.issubdtype(self["id_cluster"].dtype, np.str_):
-            INFOtime.title(" (make id cluster col a str)")
             self["id_cluster"] = self["id_cluster"].astype(str)
-            INFOtime.time()
-        INFOtime.end()
 
     def __getitem__(self, item):
         kwargs = {"name": self.name, "labels": self.labels}
