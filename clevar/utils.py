@@ -1,6 +1,8 @@
 """General utility functions that are used in multiple modules"""
 import importlib
 
+import time
+
 import numpy as np
 from scipy.interpolate import interp1d
 import healpy as hp
@@ -23,6 +25,65 @@ def import_safe(libname):
         return importlib.import_module(libname)
     except ImportError:
         return None
+
+
+########################################################################
+########## Time profiler ###############################################
+########################################################################
+
+
+class Info:
+    """
+    Class to store level within run.
+    """
+
+    def __init__(self):
+        self.LEVEL = 0
+
+    def print(self, text):
+        print("  " * self.LEVEL + text)
+
+
+INFO = Info()
+
+
+class Timer:
+    """
+    Class to time lines of function.
+
+    Example
+    -----
+
+    Start by creating the object in module to store levels
+
+        INFO.LEVEL = 0
+
+    Then add following lines within a function:
+
+        INFOtime = Timer(self.__class__.__name__+"."+inspect.currentframe().f_code.co_name)
+        INFOtime.title(" (some subtitle)")
+        INFOtime.time()
+        INFOtime.end() # close object
+    """
+
+    def __init__(self, name):
+        self.name = name
+        self.step = 0
+        self.t0 = time.time()
+        INFO.LEVEL += 1
+
+    def title(self, extra=""):
+        INFO.print(f"{self.name}.{self.step}{extra}")
+        self.t0 = time.time()
+        self.step += 1
+
+    def time(self):
+        dt = time.time() - self.t0
+        INFO.print(f" {dt:.4f} seconds")
+        return dt
+
+    def end(self):
+        INFO.LEVEL -= 1
 
 
 ########################################################################
