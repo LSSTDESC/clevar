@@ -1,7 +1,7 @@
 """@file catalog.py
 The ClCatalog and MemCatalog classes
 """
-import inspect #INFO
+import inspect  # INFO
 import warnings
 import copy
 import numpy as np
@@ -35,7 +35,7 @@ _matching_mask_funcs = {
 }
 
 INFO.LEVEL = 0
-        
+
 
 class Catalog(TagData):
     """
@@ -170,7 +170,7 @@ class Catalog(TagData):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # pylint: disable=arguments-differ
-        INFOtime = Timer("Catalog."+inspect.currentframe().f_code.co_name)
+        INFOtime = Timer("Catalog." + inspect.currentframe().f_code.co_name)
         INFOtime.title(" (TagData._add_values)")
         TagData._add_values(self, must_have_id=True, **columns)
         INFOtime.time()
@@ -398,7 +398,7 @@ class Catalog(TagData):
             the name is used in the Catalog data and the value must
             be the column name in your input file (ex: z='REDSHIFT').
         """
-        INFOtime = Timer("Catalog."+inspect.currentframe().f_code.co_name)
+        INFOtime = Timer("Catalog." + inspect.currentframe().f_code.co_name)
         INFOtime.title("")
         # out data
         mt_cols = NameList(("mt_self", "mt_other", "mt_cross", "mt_multi_self", "mt_multi_other"))
@@ -435,7 +435,7 @@ class Catalog(TagData):
         """
         # pylint: disable=protected-access
         # pylint: disable=arguments-renamed
-        INFOtime = Timer("Catalog."+inspect.currentframe().f_code.co_name)
+        INFOtime = Timer("Catalog." + inspect.currentframe().f_code.co_name)
         INFOtime.title("")
         data = TagData._read_data(filename, tags=tags, full=full)
         INFOtime.time()
@@ -559,6 +559,7 @@ class Catalog(TagData):
         Get a copy of the catalog.
         """
         return self
+
 
 class ClCatalog(Catalog):
     """
@@ -734,32 +735,59 @@ class ClCatalog(Catalog):
             Arguments to initialize member catalog if members_catalog=None. For details, see:
             https://lsstdesc.org/clevar/compiled-examples/catalogs.html#adding-members-to-cluster-catalogs
         """
+        INFOtime = Timer(self.__class__.__name__ + "." + inspect.currentframe().f_code.co_name)
         self.leftover_members = None  # clean any previous mem info
-        if members_catalog is None:
-            members = MemCatalog("members", **kwargs)
-        elif isinstance(members_catalog, MemCatalog):
-            members = members_catalog
-            if len(kwargs) > 0:
-                warnings.warn(f"leftover input arguments ignored: {kwargs.keys()}")
+        ttot = 0
+
+        # extract data for MemCatalog creation
+        INFOtime.title(" (extract data)")
+        id_cluster_colname = kwargs.get("tags", {}).get("id_cluster", "id_cluster")
+        tags = kwargs.pop("tags", None)
+        labels = kwargs.pop("labels", None)
+        if isinstance(members_catalog, MemCatalog):
+            data = members_catalog.data
+            id_cluster_colname = members_catalog.get("id_cluster", "id_cluster")
+        elif "data" in kwargs:
+            data = kwargs["data"]
         else:
-            raise TypeError(
-                f"members_catalog type is {type(members_catalog)},"
-                " it must be a MemCatalog object."
-            )
-        print("ADD ind_cl")
-        members["ind_cl"] = [self.id_dict.get(ID, -1) for ID in members["id_cluster"]]
+            data = ClData(**kwargs)
+        ttot += INFOtime.time()
+
+        # get id_cluster column
+        INFOtime.title(" (get_ind_cl)")
+        data["ind_cl"] = [self.id_dict.get(ID, -1) for ID in data[id_cluster_colname]]
+        mem_in_cl = data["ind_cl"] >= 0
+        ttot += INFOtime.time()
+        INFOtime.title(" (check if already MemCat)")
+        if isinstance(members_catalog, MemCatalog) and (not members_consistency or mem_in_cl.all()):
+            self.members = members_catalog
+            return
+        ttot += INFOtime.time()
+
         if members_consistency:
-            mem_in_cl = members["ind_cl"] >= 0
-            if not all(mem_in_cl):
+            if not mem_in_cl.all():
                 if members_warning:
                     warnings.warn(
                         "Some galaxies were not members of the cluster catalog."
                         " They are stored in leftover_members attribute."
                     )
-                    self.leftover_members = members[~mem_in_cl]
-                    self.leftover_members.name = "leftover members"
-                members = members[mem_in_cl]
-        self.members = members
+                INFOtime.title(" (make leftover members)")
+                self.leftover_members = MemCatalog(
+                    "leftover members", labels=labels, tags=tags, data=data[~mem_in_cl]
+                )
+                ttot += INFOtime.time()
+                INFOtime.title(" (clean leftover members)")
+                data = data[mem_in_cl]
+                ttot += INFOtime.time()
+        INFOtime.title(" (make members)")
+        self.members = MemCatalog(
+            "members",
+            labels=labels,
+            tags=tags,
+            data=data,
+        )
+        ttot += INFOtime.time()
+        INFOtime.end()
 
     def read_members(
         self,
@@ -788,13 +816,21 @@ class ClCatalog(Catalog):
         full: bool
             Reads all columns of the catalog
         """
+        INFOtime = Timer(self.__class__.__name__ + "." + inspect.currentframe().f_code.co_name)
+        INFOtime.title(" (read data)")
+        data = TagData._read_data(filename, tags=tags, full=full)
+        INFOtime.time()
+        INFOtime.title(" (add mems)")
         self.add_members(
-            members_catalog=MemCatalog.read(
-                filename, "members", labels=labels, tags=tags, full=full
-            ),
+            data=data,
+            members_catalog=None,
             members_consistency=members_consistency,
             members_warning=members_warning,
+            tags=tags,
+            labels=labels,
         )
+        INFOtime.time()
+        INFOtime.end()
 
     def remove_members(self):
         """
@@ -854,7 +890,7 @@ class MemCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
-        INFOtime = Timer(self.__class__.__name__+"."+inspect.currentframe().f_code.co_name)
+        INFOtime = Timer(self.__class__.__name__ + "." + inspect.currentframe().f_code.co_name)
         INFOtime.title("")
         Catalog._add_values(self, first_cols=[self.tags["id_cluster"]], **columns)
         INFOtime.time()
