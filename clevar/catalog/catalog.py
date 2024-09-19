@@ -718,7 +718,7 @@ class ClCatalog(Catalog):
         labels = kwargs.pop("labels", None)
         if isinstance(members_catalog, MemCatalog):
             data = members_catalog.data
-            id_cluster_colname = members_catalog.get("id_cluster", "id_cluster")
+            id_cluster_colname = members_catalog.tags.get("id_cluster", "id_cluster")
         elif members_catalog is not None:
             raise TypeError(
                 f"members_catalog type is {type(members_catalog)},"
