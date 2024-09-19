@@ -620,6 +620,10 @@ class ClCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
+        self.data.first_cols = [
+            self.tags["id"],
+            *filter(lambda v: v != self.tags["id"], self.tags.values()),
+        ]
 
     def __getitem__(self, item):
         kwargs = {
@@ -846,9 +850,10 @@ class MemCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
-        Catalog._add_values(self, first_cols=[self.tags["id_cluster"]], **columns)
+        Catalog._add_values(self, **columns)
         if not np.issubdtype(self["id_cluster"].dtype, np.str_):
             self["id_cluster"] = self["id_cluster"].astype(str)
+        self.data.first_cols = [self.tags["id_cluster"]]
 
     def __getitem__(self, item):
         kwargs = {"name": self.name, "labels": self.labels}

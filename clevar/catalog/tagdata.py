@@ -41,6 +41,8 @@ class ClData(APtable):
         super().__init__(*args, **kwargs)
         for col in self.colnames:
             self.namedict[col] = col
+        self.skip_cols = ["SkyCoord"]
+        self.first_cols = []
 
     def __getitem__(self, item):
         """
@@ -64,7 +66,11 @@ class ClData(APtable):
         else:
             item_ = item
 
-        return ClData(super().__getitem__(item_))
+        out = ClData(super().__getitem__(item_))
+        out.skip_cols = self.skip_cols
+        out.first_cols = list(filter(lambda col: col in self.namedict, self.first_cols))
+
+        return out
 
     def __setitem__(self, item, value):
         """
@@ -86,8 +92,19 @@ class ClData(APtable):
         """
         return self[key] if key in self.namedict else default
 
+    def _show_cols(self):
+        return [
+            *self.first_cols,
+            *(
+                col
+                for col in self.colnames
+                if col not in self.skip_cols and col not in self.first_cols
+            ),
+        ]
+
     def _repr_html_(self):
-        return APtable._repr_html_(self[[c for c in self.colnames if c != "SkyCoord"]])
+        print(self._show_cols(), self.first_cols)
+        return APtable._repr_html_(self[self._show_cols()])
 
     @classmethod
     def read(cls, *args, **kwargs):
@@ -228,7 +245,7 @@ class TagData:
     def _repr_html_(self):
         return f"<b>tags:</b> {self._prt_tags()}" f"<br>{self._prt_table_tags(self.data)}"
 
-    def _add_values(self, must_have_id=False, first_cols=None, **columns):
+    def _add_values(self, must_have_id=False, **columns):
         """Add values for all attributes."""
         if "data" in columns:
             if len(columns) > 1:
@@ -261,23 +278,8 @@ class TagData:
             raise KeyError(f"Tagged column(s) ({missing}) not found in catalog {data.colnames}")
 
         self.__data = data
-        if must_have_id:
-            if self.tags["id"] not in data.namedict:
-                self._create_id(len(data))
-        return
-
-        cols = list(data.colnames)
-        if first_cols:
-            for col in first_cols[::-1]:
-                cols.insert(0, cols.pop(cols.index(col)))
-        if must_have_id:
-            if self.tags["id"] not in data.namedict:
-                self._create_id(len(data))
-            else:
-                self[self.tags["id"]] = data[self.tags["id"]]
-                cols.pop(cols.index(data.namedict[self.tags["id"]]))
-        for colname in cols:
-            self[colname] = data[colname]
+        if must_have_id and self.tags["id"] not in data.namedict:
+            self._create_id(len(data))
 
     def _create_id(self, size):
         id_name = "id" if self.tags["id"] == "id" else f'id ({self.tags["id"]})'
