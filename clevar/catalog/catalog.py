@@ -135,18 +135,11 @@ class Catalog(TagData):
             item, Catalog, name=self.name, labels=self.labels, mt_hist=self.mt_hist
         )
 
-    def __setitem__(self, item, value):
-        value_ = value
-        if isinstance(item, str):
-            if item[:3] != "mt_":
-                self.labels[item] = self.labels.get(item, f"{item}_{{{self.name}}}")
-            if item.lower() == self.tags["id"].lower():
-                value_ = self._fmt_id_col(value)
-            elif len(self.data.colnames) == 0:
-                if isinstance(value, (int, np.int64)):
-                    raise TypeError("Empty table cannot have column set to scalar value")
-                self._create_id(len(value))
-        TagData.__setitem__(self, item, value_)
+    def _fmt_col(self, colname):
+        if colname[:3] != "mt_":
+            self.labels[colname] = self.labels.get(colname, f"{colname}_{{{self.name}}}")
+        if colname.lower() == self.tags["id"].lower():
+            self["id"] = self._fmt_id_col(self["id"])
 
     def _fmt_id_col(self, id_col):
         id_out = np.array(id_col, dtype=str)  # make id a string

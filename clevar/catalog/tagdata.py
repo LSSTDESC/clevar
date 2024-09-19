@@ -282,9 +282,13 @@ class TagData:
             self._create_id(len(data))
 
         for name in self.colnames:
+            self._fmt_col(name)
             if name in self.default_tags:
                 colname = self.tags.get(name, name)
                 self.tag_column(colname, name)
+
+    def _fmt_col(self, colname):
+        pass
 
     def _create_id(self, size):
         id_name = "id" if self.tags["id"] == "id" else f'id ({self.tags["id"]})'
