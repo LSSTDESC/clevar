@@ -43,6 +43,9 @@ jobs:
         git clone https://github.com/LSSTDESC/healsparse
         cd healsparse
         pip install .
+      run: |
+        pip install pylint
+        pylint clevar --ignored-classes=astropy.units
     - name: Run the unit tests
       run: |
         pip install pytest pytest-cov
