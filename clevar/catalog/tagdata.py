@@ -103,7 +103,6 @@ class ClData(APtable):
         ]
 
     def _repr_html_(self):
-        print(self._show_cols(), self.first_cols)
         return APtable._repr_html_(self[self._show_cols()])
 
     @classmethod
@@ -297,6 +296,9 @@ class TagData:
                 self.tag_column(colname, name)
 
     def _fmt_col(self, colname):
+        """
+        Function to auto format specific columns.
+        """
         pass
 
     def _create_id(self, size):
@@ -306,7 +308,6 @@ class TagData:
 
     def _make_col_dict(self, colname):
         return dict(zip(self[colname], np.arange(self.size, dtype=int)))
-        return dict(map(lambda v: v[::-1], enumerate(self[colname])))
 
     def _make_col_dict_list(self, colname):
         dict_list = {}
