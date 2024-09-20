@@ -725,6 +725,7 @@ class ClCatalog(Catalog):
                 f"members_catalog type is {type(members_catalog)},"
                 " it must be a MemCatalog object."
             )
+        # pylint: disable=consider-using-get
         elif "data" in kwargs:
             data = kwargs["data"]
         else:
@@ -782,6 +783,7 @@ class ClCatalog(Catalog):
         full: bool
             Reads all columns of the catalog
         """
+        # pylint: disable=protected-access
         self.add_members(
             data=TagData._read_data(filename, tags=tags, full=full),
             members_catalog=None,

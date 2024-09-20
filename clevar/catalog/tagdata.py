@@ -299,6 +299,7 @@ class TagData:
         """
         Function to auto format specific columns.
         """
+        # pylint: disable=unnecessary-pass
         pass
 
     def _create_id(self, size):
