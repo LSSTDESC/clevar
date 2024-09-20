@@ -50,6 +50,7 @@ class MembershipMatch(Match):
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None, run fill_shared_members first.")
 
+        # pylint: disable=protected-access
         cat1._init_match_vals()
         cat2._init_match_vals()
 
