@@ -17,6 +17,7 @@ def test_import_safe():
 
 
 def test_timer_class():
+    utils.LPROFILER.reset_level()
     LPtime = utils.Timer("test_name")
     LPtime.title(" (some subtitle)")
     LPtime.time()
