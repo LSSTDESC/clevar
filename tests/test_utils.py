@@ -17,7 +17,7 @@ def test_import_safe():
 
 
 def test_timer_class():
-    INFOtime = utils.Timer("test_name")
-    INFOtime.title(" (some subtitle)")
-    INFOtime.time()
-    INFOtime.end()  # close object
+    LPtime = utils.Timer("test_name")
+    LPtime.title(" (some subtitle)")
+    LPtime.time()
+    LPtime.end()  # close object

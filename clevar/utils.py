@@ -32,19 +32,51 @@ def import_safe(libname):
 ########################################################################
 
 
-class Info:
+class ClassLevelProfiler:
     """
     Class to store level within run.
     """
 
+    @property
+    def level(self):
+        """level within calls"""
+        return self.__level
+
     def __init__(self):
-        self.LEVEL = 0
+        self.__level = 0
 
-    def print(self, text):
-        print("  " * self.LEVEL + text)
+    def print(self, *args, **kwargs):
+        """
+        Print text with left spacing according to current level.
+
+        Parameters
+        ----------
+        args, kwargs: list, dict
+            Same arguments as print function.
+        """
+        sep = kwargs.get("sep", " ")
+        print("  " * self.level + sep.join(args))
+
+    def next_level(self):
+        """
+        Add new level to current state.
+        """
+        self.__level += 1
+
+    def previous_level(self):
+        """
+        Go back to previous level.
+        """
+        self.__level -= 1
+
+    def reset_level(self):
+        """
+        Reset level to 0.
+        """
+        self.__level = 0
 
 
-INFO = Info()
+LPROFILER = ClassLevelProfiler()
 
 
 class Timer:
@@ -56,34 +88,48 @@ class Timer:
 
     Start by creating the object in module to store levels
 
-        INFO.LEVEL = 0
+        LPROFILER.reset_level()
 
     Then add following lines within a function:
 
-        INFOtime = Timer(self.__class__.__name__+"."+inspect.currentframe().f_code.co_name)
-        INFOtime.title(" (some subtitle)")
-        INFOtime.time()
-        INFOtime.end() # close object
+        LPtime = Timer(self.__class__.__name__+"."+inspect.currentframe().f_code.co_name)
+        LPtime.title(" (some subtitle)")
+        LPtime.time()
+        LPtime.end() # close object
     """
 
     def __init__(self, name):
         self.name = name
         self.step = 0
         self.t0 = time.time()
-        INFO.LEVEL += 1
+        LPROFILER.next_level()
 
     def title(self, extra=""):
-        INFO.print(f"{self.name}.{self.step}{extra}")
+        """
+        Display name of class+counter+extra. Also benchmarks time.
+
+        Parameters
+        ----------
+        extra: str
+            Extra text for display.
+        """
+        LPROFILER.print(f"{self.name}.{self.step}{extra}")
         self.t0 = time.time()
         self.step += 1
 
     def time(self):
+        """
+        Display time since last call of Timer.title.
+        """
         dt = time.time() - self.t0
-        INFO.print(f" {dt:.4f} seconds")
+        LPROFILER.print(f" {dt:.4f} seconds")
         return dt
 
     def end(self):
-        INFO.LEVEL -= 1
+        """
+        Reset state to before class creation.
+        """
+        LPROFILER.previous_level()
 
 
 ########################################################################
