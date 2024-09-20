@@ -852,6 +852,7 @@ class MemCatalog(Catalog):
         Catalog._add_values(self, **columns)
         if not np.issubdtype(self["id_cluster"].dtype, np.str_):
             self["id_cluster"] = self["id_cluster"].astype(str)
+        self.id_dict_list.update(self._make_col_dict_list("id"))
         self.data.first_cols = [self.tags["id_cluster"]]
 
     def __getitem__(self, item):
