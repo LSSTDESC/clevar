@@ -409,6 +409,44 @@ def updated_dict(*dict_list):
     return out
 
 
+def subdict(dict_in, keys):
+    """
+    Create a sub dictionary with only specific keys.
+
+    Parameters
+    ----------
+    dict_in : dict
+        Input dictionary.
+    keys : list
+        List of wanted keys.
+
+    Returns
+    -------
+    dict
+        Dictionary with selected keys.
+    """
+    return {key: dict_in[key] for key in keys}
+
+
+def subdict_exclude(dict_in, keys):
+    """
+    Create a sub dictionary excluding specific keys.
+
+    Parameters
+    ----------
+    dict_in : dict
+        Input dictionary.
+    keys : list
+        List of wanted keys.
+
+    Returns
+    -------
+    dict
+        Dictionary with selected keys.
+    """
+    return {key: value for key, value in dict_in.items() if key not in keys}
+
+
 def add_dicts_diff(dict1, dict2, pref="", diff_lines=None):
     """
     Adds the differences between dictionaries to a list
