@@ -14,3 +14,10 @@ def test_import_safe():
     assert lib1 is not None
     lib2 = utils.import_safe("NotALibrary")
     assert lib2 is None
+
+
+def test_timer_class():
+    INFOtime = utils.Timer("test_name")
+    INFOtime.title(" (some subtitle)")
+    INFOtime.time()
+    INFOtime.end()  # close object
