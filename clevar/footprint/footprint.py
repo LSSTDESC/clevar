@@ -106,8 +106,6 @@ class Footprint(TagData):
         # pylint: disable=arguments-renamed
         if not isinstance(nside, int) or (nside & (nside - 1) != 0) or nside == 0:
             raise ValueError(f"nside (={nside}) must be a power of 2.")
-        self.nside = nside
-        self.nest = nest
         TagData._add_values(self, **columns)
         self["pixel"] = self["pixel"].astype(int)
         if self.tags.get("detfrac", None) not in self.colnames:
@@ -117,6 +115,8 @@ class Footprint(TagData):
         ra, dec = hp.pix2ang(nside, self["pixel"], lonlat=True, nest=nest)
         self["SkyCoord"] = SkyCoord(ra * u.deg, dec * u.deg, frame="icrs")
         self.pixel_dict.update(self._make_col_dict("pixel"))
+        self.nside = nside
+        self.nest = nest
 
     def get_map(self, data, bad_val=0):
         """
