@@ -43,6 +43,7 @@ jobs:
         git clone https://github.com/LSSTDESC/healsparse
         cd healsparse
         pip install .
+    - name: Analysing the code with pylint
       run: |
         pip install pylint
         pylint clevar --ignored-classes=astropy.units
