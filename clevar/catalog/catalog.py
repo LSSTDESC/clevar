@@ -120,6 +120,7 @@ class Catalog(TagData):
             self,
             tags=updated_dict({"id": "id"}, tags),
             default_tags=none_val(default_tags, ["id", "ra", "dec"]),
+            must_have_id=True,
             **kwargs,
         )
         self.labels.update(none_val(labels, {}))
@@ -135,18 +136,11 @@ class Catalog(TagData):
             item, Catalog, name=self.name, labels=self.labels, mt_hist=self.mt_hist
         )
 
-    def __setitem__(self, item, value):
-        value_ = value
-        if isinstance(item, str):
-            if item[:3] != "mt_":
-                self.labels[item] = self.labels.get(item, f"{item}_{{{self.name}}}")
-            if item.lower() == self.tags["id"].lower():
-                value_ = self._fmt_id_col(value)
-            elif len(self.data.colnames) == 0:
-                if isinstance(value, (int, np.int64)):
-                    raise TypeError("Empty table cannot have column set to scalar value")
-                self._create_id(len(value))
-        TagData.__setitem__(self, item, value_)
+    def _fmt_col(self, colname):
+        if colname[:3] != "mt_":
+            self.labels[colname] = self.labels.get(colname, f"{colname}_{{{self.name}}}")
+        if colname.lower() == self.tags["id"].lower():
+            self["id"] = self._fmt_id_col(self["id"])
 
     def _fmt_id_col(self, id_col):
         id_out = np.array(id_col, dtype=str)  # make id a string
@@ -166,7 +160,7 @@ class Catalog(TagData):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # pylint: disable=arguments-differ
-        TagData._add_values(self, must_have_id=True, **columns)
+        TagData._add_values(self, **columns)
         self._add_skycoord()
         self.id_dict.update(self._make_col_dict("id"))
 
@@ -538,6 +532,7 @@ class Catalog(TagData):
         """
         return self
 
+
 class ClCatalog(Catalog):
     """
     Object to handle cluster catalogs.
@@ -619,6 +614,10 @@ class ClCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         Catalog._add_values(self, **columns)
+        self.data.first_cols = [
+            self.tags["id"],
+            *filter(lambda v: v != self.tags["id"], self.tags.values()),
+        ]
 
     def __getitem__(self, item):
         kwargs = {
@@ -713,30 +712,49 @@ class ClCatalog(Catalog):
             https://lsstdesc.org/clevar/compiled-examples/catalogs.html#adding-members-to-cluster-catalogs
         """
         self.leftover_members = None  # clean any previous mem info
-        if members_catalog is None:
-            members = MemCatalog("members", **kwargs)
-        elif isinstance(members_catalog, MemCatalog):
-            members = members_catalog
-            if len(kwargs) > 0:
-                warnings.warn(f"leftover input arguments ignored: {kwargs.keys()}")
-        else:
+
+        # extract data for MemCatalog creation
+        id_cluster_colname = kwargs.get("tags", {}).get("id_cluster", "id_cluster")
+        tags = kwargs.pop("tags", None)
+        labels = kwargs.pop("labels", None)
+        if isinstance(members_catalog, MemCatalog):
+            data = members_catalog.data
+            id_cluster_colname = members_catalog.tags.get("id_cluster", "id_cluster")
+        elif members_catalog is not None:
             raise TypeError(
                 f"members_catalog type is {type(members_catalog)},"
                 " it must be a MemCatalog object."
             )
-        members["ind_cl"] = [self.id_dict.get(ID, -1) for ID in members["id_cluster"]]
+        # pylint: disable=consider-using-get
+        elif "data" in kwargs:
+            data = kwargs["data"]
+        else:
+            data = ClData(kwargs)
+
+        # get id_cluster column
+        data["ind_cl"] = [self.id_dict.get(ID, -1) for ID in data[id_cluster_colname]]
+        mem_in_cl = data["ind_cl"] >= 0
+        if isinstance(members_catalog, MemCatalog) and (not members_consistency or mem_in_cl.all()):
+            self.members = members_catalog
+            return
+
         if members_consistency:
-            mem_in_cl = members["ind_cl"] >= 0
-            if not all(mem_in_cl):
+            if not mem_in_cl.all():
                 if members_warning:
                     warnings.warn(
                         "Some galaxies were not members of the cluster catalog."
                         " They are stored in leftover_members attribute."
                     )
-                    self.leftover_members = members[~mem_in_cl]
-                    self.leftover_members.name = "leftover members"
-                members = members[mem_in_cl]
-        self.members = members
+                self.leftover_members = MemCatalog(
+                    "leftover members", labels=labels, tags=tags, data=data[~mem_in_cl]
+                )
+                data = data[mem_in_cl]
+        self.members = MemCatalog(
+            "members",
+            labels=labels,
+            tags=tags,
+            data=data,
+        )
 
     def read_members(
         self,
@@ -765,12 +783,14 @@ class ClCatalog(Catalog):
         full: bool
             Reads all columns of the catalog
         """
+        # pylint: disable=protected-access
         self.add_members(
-            members_catalog=MemCatalog.read(
-                filename, "members", labels=labels, tags=tags, full=full
-            ),
+            data=TagData._read_data(filename, tags=tags, full=full),
+            members_catalog=None,
             members_consistency=members_consistency,
             members_warning=members_warning,
+            tags=tags,
+            labels=labels,
         )
 
     def remove_members(self):
@@ -831,9 +851,11 @@ class MemCatalog(Catalog):
     def _add_values(self, **columns):
         """Add values for all attributes. If id is not provided, one is created"""
         # create catalog
-        Catalog._add_values(self, first_cols=[self.tags["id_cluster"]], **columns)
+        Catalog._add_values(self, **columns)
+        if not np.issubdtype(self["id_cluster"].dtype, np.str_):
+            self["id_cluster"] = self["id_cluster"].astype(str)
         self.id_dict_list.update(self._make_col_dict_list("id"))
-        self["id_cluster"] = self["id_cluster"].astype(str)
+        self.data.first_cols = [self.tags["id_cluster"]]
 
     def __getitem__(self, item):
         kwargs = {"name": self.name, "labels": self.labels}

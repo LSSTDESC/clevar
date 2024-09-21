@@ -7,6 +7,10 @@ from .spatial import SpatialMatch
 from ..catalog import ClData
 
 
+# To disable pylint strike: Method '_set_unique_matching_function' is abstract in class 'Match'
+# but is not overridden in child class 'ProximityMatch'
+# to be fixed latter
+# pylint: disable=abstract-method
 class ProximityMatch(SpatialMatch):
     """
     ProximityMatch Class
@@ -40,13 +44,7 @@ class ProximityMatch(SpatialMatch):
         """
         # pylint: disable=arguments-renamed
         # pylint: disable=too-many-locals
-        if cat1.mt_input is None:
-            raise AttributeError("cat1.mt_input is None, run prep_cat_for_match first.")
-        if cat2.mt_input is None:
-            raise AttributeError("cat2.mt_input is None, run prep_cat_for_match first.")
-
-        cat1._init_match_vals()
-        cat2._init_match_vals()
+        self._valid_match_input_setup(cat1, cat2)
 
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
         ra2, dec2, sk2 = (cat2[c] for c in ("ra", "dec", "SkyCoord"))
@@ -162,6 +160,7 @@ class ProximityMatch(SpatialMatch):
         float, array
             Maximum angular distance allowed for matching
         """
+        coeff1, coeff2 = None, None  # for pylint complaining
         if radius_selection == "self":
             coeff1 = np.ones(radius1.size)
             coeff2 = np.zeros(radius2.size)

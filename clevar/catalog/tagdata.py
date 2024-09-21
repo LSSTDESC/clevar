@@ -41,6 +41,8 @@ class ClData(APtable):
         super().__init__(*args, **kwargs)
         for col in self.colnames:
             self.namedict[col] = col
+        self.skip_cols = ["SkyCoord"]
+        self.first_cols = []
 
     def __getitem__(self, item):
         """
@@ -64,7 +66,11 @@ class ClData(APtable):
         else:
             item_ = item
 
-        return ClData(super().__getitem__(item_))
+        out = ClData(super().__getitem__(item_))
+        out.skip_cols = self.skip_cols
+        out.first_cols = list(filter(lambda col: col in self.namedict, self.first_cols))
+
+        return out
 
     def __setitem__(self, item, value):
         """
@@ -86,8 +92,18 @@ class ClData(APtable):
         """
         return self[key] if key in self.namedict else default
 
+    def _show_cols(self):
+        return [
+            *self.first_cols,
+            *(
+                col
+                for col in self.colnames
+                if col not in self.skip_cols and col not in self.first_cols
+            ),
+        ]
+
     def _repr_html_(self):
-        return APtable._repr_html_(self[[c for c in self.colnames if c != "SkyCoord"]])
+        return APtable._repr_html_(self[self._show_cols()])
 
     @classmethod
     def read(cls, *args, **kwargs):
@@ -125,6 +141,8 @@ class TagData:
         List of keys that generate tags automatically.
     colnames: NameList
         Names of columns in data.
+    must_have_id: bool
+        If id must be included in data.
     """
 
     @property
@@ -152,12 +170,13 @@ class TagData:
         """Case independent column names"""
         return NameList(self.data.colnames)
 
-    def __init__(self, tags=None, default_tags=None, **kwargs):
+    def __init__(self, tags=None, default_tags=None, must_have_id=False, **kwargs):
         if tags is not None and not isinstance(tags, dict):
             raise ValueError("tags must be dict.")
         self.__data = ClData()
         self.__tags = LowerCaseDict(none_val(tags, {}))
         self.__default_tags = NameList(none_val(default_tags, []))
+        self.must_have_id = must_have_id
         if len(kwargs) > 0:
             self._add_values(**kwargs)
             # make sure columns don't overwrite tags
@@ -172,6 +191,12 @@ class TagData:
             if item in self.default_tags:
                 self.tags[item] = self.data.namedict.get(cname, cname)
             self.data[cname] = value
+            if (
+                self.must_have_id
+                and self.tags["id"] not in self.data.namedict
+                and len(self.data.namedict) == 1
+            ):
+                self._create_id(self.size)
         else:
             raise ValueError(f"can only set with str item (={item}) argument.")
 
@@ -228,7 +253,7 @@ class TagData:
     def _repr_html_(self):
         return f"<b>tags:</b> {self._prt_tags()}" f"<br>{self._prt_table_tags(self.data)}"
 
-    def _add_values(self, must_have_id=False, first_cols=None, **columns):
+    def _add_values(self, **columns):
         """Add values for all attributes."""
         if "data" in columns:
             if len(columns) > 1:
@@ -260,18 +285,22 @@ class TagData:
             missing = ", ".join(missing)
             raise KeyError(f"Tagged column(s) ({missing}) not found in catalog {data.colnames}")
 
-        cols = list(data.colnames)
-        if first_cols:
-            for col in first_cols[::-1]:
-                cols.insert(0, cols.pop(cols.index(col)))
-        if must_have_id:
-            if self.tags["id"] not in data.namedict:
-                self._create_id(len(data))
-            else:
-                self[self.tags["id"]] = data[self.tags["id"]]
-                cols.pop(cols.index(data.namedict[self.tags["id"]]))
-        for colname in cols:
-            self[colname] = data[colname]
+        self.__data = data
+        if self.must_have_id and self.tags["id"] not in data.namedict:
+            self._create_id(len(data))
+
+        for name in self.colnames:
+            self._fmt_col(name)
+            if name in self.default_tags:
+                colname = self.tags.get(name, name)
+                self.tag_column(colname, name)
+
+    def _fmt_col(self, colname):
+        """
+        Function to auto format specific columns.
+        """
+        # pylint: disable=unnecessary-pass
+        pass
 
     def _create_id(self, size):
         id_name = "id" if self.tags["id"] == "id" else f'id ({self.tags["id"]})'
@@ -279,7 +308,7 @@ class TagData:
         TagData.__setitem__(self, self.tags["id"], np.array(range(size), dtype=str))
 
     def _make_col_dict(self, colname):
-        return dict(map(lambda v: v[::-1], enumerate(self[colname])))
+        return dict(zip(self[colname], np.arange(self.size, dtype=int)))
 
     def _make_col_dict_list(self, colname):
         dict_list = {}
@@ -349,7 +378,7 @@ class TagData:
         filename: str
             Name of file
         add_header: bool
-            Saves catalog name and labels.
+            Saves catalog name.
         overwrite: bool
             Overwrite saved files
         """
@@ -412,7 +441,7 @@ class TagData:
             Input file.
         """
         data = ClData.read(filename)
-        # read labels and radius unit from file
+        # read tags from file
         kwargs = {
             "tags": LowerCaseDict({k[4:]: v for k, v in data.meta.items() if k[:4] == "TAG_"}),
         }

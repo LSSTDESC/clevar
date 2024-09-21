@@ -183,3 +183,23 @@ class SpatialMatch(Match):
         if match_config["type"] == "cross":
             self.cross_match(cat1)
             self.cross_match(cat2)
+
+    def _valid_match_input_setup(self, cat1, cat2):
+        """
+        Validate if catalogs are setup for matching and init match columns.
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
+        """
+        if cat1.mt_input is None:
+            raise AttributeError("cat1.mt_input is None, run prep_cat_for_match first.")
+        if cat2.mt_input is None:
+            raise AttributeError("cat2.mt_input is None, run prep_cat_for_match first.")
+
+        # pylint: disable=protected-access
+        cat1._init_match_vals()
+        cat2._init_match_vals()

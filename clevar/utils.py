@@ -1,6 +1,8 @@
 """General utility functions that are used in multiple modules"""
 import importlib
 
+import time
+
 import numpy as np
 from scipy.interpolate import interp1d
 import healpy as hp
@@ -23,6 +25,111 @@ def import_safe(libname):
         return importlib.import_module(libname)
     except ImportError:
         return None
+
+
+########################################################################
+########## Time profiler ###############################################
+########################################################################
+
+
+class ClassLevelProfiler:
+    """
+    Class to store level within run.
+    """
+
+    @property
+    def level(self):
+        """level within calls"""
+        return self.__level
+
+    def __init__(self):
+        self.__level = 0
+
+    def print(self, *args, **kwargs):
+        """
+        Print text with left spacing according to current level.
+
+        Parameters
+        ----------
+        args, kwargs: list, dict
+            Same arguments as print function.
+        """
+        sep = kwargs.get("sep", " ")
+        print("  " * self.level + sep.join(args))
+
+    def next_level(self):
+        """
+        Add new level to current state.
+        """
+        self.__level += 1
+
+    def previous_level(self):
+        """
+        Go back to previous level.
+        """
+        self.__level -= 1
+
+    def reset_level(self):
+        """
+        Reset level to 0.
+        """
+        self.__level = 0
+
+
+LPROFILER = ClassLevelProfiler()
+
+
+class Timer:
+    """
+    Class to time lines of function.
+
+    Example
+    -----
+
+    Start by creating the object in module to store levels
+
+        LPROFILER.reset_level()
+
+    Then add following lines within a function:
+
+        LPtime = Timer(self.__class__.__name__+"."+inspect.currentframe().f_code.co_name)
+        LPtime.title(" (some subtitle)")
+        LPtime.time()
+        LPtime.end() # close object
+    """
+
+    def __init__(self, name):
+        self.name = name
+        self.step = 0
+        self.t0 = time.time()
+        LPROFILER.next_level()
+
+    def title(self, extra=""):
+        """
+        Display name of class+counter+extra. Also benchmarks time.
+
+        Parameters
+        ----------
+        extra: str
+            Extra text for display.
+        """
+        LPROFILER.print(f"{self.name}.{self.step}{extra}")
+        self.t0 = time.time()
+        self.step += 1
+
+    def time(self):
+        """
+        Display time since last call of Timer.title.
+        """
+        dt = time.time() - self.t0
+        LPROFILER.print(f" {dt:.4f} seconds")
+        return dt
+
+    def end(self):
+        """
+        Reset state to before class creation.
+        """
+        LPROFILER.previous_level()
 
 
 ########################################################################
@@ -300,6 +407,44 @@ def updated_dict(*dict_list):
             )
         out.update(updict)
     return out
+
+
+def subdict(dict_in, keys):
+    """
+    Create a sub dictionary with only specific keys.
+
+    Parameters
+    ----------
+    dict_in : dict
+        Input dictionary.
+    keys : list
+        List of wanted keys.
+
+    Returns
+    -------
+    dict
+        Dictionary with selected keys.
+    """
+    return {key: dict_in[key] for key in keys}
+
+
+def subdict_exclude(dict_in, keys):
+    """
+    Create a sub dictionary excluding specific keys.
+
+    Parameters
+    ----------
+    dict_in : dict
+        Input dictionary.
+    keys : list
+        List of wanted keys.
+
+    Returns
+    -------
+    dict
+        Dictionary with selected keys.
+    """
+    return {key: value for key, value in dict_in.items() if key not in keys}
 
 
 def add_dicts_diff(dict1, dict2, pref="", diff_lines=None):

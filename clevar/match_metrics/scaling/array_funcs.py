@@ -4,7 +4,7 @@ Main scaling functions using arrays.
 """
 import numpy as np
 
-from ...utils import none_val, autobins, binmasks, updated_dict
+from ...utils import none_val, autobins, binmasks, updated_dict, subdict, subdict_exclude
 from ..plot_helper import plt
 from .. import plot_helper as ph
 from .aux_funcs import (
@@ -229,15 +229,15 @@ def plot_density(
             values2,
             bins1,
             bins2,
-            ax_rotation=ax_rotation,
-            rotation_resolution=rotation_resolution,
-            xscale=xscale,
-            yscale=yscale,
+            **subdict(
+                locals(),
+                ["ax_rotation", "rotation_resolution", "xscale", "yscale"],
+            ),
         )
         if len(values1) > 0
         else None
     )
-    _kwargs.update(_kwargs.pop('kwargs'))
+    _kwargs.update(_kwargs.pop("kwargs"))
     return plot(**_kwargs)
 
 
@@ -323,12 +323,10 @@ def plot_panel(
             (see `scaling.array_funcs.plot` for more info).
     """
     # pylint: disable=unused-argument
-    _kwargs = locals()
-    _kwargs.update(_kwargs.pop('kwargs'))
     return _plot_panel(
         # _plot_panel arguments
         plot_function=plot,
-        **_kwargs,
+        **subdict_exclude(locals(), ["kwargs"]),
     )
 
 
@@ -428,7 +426,7 @@ def plot_density_panel(
     # pylint: disable=too-many-arguments
     # pylint: disable=unused-argument
     _kwargs = locals()
-    _kwargs.update(_kwargs.pop('kwargs'))
+    _kwargs.update(_kwargs.pop("kwargs"))
     return _plot_panel(
         plot_function=plot_density,
         **_kwargs,
@@ -499,26 +497,15 @@ def plot_metrics(
     info = {"fig": fig, "axes": axes}
     # default args
     _common = {"mode": mode, "metrics": metrics, "metrics_kwargs": metrics_kwargs}
-    info["top"] = _plot_metrics(
-        values1,
-        values2,
-        bins=bins1,
-        ax=info["axes"][0],
-        **_common,
-    )
-    info["bottom"] = _plot_metrics(
-        values2,
-        values1,
-        bins=bins2,
-        ax=info["axes"][1],
-        **_common,
-    )
+    info["top"] = _plot_metrics(values1, values2, bins=bins1, ax=info["axes"][0], **_common)
+    info["bottom"] = _plot_metrics(values2, values1, bins=bins2, ax=info["axes"][1], **_common)
     info["axes"][0].legend(**updated_dict(legend_kwargs))
     info["axes"][0].xaxis.tick_top()
     info["axes"][0].xaxis.set_label_position("top")
     return info
 
 
+# pylint: disable=unused-argument
 def plot_density_metrics(
     values1,
     values2,
@@ -625,9 +612,9 @@ def plot_density_metrics(
             (see `scaling.array_funcs.plot` for more info).
     """
     # pylint: disable=too-many-locals
+    fig = plt.figure(**updated_dict({"figsize": (8, 6)}, fig_kwargs))
+    axes = {}
     info = {
-        "fig": plt.figure(**updated_dict({"figsize": (8, 6)}, fig_kwargs)),
-        "axes": {},
         "metrics": {},
     }
     left, bottom, right, top = fig_pos
@@ -637,84 +624,76 @@ def plot_density_metrics(
     ymain, ygap, ypanel, ycb = (top - bottom) * np.array(
         [fmain, fgap, 1 - fmain - fgap - fcb, fcb - fgap]
     )
-    info["axes"]["main"] = info["fig"].add_axes([left, bottom, xmain, ymain])
-    info["axes"]["right"] = info["fig"].add_axes([left + xmain + xgap, bottom, xpanel, ymain])
-    info["axes"]["top"] = info["fig"].add_axes([left, bottom + ymain + ygap, xmain, ypanel])
-    info["axes"]["label"] = info["fig"].add_axes(
-        [left + xmain + xgap, bottom + ymain + ygap, xpanel, ypanel]
-    )
-    info["axes"]["colorbar"] = (
-        info["fig"].add_axes([left, bottom + ymain + 2 * ygap + ypanel, xmain + xgap + xpanel, ycb])
+    axes["main"] = fig.add_axes([left, bottom, xmain, ymain])
+    axes["right"] = fig.add_axes([left + xmain + xgap, bottom, xpanel, ymain])
+    axes["top"] = fig.add_axes([left, bottom + ymain + ygap, xmain, ypanel])
+    axes["label"] = fig.add_axes([left + xmain + xgap, bottom + ymain + ygap, xpanel, ypanel])
+    axes["colorbar"] = (
+        fig.add_axes([left, bottom + ymain + 2 * ygap + ypanel, xmain + xgap + xpanel, ycb])
         if add_cb
         else None
     )
     # Main plot
-    main_info = plot_density(
-        values1,
-        values2,
-        bins1=bins1,
-        bins2=bins2,
-        ax_rotation=ax_rotation,
-        rotation_resolution=rotation_resolution,
-        xscale=xscale,
-        yscale=yscale,
-        err1=err1,
-        err2=err2,
-        ax=info["axes"]["main"],
-        plt_kwargs=plt_kwargs,
-        add_cb=add_cb,
-        err_kwargs=err_kwargs,
-        cb_kwargs=updated_dict(
-            {"cax": info["axes"]["colorbar"], "orientation": "horizontal"}, cb_kwargs
-        ),
-        **kwargs,
+    info.update(
+        subdict_exclude(
+            plot_density(
+                values1,
+                values2,
+                **subdict(
+                    locals(),
+                    [
+                        "bins1",
+                        "bins2",
+                        "ax_rotation",
+                        "rotation_resolution",
+                        "xscale",
+                        "yscale",
+                        "err1",
+                        "err2",
+                        "plt_kwargs",
+                        "add_cb",
+                        "err_kwargs",
+                    ],
+                ),
+                ax=axes["main"],
+                cb_kwargs=updated_dict(
+                    {"cax": axes["colorbar"], "orientation": "horizontal"}, cb_kwargs
+                ),
+                **kwargs,
+            ),
+            ["ax", "ax_cb"],
+        )
     )
-    main_info.pop("ax")
-    main_info.pop("ax_cb", None)
-    info.update(main_info)
     if add_cb:
-        info["axes"]["colorbar"].xaxis.tick_top()
-        info["axes"]["colorbar"].xaxis.set_label_position("top")
+        axes["colorbar"].xaxis.tick_top()
+        axes["colorbar"].xaxis.set_label_position("top")
     # Metrics plot
     _common = {"mode": metrics_mode, "metrics": metrics, "metrics_kwargs": metrics_kwargs}
-    info["metrics"]["top"] = _plot_metrics(
-        values1,
-        values2,
-        bins=bins1,
-        ax=info["axes"]["top"],
-        **_common,
-    )["plots"]
+    info["metrics"]["top"] = _plot_metrics(values1, values2, bins=bins1, ax=axes["top"], **_common)[
+        "plots"
+    ]
     info["metrics"]["right"] = _plot_metrics(
-        values2,
-        values1,
-        bins=bins2,
-        ax=info["axes"]["right"],
-        rotated=True,
-        **_common,
+        values2, values1, bins=bins2, ax=axes["right"], rotated=True, **_common
     )["plots"]
     # Adjust plots
     labels = [
         rf"$\sigma_{{{l.replace('p_', '')}}}$" if l[:2] == "p_" else l
-        for l in (
-            c.get_label() for c in info["axes"]["right"].collections + info["axes"]["right"].lines
-        )
+        for l in (c.get_label() for c in axes["right"].collections + axes["right"].lines)
     ]
-    info["axes"]["label"].legend(
-        info["axes"]["right"].collections + info["axes"]["right"].lines, labels
-    )
-    info["axes"]["main"].set_xscale(xscale)
-    info["axes"]["main"].set_yscale(yscale)
+    axes["label"].legend(axes["right"].collections + axes["right"].lines, labels)
+    axes["main"].set_xscale(xscale)
+    axes["main"].set_yscale(yscale)
     # Horizontal
-    info["axes"]["top"].set_xscale(xscale)
-    ph.rm_axis_ticklabels(info["axes"]["top"].xaxis)
-    info["axes"]["top"].set_xlim(info["axes"]["main"].get_xlim())
+    axes["top"].set_xscale(xscale)
+    ph.rm_axis_ticklabels(axes["top"].xaxis)
+    axes["top"].set_xlim(axes["main"].get_xlim())
     # Vertical
-    info["axes"]["right"].set_yscale(yscale)
-    ph.rm_axis_ticklabels(info["axes"]["right"].yaxis)
-    info["axes"]["right"].set_ylim(info["axes"]["main"].get_ylim())
+    axes["right"].set_yscale(yscale)
+    ph.rm_axis_ticklabels(axes["right"].yaxis)
+    axes["right"].set_ylim(axes["main"].get_ylim())
     # Label
-    info["axes"]["label"].axis("off")
-    return info
+    axes["label"].axis("off")
+    return updated_dict({"fig": fig, "axes": axes}, info)
 
 
 def plot_dist(
@@ -850,6 +829,7 @@ def plot_dist(
     return info
 
 
+# pylint: disable=unused-argument
 def plot_density_dist(
     values1,
     values2,
@@ -947,18 +927,23 @@ def plot_density_dist(
     plot_density(
         values1,
         values2,
-        bins1=bins1,
-        bins2=bins2,
-        ax_rotation=ax_rotation,
-        rotation_resolution=rotation_resolution,
-        xscale=xscale,
-        yscale=yscale,
-        err1=err1,
-        err2=err2,
+        **subdict(
+            locals(),
+            [
+                "bins1",
+                "bins2",
+                "ax_rotation",
+                "rotation_resolution",
+                "xscale",
+                "yscale",
+                "err1",
+                "err2",
+                "plt_kwargs",
+                "add_cb",
+                "err_kwargs",
+            ],
+        ),
         ax=info["axes"]["main"],
-        plt_kwargs=plt_kwargs,
-        add_cb=add_cb,
-        err_kwargs=err_kwargs,
         cb_kwargs=updated_dict(
             {"cax": info["axes"]["colorbar"], "orientation": "vertical"}, cb_kwargs
         ),
