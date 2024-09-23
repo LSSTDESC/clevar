@@ -1,18 +1,22 @@
-#!/usr/bin/env python
+"""@file footprint.py
+Footprint class
+"""
 import warnings
 import numpy as np
 
-from ..catalog import ClData, ClCatalog
-from ..geometry import convert_units, angular_bank, physical_bank
-from ..utils import none_val, hp
 from astropy.coordinates import SkyCoord
 from astropy import units as u
-from .nfw_funcs import nfw2D_profile_flatcore
-from ..match_metrics import plot_helper as ph
-from ..match_metrics.plot_helper import plt
 
-class Footprint():
-    '''
+from ..catalog import ClData, TagData, ClCatalog
+from ..geometry import convert_units, physical_bank
+from ..utils import hp, updated_dict
+from .nfw_funcs import nfw2D_profile_flatcore_unnorm
+from ..match_metrics import plot_helper as ph
+from .. import optional_libs as ol
+
+
+class Footprint(TagData):
+    """
     Functions for footprint management
 
     Attributes
@@ -25,30 +29,65 @@ class Footprint():
         Data with columns: pixel, detfrac, zmax
     pixel_dict: dict
         Dictionary to point to pixel in data
-    '''
-    def __init__(self, *args, **kargs):
-        '''
+    size: int
+        Number of objects in the catalog
+    tags: LoweCaseDict
+        Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax)
+    keep_int_prod: bool
+        Keep positions, values and weights used in computation.
+        If true, they are stored in .temp attribute.
+    """
+
+    @property
+    def pixel_dict(self):
+        """Dictionary relating pixel value to row number."""
+        return self.__pixel_dict
+
+    @property
+    def nside(self):
+        """NSIDE of footprint."""
+        return self.data.meta["nside"]
+
+    @property
+    def nest(self):
+        """If footprint is nested."""
+        return self.data.meta["nest"]
+
+    @nside.setter
+    def nside(self, nside):
+        self.data.meta["nside"] = nside
+
+    @nest.setter
+    def nest(self, nest):
+        self.data.meta["nest"] = nest
+
+    def __init__(self, nside=None, tags=None, nest=False, **kwargs):
+        """
         Parameters
         ----------
         nside: int
             Heapix NSIDE
         nest: bool
             If ordering is nested
-        pixels: array
+        pixel: array
             Pixels inside the footprint
-        detfrac_vals: array
-            Detection fraction
-        zmax_vals: array
-            Zmax
-        '''
-        self.data = ClData()
-        self.nside = None
-        self.nest = None
-        if len(args)>0 or len(kargs)>0:
-            self._add_values(*args, **kargs)
-    def _add_values(self, nside, pixels, detfrac=None, zmax=None,
-            nest=False):
-        '''
+        detfrac_vals: array, None
+            Detection fraction, if None is set to 1
+        zmax_vals: array, None
+            Zmax, if None is set to 99
+        """
+        # pylint: disable=arguments-renamed
+        self.__pixel_dict = {}
+        tags = updated_dict({"pixel": "pixel"}, tags)
+        if len(kwargs) > 0:
+            kwargs["nside"] = nside
+            kwargs["nest"] = nest
+        TagData.__init__(self, tags=tags, default_tags=["pixel", "detfrac", "zmax"], **kwargs)
+        self.keep_int_prod = False
+        self.temp = None
+
+    def _add_values(self, nside=None, nest=False, **columns):
+        """
         Adds provided values for attribues and assign default values to rest
 
         Parameters
@@ -57,26 +96,30 @@ class Footprint():
             Heapix NSIDE
         nest: bool
             If ordering is nested
-        pixels: array
+        pixel: array
             Pixels inside the footprint
         detfrac: array
             Detection fraction. If None, value 1 is assigned.
         zmax: array
             Zmax. If None, value 99 is assigned.
-        '''
+        """
+        # pylint: disable=arguments-renamed
+        if not isinstance(nside, int) or (nside & (nside - 1) != 0) or nside == 0:
+            raise ValueError(f"nside (={nside}) must be a power of 2.")
+        TagData._add_values(self, **columns)
+        self["pixel"] = self["pixel"].astype(int)
+        if self.tags.get("detfrac", None) not in self.colnames:
+            self["detfrac"] = 1.0
+        if self.tags.get("zmax", None) not in self.colnames:
+            self["zmax"] = 99.0
+        ra, dec = hp.pix2ang(nside, self["pixel"], lonlat=True, nest=nest)
+        self["SkyCoord"] = SkyCoord(ra * u.deg, dec * u.deg, frame="icrs")
+        self.pixel_dict.update(self._make_col_dict("pixel"))
         self.nside = nside
         self.nest = nest
-        self.data.meta.update({'nside':nside, 'nest':nest})
-        self.data['pixel'] = np.array(pixels, dtype=int)
-        self.data['detfrac'] = none_val(detfrac, 1)
-        self.data['zmax'] = none_val(zmax, 99)
-        ra, dec = hp.pix2ang(nside, pixels, lonlat=True, nest=nest)
-        self.data['SkyCoord'] = SkyCoord(ra*u.deg, dec*u.deg, frame='icrs')
-        self.pixel_dict = {p:i for i, p in enumerate(self['pixel'])}
-    def __getitem__(self, item):
-        return self.data[item]
+
     def get_map(self, data, bad_val=0):
-        '''
+        """
         Transforms a internal quantity into a map
 
         Parameters
@@ -90,11 +133,12 @@ class Footprint():
         -------
         Map
             Healpix map with the given values, other pixels are zero
-        '''
-        return hp.pix2map(self.nside, self['pixel'], self[data], bad_val)
-    def get_values_in_pixels(self, data, pixels, bad_val, transform=lambda x:x):
-        '''
-        Transforms a internal quantity into a map
+        """
+        return hp.pix2map(self.nside, self["pixel"], self[data], bad_val)
+
+    def get_values_in_pixels(self, data, pixels, bad_val, transform=lambda x: x):
+        """
+        Get values of data in pixel list.
 
         Parameters
         ----------
@@ -113,11 +157,16 @@ class Footprint():
         -------
         Map
             Healpix map with the given values, other pixels are zero
-        '''
-        return np.array([transform(self[data][self.pixel_dict[p]])
-                        if p in self.pixel_dict else bad_val for p in pixels])
+        """
+        return np.array(
+            [
+                transform(self[data][self.pixel_dict[p]]) if p in self.pixel_dict else bad_val
+                for p in pixels
+            ]
+        )
+
     def zmax_masks_from_footprint(self, ra, dec, z):
-        '''
+        """
         Create a zmax mask for a catalog based on a footprint
 
         Parameters
@@ -133,17 +182,45 @@ class Footprint():
         -------
         ndarray
             Arrays of booleans of objects in footprint
-        '''
+        """
         pixels = hp.ang2pix(self.nside, ra, dec, nest=self.nest, lonlat=True)
         print("## creating visibility mask ##")
-        #zmax_vals = self.get_map(self['zmax'])[pixels] old method
-        zmax_vals = self.get_values_in_pixels('zmax', pixels, 0)
-        return z<=zmax_vals
+        # zmax_vals = self.get_map(self['zmax'])[pixels] old method
+        zmax_vals = self.get_values_in_pixels("zmax", pixels, 0)
+        return z <= zmax_vals
+
     @classmethod
-    def read(self, filename, nside, pixel_name, detfrac_name=None, zmax_name=None,
-             nest=False):
+    def _read(cls, data, nside, tags, nest, full):
         """
-        Loads fits file and converst to FootprintZmax object
+        Internal function for reading.
+
+        Parameters
+        ----------
+        data: ClData
+            Data with main columns.
+        nside: int
+            Healpix nside
+        tags: LoweCaseDict, None
+            Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax).
+        nest: bool
+            If ordering is nested
+        full: bool
+            Reads all columns of the catalog
+        """
+        # pylint: disable=protected-access
+        if not full:
+            if not isinstance(tags, dict):
+                raise ValueError(f"tags (={tags}) must be a dictionary.")
+            if "pixel" not in tags:
+                raise ValueError(f"pixel must be a key in tags (={tags})")
+            data._check_cols(tags.values())
+            data = data[list(tags.values())]
+        return cls(nside=nside, nest=nest, data=data, tags=tags)
+
+    @classmethod
+    def read(cls, filename, nside, tags=None, nest=False, full=False):
+        """
+        Loads fits file and convert to Footprint object
 
         Parameters
         ----------
@@ -151,28 +228,82 @@ class Footprint():
             Name of input file
         nside: int
             Healpix nside
-        pixel_name: str
-            Name of pixel column
-        detfrac_name: str, None
-            Name of detection fraction colum. If None value 1 is assigned.
-        zmax_name:
-            Name of maximum redshit colum. If None value 99 is assigned.
+        tags: LoweCaseDict, None
+            Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax).
+            Required if full=False.
+        nest: bool
+            If ordering is nested
+        full: bool
+            Reads all columns of the catalog
         """
-        self = Footprint()
-        values = ClData.read(filename)
-        self._add_values(nside=nside, nest=nest,
-            pixels=values[pixel_name],
-            detfrac=values[detfrac_name] if detfrac_name is not None else None,
-            zmax=values[zmax_name] if zmax_name is not None else None)
-        return self
-    def __repr__(self,):
-        out = f"FootprintZmax object with {len(self.data):,} pixels\n"
-        out += "zmax: [%g, %g]\n"%(self['zmax'].min(), self['zmax'].max())
-        out += "detfrac: [%g, %g]"%(self['detfrac'].min(), self['detfrac'].max())
-        return out
-    def _get_coverfrac(self, cl_sk, cl_z, aperture_radius, aperture_radius_unit,
-                       cosmo=None, wtfunc=lambda pixels, sk: np.ones(len(pixels))):
-        '''
+        # pylint: disable=arguments-renamed
+        data = ClData.read(filename)
+        return cls._read(data, nside, tags, nest, full)
+
+    @classmethod
+    def read_healsparse(cls, filename, tags=None, full=True):
+        """
+        Loads healsparse file and convert to Footprint object
+
+        Parameters
+        ----------
+        filename: str
+            Name of input file
+        tags: LoweCaseDict, None
+            Tag for main quantities used in matching and plots (ex: pixel, detfrac, zmax).
+            Required if full=False. If map only has one quantity, it is assumed to be detfrac.
+        full: bool
+            Reads all columns of the catalog
+        """
+        if ol.hs is None:  # _HAS_HEALSPARSE:
+            raise ImportError("pyccl library missing.")
+
+        data = ClData()
+        _tags = {"pixel": "pixel"}
+        _tags.update(tags if tags is not None else {})
+
+        hsp_map = ol.hs.HealSparseMap.read(filename)
+        nside = hsp_map.nside_sparse
+        if hsp_map.dtype.names is None:
+            mask = hsp_map[:] != hp.UNSEEN
+            data["pixel"] = np.arange(mask.size, dtype=int)[mask]
+            data["detfrac"] = hsp_map[:][mask]
+            if not full:
+                raise ValueError("full must be true for files with only one map!")
+            if tags is not None:
+                raise ValueError("tags cannot be used for files with only one map!")
+        else:
+            mask = hsp_map[hsp_map.dtype.names[0]][:] != hp.UNSEEN
+            data["pixel"] = np.arange(mask.size, dtype=int)[mask]
+            for name in hsp_map.dtype.names:
+                data[name] = hsp_map[name][:][mask]
+        del hsp_map
+        return cls._read(data, nside, _tags, nest=True, full=full)
+
+    def __repr__(self):
+        return (
+            f"Footprint object with {len(self.data):,} pixels\n"
+            f"zmax: [{self['zmax'].min():g}, {self['zmax'].max():g}"
+            f"detfrac: [{self['detfrac'].min():g}, {self['detfrac'].max():g}"
+        )
+
+    def _repr_html_(self):
+        return (
+            f"<b>Footprint object (nside:</b>{self.nside:,}<b>, nest:</b>{self.nest}<b>)</b>"
+            f"<br><b>tags:</b> {self._prt_tags()}"
+            f"<br>{self._prt_table_tags(self.data)}"
+        )
+
+    def _get_coverfrac(
+        self,
+        cl_sk,
+        cl_z,
+        aperture_radius,
+        aperture_radius_unit,
+        cosmo=None,
+        wtfunc=lambda pixels, sk: np.ones(len(pixels)),
+    ):
+        """
         Get cover fraction
 
         Parameters
@@ -195,23 +326,36 @@ class Footprint():
         -------
         float
             Cover fraction
-        '''
+        """
         if aperture_radius_unit in physical_bank and cosmo is None:
-            raise TypeError('A cosmology is necessary if aperture in physical units.')
+            raise TypeError("A cosmology is necessary if aperture in physical units.")
         pix_list = hp.query_disc(
-            nside=self.nside, inclusive=True, nest=self.nest,
+            nside=self.nside,
+            inclusive=True,
+            nest=self.nest,
             vec=hp.pixelfunc.ang2vec(cl_sk.ra.value, cl_sk.dec.value, lonlat=True),
-            radius=convert_units(aperture_radius, aperture_radius_unit, 'radians',
-                                 redshift=cl_z, cosmo=cosmo)
-            )
+            radius=convert_units(
+                aperture_radius, aperture_radius_unit, "radians", redshift=cl_z, cosmo=cosmo
+            ),
+        )
+        zmax_vals = self.get_values_in_pixels("zmax", pix_list, 0)
+        has_pix = cl_z <= zmax_vals
+        if has_pix.all():
+            return 1.0
+        if (~has_pix).all():
+            return 0.0
+        detfrac_vals = self.get_values_in_pixels("detfrac", pix_list, 0)
+        values = detfrac_vals * np.array(cl_z <= zmax_vals, dtype=float)
         weights = np.array(wtfunc(pix_list, cl_sk))
-        detfrac_vals = self.get_values_in_pixels('detfrac', pix_list, 0)
-        zmax_vals = self.get_values_in_pixels('zmax', pix_list, 0)
-        values = detfrac_vals*np.array(cl_z<=zmax_vals, dtype=float)
-        return (weights*values).sum()/weights.sum()
-    def _get_coverfrac_nfw2D(self, cl_sk, cl_z, cl_radius, cl_radius_unit,
-                             aperture_radius, aperture_radius_unit, cosmo):
-        '''
+        if self.keep_int_prod:
+            ra, dec = hp.pix2ang(4096, pix_list, nest=self.nest, lonlat=True)
+            self.temp = {"ra": ra, "dec": dec, "values": values, "weights": weights}
+        return (weights * values).sum() / weights.sum()
+
+    def _get_coverfrac_nfw2D(
+        self, cl_sk, cl_z, cl_radius, cl_radius_unit, aperture_radius, aperture_radius_unit, cosmo
+    ):
+        """
         Cover fraction with NFW 2D flatcore window. It is computed using:
 
         Parameters
@@ -234,14 +378,31 @@ class Footprint():
         Returns
         -------
         float
-        '''
-        cl_radius_mpc = convert_units(cl_radius, cl_radius_unit, 'mpc', redshift=cl_z, cosmo=cosmo)
-        return self._get_coverfrac(cl_sk, cl_z, aperture_radius, aperture_radius_unit, cosmo=cosmo,
+        """
+        # pylint: disable=invalid-name
+        cl_radius_mpc = convert_units(cl_radius, cl_radius_unit, "mpc", redshift=cl_z, cosmo=cosmo)
+        return self._get_coverfrac(
+            cl_sk,
+            cl_z,
+            aperture_radius,
+            aperture_radius_unit,
+            cosmo=cosmo,
             wtfunc=lambda pix_list, cl_sk: self._nfw_flatcore_window_func(
-                pix_list, cl_sk, cl_z, cl_radius_mpc, cosmo))
-    def get_coverfrac(self, cl_ra, cl_dec, cl_z, aperture_radius, aperture_radius_unit,
-                      cosmo=None, wtfunc=lambda pixels, sk: np.ones(len(pixels))):
-        r'''
+                pix_list, cl_sk, cl_z, cl_radius_mpc, cosmo
+            ),
+        )
+
+    def get_coverfrac(
+        self,
+        cl_ra,
+        cl_dec,
+        cl_z,
+        aperture_radius,
+        aperture_radius_unit,
+        cosmo=None,
+        wtfunc=lambda pixels, sk: np.ones(len(pixels)),
+    ):
+        r"""
         Get cover fraction with a given window.
 
         .. math::
@@ -274,13 +435,28 @@ class Footprint():
         -------
         float
             Cover fraction
-        '''
-        return self._get_coverfrac(SkyCoord(cl_ra*u.deg, cl_dec*u.deg, frame='icrs'),
-                                   cl_z, aperture_radius, aperture_radius_unit,
-                                   cosmo=cosmo, wtfunc=wtfunc)
-    def get_coverfrac_nfw2D(self, cl_ra, cl_dec, cl_z, cl_radius, cl_radius_unit,
-                            aperture_radius, aperture_radius_unit, cosmo):
-        r'''
+        """
+        return self._get_coverfrac(
+            SkyCoord(cl_ra * u.deg, cl_dec * u.deg, frame="icrs"),
+            cl_z,
+            aperture_radius,
+            aperture_radius_unit,
+            cosmo=cosmo,
+            wtfunc=wtfunc,
+        )
+
+    def get_coverfrac_nfw2D(
+        self,
+        cl_ra,
+        cl_dec,
+        cl_z,
+        cl_radius,
+        cl_radius_unit,
+        aperture_radius,
+        aperture_radius_unit,
+        cosmo,
+    ):
+        r"""
         Cover fraction with NFW 2D flatcore window.
 
         .. math::
@@ -317,13 +493,21 @@ class Footprint():
         Notes
         -----
             The NFW 2D function was taken from section 3.1 of arXiv:1104.2089 and was
-            validated with Rs = 0.15 Mpc/h (0.214 Mpc) and Rcore = 0.1 Mpc/h (0.142 Mpc).
-        '''
-        return self._get_coverfrac_nfw2D(SkyCoord(cl_ra*u.deg, cl_dec*u.deg, frame='icrs'),
-                                         cl_z, cl_radius, cl_radius_unit,
-                                         aperture_radius, aperture_radius_unit, cosmo=cosmo)
+            validated with r_scale = 0.15 Mpc/h (0.214 Mpc) and r_core = 0.1 Mpc/h (0.142 Mpc).
+        """
+        # pylint: disable=invalid-name
+        return self._get_coverfrac_nfw2D(
+            SkyCoord(cl_ra * u.deg, cl_dec * u.deg, frame="icrs"),
+            cl_z,
+            cl_radius,
+            cl_radius_unit,
+            aperture_radius,
+            aperture_radius_unit,
+            cosmo=cosmo,
+        )
+
     def _nfw_flatcore_window_func(self, pix_list, cl_sk, cl_z, cl_radius, cosmo):
-        '''
+        """
         Get aperture function for NFW 2D Profile with a top-hat core
 
         Parameters
@@ -341,16 +525,34 @@ class Footprint():
         -------
         array
             Value of the aperture function at each pixel
-        '''
-        Rs = 0.15/cosmo['h'] # 0.214Mpc
-        Rcore = 0.1/cosmo['h'] # 0.142Mpc
-        R = self.get_values_in_pixels('SkyCoord', pix_list, Rcore,
-            transform=lambda x: convert_units(cl_sk.separation(x).value,
-                                              'degrees', 'mpc', cl_z, cosmo)
-            )
-        return nfw2D_profile_flatcore(R, cl_radius, Rs, Rcore)
-    def plot(self, data, bad_val=hp.UNSEEN, auto_lim=False, ra_lim=None, dec_lim=None,
-             cluster=None, cluster_kwargs={}, cosmo=None, fig=None, figsize=None, **kwargs):
+        """
+        # pylint: disable=unused-argument
+        r_scale = 0.15 / cosmo["h"]  # 0.214Mpc
+        r_core = 0.1 / cosmo["h"]  # 0.142Mpc
+        pix_list_sk = SkyCoord(
+            *[
+                coord * u.deg
+                for coord in hp.pix2ang(self.nside, pix_list, nest=self.nest, lonlat=True)
+            ],
+            frame="icrs",
+        )
+        radius = convert_units(cl_sk.separation(pix_list_sk).value, "degrees", "mpc", cl_z, cosmo)
+        return nfw2D_profile_flatcore_unnorm(radius, r_scale, r_core)
+
+    def plot(
+        self,
+        data,
+        bad_val=hp.UNSEEN,
+        auto_lim=False,
+        ra_lim=None,
+        dec_lim=None,
+        cluster=None,
+        cluster_kwargs=None,
+        cosmo=None,
+        fig=None,
+        figsize=None,
+        **kwargs,
+    ):
         """
         Plot footprint. It can also overlay clusters with their radial sizes.
 
@@ -368,7 +570,7 @@ class Footprint():
             DEC limits in degrees.
         cluster: clevar.ClCatalog
             Clusters to be overlayed on footprint.
-        cluster_kwargs: dict
+        cluster_kwargs: dict, None
             Keyword arguments to plot clusters. If cluster radius used, arguments
             for plt.Circle function, if not arguments for plt.scatter.
         cosmo: clevar.Cosmology object
@@ -409,63 +611,94 @@ class Footprint():
             Figure of the plot. The main can be accessed at fig.axes[0], and the colorbar
             at fig.axes[1].
         """
-        fig, ax, cb = ph.plot_healpix_map(
-            self.get_map(data, bad_val), nest=self.nest, auto_lim=auto_lim, bad_val=bad_val,
-            ra_lim=ra_lim, dec_lim=dec_lim, fig=fig, figsize=figsize, **kwargs)
-        if cb:
-            cb.set_xlabel(data)
+        # pylint: disable=too-many-locals
+        fig, axis, cbar = ph.plot_healpix_map(
+            self.get_map(data, bad_val),
+            nest=self.nest,
+            auto_lim=auto_lim,
+            bad_val=bad_val,
+            ra_lim=ra_lim,
+            dec_lim=dec_lim,
+            fig=fig,
+            figsize=figsize,
+            **kwargs,
+        )
+        if cbar:
+            cbar.set_xlabel(data)
+            axis.xaxis.tick_top()
+            axis.xaxis.set_label_position("top")
 
-        xlim, ylim = ax.get_xlim(), ax.get_ylim()
+        # pylint: disable=unnecessary-lambda-assignment
+        xlim, ylim = axis.get_xlim(), axis.get_ylim()
         if cluster is not None:
             if isinstance(cluster, ClCatalog):
-                if 'radius' in cluster.colnames and cluster.radius_unit is not None:
-                    if (cluster.radius_unit in physical_bank and
-                            (cosmo is None or 'z' not in cluster.colnames)):
+                if "radius" in cluster.tags and cluster.radius_unit is not None:
+                    if cluster.radius_unit in physical_bank and (
+                        cosmo is None or "z" not in cluster.tags
+                    ):
                         raise TypeError(
-                            'A cosmology and cluster redsift is necessary if '
-                            'cluster radius in physical units.')
-                    cl_kwargs = dict(color='b', fill=0, lw=1)
-                    cl_kwargs.update(cluster_kwargs)
-                    rad_deg = convert_units(cluster['radius'], cluster.radius_unit, 'degrees',
-                                            redshift=cluster['z'], cosmo=cosmo)
-                    lims_mask = lambda ra, dec, rad_deg: (
-                        (ra+rad_deg>=xlim[0])*(ra-rad_deg<xlim[1])
-                        *(dec+rad_deg>=ylim[0])*(dec-rad_deg<ylim[1]))
+                            "A cosmology and cluster redsift is necessary if "
+                            "cluster radius in physical units."
+                        )
+                    theta = np.linspace(0, 2 * np.pi, 50)
+                    sin, cos = np.sin(theta), np.cos(theta)
+                    rad_deg = convert_units(
+                        cluster["radius"],
+                        cluster.radius_unit,
+                        "degrees",
+                        redshift=cluster["z"],
+                        cosmo=cosmo,
+                    )
                     plt_cl = lambda ra, dec, radius: [
-                        ax.add_patch(plt.Circle((ra_, dec_), radius=radius_, **cl_kwargs))
-                        for ra_, dec_, radius_ in
-                        np.transpose([ra, dec, radius])[lims_mask(ra, dec, radius)]]\
-                        if len(ra)>0 else []
+                        axis.plot(
+                            ra_ + radius_ * sin / np.cos(np.radians(dec_)),
+                            dec_ + radius_ * cos,
+                            **updated_dict({"color": "b", "lw": 1}, cluster_kwargs),
+                        )
+                        for ra_, dec_, radius_ in np.transpose([ra, dec, radius])[
+                            (ra + radius >= xlim[0])
+                            * (ra - radius < xlim[1])
+                            * (dec + radius >= ylim[0])
+                            * (dec - radius < ylim[1])
+                        ]
+                    ]
                 else:
-                    warnings.warn("Column 'radius' or radius_unit of cluster not set up. "
-                                  "Plotting clusters as points with plt.scatter.")
-                    cl_kwargs = dict(color='b', s=5)
-                    cl_kwargs.update(cluster_kwargs)
+                    warnings.warn(
+                        "Column 'radius' or radius_unit of cluster not set up. "
+                        "Plotting clusters as points with plt.scatter."
+                    )
                     rad_deg = np.ones(cluster.size)
-                    lims_mask = lambda ra, dec: ((ra>=xlim[0])*(ra<xlim[1])*(dec>=ylim[0])*(dec<ylim[1]))
-                    plt_cl = lambda ra, dec, radius: \
-                        ax.scatter(*np.transpose([ra, dec])[lims_mask(ra, dec)].T, **cl_kwargs)
+                    lims_mask = lambda ra, dec: (
+                        (ra >= xlim[0]) * (ra < xlim[1]) * (dec >= ylim[0]) * (dec < ylim[1])
+                    )
+                    plt_cl = lambda ra, dec, radius: axis.scatter(
+                        *np.transpose([ra, dec])[lims_mask(ra, dec)].T,
+                        **updated_dict({"color": "b", "s": 5}, cluster_kwargs),
+                    )
                 # Plot clusters in regular range
-                plt_cl(cluster['ra'], cluster['dec'], rad_deg)
+                plt_cl(cluster["ra"], cluster["dec"], rad_deg)
                 # Plot clusters using -180<ra<0
-                if ax.get_xlim()[0]<=0.:
-                    ra2, dec2, r2 = np.transpose([cluster['ra'], cluster['dec'], rad_deg])[
-                        (cluster['ra']>=180)].T
-                    ra2 -= 360.
-                    plt_cl(ra2, dec2, r2)
+                if axis.get_xlim()[0] <= 0.0:
+                    ra2, dec2, radius2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
+                        (cluster["ra"] >= 180)
+                    ].T
+                    ra2 -= 360.0
+                    plt_cl(ra2, dec2, radius2)
                 # Plot clusters using 180<ra<360
-                if ax.get_xlim()[1]>=180.:
-                    ra2, dec2, r2 = np.transpose([cluster['ra'], cluster['dec'], rad_deg])[
-                        (cluster['ra']<=0)].T
-                    ra2 += 360.
-                    plt_cl(ra2, dec2, r2)
+                if axis.get_xlim()[1] >= 180.0:
+                    ra2, dec2, radius2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
+                        (cluster["ra"] <= 0)
+                    ].T
+                    ra2 += 360.0
+                    plt_cl(ra2, dec2, radius2)
                 # Plot clusters using ra>360 (for xlim [360<, >0])
-                if ax.get_xlim()[1]>=360.:
-                    ra2, dec2, r2 = np.transpose([cluster['ra'], cluster['dec'], rad_deg])[
-                        (cluster['ra']>=0)].T
-                    ra2 += 360.
-                    plt_cl(ra2, dec2, r2)
+                if axis.get_xlim()[1] >= 360.0:
+                    ra2, dec2, radius2 = np.transpose([cluster["ra"], cluster["dec"], rad_deg])[
+                        (cluster["ra"] >= 0)
+                    ].T
+                    ra2 += 360.0
+                    plt_cl(ra2, dec2, radius2)
             else:
-                raise TypeError(f'cluster argument (={cluster}) must be a ClCatalog.')
+                raise TypeError(f"cluster argument (={cluster}) must be a ClCatalog.")
 
         return fig

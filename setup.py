@@ -22,7 +22,7 @@ def get_version(rel_path):
 
 setup(
       name='clevar',
-      version=get_version('clevar/__init__.py'),
+      version=get_version('clevar/version.py'),
       author='The LSST DESC ClEvaR Contributors',
       author_email='aguena@lapp.in2p3.fr',
       license='BSD 3-Clause License',
@@ -40,7 +40,7 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python"
         ],
-      install_requires=["astropy>=4.0", "numpy>=1.20", "scipy>=1.4", "healpy"],
+      install_requires=["astropy>=5.0", "numpy>=1.20", "scipy>=1.4", "healpy", "healsparse"],
       python_requires='>'+str(required_py_version)
 )
 

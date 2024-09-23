@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+"""Footprint module
+"""
 import warnings
 
 from .footprint import Footprint

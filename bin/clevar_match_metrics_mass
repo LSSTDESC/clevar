@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import argparse
-from clevar import yaml
+from clevar import clv_yaml
 
 if __name__=="__main__":
     # Get command line arguments
@@ -8,4 +8,4 @@ if __name__=="__main__":
     parser.add_argument(dest='config_file', help='Configuration yaml file')
     args = parser.parse_args()
     # Run function
-    yaml.match_metrics_mass(args.config_file)
+    clv_yaml.match_metrics_mass(args.config_file)

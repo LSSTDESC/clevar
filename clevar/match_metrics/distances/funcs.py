@@ -5,10 +5,22 @@ Main distances functions, wrapper of catalog_funcs functions
 import numpy as np
 from . import catalog_funcs
 
-def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units='degrees', cosmo=None,
-                     quantity_bins=None, bins=None, log_quantity=False, ax=None, **kwargs):
+
+def central_position(
+    cat1,
+    cat2,
+    matching_type,
+    radial_bins=20,
+    radial_bin_units="degrees",
+    cosmo=None,
+    quantity_bins=None,
+    bins=None,
+    log_quantity=False,
+    ax=None,
+    **kwargs,
+):
     """
-    Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
+    Plot distance between central position of matched clusters, binned by a second quantity.
 
     Parameters
     ----------
@@ -41,8 +53,10 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
-        Additional arguments for pylab.plot
+    plt_kwargs: dict, None
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -52,7 +66,7 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
         Function to format the values of the bins in legend
     legend_fmt: str
         Format the values of binedges (ex: '.2f')
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
@@ -70,19 +84,39 @@ def central_position(cat1, cat2, matching_type, radial_bins=20, radial_bin_units
                 * `bins2` (optional): The bin edges along the second dimension.
     """
     legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_quantity else ".2f")
-    kwargs['legend_format'] = kwargs.get('legend_format',
-        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_quantity else f'%{legend_fmt}'%v)
-    kwargs['add_legend'] = kwargs.get('add_legend', True)*(bins is not None)
+    kwargs["legend_format"] = kwargs.get(
+        "legend_format",
+        lambda v: f"10^{{%{legend_fmt}}}" % np.log10(v) if log_quantity else f"%{legend_fmt}" % v,
+    )
+    kwargs["add_legend"] = kwargs.get("add_legend", True) * (bins is not None)
     return catalog_funcs.central_position(
-        cat1, cat2, matching_type, radial_bins=radial_bins,
-        radial_bin_units=radial_bin_units, cosmo=cosmo, col2=quantity_bins,
-        bins2=bins, ax=ax, **kwargs)
+        cat1,
+        cat2,
+        matching_type,
+        radial_bins=radial_bins,
+        radial_bin_units=radial_bin_units,
+        cosmo=cosmo,
+        col2=quantity_bins,
+        bins2=bins,
+        ax=ax,
+        **kwargs,
+    )
 
-def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
-             quantity_bins=None, bins=None, log_quantity=False,
-             ax=None, **kwargs):
+
+def redshift(
+    cat1,
+    cat2,
+    matching_type,
+    redshift_bins=20,
+    normalize=None,
+    quantity_bins=None,
+    bins=None,
+    log_quantity=False,
+    ax=None,
+    **kwargs,
+):
     """
-    Plot recovery rate as lines, with each line binned by redshift inside a mass bin.
+    Plot redshift distance between matched clusters, binned by a second quantity.
 
     Parameters
     ----------
@@ -114,8 +148,10 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         Shape of the lines. Can be steps or line.
     ax: matplotlib.axes
         Ax to add plot
-    plt_kwargs: dict
-        Additional arguments for pylab.plot
+    plt_kwargs: dict, None
+        Additional arguments for pylab.plot.
+        It also includes the possibility of smoothening the line with `n_increase, scheme`
+        arguments. See `clevar.utils.smooth_line` for details.
     lines_kwargs_list: list, None
         List of additional arguments for plotting each line (using pylab.plot).
         Must have same size as len(bins2)-1
@@ -125,7 +161,7 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
         Function to format the values of the bins in legend
     legend_fmt: str
         Format the values of binedges (ex: '.2f')
-    legend_kwargs: dict
+    legend_kwargs: dict, None
         Additional arguments for pylab.legend
 
     Returns
@@ -143,9 +179,19 @@ def redshift(cat1, cat2, matching_type, redshift_bins=20, normalize=None,
                 * `bins2` (optional): The bin edges along the second dimension.
     """
     legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_quantity else ".2f")
-    kwargs['legend_format'] = kwargs.get('legend_format',
-        lambda v: f'10^{{%{legend_fmt}}}'%np.log10(v) if log_quantity else f'%{legend_fmt}'%v)
-    kwargs['add_legend'] = kwargs.get('add_legend', True)*(bins is not None)
+    kwargs["legend_format"] = kwargs.get(
+        "legend_format",
+        lambda v: f"10^{{%{legend_fmt}}}" % np.log10(v) if log_quantity else f"%{legend_fmt}" % v,
+    )
+    kwargs["add_legend"] = kwargs.get("add_legend", True) * (bins is not None)
     return catalog_funcs.redshift(
-        cat1, cat2, matching_type, redshift_bins=redshift_bins,
-        normalize=normalize, col2=quantity_bins, bins2=bins, ax=ax, **kwargs)
+        cat1,
+        cat2,
+        matching_type,
+        redshift_bins=redshift_bins,
+        normalize=normalize,
+        col2=quantity_bins,
+        bins2=bins,
+        ax=ax,
+        **kwargs,
+    )

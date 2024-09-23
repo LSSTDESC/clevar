@@ -2,12 +2,13 @@
 import os
 import subprocess
 import sys
-sys.path.insert(0, os.path.abspath('../clevar'))
-sys.path.insert(0, os.path.abspath('..'))
+
+sys.path.insert(0, os.path.abspath("../clevar"))
+sys.path.insert(0, os.path.abspath(".."))
 
 from unittest.mock import MagicMock
 
-MOCK_MODULES = ['pyccl']
+MOCK_MODULES = ["pyccl"]
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = MagicMock()
 
@@ -15,7 +16,7 @@ import clevar
 
 
 # -- RTD Fix for cluster_toolkit -----------------------------------------
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+on_rtd = os.environ.get("READTHEDOCS", None) == "True"
 
 # This code will execute only on readthedocs
 if on_rtd:
@@ -30,7 +31,7 @@ if on_rtd:
             return MagicMock()
 
     # For these modules, do a mock import
-    MOCK_MODULES = ['pyccl']
+    MOCK_MODULES = ["pyccl"]
     sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- Load the version number ----------------------------------------------
@@ -38,36 +39,42 @@ version = clevar.__version__
 release = version
 
 # -- General configuration ------------------------------------------------
-extensions = ['sphinx.ext.autodoc',
-              'sphinx.ext.autosummary',
-              'sphinx.ext.viewcode',
-              'sphinx.ext.napoleon',
-              'sphinx.ext.githubpages',
-              'IPython.sphinxext.ipython_console_highlighting']
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.githubpages",
+    "IPython.sphinxext.ipython_console_highlighting",
+]
 
-apidoc_module_dir = '../clevar'
+apidoc_module_dir = "../clevar"
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
-source_suffix = ['.rst', '.md']
+templates_path = ["_templates"]
+source_suffix = [".rst", ".md"]
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = 'ClEvaR'
-copyright = '2021, LSST DESC ClEvaR Contributors'
-author = 'LSST DESC ClEvaR Contributors'
-language = 'en'
+project = "ClEvaR"
+copyright = "2021, LSST DESC ClEvaR Contributors"
+author = "LSST DESC ClEvaR Contributors"
+language = "en"
 
 # Files to ignore when looking for source files
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
-                    'api/clevar.rst', 'source/index_body.rst',
-                    ]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "api/clevar.rst",
+    "source/index_body.rst",
+]
 
 # Some style options
-highlight_language = 'python3'
-pygments_style = 'sphinx'
+highlight_language = "python3"
+pygments_style = "sphinx"
 todo_include_todos = True
 add_function_parentheses = True
 add_module_names = True
@@ -76,10 +83,12 @@ add_module_names = True
 # -- Options for HTML output ----------------------------------------------
 
 # HTML Theme
-html_theme = 'sphinx_rtd_theme'
-html_theme_options = {'prev_next_buttons_location': None,
-                      'collapse_navigation': False,
-                      'titles_only': True}
+html_theme = "sphinx_rtd_theme"
+html_theme_options = {
+    "prev_next_buttons_location": None,
+    "collapse_navigation": False,
+    "titles_only": True,
+}
 html_static_path = []
 
 
@@ -97,7 +106,7 @@ napoleon_use_ivar = True
 # -- Options for Autodoc--------------------------------------------------
 # Autodoc collects docstrings and builds API pages
 
-#def run_apidoc(_):
+# def run_apidoc(_):
 #    from sphinxcontrib.apidoc import main as apidoc_main
 #    cur_dir = os.path.normpath(os.path.dirname(__file__))
 #    output_path = os.path.join(cur_dir, 'api')
@@ -105,32 +114,32 @@ napoleon_use_ivar = True
 #    paramlist = ['--separate', '--no-toc', '-f', '-M', '-o', output_path, modules]
 #    apidoc_main(paramlist)
 
-#def setup(app):
+# def setup(app):
 #    app.connect('builder-inited', run_apidoc)
 
 
 # -- Load from the config file -------------------------------------------
-config = open('doc-config.ini').read().strip().split('\n')
+config = open("doc-config.ini").read().strip().split("\n")
 apilist, demofiles, examplefiles = [], [], []
 apion, demoon, exon = False, False, False
 for entry in config:
-    if not entry or entry[0] == '#':
+    if not entry or entry[0] == "#":
         continue
-    if entry == 'APIDOC':
+    if entry == "APIDOC":
         apion, demoon, exon = True, False, False
         continue
-    elif entry == 'DEMO':
+    elif entry == "DEMO":
         apion, demoon, exon = False, True, False
         continue
-    elif entry == 'EXAMPLE':
+    elif entry == "EXAMPLE":
         apion, demoon, exon = False, False, True
         continue
     if apion:
-        apilist+= [entry]
+        apilist += [entry]
     elif demoon:
-        demofiles+= [entry]
+        demofiles += [entry]
     elif exon:
-        examplefiles+= [entry]
+        examplefiles += [entry]
 
 
 # -- Compile the examples into rst----------------------------------------
@@ -143,60 +152,59 @@ def fix_rst_equations(rst_file):
     rst_file: str
         Name of the rst file to be corrected.
     """
-    data = open(rst_file).read().split('\n')
+    data = open(rst_file).read().split("\n")
     out, tab = [], False
     for line in data:
-        if line==r':raw-latex:`\begin{equation}':
+        if line == r":raw-latex:`\begin{equation}":
             tab = True
-            out.append('.. math::\n')
-        elif line==r'\end{equation}`':
+            out.append(".. math::\n")
+        elif line == r"\end{equation}`":
             tab = False
-            out.append('')
+            out.append("")
         else:
-            out.append('    '+line.strip() if tab else line)
-    f = open(rst_file, 'w')
-    print('\n'.join(out), file=f)
+            out.append("    " + line.strip() if tab else line)
+    f = open(rst_file, "w")
+    print("\n".join(out), file=f)
     f.close()
 
-outdir = 'compiled-examples/'
-nbconvert_opts = ['--to rst',
-                  '--ExecutePreprocessor.kernel_name=python3',
-                 #'--execute',
-                  f'--output-dir {outdir}']
+
+outdir = "compiled-examples/"
+nbconvert_opts = [
+    "--to rst",
+    "--ExecutePreprocessor.kernel_name=python3",
+    #'--execute',
+    f"--output-dir {outdir}",
+]
 
 for demo in [*demofiles, *examplefiles]:
-    com = ' '.join(['jupyter nbconvert']+nbconvert_opts+[demo])
+    com = " ".join(["jupyter nbconvert"] + nbconvert_opts + [demo])
     subprocess.run(com, shell=True)
-    rst_output = demo.split('/')[-1].replace('.ipynb', '.rst')
-    fix_rst_equations(f'{outdir}/{rst_output}')
-
+    rst_output = demo.split("/")[-1].replace(".ipynb", ".rst")
+    fix_rst_equations(f"{outdir}/{rst_output}")
 
 
 # -- Build index.html ----------------------------------------------------
-index_examples_toc = \
-""".. toctree::
+index_examples_toc = """.. toctree::
    :maxdepth: 1
    :caption: Mass Fitting Examples
 
 """
 for example in examplefiles:
-    fname = ''.join(example.split('.')[:-1]).split('/')[-1]+'.rst'
-    index_examples_toc+= f"   {outdir}{fname}\n"
+    fname = "".join(example.split(".")[:-1]).split("/")[-1] + ".rst"
+    index_examples_toc += f"   {outdir}{fname}\n"
 
 # This is automatic
-index_demo_toc = \
-"""
+index_demo_toc = """
 .. toctree::
    :maxdepth: 1
    :caption: Usage Demos
 
 """
 for demo in demofiles:
-    fname = ''.join(demo.split('.')[:-1]).split('/')[-1]+'.rst'
-    index_demo_toc+= f"   {outdir}{fname}\n"
+    fname = "".join(demo.split(".")[:-1]).split("/")[-1] + ".rst"
+    index_demo_toc += f"   {outdir}{fname}\n"
 
-index_api_toc = \
-"""
+index_api_toc = """
 .. toctree::
    :maxdepth: 1
    :caption: Reference
@@ -204,16 +212,15 @@ index_api_toc = \
    api
 """
 
-subprocess.run('cp source/index_body.rst index.rst', shell=True)
-with open('index.rst', 'a') as indexfile:
+subprocess.run("cp source/index_body.rst index.rst", shell=True)
+with open("index.rst", "a") as indexfile:
     indexfile.write(index_demo_toc)
     indexfile.write(index_examples_toc)
     indexfile.write(index_api_toc)
 
 
 # -- Set up the API table of contents ------------------------------------
-apitoc = \
-"""API Documentation
+apitoc = """API Documentation
 -----------------
 
 Information on specific functions, classes, and methods.
@@ -223,6 +230,6 @@ Information on specific functions, classes, and methods.
 
 """
 for onemodule in apilist:
-    apitoc+= f"   api/clevar.{onemodule}.rst\n"
-with open('api.rst', 'w') as apitocfile:
+    apitoc += f"   api/clevar.{onemodule}.rst\n"
+with open("api.rst", "w") as apitocfile:
     apitocfile.write(apitoc)
