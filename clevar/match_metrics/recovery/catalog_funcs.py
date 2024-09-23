@@ -3,7 +3,7 @@
 Main recovery functions using catalogs, wrapper of array_funcs functions
 """
 import numpy as np
-from ...utils import none_val
+from ...utils import none_val, updated_dict, subdict
 from .. import plot_helper as ph
 from . import array_funcs
 
@@ -469,6 +469,7 @@ def _plot_fscore_base(
     -------
     Same as pltfunc
     """
+    # pylint: disable=too-many-locals
     c1_mask, c1_is_matched = _rec_masks(cat1, matching_type, cat1_mask, cat1_mask_unmatched)
     c2_mask, c2_is_matched = _rec_masks(cat2, matching_type, cat2_mask, cat2_mask_unmatched)
     # make sure bins stay consistent regardless of mask
@@ -593,34 +594,42 @@ def plot_fscore(
                 * `cat1`: Dictionary with recovery rate of catalog 1, see get_recovery_rate.
                 * `cat2`: Dictionary with recovery rate of catalog 2, see get_recovery_rate.
     """
-    kwargs_ = {
-        "cat1_val1_label": cat1.labels[cat1_col1],
-        "cat1_val2_label": cat1.labels[cat1_col2],
-        "cat2_val1_label": cat2.labels[cat2_col1],
-        "cat2_val2_label": cat2.labels[cat2_col2],
-        "cat1_mask": cat1_mask,
-        "cat1_mask_unmatched": cat1_mask_unmatched,
-        "cat2_mask": cat2_mask,
-        "cat2_mask_unmatched": cat2_mask_unmatched,
-    }
-    kwargs_.update(kwargs)
+    # pylint: disable=too-many-locals
+    # pylint: disable=unused-argument
     info = _plot_fscore_base(
         array_funcs.plot_fscore,
-        cat1,
-        cat1_col1,
-        cat1_col2,
-        cat1_bins1,
-        cat1_bins2,
-        cat2,
-        cat2_col1,
-        cat2_col2,
-        cat2_bins1,
-        cat2_bins2,
-        matching_type,
-        beta=beta,
-        pref=pref,
-        par_order=par_order,
-        **kwargs_,
+        **subdict(
+            locals(),
+            (
+                "cat1",
+                "cat1_col1",
+                "cat1_col2",
+                "cat1_bins1",
+                "cat1_bins2",
+                "cat2",
+                "cat2_col1",
+                "cat2_col2",
+                "cat2_bins1",
+                "cat2_bins2",
+                "matching_type",
+                "beta",
+                "pref",
+                "par_order",
+            ),
+        ),
+        **updated_dict(
+            {
+                "cat1_val1_label": cat1.labels[cat1_col1],
+                "cat1_val2_label": cat1.labels[cat1_col2],
+                "cat2_val1_label": cat2.labels[cat2_col1],
+                "cat2_val2_label": cat2.labels[cat2_col2],
+                "cat1_mask": cat1_mask,
+                "cat1_mask_unmatched": cat1_mask_unmatched,
+                "cat2_mask": cat2_mask,
+                "cat2_mask_unmatched": cat2_mask_unmatched,
+            },
+            kwargs,
+        ),
     )
     if xlabel:
         for ax in info["axes"][-1]:

@@ -667,6 +667,7 @@ def plot_fscore(
     kwargs_["cat2_val1_label"] = kwargs_.pop("cat2_redshift_label", cat2.labels["z"])
     kwargs_["cat2_val2_label"] = kwargs_.pop("cat2_mass_label", cat2.labels["mass"])
     # label formats
+    # pylint: disable=protected-access
     for i in "12":
         ph._set_label_format(
             kwargs_,

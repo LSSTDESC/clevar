@@ -487,10 +487,10 @@ def plot_fscore(
     pref="cat1",
     par_order=(0, 1, 2, 3),
     shape="steps",
-    plt_kwargs={},
+    plt_kwargs=None,
     lines_kwargs_list=None,
-    fig_kwargs={},
-    legend_kwargs={},
+    fig_kwargs=None,
+    legend_kwargs=None,
     cat1_val1_label=None,
     cat1_val2_label=None,
     cat2_val1_label=None,
@@ -558,6 +558,7 @@ def plot_fscore(
                 * `cat1`: Dictionary with recovery rate of catalog 1, see get_recovery_rate.
                 * `cat2`: Dictionary with recovery rate of catalog 2, see get_recovery_rate.
     """
+    # pylint: disable=too-many-locals
     info = {
         "data": get_fscore(
             cat1_val1,
@@ -601,10 +602,17 @@ def plot_fscore(
 
     ni = edges[2].size - 1
     nj = edges[3].size - 1
-    fig_kwargs_ = dict(sharex=True, sharey=True, figsize=(8, 6))
-    fig_kwargs_.update(fig_kwargs)
     info.update(
-        {key: value for key, value in zip(("fig", "axes"), plt.subplots(ni, nj, **fig_kwargs_))}
+        dict(
+            zip(
+                ("fig", "axes"),
+                plt.subplots(
+                    ni,
+                    nj,
+                    **updated_dict({"sharex": True, "sharey": True, "figsize": (8, 6)}, fig_kwargs),
+                ),
+            )
+        )
     )
     add_legend = True
     for axl, fscl in zip(info["axes"], info["data"]["fscore"].transpose(*tr_order)):
