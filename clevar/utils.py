@@ -200,6 +200,8 @@ class LowerCaseDict(dict):
 
 
 veclen = np.vectorize(len)
+
+
 def index_list(input_list, indexes):
     """Get list sorted by index list
 
@@ -216,6 +218,7 @@ def index_list(input_list, indexes):
         input_list sorted by indexes.
     """
     return [input_list[i] for i in indexes]
+
 
 def none_val(value, none_value):
     """

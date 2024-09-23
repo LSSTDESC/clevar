@@ -556,11 +556,25 @@ def skyplot(
     )
 
 
-def plot_fscore(cat1, cat1_redshift_bins, cat1_mass_bins, cat2, cat2_redshift_bins, cat2_mass_bins,
-                matching_type, beta=1, pref='cat1', par_order=(0, 1, 2, 3), cat1_mask=None,
-                cat1_mask_unmatched=None, cat2_mask=None, cat2_mask_unmatched=None, log_mass=True,
-                fscore_label=None, **kwargs):
-
+def plot_fscore(
+    cat1,
+    cat1_redshift_bins,
+    cat1_mass_bins,
+    cat2,
+    cat2_redshift_bins,
+    cat2_mass_bins,
+    matching_type,
+    beta=1,
+    pref="cat1",
+    par_order=(0, 1, 2, 3),
+    cat1_mask=None,
+    cat1_mask_unmatched=None,
+    cat2_mask=None,
+    cat2_mask_unmatched=None,
+    log_mass=True,
+    fscore_label=None,
+    **kwargs,
+):
     """
     Plot recovery rate as lines in panels, with each line binned by redshift
     and each panel is based on the data inside a mass bin.
@@ -648,29 +662,52 @@ def plot_fscore(cat1, cat1_redshift_bins, cat1_mass_bins, cat2, cat2_redshift_bi
     kwargs_ = {}
     kwargs_.update(kwargs)
     # labels
-    kwargs_['cat1_val1_label'] = kwargs_.pop('cat1_redshift_label', cat1.labels['z'])
-    kwargs_['cat1_val2_label'] = kwargs_.pop('cat1_mass_label', cat1.labels['mass'])
-    kwargs_['cat2_val1_label'] = kwargs_.pop('cat2_redshift_label', cat2.labels['z'])
-    kwargs_['cat2_val2_label'] = kwargs_.pop('cat2_mass_label', cat2.labels['mass'])
+    kwargs_["cat1_val1_label"] = kwargs_.pop("cat1_redshift_label", cat1.labels["z"])
+    kwargs_["cat1_val2_label"] = kwargs_.pop("cat1_mass_label", cat1.labels["mass"])
+    kwargs_["cat2_val1_label"] = kwargs_.pop("cat2_redshift_label", cat2.labels["z"])
+    kwargs_["cat2_val2_label"] = kwargs_.pop("cat2_mass_label", cat2.labels["mass"])
     # label formats
-    for i in '12':
+    for i in "12":
         ph._set_label_format(
-            kwargs_, f'cat{i}_redshiftlabel_format', f'cat{i}_redshiftlabel_fmt',
-            log=False, default_fmt=".2f")
+            kwargs_,
+            f"cat{i}_redshiftlabel_format",
+            f"cat{i}_redshiftlabel_fmt",
+            log=False,
+            default_fmt=".2f",
+        )
         ph._set_label_format(
-            kwargs_, f'cat{i}_masslabel_format', f'cat{i}_masslabel_fmt',
-            log=log_mass, default_fmt=".1f")
-    kwargs_['cat1_datalabel1_format'] = kwargs_.pop('cat1_redshiftlabel_format')
-    kwargs_['cat1_datalabel2_format'] = kwargs_.pop('cat1_masslabel_format')
-    kwargs_['cat2_datalabel1_format'] = kwargs_.pop('cat2_redshiftlabel_format')
-    kwargs_['cat2_datalabel2_format'] = kwargs_.pop('cat2_masslabel_format')
+            kwargs_,
+            f"cat{i}_masslabel_format",
+            f"cat{i}_masslabel_fmt",
+            log=log_mass,
+            default_fmt=".1f",
+        )
+    kwargs_["cat1_datalabel1_format"] = kwargs_.pop("cat1_redshiftlabel_format")
+    kwargs_["cat1_datalabel2_format"] = kwargs_.pop("cat1_masslabel_format")
+    kwargs_["cat2_datalabel1_format"] = kwargs_.pop("cat2_redshiftlabel_format")
+    kwargs_["cat2_datalabel2_format"] = kwargs_.pop("cat2_masslabel_format")
 
     info = catalog_funcs.plot_fscore(
-        cat1, 'z', 'mass', cat1_redshift_bins, cat1_mass_bins,
-        cat2, 'z', 'mass', cat2_redshift_bins, cat2_mass_bins,
-        matching_type, beta=beta, pref=pref, par_order=par_order, cat1_mask=cat1_mask,
-        cat1_mask_unmatched=cat1_mask_unmatched, cat2_mask=cat2_mask,
+        cat1,
+        "z",
+        "mass",
+        cat1_redshift_bins,
+        cat1_mass_bins,
+        cat2,
+        "z",
+        "mass",
+        cat2_redshift_bins,
+        cat2_mass_bins,
+        matching_type,
+        beta=beta,
+        pref=pref,
+        par_order=par_order,
+        cat1_mask=cat1_mask,
+        cat1_mask_unmatched=cat1_mask_unmatched,
+        cat2_mask=cat2_mask,
         cat2_mask_unmatched=cat2_mask_unmatched,
-        xscale='log' if par_order[0] in (1, 3) else 'linear',
-        ylabel=fscore_label, **kwargs_)
+        xscale="log" if par_order[0] in (1, 3) else "linear",
+        ylabel=fscore_label,
+        **kwargs_,
+    )
     return info

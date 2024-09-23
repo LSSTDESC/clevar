@@ -419,10 +419,25 @@ def skyplot(
     )
 
 
-def _plot_fscore_base(pltfunc, cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
-                      cat2, cat2_col1, cat2_col2, cat2_bins1, cat2_bins2, matching_type,
-                      cat1_mask=None, cat1_mask_unmatched=None, cat2_mask=None,
-                      cat2_mask_unmatched=None, **kwargs):
+def _plot_fscore_base(
+    pltfunc,
+    cat1,
+    cat1_col1,
+    cat1_col2,
+    cat1_bins1,
+    cat1_bins2,
+    cat2,
+    cat2_col1,
+    cat2_col2,
+    cat2_bins1,
+    cat2_bins2,
+    matching_type,
+    cat1_mask=None,
+    cat1_mask_unmatched=None,
+    cat2_mask=None,
+    cat2_mask_unmatched=None,
+    **kwargs,
+):
     """
     Adapts local function to use a ArrayFuncs function.
 
@@ -457,21 +472,51 @@ def _plot_fscore_base(pltfunc, cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins
     c1_mask, c1_is_matched = _rec_masks(cat1, matching_type, cat1_mask, cat1_mask_unmatched)
     c2_mask, c2_is_matched = _rec_masks(cat2, matching_type, cat2_mask, cat2_mask_unmatched)
     # make sure bins stay consistent regardless of mask
-    c1_edges1, c1_edges2 = np.histogram2d(cat1[cat1_col1], cat1[cat1_col2],
-                                          bins=(cat1_bins1, cat1_bins2))[1:]
-    c2_edges1, c2_edges2 = np.histogram2d(cat2[cat2_col1], cat2[cat2_col2],
-                                          bins=(cat2_bins1, cat2_bins2))[1:]
+    c1_edges1, c1_edges2 = np.histogram2d(
+        cat1[cat1_col1], cat1[cat1_col2], bins=(cat1_bins1, cat1_bins2)
+    )[1:]
+    c2_edges1, c2_edges2 = np.histogram2d(
+        cat2[cat2_col1], cat2[cat2_col2], bins=(cat2_bins1, cat2_bins2)
+    )[1:]
     return pltfunc(
-        cat1[cat1_col1][c1_mask], cat1[cat1_col2][c1_mask], c1_edges1, c1_edges2, c1_is_matched[c1_mask],
-        cat2[cat2_col1][c2_mask], cat2[cat2_col2][c2_mask], c2_edges1, c2_edges2, c2_is_matched[c2_mask],
-        **kwargs)
+        cat1[cat1_col1][c1_mask],
+        cat1[cat1_col2][c1_mask],
+        c1_edges1,
+        c1_edges2,
+        c1_is_matched[c1_mask],
+        cat2[cat2_col1][c2_mask],
+        cat2[cat2_col2][c2_mask],
+        c2_edges1,
+        c2_edges2,
+        c2_is_matched[c2_mask],
+        **kwargs,
+    )
 
 
-def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
-                cat2, cat2_col1, cat2_col2, cat2_bins1, cat2_bins2,
-                matching_type, beta=1, pref='cat1', par_order=(0, 1, 2, 3),
-                cat1_mask=None, cat1_mask_unmatched=None, cat2_mask=None, cat2_mask_unmatched=None,
-                xlabel=None, ylabel=None, xscale='linear', **kwargs):
+def plot_fscore(
+    cat1,
+    cat1_col1,
+    cat1_col2,
+    cat1_bins1,
+    cat1_bins2,
+    cat2,
+    cat2_col1,
+    cat2_col2,
+    cat2_bins1,
+    cat2_bins2,
+    matching_type,
+    beta=1,
+    pref="cat1",
+    par_order=(0, 1, 2, 3),
+    cat1_mask=None,
+    cat1_mask_unmatched=None,
+    cat2_mask=None,
+    cat2_mask_unmatched=None,
+    xlabel=None,
+    ylabel=None,
+    xscale="linear",
+    **kwargs,
+):
     """
     Plot recovery rate as lines, with each line binned by bins1 inside a bin of bins2.
 
@@ -549,28 +594,41 @@ def plot_fscore(cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
                 * `cat2`: Dictionary with recovery rate of catalog 2, see get_recovery_rate.
     """
     kwargs_ = {
-        'cat1_val1_label':cat1.labels[cat1_col1],
-        'cat1_val2_label':cat1.labels[cat1_col2],
-        'cat2_val1_label':cat2.labels[cat2_col1],
-        'cat2_val2_label':cat2.labels[cat2_col2],
-        'cat1_mask':cat1_mask,
-        'cat1_mask_unmatched':cat1_mask_unmatched,
-        'cat2_mask':cat2_mask,
-        'cat2_mask_unmatched':cat2_mask_unmatched,
+        "cat1_val1_label": cat1.labels[cat1_col1],
+        "cat1_val2_label": cat1.labels[cat1_col2],
+        "cat2_val1_label": cat2.labels[cat2_col1],
+        "cat2_val2_label": cat2.labels[cat2_col2],
+        "cat1_mask": cat1_mask,
+        "cat1_mask_unmatched": cat1_mask_unmatched,
+        "cat2_mask": cat2_mask,
+        "cat2_mask_unmatched": cat2_mask_unmatched,
     }
     kwargs_.update(kwargs)
-    info = _plot_fscore_base(array_funcs.plot_fscore,
-                             cat1, cat1_col1, cat1_col2, cat1_bins1, cat1_bins2,
-                             cat2, cat2_col1, cat2_col2, cat2_bins1, cat2_bins2,
-                             matching_type, beta=beta, pref=pref, par_order=par_order,
-                             **kwargs_)
+    info = _plot_fscore_base(
+        array_funcs.plot_fscore,
+        cat1,
+        cat1_col1,
+        cat1_col2,
+        cat1_bins1,
+        cat1_bins2,
+        cat2,
+        cat2_col1,
+        cat2_col2,
+        cat2_bins1,
+        cat2_bins2,
+        matching_type,
+        beta=beta,
+        pref=pref,
+        par_order=par_order,
+        **kwargs_,
+    )
     if xlabel:
-        for ax in info['axes'][-1]:
+        for ax in info["axes"][-1]:
             ax.set_xlabel(xlabel)
     if ylabel:
-        for ax in info['axes'][:, 0]:
+        for ax in info["axes"][:, 0]:
             ax.set_ylabel(ylabel)
-    for ax in info['axes'].flatten():
+    for ax in info["axes"].flatten():
         ax.set_xscale(xscale)
-        ax.set_ylim(-.01, 1.05)
+        ax.set_ylim(-0.01, 1.05)
     return info
