@@ -43,16 +43,16 @@ jobs:
         git clone https://github.com/LSSTDESC/healsparse
         cd healsparse
         pip install .
-    - name: Analysing the code with pylint
-      run: |
-        pip install pylint
-        pylint clevar --ignored-classes=astropy.units
     - name: Run the unit tests
       run: |
         pip install pytest pytest-cov
         pytest tests/ --cov=clevar/
       env:
         DISPLAY: test
+    - name: Analysing the code with pylint
+      run: |
+        pip install pylint
+        pylint clevar --ignored-classes=astropy.units
     - name: Install Sphinx prereq
       run: |
         conda install -c conda-forge sphinx sphinx_rtd_theme nbconvert>=7 pandoc ipython ipython_genutils

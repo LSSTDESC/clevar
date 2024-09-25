@@ -554,3 +554,161 @@ def skyplot(
         figsize=figsize,
         **kwargs,
     )
+
+
+def plot_fscore(
+    cat1,
+    cat1_redshift_bins,
+    cat1_mass_bins,
+    cat2,
+    cat2_redshift_bins,
+    cat2_mass_bins,
+    matching_type,
+    beta=1,
+    pref="cat1",
+    par_order=(0, 1, 2, 3),
+    cat1_mask=None,
+    cat1_mask_unmatched=None,
+    cat2_mask=None,
+    cat2_mask_unmatched=None,
+    log_mass=True,
+    fscore_label=None,
+    **kwargs,
+):
+    """
+    Plot recovery rate as lines in panels, with each line binned by redshift
+    and each panel is based on the data inside a mass bin.
+
+    Parameters
+    ----------
+    cat1: clevar.ClCatalog
+        ClCatalog with matching information
+    cat1_redshift_bins: array, int
+        Bins for redshift of catalog 1.
+    cat1_mass_bins: array, int
+        Bins for mass of catalog 1.
+    cat2: clevar.ClCatalog
+        ClCatalog with matching information
+    cat2_redshift_bins: array, int
+        Bins for redshift of catalog 2.
+    cat2_mass_bins: array, int
+        Bins for mass of catalog 2.
+    matching_type: str
+        Type of matching to be considered. Must be in:
+        'cross', 'cat1', 'cat2', 'multi_cat1', 'multi_cat2', 'multi_join'
+    beta: float
+        Additional recall weight in f-score
+    pref: str
+        Peference to which recovery rate beta is applied, must be cat1 or cat2.
+    par_order: list, bool
+        It transposes quantities used, must be a percolation of (0, 1, 2, 3).
+    log_mass: bool
+        Plot mass in log scale
+    cat1_mask: array
+        Mask of unwanted clusters of catalog 1.
+    cat1_mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint) of catalog 1.
+    cat2_mask: array
+        Mask of unwanted clusters of catalog 2.
+    cat2_mask_unmatched: array
+        Mask of unwanted unmatched clusters (ex: out of footprint) of catalog 2.
+
+    Other parameters
+    ----------------
+    shape: str
+        Shape of the lines. Can be steps or line.
+    cat1_redshift_label, cat1_mass_label: str
+        Label for redshift and mass of catalog 1.
+    cat2_redshift_label, cat2_mass_label: str
+        Label for redshift and mass of catalog 2.
+    fscore_label: str
+        Label for fscore.
+    plt_kwargs: dict
+        Additional arguments for pylab.plot
+    fig_kwargs: dict
+        Additional arguments for plt.subplots
+    lines_kwargs_list: list, None
+        List of additional arguments for plotting each line (using pylab.plot).
+        Must have same size as len(bins2)-1
+    legend_kwargs: dict
+        Additional arguments for pylab.legend
+    cat1_val1_label, cat1_val2_label: str
+        Labels for quantities 1 and 2 of catalog 1.
+    cat2_val1_label, cat2_val2_label: str
+        Labels for quantities 1 and 2 of catalog 2.
+    cat1_redshift_format, cat1_mass_format: function
+        Function to format the values of labels for catalog 1.
+    cat2_redshift_format, cat2_mass_format: function
+        Function to format the values of labels for catalog 2.
+    cat1_redshift_fmt, cat1_mass_fmt: str
+        Format the values of labels for catalog 1 (ex: '.2f').
+    cat2_redshift_fmt, cat2_mass_fmt: str
+        Format the values of labels for catalog 2 (ex: '.2f').
+
+    Returns
+    -------
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `fig`: `matplotlib.figure.Figure` object.
+            * `axes`: `matplotlib.axes` used in the plot.
+            * `data`: Binned data used in the plot. It has the sections:
+
+                * `fscore`: F-n score binned with (cat2_redshift_bins, cat2_mass_bins, \
+                cat1_redshift_bins, cat1_mass_bins).
+                * `cat1`: Dictionary with recovery rate of catalog 1, see get_recovery_rate.
+                * `cat2`: Dictionary with recovery rate of catalog 2, see get_recovery_rate.
+    """
+    kwargs_ = {}
+    kwargs_.update(kwargs)
+    # labels
+    kwargs_["cat1_val1_label"] = kwargs_.pop("cat1_redshift_label", cat1.labels["z"])
+    kwargs_["cat1_val2_label"] = kwargs_.pop("cat1_mass_label", cat1.labels["mass"])
+    kwargs_["cat2_val1_label"] = kwargs_.pop("cat2_redshift_label", cat2.labels["z"])
+    kwargs_["cat2_val2_label"] = kwargs_.pop("cat2_mass_label", cat2.labels["mass"])
+    # label formats
+    # pylint: disable=protected-access
+    for i in "12":
+        ph._set_label_format(
+            kwargs_,
+            f"cat{i}_redshiftlabel_format",
+            f"cat{i}_redshiftlabel_fmt",
+            log=False,
+            default_fmt=".2f",
+        )
+        ph._set_label_format(
+            kwargs_,
+            f"cat{i}_masslabel_format",
+            f"cat{i}_masslabel_fmt",
+            log=log_mass,
+            default_fmt=".1f",
+        )
+    kwargs_["cat1_datalabel1_format"] = kwargs_.pop("cat1_redshiftlabel_format")
+    kwargs_["cat1_datalabel2_format"] = kwargs_.pop("cat1_masslabel_format")
+    kwargs_["cat2_datalabel1_format"] = kwargs_.pop("cat2_redshiftlabel_format")
+    kwargs_["cat2_datalabel2_format"] = kwargs_.pop("cat2_masslabel_format")
+
+    info = catalog_funcs.plot_fscore(
+        cat1,
+        "z",
+        "mass",
+        cat1_redshift_bins,
+        cat1_mass_bins,
+        cat2,
+        "z",
+        "mass",
+        cat2_redshift_bins,
+        cat2_mass_bins,
+        matching_type,
+        beta=beta,
+        pref=pref,
+        par_order=par_order,
+        cat1_mask=cat1_mask,
+        cat1_mask_unmatched=cat1_mask_unmatched,
+        cat2_mask=cat2_mask,
+        cat2_mask_unmatched=cat2_mask_unmatched,
+        xscale="log" if par_order[0] in (1, 3) else "linear",
+        ylabel=fscore_label,
+        **kwargs_,
+    )
+    return info

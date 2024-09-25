@@ -202,6 +202,24 @@ class LowerCaseDict(dict):
 veclen = np.vectorize(len)
 
 
+def index_list(input_list, indexes):
+    """Get list sorted by index list
+
+    Parameters
+    ----------
+    input_list: list
+        Input list
+    indexes: list
+        List of indexes
+
+    Returns
+    -------
+    list
+        input_list sorted by indexes.
+    """
+    return [input_list[i] for i in indexes]
+
+
 def none_val(value, none_value):
     """
     Set default value to be returned if input is None

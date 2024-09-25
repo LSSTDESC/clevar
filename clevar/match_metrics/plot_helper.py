@@ -140,7 +140,9 @@ def get_bin_label(edge_lower, edge_higher, format_func=lambda v: v, prefix=""):
     return f"${prefix}[{format_func(edge_lower)}$ : ${format_func(edge_higher)}]$"
 
 
-def add_panel_bin_label(axes, edges_lower, edges_higher, format_func=lambda v: v, prefix=""):
+def add_panel_bin_label(
+    axes, edges_lower, edges_higher, format_func=lambda v: v, prefix="", position="top"
+):
     """
     Adds label with bin range on the top of panel
 
@@ -156,11 +158,25 @@ def add_panel_bin_label(axes, edges_lower, edges_higher, format_func=lambda v: v
         Function to format the values of the bins
     prefix: str
         Prefix to add to labels
+    position: str
+        Position od the panel, must be in: top, bottom, left, right
     """
-    for ax, val_lower, val_higher in zip(axes.flatten(), edges_lower, edges_higher):
-        topax = ax.twiny()
-        topax.set_xticks([])
-        topax.set_xlabel(get_bin_label(val_lower, val_higher, format_func, prefix))
+    for ax, vb, vt in zip(axes.flatten(), edges_lower, edges_higher):
+        if position == "top":
+            use_ax = ax.twiny()
+            use_ax.set_xticks([])
+            set_label = use_ax.set_xlabel
+        elif position == "bottom":
+            set_label = ax.set_xlabel
+        elif position == "left":
+            set_label = ax.set_ylabel
+        elif position == "right":
+            use_ax = ax.twinx()
+            use_ax.set_yticks([])
+            set_label = use_ax.set_ylabel
+        else:
+            raise ValueError(f"position (={position}) must be in: top, bottom, left, right")
+        set_label(get_bin_label(vb, vt, format_func, prefix))
 
 
 def get_density_colors(
