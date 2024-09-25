@@ -129,3 +129,44 @@ def test_skyplot():
         matching_type,
         recovery_label=None,
     )
+
+
+def test_fscore():
+    matching_type = "cat1"
+    redshift_bins = [0, 0.5, 1]
+    mass_bins = [1e13, 1e14, 1e15, 1e16]
+    args = (
+        _test_data.cat1,
+        redshift_bins,
+        mass_bins,
+        _test_data.cat2,
+        redshift_bins,
+        mass_bins,
+        matching_type,
+    )
+    rc.plot_fscore(
+        *args,
+        beta=1,
+        pref="cat1",
+        par_order=(0, 1, 2, 3),
+        cat1_mask=None,
+        cat1_mask_unmatched=None,
+        cat2_mask=None,
+        cat2_mask_unmatched=None,
+        log_mass=True,
+        fscore_label="fscore",
+        xlabel="x",
+    )
+    rc.plot_fscore(
+        *args,
+        beta=1,
+        pref="cat2",
+        par_order=(0, 1, 2, 3),
+        cat1_mask=None,
+        cat1_mask_unmatched=None,
+        cat2_mask=None,
+        cat2_mask_unmatched=None,
+        log_mass=True,
+        fscore_label=None,
+    )
+    assert_raises(ValueError, rc.plot_fscore, *args, pref="unknown")

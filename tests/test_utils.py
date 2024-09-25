@@ -21,4 +21,10 @@ def test_timer_class():
     LPtime = utils.Timer("test_name")
     LPtime.title(" (some subtitle)")
     LPtime.time()
-    LPtime.end()  # close object
+    LPtime.end()
+
+
+def test_other():
+    assert utils.none_val("y", "x") == "y"
+    assert utils.none_val(None, "x") == "x"
+    assert utils.index_list(["A", "B"], [1, 0]) == ["B", "A"]
