@@ -201,7 +201,7 @@ class MembershipMatch(Match):
         with open(f"{fileprefix}.2.p", "rb") as handle:
             cat2.mt_input = ClData(pickle.load(handle))
 
-    def match_members(self, mem1, mem2, method="id", radius=None, cosmo=None):
+    def match_members(self, mem1, mem2, method="id", radius=None, cosmo=None, delta_z=None):
         """
         Match member catalogs.
         Adds array with indices of matched members `(ind1, ind2)` to self.matched_mems.
@@ -219,15 +219,32 @@ class MembershipMatch(Match):
             with format `'value unit'` - used fixed value (ex: `1 arcsec`, `1 Mpc`).
         cosmo: clevar.Cosmology, None
             For `method='angular_distance'`. Cosmology object for when radius has physical units.
+        delta_z: float
+            Defines the zmin, zmax for matching. Options are:
+
+                * `float` - uses delta_z*(1+z)
+                * `None` - does not use z
         """
         if mem1 is None:
             raise AttributeError("members of catalog 1 is None, add members to catalog 1 first.")
         if mem2 is None:
             raise AttributeError("members of catalog 2 is None, add members to catalog 2 first.")
+        if delta_z is not None:
+            if "z" not in mem1.colnames:
+                raise AttributeError(f"mem1 does not have z column")
+            if "z" not in mem2.colnames:
+                raise AttributeError(f"mem2 does not have z column")
+
         if method == "id":
             self._match_members_by_id(mem1, mem2)
         elif method == "angular_distance":
             self._match_members_by_ang(mem1, mem2, radius, cosmo)
+
+        if delta_z is not None:
+            _dz = (mem1["z"][self.matched_mems[:,0]]-mem2["z"][self.matched_mems[:,1]]).abs()
+            _zm = 0.5*(mem1["z"][self.matched_mems[:,0]]+mem2["z"][self.matched_mems[:,1]])
+            self.matched_mems = self.matched_mems[_dz<=delta_z*(1+_zm)]
+
         print(f"{self.matched_mems.size:,} members were matched.")
         # Add id_cluster if found in other catalog
         mem1["match"] = None
