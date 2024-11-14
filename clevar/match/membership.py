@@ -1,6 +1,7 @@
 """@file membership.py
 The MembershipMatch class
 """
+
 import pickle
 import numpy as np
 
@@ -231,9 +232,9 @@ class MembershipMatch(Match):
             raise AttributeError("members of catalog 2 is None, add members to catalog 2 first.")
         if delta_z is not None:
             if "z" not in mem1.colnames:
-                raise AttributeError(f"mem1 does not have z column")
+                raise AttributeError("mem1 does not have z column")
             if "z" not in mem2.colnames:
-                raise AttributeError(f"mem2 does not have z column")
+                raise AttributeError("mem2 does not have z column")
 
         if method == "id":
             self._match_members_by_id(mem1, mem2)
@@ -241,9 +242,9 @@ class MembershipMatch(Match):
             self._match_members_by_ang(mem1, mem2, radius, cosmo)
 
         if delta_z is not None:
-            _dz = (mem1["z"][self.matched_mems[:,0]]-mem2["z"][self.matched_mems[:,1]]).abs()
-            _zm = 0.5*(mem1["z"][self.matched_mems[:,0]]+mem2["z"][self.matched_mems[:,1]])
-            self.matched_mems = self.matched_mems[_dz<=delta_z*(1+_zm)]
+            _dz = (mem1["z"][self.matched_mems[:, 0]] - mem2["z"][self.matched_mems[:, 1]]).abs()
+            _zm = 0.5 * (mem1["z"][self.matched_mems[:, 0]] + mem2["z"][self.matched_mems[:, 1]])
+            self.matched_mems = self.matched_mems[_dz <= delta_z * (1 + _zm)]
 
         print(f"{self.matched_mems.size:,} members were matched.")
         # Add id_cluster if found in other catalog
