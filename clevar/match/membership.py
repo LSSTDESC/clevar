@@ -242,7 +242,7 @@ class MembershipMatch(Match):
             self._match_members_by_ang(mem1, mem2, radius, cosmo)
 
         if delta_z is not None:
-            _dz = (mem1["z"][self.matched_mems[:, 0]] - mem2["z"][self.matched_mems[:, 1]]).abs()
+            _dz = abs(mem1["z"][self.matched_mems[:, 0]] - mem2["z"][self.matched_mems[:, 1]])
             _zm = 0.5 * (mem1["z"][self.matched_mems[:, 0]] + mem2["z"][self.matched_mems[:, 1]])
             self.matched_mems = self.matched_mems[_dz <= delta_z * (1 + _zm)]
 
