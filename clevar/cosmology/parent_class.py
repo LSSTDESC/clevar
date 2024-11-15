@@ -1,6 +1,7 @@
 """@file parent_class.py
 Cosmology object abstract superclass
 """
+
 import numpy as np
 from ..constants import Constants as const
 

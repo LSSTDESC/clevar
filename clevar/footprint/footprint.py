@@ -1,6 +1,7 @@
 """@file footprint.py
 Footprint class
 """
+
 import warnings
 import numpy as np
 

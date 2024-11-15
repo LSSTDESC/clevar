@@ -1,6 +1,7 @@
 """@file catalog.py
 The improved Astropy table classes
 """
+
 import warnings
 import numpy as np
 from astropy.table import Table as APtable
