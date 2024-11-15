@@ -36,7 +36,7 @@ jobs:
         conda install -c conda-forge cmake "swig<4.3.0"
         git clone https://github.com/LSSTDESC/CCL
         cd CCL
-        pip install --no-use-pep517 .
+        pip install .
     - name: Install healsparse from source
       run: |
         git clone https://github.com/LSSTDESC/healsparse
