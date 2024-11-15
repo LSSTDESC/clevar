@@ -226,10 +226,6 @@ class MembershipMatch(Match):
                 * `float` - uses delta_z*(1+z)
                 * `None` - does not use z
         """
-        if mem1 is None:
-            raise AttributeError("members of catalog 1 is None, add members to catalog 1 first.")
-        if mem2 is None:
-            raise AttributeError("members of catalog 2 is None, add members to catalog 2 first.")
         if delta_z is not None:
             if "z" not in mem1.colnames:
                 raise AttributeError("mem1 does not have z column")

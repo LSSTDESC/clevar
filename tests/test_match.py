@@ -286,8 +286,9 @@ def test_membership():
     # init match
     mt = MembershipMatch()
     # test missing data
-    assert_raises(AttributeError, mt.match_members, cat1.members, None)
-    assert_raises(AttributeError, mt.match_members, None, cat2.members)
+    none_z_mem = cat1.members["id", "ra"]
+    assert_raises(AttributeError, mt.match_members, cat1.members, none_z_mem, delta_z=0.1)
+    assert_raises(AttributeError, mt.match_members, none_z_mem, cat2.members, delta_z=0.1)
     assert_raises(AttributeError, mt.save_matched_members, "xxx")
     assert_raises(AttributeError, mt.save_shared_members, cat1, cat2, "xxx")
     assert_raises(AttributeError, mt.fill_shared_members, cat1, cat2)
