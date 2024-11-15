@@ -33,11 +33,9 @@ jobs:
         pip install .
     - name: Install CCL from source
       run: |
-        conda install -c conda-forge cmake swig
         conda install -c conda-forge cmake "swig<4.3.0"
         git clone https://github.com/LSSTDESC/CCL
         cd CCL
-        git checkout v3.0.0
         pip install .
     - name: Install healsparse from source
       run: |

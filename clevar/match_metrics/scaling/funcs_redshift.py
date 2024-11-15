@@ -2,6 +2,7 @@
 Main scaling functions for redshift plots,
 wrapper of catalog_funcs functions
 """
+
 from ...utils import deep_update, updated_dict
 from . import catalog_funcs
 

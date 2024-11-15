@@ -3,6 +3,7 @@
 Main recovery functions for mass and redshift plots,
 wrapper of catalog_funcs functions
 """
+
 import numpy as np
 from scipy.integrate import quad_vec
 
@@ -213,9 +214,11 @@ def plot(
     legend_fmt = kwargs.pop("legend_fmt", ".1f" if log_mass * (not transpose) else ".2f")
     kwargs["legend_format"] = kwargs.get(
         "legend_format",
-        lambda v: f"10^{{%{legend_fmt}}}" % np.log10(v)
-        if log_mass * (not transpose)
-        else f"%{legend_fmt}" % v,
+        lambda v: (
+            f"10^{{%{legend_fmt}}}" % np.log10(v)
+            if log_mass * (not transpose)
+            else f"%{legend_fmt}" % v
+        ),
     )
     info = _plot_base(
         catalog_funcs.plot,

@@ -1,6 +1,7 @@
 """@file footprint.py
 Footprint functions for command line execution
 """
+
 import os
 
 import clevar

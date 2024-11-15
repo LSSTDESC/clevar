@@ -1,6 +1,7 @@
 """@file match_metrics_redshift.py
 Matching metrics - redshift functions for command line execution
 """
+
 from clevar.match_metrics import scaling
 from .match_metrics_parent import ScalingYamlFuncs
 

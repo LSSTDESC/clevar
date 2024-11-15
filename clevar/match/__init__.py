@@ -1,6 +1,7 @@
 """@file __init__.py
 Match package
 """
+
 import numpy as np
 
 from ..catalog import ClData

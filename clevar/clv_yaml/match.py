@@ -1,6 +1,7 @@
 """@file match_proximity.py
 Proximity matching functions for command line execution
 """
+
 import os
 import warnings
 
@@ -117,6 +118,12 @@ def membership(config_file, overwrite_config, overwrite_files):
     if any(unit in mem_mt_radius for unit in clevar.geometry.physical_bank):
         print("\n# Creating Cosmology")
         match_config["match_members_kwargs"]["cosmo"] = make_cosmology(config["cosmology"])
+    match_config["match_members_kwargs"].setdefault("delta_z", None)
+    match_config["match_members_kwargs"]["delta_z"] = (
+        None
+        if match_config["match_members_kwargs"]["delta_z"] == "None"
+        else match_config["match_members_kwargs"]["delta_z"]
+    )
     # Run matching
     mt_membership = clevar.match.MembershipMatch()
     prt_msg = "# Start membership matching"

@@ -1,6 +1,7 @@
 """@file __init__.py
 scaling package
 """
+
 from . import array_funcs as ArrayFuncs
 from . import catalog_funcs as ClCatalogFuncs
 

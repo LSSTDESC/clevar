@@ -1,6 +1,7 @@
 """@file spatial.py
 The SpatialMatch class
 """
+
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as spline
 

@@ -1,6 +1,7 @@
 """@file catalog.py
 The ClCatalog and MemCatalog classes
 """
+
 import warnings
 import copy
 import numpy as np
