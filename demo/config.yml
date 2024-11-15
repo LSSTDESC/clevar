@@ -103,6 +103,7 @@ membership_match:
     match_members_kwargs: # Arguments to match members, needed if match_members=True.
         method: id # Method for matching. Options are id or angular_distance.
         radius: None # For method=angular_distance. Radius for matching, with format 'value unit' - used fixed value (ex: 1 arcsec, 1 Mpc).
+        delta_z: None # Defines the zmin, zmax for members matching. If float uses delta_z*(1+z).
     match_members_save: True # saves file with matched members.
     match_members_load: False # load matched members, if True skips matching (and save) of members.
     match_members_file: temp_mems_mt.txt # file to save matching of members, needed if match_members_save or match_members_load is True.

@@ -221,7 +221,7 @@ class MembershipMatch(Match):
         cosmo: clevar.Cosmology, None
             For `method='angular_distance'`. Cosmology object for when radius has physical units.
         delta_z: float
-            Defines the zmin, zmax for matching. Options are:
+            Defines the zmin, zmax for members matching. Options are:
 
                 * `float` - uses delta_z*(1+z)
                 * `None` - does not use z
