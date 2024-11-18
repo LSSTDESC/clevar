@@ -1,6 +1,7 @@
 """@file box.py
 The BoxMatch class
 """
+
 import numpy as np
 
 from .spatial import SpatialMatch

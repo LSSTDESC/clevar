@@ -1,6 +1,7 @@
 """@file artificial.py
 Functions to create artificial footprints
 """
+
 import numpy as np
 from ..utils import hp
 from .footprint import Footprint

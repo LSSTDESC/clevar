@@ -9,35 +9,25 @@ on:
 jobs:
   build-gcc-ubuntu:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        installer-url: 'https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh'
+    - uses: actions/checkout@v4
+    - uses: conda-incubator/setup-miniconda@v3
     - name: Install prereq using conda
       run: |
-        conda install -c conda-forge gobject-introspection pygobject python_abi=3.9=3_cp39
         echo "$CONDA/bin" >> $GITHUB_PATH
+        conda install -c conda-forge gobject-introspection pygobject cmake swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
     - name: Install prereq using pip
       run: |
         pip install -r requirements.txt
     - name: Install the package
       run: |
         pip install .
-    - name: Install cluster_toolkit from source
-      run: |
-        git clone https://github.com/tmcclintock/cluster_toolkit.git
-        cd cluster_toolkit
-        pip install .
     - name: Install CCL from source
       run: |
-        conda install -c conda-forge cmake swig
-        conda install -c conda-forge cmake "swig<4.3.0"
         git clone https://github.com/LSSTDESC/CCL
         cd CCL
-        git checkout v3.0.0
         pip install .
     - name: Install healsparse from source
       run: |
@@ -54,9 +44,6 @@ jobs:
         pytest tests/ --cov=clevar/
       env:
         DISPLAY: test
-    - name: Install Sphinx prereq
-      run: |
-        conda install -c conda-forge sphinx sphinx_rtd_theme nbconvert>=7 pandoc ipython ipython_genutils
     - name: Run the docs
       run: |
         make -C docs/ html

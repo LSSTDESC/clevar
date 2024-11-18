@@ -2,6 +2,7 @@
 Main scaling functions for mass plots,
 wrapper of catalog_funcs functions
 """
+
 from ...utils import deep_update, updated_dict
 from . import catalog_funcs
 

@@ -1,5 +1,6 @@
 """Footprint module
 """
+
 import warnings
 
 from .footprint import Footprint

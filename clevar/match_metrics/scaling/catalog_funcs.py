@@ -1,6 +1,7 @@
 """@file clevar/match_metrics/scaling/catalog_funcs.py
 Main scaling functions using catalogs, wrapper of array_funcs functions
 """
+
 import numpy as np
 
 from ...utils import autobins, updated_dict

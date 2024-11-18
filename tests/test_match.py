@@ -268,6 +268,9 @@ def get_test_data_mem():
     input2_mem["ra"] = np.arange(len(input2_mem["id_cluster"]))
     input1_mem["dec"] = np.zeros(len(input1_mem["id_cluster"]))
     input2_mem["dec"] = np.zeros(len(input2_mem["id_cluster"]))
+    input1_mem["z"] = np.ones(len(input1_mem["id_cluster"]))
+    input2_mem["z"] = np.ones(len(input2_mem["id_cluster"]))
+    input2_mem["z"][-1] += 1
     input2_mem["id_cluster"][0] = f"CL{ncl-2}"
     cat1 = ClCatalog("Cat1", **input1)
     cat2 = ClCatalog("Cat2", **input2)
@@ -283,8 +286,9 @@ def test_membership():
     # init match
     mt = MembershipMatch()
     # test missing data
-    assert_raises(AttributeError, mt.match_members, cat1.members, None)
-    assert_raises(AttributeError, mt.match_members, None, cat2.members)
+    none_z_mem = cat1.members["id", "ra"]
+    assert_raises(AttributeError, mt.match_members, cat1.members, none_z_mem, delta_z=0.1)
+    assert_raises(AttributeError, mt.match_members, none_z_mem, cat2.members, delta_z=0.1)
     assert_raises(AttributeError, mt.save_matched_members, "xxx")
     assert_raises(AttributeError, mt.save_shared_members, cat1, cat2, "xxx")
     assert_raises(AttributeError, mt.fill_shared_members, cat1, cat2)
@@ -293,11 +297,18 @@ def test_membership():
     assert_raises(AttributeError, mt.save_shared_members, cat1, cat2, "xxx")
     assert_raises(AttributeError, mt.multiple, cat1, cat2)
     cat1.mt_input = None
-    # Check both methods
-    mt.match_members(cat1.members, cat2.members, method="id")
+    # check with diff delta_z
     mt2 = MembershipMatch()
-    mt2.match_members(cat1.members, cat2.members, method="angular_distance", radius="1arcsec")
-    assert_equal(mt.matched_mems, mt2.matched_mems)
+    mt.match_members(cat1.members, cat2.members, method="id")
+    mt2.match_members(cat1.members, cat2.members, method="id", delta_z=0.1)
+    assert_equal(mt.matched_mems[:-1], mt2.matched_mems)
+    # Check both methods
+    for delta_z in (0.1, None):
+        mt.match_members(cat1.members, cat2.members, method="id", delta_z=delta_z)
+        mt2.match_members(
+            cat1.members, cat2.members, method="angular_distance", radius="1arcsec", delta_z=delta_z
+        )
+        assert_equal(mt.matched_mems, mt2.matched_mems)
     # Save and load matched members
     mt.save_matched_members("temp_mem.txt")
     mt2.load_matched_members("temp_mem.txt")
