@@ -9,17 +9,15 @@ on:
 jobs:
   build-gcc-ubuntu:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        installer-url: 'https://repo.anaconda.com/miniconda/Miniconda3-py39_4.12.0-Linux-x86_64.sh'
+    - uses: actions/checkout@v4
+    - uses: conda-incubator/setup-miniconda@v3
     - name: Install prereq using conda
       run: |
-        conda install -c conda-forge gobject-introspection pygobject cmake swig sphinx sphinx_rtd_theme nbconvert>=7 pandoc ipython
         echo "$CONDA/bin" >> $GITHUB_PATH
+        conda install -c conda-forge gobject-introspection pygobject cmake swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
     - name: Install prereq using pip
       run: |
         pip install -r requirements.txt
