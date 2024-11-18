@@ -13,7 +13,7 @@ if os.environ.get("DISPLAY", "") == "test":
 # pylint: disable=wrong-import-position
 import pylab as plt
 import numpy as np
-from scipy.interpolate import interp2d
+from scipy.interpolate import RectBivariateSpline
 from matplotlib.ticker import ScalarFormatter, NullFormatter
 
 from ..utils import none_val, hp, updated_dict
@@ -220,10 +220,8 @@ def get_density_colors(
     # Interpolate histogram
     xmid = 0.5 * (xedges[:-1] + xedges[1:])
     ymid = 0.5 * (yedges[:-1] + yedges[1:])
-    funcz = interp2d(xmid, ymid, hist, kind="cubic")
-    # to fix bug in pylint
-    # pylint: disable=not-callable
-    return np.array([funcz(*coord)[0] for coord in zip(xvals2, yvals2)])
+    funcz = RectBivariateSpline(xmid, ymid, hist, kx=3, ky=3)
+    return np.array([funcz(*coord)[0, 0] for coord in zip(xvals2, yvals2)])
 
 
 def nice_panel(axes, xlabel=None, ylabel=None, xscale="linear", yscale="linear"):
