@@ -1,6 +1,7 @@
 """@file nfw_funcs.py
 NFW functions for footprints
 """
+
 import numpy as np
 
 

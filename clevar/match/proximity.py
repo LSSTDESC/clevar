@@ -1,6 +1,7 @@
 """@file proximity.py
 The ProximityMatch class
 """
+
 import numpy as np
 
 from .spatial import SpatialMatch

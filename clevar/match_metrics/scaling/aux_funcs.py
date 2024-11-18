@@ -1,6 +1,7 @@
 """@file clevar/match_metrics/scaling/aux_funcs.py
 Auxiliary functions for scaling array functions.
 """
+
 import warnings
 import numpy as np
 from scipy.optimize import curve_fit
@@ -424,10 +425,12 @@ def _plot_panel(
                 plt_kwargs=updated_dict(plt_kwargs, p_kwargs),
                 err_kwargs=updated_dict(err_kwargs, p_e_kwargs),
                 **{
-                    k: v[mask]
-                    if (hasattr(v, "__len__") and len(v) == mask.size)
-                    and (not isinstance(v, (str, dict)))
-                    else v
+                    k: (
+                        v[mask]
+                        if (hasattr(v, "__len__") and len(v) == mask.size)
+                        and (not isinstance(v, (str, dict)))
+                        else v
+                    )
                     for k, v in plt_func_kwargs.items()
                 },
             )

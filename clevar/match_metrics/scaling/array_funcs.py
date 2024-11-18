@@ -2,6 +2,7 @@
 
 Main scaling functions using arrays.
 """
+
 import numpy as np
 
 from ...utils import none_val, autobins, binmasks, updated_dict, subdict, subdict_exclude
@@ -797,12 +798,14 @@ def plot_dist(
     info = {"fig": fig, "axes": axes}
     line_kwargs_list = none_val(
         line_kwargs_list,
-        [{}]
-        if values_aux is None
-        else [
-            {"label": ph.get_bin_label(vb, vt, line_label_format)}
-            for vb, vt in zip(line_edges, line_edges[1:])
-        ],
+        (
+            [{}]
+            if values_aux is None
+            else [
+                {"label": ph.get_bin_label(vb, vt, line_label_format)}
+                for vb, vt in zip(line_edges, line_edges[1:])
+            ]
+        ),
     )
     for ax, maskp in zip(info["axes"].flatten(), panel_masks):
         ph.add_grid(ax)

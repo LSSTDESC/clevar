@@ -1,6 +1,7 @@
 """@file clevar/match_metrics/distances/catalog_funcs.py
 Main distances functions using catalogs.
 """
+
 import numpy as np
 
 from ...geometry import convert_units
