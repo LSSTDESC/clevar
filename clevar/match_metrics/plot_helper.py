@@ -221,6 +221,8 @@ def get_density_colors(
     xmid = 0.5 * (xedges[:-1] + xedges[1:])
     ymid = 0.5 * (yedges[:-1] + yedges[1:])
     funcz = interp2d(xmid, ymid, hist, kind="cubic")
+    # to fix bug in pylint
+    # pylint: disable=not-callable
     return np.array([funcz(*coord)[0] for coord in zip(xvals2, yvals2)])
 
 
