@@ -173,14 +173,24 @@ def test_clcatalog():
     c_read = ClCatalog.read_full("cat1_with_header.fits")
     os.system("rm -f cat1_with_header.fits")
     # Check add members
-    c = ClCatalog(
-        name="test", **{"id": ["a", "b"], "ra": [10, 20], "dec": [20, 30], "z": [0.5, 0.6]}
-    )
-    assert_raises(TypeError, c.add_members, members_catalog={})
-    mem_dat = {"id": ["m_a1", "m_a2", "m_b1", "m_c1"], "id_cluster": ["a", "a", "b", "c"]}
-    c.add_members(**mem_dat)
-    mem = MemCatalog("mem", **mem_dat)
-    c.add_members(members_catalog=mem, **mem_dat)
+    for cl_id_col, mem_cl_id_col in (
+        ([1, 2], [1, 1, 2, 3]),
+        (["a", "b"], ["a", "a", "b", "c"]),
+    ):
+        mem_dat = {"id": ["m_a1", "m_a2", "m_b1", "m_c1"], "id_cluster": mem_cl_id_col}
+        c = ClCatalog(name="test", id=cl_id_col)
+
+        assert_raises(TypeError, c.add_members, members_catalog={})
+
+        c.add_members(**mem_dat)
+        assert_equal(c.members.size, 3)
+        assert_equal(c.leftover_members.size, 1)
+
+        mem = MemCatalog("mem", **mem_dat)
+        c.add_members(members_catalog=mem, **mem_dat)
+        assert_equal(c.members.size, 3)
+        assert_equal(c.leftover_members.size, 1)
+
     # Check read members
     c.read_members("demo/cat1_mem.fits", tags={"id": "ID", "id_cluster": "ID_CLUSTER"})
     # Check raw function

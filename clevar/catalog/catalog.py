@@ -733,7 +733,7 @@ class ClCatalog(Catalog):
             data = ClData(kwargs)
 
         # get id_cluster column
-        data["ind_cl"] = [self.id_dict.get(ID, -1) for ID in data[id_cluster_colname]]
+        data["ind_cl"] = self.ids2inds(np.array(data[id_cluster_colname], dtype=str), missing=-1)
         mem_in_cl = data["ind_cl"] >= 0
         if isinstance(members_catalog, MemCatalog) and (not members_consistency or mem_in_cl.all()):
             self.members = members_catalog
