@@ -245,6 +245,42 @@ class Catalog(TagData):
             )
         return _matching_mask_funcs[matching_type](self.data)
 
+    @static
+    def _clean_mmt_col(mmt_col, bad_ids):
+        return [list(filter(lambda x: x not in bad_ids, mmt)) for mmt in mmt_col]
+
+
+    def _remove_ids_from_mmt(self, bad_ids, mmt_col):
+
+        self[mmt_col] = Catalog._clean_mmt_col(self[mmt_col], bad_ids)
+
+    def remove_clusters_from_multiple(self, cat2, mask2):
+        """Remove cat2 clusters from mt_multi_self, mt_multi_other columns.
+
+        Parameters
+        ----------
+        cat2: clevar.ClCatalog
+            Other cluster catalog.
+        cat2_ids : array
+            ID's of catalog2 to be removed
+        mask2: array
+            Mask for clusters 2 properties, must have size=cat2.size
+        """
+        self.remove_ids_from_multiple(~cat2["id"][mask2])
+
+
+    def remove_ids_from_multiple(self, cat2_ids):
+        """Remove cat2 clusters from mt_multi_self, mt_multi_other columns.
+
+        Parameters
+        ----------
+        cat2_ids : array
+            ID's of catalog2 to be removed
+        """
+        bad_ids = set(cat2_ids)
+        self._remove_ids_from_mmt(bad_ids, "mt_multi_self")
+        self._remove_ids_from_mmt(bad_ids, "mt_multi_other")
+
     def _add_ftpt_mask(self, ftpt, maskname):
         """
         Adds a mask based on the cluster position relative to a footprint.
