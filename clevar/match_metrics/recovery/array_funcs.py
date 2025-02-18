@@ -404,3 +404,21 @@ def skyplot(
 
     info = {"fig": fig, "nc_pix": all_pix, "nc_mt_pix": mt_pix}
     return info
+
+
+def threshold_counts(values, thresholds):
+    return np.cumsum(np.histogram(values, bins=np.append(thresholds, np.inf))[0][::-1])[::-1]
+
+
+def get_rates_snr(is_matched, snr, snr_cat2, snr_thresholds):
+    num_cat_th = threshold_counts(snr, bins=snr_thresholds)
+    num_cat_mt_th = threshold_counts(snr[is_matched], bins=snr_thresholds)
+
+    _msk = num_cat_th > 0
+
+    recovery1 = np.full(len(is_matched) - 1, np.nan)
+    recovery1[_msk] = num_cat_mt_th[_msk] / num_cat_th[_msk]
+
+    recovery2 = threshold_counts(snr_cat2, bins=snr_thresholds) / len(snr_cat2)
+
+    return recovery1, recovery2
