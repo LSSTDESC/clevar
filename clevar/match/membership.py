@@ -71,7 +71,12 @@ class MembershipMatch(Match):
         hist = {"func": "multiple", "cats": f"{cat1.name}, {cat2.name}"}
         self._rm_dup_add_hist(cat1, cat2, hist)
 
-    def fill_shared_members(self, cat1, cat2):
+    def _prep_mt_input(self, cat, add_nmem=True):
+        cat.mt_input = ClData({"share_mems": list(map(lambda x: {}, range(cat.size)))})
+        if add_nmem:
+            cat.mt_input["nmem"] = self._comp_nmem(cat)
+
+    def fill_shared_members(self, cat1, cat2, reset_mt_input=True):
         """
         Adds shared members dicts and nmem to mt_input in catalogs.
 
@@ -88,17 +93,16 @@ class MembershipMatch(Match):
             cat1.members["pmem"] = 1.0
         if "pmem" not in cat2.members.tags:
             cat2.members["pmem"] = 1.0
-        cat1.mt_input = ClData(
-            {"share_mems": list(map(lambda x: {}, range(cat1.size))), "nmem": self._comp_nmem(cat1)}
-        )
-        cat2.mt_input = ClData(
-            {"share_mems": list(map(lambda x: {}, range(cat2.size))), "nmem": self._comp_nmem(cat2)}
-        )
+        if reset_mt_input:
+            self._prep_mt_input(cat1, add_nmem=True)
+            self._prep_mt_input(cat2, add_nmem=True)
+
         for ind1, ind2 in self.matched_mems:
             idcl1, pmem1 = cat1.members["id_cluster"][ind1], cat1.members["pmem"][ind1]
             idcl2, pmem2 = cat2.members["id_cluster"][ind2], cat2.members["pmem"][ind2]
             self._add_pmem(cat1.mt_input["share_mems"], cat1.id_dict[idcl1], idcl2, pmem1)
             self._add_pmem(cat2.mt_input["share_mems"], cat2.id_dict[idcl2], idcl1, pmem2)
+
         # sort order in dicts by mass
         cat1.mt_input["share_mems"] = [
             self._sort_share_mem_mass(share_mem1, cat2)
@@ -156,6 +160,23 @@ class MembershipMatch(Match):
 
         return set_unique
 
+    def save_shared_members_individual(self, cat, filename):
+        """
+        Saves dictionarie of shared members
+
+        Parameters
+        ----------
+        cat: clevar.ClCatalog
+            Cluster catalog with members attribute.
+        filename: str
+            Filename for output
+        """
+        with open(filename, "wb") as handle:
+            pickle.dump(
+                {c: cat.mt_input[c] for c in cat.mt_input.colnames},
+                handle,
+            )
+
     def save_shared_members(self, cat1, cat2, fileprefix):
         """
         Saves dictionaries of shared members
@@ -173,16 +194,8 @@ class MembershipMatch(Match):
             raise AttributeError("cat1.mt_input is None cannot save it.")
         if cat2.mt_input is None:
             raise AttributeError("cat2.mt_input is None cannot save it.")
-        with open(f"{fileprefix}.1.p", "wb") as handle:
-            pickle.dump(
-                {c: cat1.mt_input[c] for c in cat1.mt_input.colnames},
-                handle,
-            )
-        with open(f"{fileprefix}.2.p", "wb") as handle:
-            pickle.dump(
-                {c: cat2.mt_input[c] for c in cat2.mt_input.colnames},
-                handle,
-            )
+        self.save_shared_members_individual(cat1, f"{fileprefix}.1.p")
+        self.save_shared_members_individual(cat2, f"{fileprefix}.2.p")
 
     def load_shared_members(self, cat1, cat2, fileprefix):
         """
