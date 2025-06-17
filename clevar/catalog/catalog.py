@@ -245,7 +245,7 @@ class Catalog(TagData):
             )
         return _matching_mask_funcs[matching_type](self.data)
 
-    @static
+    @staticmethod
     def _clean_mmt_col(mmt_col, bad_ids):
         return [list(filter(lambda x: x not in bad_ids, mmt)) for mmt in mmt_col]
 
