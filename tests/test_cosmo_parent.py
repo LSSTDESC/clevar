@@ -1,4 +1,5 @@
 """Tests for cosmo"""
+
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal
 

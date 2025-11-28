@@ -1,5 +1,4 @@
-"""Footprint module
-"""
+"""Footprint module"""
 
 import warnings
 

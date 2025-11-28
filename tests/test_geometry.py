@@ -1,5 +1,5 @@
 # pylint: disable=no-member, protected-access
-""" Tests for geometry.py """
+"""Tests for geometry.py"""
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose
 

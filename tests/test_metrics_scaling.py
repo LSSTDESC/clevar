@@ -1,4 +1,5 @@
 """Tests for clevar/match_metrics/recovery"""
+
 import numpy as np
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass

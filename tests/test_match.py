@@ -1,5 +1,5 @@
 # pylint: disable=no-member, protected-access
-""" Tests for match.py """
+"""Tests for match.py"""
 import os
 import numpy as np
 from numpy.testing import assert_raises, assert_allclose, assert_equal

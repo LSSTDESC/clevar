@@ -1,4 +1,5 @@
-""" Tests for utils.py """
+"""Tests for utils.py"""
+
 from clevar import utils
 
 

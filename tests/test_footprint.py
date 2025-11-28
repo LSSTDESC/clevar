@@ -1,4 +1,5 @@
 """Tests for clevar/footprint"""
+
 import os
 import numpy as np
 import healpy as hp
