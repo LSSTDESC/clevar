@@ -73,7 +73,7 @@ jobs:
       - name: Get version from main branch
         id: main_version
         run: |
-          if [ "$(git show origin/main:clevar/version.py)" == *"__version__"* ]; then
+          if [[ "$(git show origin/main:clevar/version.py)" == *"__version__"* ]]; then
             MAIN_VERSION="$(grep -oP '__version__ = "\K[^"]+' clevar/version.py)"
           else
             echo "No version found at main, assuming version 0.0.0"
