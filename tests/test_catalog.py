@@ -1,10 +1,12 @@
-from clevar import ClCatalog, MemCatalog, ClData
-from clevar.catalog import Catalog, TagData
-from clevar.utils import NameList, LowerCaseDict, updated_dict
-import numpy as np
-from numpy.testing import assert_raises, assert_allclose, assert_equal
-import pytest
 import os
+
+import numpy as np
+import pytest
+from numpy.testing import assert_allclose, assert_equal, assert_raises
+
+from clevar import ClCatalog, ClData, MemCatalog
+from clevar.catalog import Catalog, TagData
+from clevar.utils import LowerCaseDict, NameList, updated_dict
 
 
 def test_lowercasedict():

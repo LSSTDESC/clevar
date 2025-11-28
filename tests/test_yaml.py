@@ -1,15 +1,16 @@
 # pylint: disable=no-member, protected-access
 """Tests for match.py"""
 import os
+from unittest import mock
+
 import numpy as np
 import pytest
 import yaml
-from numpy.testing import assert_raises, assert_allclose, assert_equal
-from unittest import mock
+from numpy.testing import assert_allclose, assert_equal, assert_raises
 
 from clevar import clv_yaml as clevar_yaml
-from clevar.clv_yaml import match_metrics_parent as metric_parent
 from clevar import optional_libs
+from clevar.clv_yaml import match_metrics_parent as metric_parent
 
 
 def test_yaml_parent():

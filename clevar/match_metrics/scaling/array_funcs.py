@@ -5,14 +5,21 @@ Main scaling functions using arrays.
 
 import numpy as np
 
-from ...utils import none_val, autobins, binmasks, updated_dict, subdict, subdict_exclude
-from ..plot_helper import plt
+from ...utils import (
+    autobins,
+    binmasks,
+    none_val,
+    subdict,
+    subdict_exclude,
+    updated_dict,
+)
 from .. import plot_helper as ph
+from ..plot_helper import plt
 from .aux_funcs import (
     _add_bindata_and_powlawfit_array,
-    _plot_panel,
-    _plot_metrics,
     _plot_dist_vertical,
+    _plot_metrics,
+    _plot_panel,
 )
 
 

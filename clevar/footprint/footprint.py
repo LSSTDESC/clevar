@@ -3,17 +3,17 @@ Footprint class
 """
 
 import warnings
+
 import numpy as np
-
-from astropy.coordinates import SkyCoord
 from astropy import units as u
+from astropy.coordinates import SkyCoord
 
-from ..catalog import ClData, TagData, ClCatalog
+from .. import optional_libs as ol
+from ..catalog import ClCatalog, ClData, TagData
 from ..geometry import convert_units, physical_bank
+from ..match_metrics import plot_helper as ph
 from ..utils import hp, updated_dict
 from .nfw_funcs import nfw2D_profile_flatcore_unnorm
-from ..match_metrics import plot_helper as ph
-from .. import optional_libs as ol
 
 
 class Footprint(TagData):

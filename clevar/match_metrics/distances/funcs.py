@@ -4,6 +4,7 @@ Main distances functions, wrapper of catalog_funcs functions
 """
 
 import numpy as np
+
 from . import catalog_funcs
 
 

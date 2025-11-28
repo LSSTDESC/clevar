@@ -3,7 +3,7 @@ Cosmology using AstroPy
 """
 
 from astropy import units
-from astropy.cosmology import LambdaCDM, FlatLambdaCDM
+from astropy.cosmology import FlatLambdaCDM, LambdaCDM
 
 from .parent_class import Cosmology
 

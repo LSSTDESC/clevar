@@ -1,11 +1,12 @@
 """Tests for clevar/match_metrics/recovery"""
 
 import numpy as np
+from numpy.testing import assert_raises
+
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
 from clevar.match_metrics import scaling
-from numpy.testing import assert_raises
 
 
 ##############################

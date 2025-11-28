@@ -1,20 +1,21 @@
 # pylint: disable=no-member, protected-access
 """Tests for match.py"""
 import os
+
 import numpy as np
-from numpy.testing import assert_raises, assert_allclose, assert_equal
+from numpy.testing import assert_allclose, assert_equal, assert_raises
 
 from clevar.catalog import ClCatalog, MemCatalog
-from clevar.match.parent import Match
-from clevar.match.spatial import SpatialMatch
 from clevar.match import (
-    ProximityMatch,
-    MembershipMatch,
     BoxMatch,
+    MembershipMatch,
+    ProximityMatch,
+    get_matched_pairs,
     output_catalog_with_matching,
     output_matched_catalog,
-    get_matched_pairs,
 )
+from clevar.match.parent import Match
+from clevar.match.spatial import SpatialMatch
 
 
 def test_parent():

@@ -3,14 +3,11 @@ The improved Astropy table classes
 """
 
 import warnings
+
 import numpy as np
 from astropy.table import Table as APtable
 
-from ..utils import (
-    none_val,
-    NameList,
-    LowerCaseDict,
-)
+from ..utils import LowerCaseDict, NameList, none_val
 
 
 class ClData(APtable):

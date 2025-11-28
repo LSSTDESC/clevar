@@ -3,14 +3,15 @@ Auxiliary functions for scaling array functions.
 """
 
 import warnings
+
 import numpy as np
+from scipy.interpolate import UnivariateSpline as spline
 from scipy.optimize import curve_fit
 from scipy.stats import binned_statistic
-from scipy.interpolate import UnivariateSpline as spline
 
-from ...utils import none_val, autobins, binmasks, deep_update, gaussian, updated_dict
-from ..plot_helper import plt, NullFormatter
+from ...utils import autobins, binmasks, deep_update, gaussian, none_val, updated_dict
 from .. import plot_helper as ph
+from ..plot_helper import NullFormatter, plt
 
 
 def _prep_fit_data(xvals, yvals, yerr=None, statistics="mean", bins_x=None, bins_y=None):

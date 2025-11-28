@@ -3,10 +3,12 @@ Matching metrics - recovery rate functions for command line execution
 """
 
 import os
+
 import numpy as np
 import pylab as plt
 
 from clevar.match_metrics import recovery
+
 from .match_metrics_parent import MetricYamlFuncs
 
 

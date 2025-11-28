@@ -1,6 +1,7 @@
 """Tests for clevar/match_metrics/distances"""
 
 import numpy as np
+
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch

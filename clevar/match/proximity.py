@@ -4,8 +4,8 @@ The ProximityMatch class
 
 import numpy as np
 
-from .spatial import SpatialMatch
 from ..catalog import ClData
+from .spatial import SpatialMatch
 
 
 # To disable pylint strike: Method '_set_unique_matching_function' is abstract in class 'Match'

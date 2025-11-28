@@ -3,6 +3,7 @@ The Match class
 """
 
 import os
+
 import numpy as np
 
 from ..utils import veclen
