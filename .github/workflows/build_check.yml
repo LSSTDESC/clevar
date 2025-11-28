@@ -55,8 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install required packages
-        run: |
-        pip install nbconvert pandoc sphinx sphinx_rtd_theme
+        run: pip install nbconvert pandoc sphinx sphinx_rtd_theme
   format-validation:
     name: Format validation
     runs-on: ubuntu-latest
