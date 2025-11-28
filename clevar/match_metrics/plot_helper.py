@@ -25,7 +25,6 @@ from ..utils import hp, none_val, smooth_line, updated_dict
 ########################################################################
 
 
-
 def _plot_smooth(self, *args, scheme=(1, 2, 1), n_increase=0, **kwargs):
     """Function to apply loops in plots.
 
