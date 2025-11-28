@@ -17,7 +17,7 @@ jobs:
     - name: Install prereq using conda
       run: |
         echo "$CONDA/bin" >> $GITHUB_PATH
-        conda install -c conda-forge gobject-introspection pygobject cmake swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
+        conda install -c conda-forge gobject-introspection pygobject cmake swig
     - name: Install prereq using pip
       run: pip install -r requirements.txt
     - name: Install the package
@@ -49,6 +49,14 @@ jobs:
       run: |
         pip install coveralls
         coveralls --service=github
+  documentation-validation:
+    name: Documentation validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install required packages
+        run: |
+        pip install nbconvert pandoc sphinx sphinx_rtd_theme
   format-validation:
     name: Format validation
     runs-on: ubuntu-latest
