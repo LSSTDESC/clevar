@@ -30,19 +30,12 @@ jobs:
         git clone https://github.com/LSSTDESC/healsparse
         cd healsparse
         pip install .
-    - name: Analysing the code with pylint
-      run: |
-        pip install pylint
-        pylint clevar --ignored-classes=astropy.units
     - name: Run the unit tests
       run: |
         pip install pytest pytest-cov
         pytest tests/ --cov=clevar/
       env:
         DISPLAY: test
-    - name: Run the docs
-      run: |
-        make -C docs/ html
     - name: Coveralls
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,6 +49,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install required packages
         run: pip install nbconvert pandoc sphinx sphinx_rtd_theme
+      - name: Run the docs
+        run: |
+          make -C docs/ html
   format-validation:
     name: Format validation
     runs-on: ubuntu-latest
@@ -69,6 +65,10 @@ jobs:
         run: |
           pip install isort
           isort --check --diff clevar tests
+      - name: Analysing the code with pylint
+        run: |
+          pip install pylint
+          pylint clevar --ignored-classes=astropy.units
   check-code-version:
     name: Verify code version update
     runs-on: ubuntu-latest
