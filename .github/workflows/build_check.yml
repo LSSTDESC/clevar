@@ -67,7 +67,7 @@ jobs:
           isort --check --diff clevar tests
       - name: Analysing the code with pylint
         run: |
-          pip install numpy scipy pylint
+          pip install numpy scipy astropy pylint
           pylint clevar --ignored-classes=astropy.units
   check-code-version:
     name: Verify code version update
