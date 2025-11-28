@@ -53,6 +53,19 @@ jobs:
       run: |
         pip install coveralls
         coveralls --service=github
+  format-validation:
+    name: Format validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check code formatting with black
+        run: |
+          pip install black black-configparser
+          black --check --diff clevar tests
+      - name: Check import order with isort
+        run: |
+          pip install isort
+          isort --check --diff clevar tests
   check-code-version:
     name: Verify code version update
     runs-on: ubuntu-latest
