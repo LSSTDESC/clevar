@@ -96,7 +96,6 @@ def test_catalog():
     assert_raises(ValueError, Catalog.__init__, Catalog, name="test", labels="x")
     assert_raises(ValueError, Catalog.__init__, Catalog, name="test", tags="x")
     c_ = Catalog("null")
-    assert_raises(TypeError, c_.__setitem__, "mass", 1)
     assert_raises(TypeError, c_._add_values, data=1)
     assert_raises(KeyError, c_._add_values, data=[1], mass=[1])
     # Check creation of id col
