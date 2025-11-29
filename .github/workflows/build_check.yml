@@ -10,6 +10,7 @@ jobs:
   main-tests:
     name: Code Validation
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '[skip main-tests]') }}
     steps:
     - uses: actions/checkout@v4
     - uses: conda-incubator/setup-miniconda@v3
@@ -79,7 +80,7 @@ jobs:
           pip install pylint
           pylint clevar --ignored-classes=astropy.units
   check-code-version:
-    name: Code Version Validation
+    name: Version Validation
     runs-on: ubuntu-latest
     steps:
       # Get current version
