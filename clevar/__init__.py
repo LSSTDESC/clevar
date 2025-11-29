@@ -1,10 +1,6 @@
-""" ClEvaR is a code to validate and evaluate cluster catalogs"""
+"""ClEvaR is a code to validate and evaluate cluster catalogs"""
 
-from .catalog import ClData, ClCatalog, MemCatalog
+from . import constants, cosmology, geometry, match, utils
+from .catalog import ClCatalog, ClData, MemCatalog
 from .footprint import Footprint
-from . import constants
-from . import geometry
-from . import utils
-from . import cosmology
-from . import match
 from .version import __version__

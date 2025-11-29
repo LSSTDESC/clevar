@@ -5,9 +5,9 @@ The SpatialMatch class
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline as spline
 
-from .parent import Match
-from ..geometry import units_bank, convert_units
+from ..geometry import convert_units, units_bank
 from ..utils import str2dataunit
+from .parent import Match
 
 
 class SpatialMatch(Match):

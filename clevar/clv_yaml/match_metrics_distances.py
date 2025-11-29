@@ -5,6 +5,7 @@ Matching metrics - distances functions for command line execution
 import pylab as plt
 
 from clevar.match_metrics import distances
+
 from .helper_funcs import make_cosmology
 from .match_metrics_parent import MetricYamlFuncs
 

@@ -3,11 +3,12 @@ The MembershipMatch class
 """
 
 import pickle
+
 import numpy as np
 
+from ..catalog import ClData
 from .parent import Match
 from .proximity import ProximityMatch
-from ..catalog import ClData
 
 
 class MembershipMatch(Match):

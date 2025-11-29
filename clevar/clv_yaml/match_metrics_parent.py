@@ -6,7 +6,7 @@ import numpy as np
 import pylab as plt
 
 from ..utils import dict_with_none
-from .helper_funcs import loadconf, make_catalog, make_bins
+from .helper_funcs import loadconf, make_bins, make_catalog
 
 
 class MetricYamlFuncs:
