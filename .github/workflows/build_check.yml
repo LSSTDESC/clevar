@@ -52,7 +52,7 @@ jobs:
     - name: Install prereq using conda
       run: |
         echo "$CONDA/bin" >> $GITHUB_PATH
-        conda install -c conda-forge gobject-introspection pygobject cmake swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
+        conda install -c conda-forge swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
     - name: Install the package
       run: |
         pip install .
