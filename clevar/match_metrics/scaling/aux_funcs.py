@@ -43,8 +43,9 @@ def _prep_fit_data(xvals, yvals, yerr=None, statistics="mean", bins_x=None, bins
     xdata, ydata, errdata: array
         Data for fit
     """
+    bins_hist = None
     if statistics == "individual":
-        return xvals, yvals, yerr
+        return xvals, yvals, yerr, None, None
     if statistics == "mode":
         bins_hist = autobins(yvals, bins_y)
         bins_hist_m = 0.5 * (bins_hist[1:] + bins_hist[:-1])
@@ -61,8 +62,9 @@ def _prep_fit_data(xvals, yvals, yerr=None, statistics="mean", bins_x=None, bins
     err = binned_statistic(
         xvals, none_val(yerr, np.zeros(len(yvals))), bins=xbins, statistic="mean"
     )[0]
+    counts = np.histogram(xvals, bins=xbins)[0]
     valid = ~np.isnan(xdata)
-    return xdata[valid], ydata[valid], np.sqrt(std**2 + err**2)[valid]
+    return xdata[valid], ydata[valid], np.sqrt(std**2 + err**2)[valid], counts[valid], bins_hist
 
 
 def _pw_func(xvals, coeff_ang, coeff_lin):
@@ -150,7 +152,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     # set log/lin funcs
     tfunc, ifunc = (np.log10, lambda x: 10**x) if log else (lambda x: x, lambda x: x)
     # data
-    vbin_1, vbin_2, vbin_err2 = _prep_fit_data(
+    vbin_1, vbin_2, vbin_err2, counts, bins_y = _prep_fit_data(
         tfunc(values1),
         tfunc(values2),
         bins_x=tfunc(bins1) if hasattr(bins1, "__len__") else bins1,
@@ -160,7 +162,13 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     )
     if len(vbin_1) == 0:
         return info
-    info["binned_data"] = {"x": vbin_1, "y": vbin_2, "yerr": vbin_err2}
+    info["binned_data"] = {
+        "x": vbin_1,
+        "y": vbin_2,
+        "yerr": vbin_err2,
+        "counts": counts,
+        "bins_y": bins_y,
+    }
     # fit
     if add_fit:
         fit, cov = curve_fit(_pw_func, vbin_1, vbin_2, sigma=vbin_err2, absolute_sigma=True)[:2]
@@ -216,7 +224,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
             kwargs.get("plot_kwargs", {}),
         )
         sort = np.argsort(values1)
-        xvals = values1[sort]
+        xvals = np.array(values1[sort])
         ax.plot(xvals, info["fit"]["func"](xvals), **plot_kwargs_)
         deep_update(
             info,
