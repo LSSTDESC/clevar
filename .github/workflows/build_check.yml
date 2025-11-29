@@ -7,7 +7,8 @@ on:
   pull_request:
 
 jobs:
-  main-tests:
+  main-valid:
+    name: Code Validation
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -41,7 +42,8 @@ jobs:
       run: |
         pip install coveralls
         coveralls --service=github
-  documentation-validation:
+  doc-valid:
+    name: Documentation Validation
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -49,24 +51,14 @@ jobs:
     - name: Install prereq using conda
       run: |
         echo "$CONDA/bin" >> $GITHUB_PATH
-        conda install -c conda-forge gobject-introspection pygobject cmake swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
-    - name: Install prereq using pip
-      run: |
-        pip install -r requirements.txt
+        conda install -c conda-forge swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
     - name: Install the package
       run: |
-        pip install .
-    - name: Install CCL
-      run: pip install pyccl
-    - name: Install healsparse from source
-      run: |
-        git clone https://github.com/LSSTDESC/healsparse
-        cd healsparse
         pip install .
     - name: Run the docs
       run: |
         make -C docs/ html
-  format-validation:
+  format-valid:
     name: Format validation
     runs-on: ubuntu-latest
     steps:
@@ -82,13 +74,12 @@ jobs:
       - name: Install pylint requirements
         run: |
           pip install swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
-          pip install -r requirements.txt
       - name: Analysing the code with pylint
         run: |
           pip install pylint
           pylint clevar --ignored-classes=astropy.units
-  check-code-version:
-    name: Verify code version update
+  code-vers-valid:
+    name: Version Validation
     runs-on: ubuntu-latest
     steps:
       # Get current version
