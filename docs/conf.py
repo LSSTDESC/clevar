@@ -16,12 +16,17 @@ MOCK_MODULES = [
     "healpy",
     "healsparse",
     "matplotlib",
+    "matplotlib.ticker",
     "numpy",
     "pyccl",
     "pylab",
     "scipy",
+    "scipy.integrate",
     "scipy.interpolate",
+    "scipy.optimize",
     "scipy.special",
+    "scipy.stats",
+    "yaml",
 ]
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = MagicMock()

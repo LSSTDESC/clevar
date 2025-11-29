@@ -23,12 +23,17 @@ ignored-modules = [
     "healpy",
     "healsparse",
     "matplotlib",
+    "matplotlib.ticker",
     "numpy",
     "pyccl",
     "pylab",
     "scipy",
+    "scipy.integrate",
     "scipy.interpolate",
+    "scipy.optimize",
     "scipy.special",
+    "scipy.stats",
+    "yaml",
 ]
 
 [tool.pylint.'DESIGN']
