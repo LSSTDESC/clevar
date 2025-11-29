@@ -8,6 +8,7 @@ on:
 
 jobs:
   check-skip:
+    name: Checks Skipping Keys
     runs-on: ubuntu-latest
     outputs:
       skip_main_valid: ${{ steps.skip.outputs.skip }}
@@ -24,6 +25,7 @@ jobs:
   main-valid:
     name: Code Validation
     runs-on: ubuntu-latest
+    needs: check-skip
     if: ${{ needs.check-skip.outputs.skip_main_valid != 'true' }}
     steps:
     - uses: actions/checkout@v4
