@@ -250,7 +250,6 @@ class Catalog(TagData):
     def _clean_mmt_col(mmt_col, bad_ids):
         return [list(filter(lambda x: x not in bad_ids, mmt)) for mmt in mmt_col]
 
-
     def _remove_ids_from_mmt(self, bad_ids, mmt_col):
 
         self[mmt_col] = Catalog._clean_mmt_col(self[mmt_col], bad_ids)
@@ -268,7 +267,6 @@ class Catalog(TagData):
             Mask for clusters 2 properties, must have size=cat2.size
         """
         self.remove_ids_from_multiple(~cat2["id"][mask2])
-
 
     def remove_ids_from_multiple(self, cat2_ids):
         """Remove cat2 clusters from mt_multi_self, mt_multi_other columns.
