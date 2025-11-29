@@ -51,6 +51,7 @@ jobs:
         run: |
           pip install swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
           pip install -r requirements.txt
+          pip install .
       - name: Run the docs
         run: |
           make -C docs/ html
