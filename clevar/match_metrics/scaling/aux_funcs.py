@@ -45,7 +45,7 @@ def _prep_fit_data(xvals, yvals, yerr=None, statistics="mean", bins_x=None, bins
     """
     bins_hist = None
     if statistics == "individual":
-        return xvals, yvals, yerr
+        return xvals, yvals, yerr, None, None
     if statistics == "mode":
         bins_hist = autobins(yvals, bins_y)
         bins_hist_m = 0.5 * (bins_hist[1:] + bins_hist[:-1])
