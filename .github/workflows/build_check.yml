@@ -7,26 +7,26 @@ on:
   pull_request:
 
 jobs:
+  check-skip:
+    runs-on: ubuntu-latest
+    outputs:
+      skip_main_valid: ${{ steps.skip.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # important so history is available
+
+      - id: skip
+        uses: Legorooj/skip-ci@main
+        with:
+          pattern: '\\[skip main-valid\\]'   # regex to match your skip flag
+          # token: ${{ github.token }}  # default is fine
   main-valid:
     name: Code Validation
     runs-on: ubuntu-latest
+    if: ${{ needs.check-skip.outputs.skip_main_valid != 'true' }}
     steps:
     - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - uses: ci-skip-action@v1
-      with:
-        pattern: '\\[skip main-valid\\]'
-    - name: Checks the last commit for skipping action
-      run: |
-        LAST_COMMIT=$(git log -1 --pretty=format:'%s')
-        echo "last commit: $LAST_COMMIT"
-        echo "LAST_COMMIT=$LAST_COMMIT" >> $GITHUB_ENV
-        echo "${{ env.LAST_COMMIT != '[skip docs]' }}"
-        if [[ "$LAST_COMMIT" == *"[skip main-valid]"* ]]; then
-          echo "Skipping docs build because commit message contains skip flag."
-          exit 0
-        fi
     - uses: conda-incubator/setup-miniconda@v3
     - name: Install prereq using conda
       run: |
