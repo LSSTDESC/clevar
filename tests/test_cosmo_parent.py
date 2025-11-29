@@ -1,6 +1,7 @@
 """Tests for cosmo"""
+
 import numpy as np
-from numpy.testing import assert_raises, assert_allclose, assert_equal
+from numpy.testing import assert_allclose, assert_equal, assert_raises
 
 import clevar
 from clevar.cosmology.parent_class import Cosmology

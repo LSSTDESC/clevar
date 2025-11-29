@@ -1,6 +1,9 @@
 [tool.black]
 line-length  = 100
 
+[tool.isort]
+profile = "black"
+
 [tool.pylint]
 max-line-length = 100
 disable = ["R0913", "too-many-positional-arguments"]
@@ -12,7 +15,26 @@ good-names = ["ra", "z", "z1", "z2", "a", "a1", "a2",
               "_get_Omega_m", "_get_E2", "_get_E2Omega_m", 
               ]
 max-public-methods = 30
-ignored-modules = ["scipy.special"]
+ignored-modules = [
+    "astropy",
+    "astropy.coordinates",
+    "astropy.cosmology",
+    "astropy.table",
+    "healpy",
+    "healsparse",
+    "matplotlib",
+    "matplotlib.ticker",
+    "numpy",
+    "pyccl",
+    "pylab",
+    "scipy",
+    "scipy.integrate",
+    "scipy.interpolate",
+    "scipy.optimize",
+    "scipy.special",
+    "scipy.stats",
+    "yaml",
+]
 
 [tool.pylint.'DESIGN']
 max-locals = 20

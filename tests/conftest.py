@@ -1,9 +1,11 @@
-import sys
-import pytest
 import importlib
 import os
-from clevar.cosmology import AstroPyCosmology, CCLCosmology
+import sys
+
+import pytest
+
 from clevar import optional_libs
+from clevar.cosmology import AstroPyCosmology, CCLCosmology
 
 
 @pytest.fixture(scope="module", params=[AstroPyCosmology, CCLCosmology])

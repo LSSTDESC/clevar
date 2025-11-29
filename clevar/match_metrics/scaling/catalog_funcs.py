@@ -4,8 +4,8 @@ Main scaling functions using catalogs, wrapper of array_funcs functions
 
 import numpy as np
 
-from ...utils import autobins, updated_dict
 from ...match import get_matched_pairs
+from ...utils import autobins, updated_dict
 from .. import plot_helper as ph
 from . import array_funcs
 

@@ -1,16 +1,26 @@
 """Tests for clevar/footprint"""
+
 import os
-import numpy as np
+
 import healpy as hp
 import healsparse as hs
+import numpy as np
+from numpy.testing import (
+    assert_allclose,
+    assert_almost_equal,
+    assert_equal,
+    assert_raises,
+)
 
 import clevar
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology
 from clevar.footprint import Footprint
 from clevar.footprint.artificial import create_footprint
-from clevar.footprint.nfw_funcs import nfw2D_profile_flatcore, nfw2D_profile_flatcore_unnorm
-from numpy.testing import assert_raises, assert_allclose, assert_equal, assert_almost_equal
+from clevar.footprint.nfw_funcs import (
+    nfw2D_profile_flatcore,
+    nfw2D_profile_flatcore_unnorm,
+)
 
 
 def test_installation_healsparse():

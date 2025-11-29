@@ -6,13 +6,14 @@ import os
 import warnings
 
 import clevar
+
 from .helper_funcs import (
-    yaml,
+    add_mem_catalog,
+    get_input_loop,
     loadconf,
     make_catalog,
-    add_mem_catalog,
     make_cosmology,
-    get_input_loop,
+    yaml,
 )
 
 

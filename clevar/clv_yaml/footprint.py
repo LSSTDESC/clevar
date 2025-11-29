@@ -5,7 +5,8 @@ Footprint functions for command line execution
 import os
 
 import clevar
-from .helper_funcs import loadconf, make_catalog, make_cosmology, get_input_loop
+
+from .helper_funcs import get_input_loop, loadconf, make_catalog, make_cosmology
 
 _check_actions = {
     "o": (lambda: True, [], {}),

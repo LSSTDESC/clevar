@@ -4,6 +4,7 @@ Helper functions for plotting.
 
 # Set mpl backend run plots on github actions
 import os
+
 import matplotlib as mpl
 
 if os.environ.get("DISPLAY", "") == "test":
@@ -11,18 +12,16 @@ if os.environ.get("DISPLAY", "") == "test":
     mpl.use("Agg")
 
 # pylint: disable=wrong-import-position
-import pylab as plt
 import numpy as np
+import pylab as plt
+from matplotlib.ticker import NullFormatter, ScalarFormatter
 from scipy.interpolate import RectBivariateSpline
-from matplotlib.ticker import ScalarFormatter, NullFormatter
 
-from ..utils import none_val, hp, updated_dict
+from ..utils import hp, none_val, smooth_line, updated_dict
 
 ########################################################################
 ########## Monkeypatching matplotlib ###################################
 ########################################################################
-
-from ..utils import smooth_line
 
 
 def _plot_smooth(self, *args, scheme=(1, 2, 1), n_increase=0, **kwargs):

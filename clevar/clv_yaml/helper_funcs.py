@@ -3,12 +3,13 @@ Helper functions for command line execution
 """
 
 import os
-import yaml
-import numpy as np
 
-from clevar.catalog import ClCatalog
+import numpy as np
+import yaml
+
 from clevar import cosmology
-from clevar.utils import get_dicts_diff, deep_update
+from clevar.catalog import ClCatalog
+from clevar.utils import deep_update, get_dicts_diff
 
 
 ######################################################################

@@ -5,9 +5,7 @@ Cosmology using CCL
 import numpy as np
 
 from .. import optional_libs as ol
-
 from ..constants import Constants as const
-
 from .parent_class import Cosmology
 
 __all__ = []

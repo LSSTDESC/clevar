@@ -2,5 +2,4 @@
 match_metrics package
 """
 
-from . import recovery
-from . import distances
+from . import distances, recovery

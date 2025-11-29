@@ -4,8 +4,8 @@ The BoxMatch class
 
 import numpy as np
 
-from .spatial import SpatialMatch
 from ..catalog import ClData
+from .spatial import SpatialMatch
 
 _area_type_funcs = {
     "min": lambda area1, area2: np.min([area1, area2], axis=0),

@@ -2,22 +2,23 @@
 The ClCatalog and MemCatalog classes
 """
 
-import warnings
 import copy
+import warnings
+
 import numpy as np
-from astropy.coordinates import SkyCoord
 from astropy import units as u
+from astropy.coordinates import SkyCoord
 
 from ..utils import (
-    veclen,
-    none_val,
-    NameList,
     LowerCaseDict,
-    updated_dict,
-    pack_mt_col,
-    unpack_mt_col,
+    NameList,
+    none_val,
     pack_mmt_col,
+    pack_mt_col,
     unpack_mmt_col,
+    unpack_mt_col,
+    updated_dict,
+    veclen,
 )
 from ..version import __version__
 from .tagdata import ClData, TagData

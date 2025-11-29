@@ -8,7 +8,26 @@ sys.path.insert(0, os.path.abspath(".."))
 
 from unittest.mock import MagicMock
 
-MOCK_MODULES = ["pyccl"]
+MOCK_MODULES = [
+    "astropy",
+    "astropy.coordinates",
+    "astropy.cosmology",
+    "astropy.table",
+    "healpy",
+    "healsparse",
+    "matplotlib",
+    "matplotlib.ticker",
+    "numpy",
+    "pyccl",
+    "pylab",
+    "scipy",
+    "scipy.integrate",
+    "scipy.interpolate",
+    "scipy.optimize",
+    "scipy.special",
+    "scipy.stats",
+    "yaml",
+]
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = MagicMock()
 
