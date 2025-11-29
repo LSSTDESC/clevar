@@ -203,6 +203,18 @@ def test_clcatalog():
     assert_equal(c.members, None)
     assert_equal(c.leftover_members, None)
 
+    # test remove from match
+    c_ = Catalog("test", **quantities)
+    c._init_match_vals()
+    c_[f"mt_multi_self"] = [["1", "2", "3", "4"], ["2", "3", "4", "5"]]
+    c_[f"mt_multi_other"] = [["2", "3", "4"], ["2", "3"]]
+    cat2_ = Catalog("cat2", id=range(10))
+    mask2 = ~np.isin(cat2_["id"], ["1", "3"])
+    c_.remove_clusters_from_multiple(cat2_, mask2)
+    for test, ref in zip(c_[f"mt_multi_self"], [["2", "4"], ["2", "4", "5"]]):
+        assert test==ref
+    for test, ref in zip(c_[f"mt_multi_other"], [["2", "4"], ["2"]]):
+        assert test==ref
 
 def test_memcatalog():
     quantities = {
