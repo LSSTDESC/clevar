@@ -7,26 +7,9 @@ on:
   pull_request:
 
 jobs:
-  check-skip:
-    name: Checks Skipping Keys
-    runs-on: ubuntu-latest
-    outputs:
-      skip_main_valid: ${{ steps.skip.outputs.skip }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0   # important so history is available
-
-      - id: skip
-        uses: Legorooj/skip-ci@main
-        with:
-          pattern: '\\[skip main-valid\\]'   # regex to match your skip flag
-          # token: ${{ github.token }}  # default is fine
   main-valid:
     name: Code Validation
     runs-on: ubuntu-latest
-    needs: check-skip
-    if: ${{ needs.check-skip.outputs.skip_main_valid != 'true' }}
     steps:
     - uses: actions/checkout@v4
     - uses: conda-incubator/setup-miniconda@v3
