@@ -23,11 +23,11 @@ ignored-modules = [
     "astropy.table",
     "scipy",
     "scipy.interpolate",
-    "scipy.special"
+    "scipy.special",
     "matplotlib",
     "pyccl",
     "healpy",
-    "healsparse"
+    "healsparse",
 ]
 
 [tool.pylint.'DESIGN']

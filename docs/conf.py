@@ -16,6 +16,7 @@ MOCK_MODULES = [
     "astropy.table",
     "scipy",
     "scipy.interpolate",
+    "scipy.special",
     "matplotlib",
     "pyccl",
     "healpy",
