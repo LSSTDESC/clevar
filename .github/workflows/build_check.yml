@@ -31,9 +31,9 @@ jobs:
         pip install .
   main-tests:
     runs-on: ubuntu-latest
+    needs: setup-main-env
     steps:
     - uses: actions/checkout@v4
-    - needs: setup-main-env
     - name: Run the unit tests
       run: |
         pip install pytest pytest-cov
@@ -48,9 +48,9 @@ jobs:
         coveralls --service=github
   documentation-validation:
     runs-on: ubuntu-latest
+    needs: setup-main-env
     steps:
     - uses: actions/checkout@v4
-    - needs: setup-main-env
     - name: Run the docs
       run: |
         make -C docs/ html
