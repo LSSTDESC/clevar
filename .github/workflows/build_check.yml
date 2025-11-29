@@ -48,7 +48,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install required packages
-        run: pip install nbconvert pandoc sphinx sphinx_rtd_theme
+        run: |
+          pip install swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
+          pip install -r requirements.txt
       - name: Run the docs
         run: |
           make -C docs/ html
@@ -65,6 +67,10 @@ jobs:
         run: |
           pip install isort
           isort --check --diff clevar tests
+      - name: Install pylint requirements
+        run: |
+          pip install swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
+          pip install -r requirements.txt
       - name: Analysing the code with pylint
         run: |
           pip install pylint
