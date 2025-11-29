@@ -56,13 +56,6 @@ jobs:
     - name: Install the package
       run: |
         pip install .
-    - name: Install CCL
-      run: pip install pyccl
-    - name: Install healsparse from source
-      run: |
-        git clone https://github.com/LSSTDESC/healsparse
-        cd healsparse
-        pip install .
     - name: Run the docs
       run: |
         make -C docs/ html
