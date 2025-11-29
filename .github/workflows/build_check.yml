@@ -15,7 +15,7 @@ jobs:
     - uses: conda-incubator/setup-miniconda@v3
     - name: Checks the last commit for skipping action
       run: |
-        LAST_COMMIT=$(git log -1 --pretty=format:'%s')
+        LAST_COMMIT=$(git log -2 --pretty=format:'%s')
         echo "last commit: $LAST_COMMIT"
         if [[ "$LAST_COMMIT" == *"[skip main-valid]"* ]]; then
           echo "Skipping docs build because commit message contains skip flag."
