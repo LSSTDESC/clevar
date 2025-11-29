@@ -11,9 +11,8 @@ if os.environ.get("DISPLAY", "") == "test":
     print("no display found. Using non-interactive Agg backend")
     mpl.use("Agg")
 
-import numpy as np
-
 # pylint: disable=wrong-import-position
+import numpy as np
 import pylab as plt
 from matplotlib.ticker import NullFormatter, ScalarFormatter
 from scipy.interpolate import RectBivariateSpline

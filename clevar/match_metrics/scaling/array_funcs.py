@@ -2,6 +2,7 @@
 
 Main scaling functions using arrays.
 """
+# pylint: disable=too-many-lines
 
 import numpy as np
 
