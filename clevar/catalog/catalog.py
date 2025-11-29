@@ -266,7 +266,7 @@ class Catalog(TagData):
         mask2: array
             Mask for clusters 2 properties, must have size=cat2.size
         """
-        self.remove_ids_from_multiple(~cat2["id"][mask2])
+        self.remove_ids_from_multiple(cat2["id"][~mask2])
 
     def remove_ids_from_multiple(self, cat2_ids):
         """Remove cat2 clusters from mt_multi_self, mt_multi_other columns.
