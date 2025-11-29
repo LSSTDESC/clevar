@@ -8,6 +8,7 @@ on:
 
 jobs:
   main-tests:
+    name: Code Validation
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -42,6 +43,7 @@ jobs:
         pip install coveralls
         coveralls --service=github
   documentation-validation:
+    name: Documentation Validation
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -81,7 +83,7 @@ jobs:
           pip install pylint
           pylint clevar --ignored-classes=astropy.units
   check-code-version:
-    name: Verify code version update
+    name: Code Version Validation
     runs-on: ubuntu-latest
     steps:
       # Get current version
