@@ -212,9 +212,10 @@ def test_clcatalog():
     mask2 = ~np.isin(cat2_["id"], ["1", "3"])
     c_.remove_clusters_from_multiple(cat2_, mask2)
     for test, ref in zip(c_[f"mt_multi_self"], [["2", "4"], ["2", "4", "5"]]):
-        assert test==ref
+        assert test == ref
     for test, ref in zip(c_[f"mt_multi_other"], [["2", "4"], ["2"]]):
-        assert test==ref
+        assert test == ref
+
 
 def test_memcatalog():
     quantities = {
