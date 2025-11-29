@@ -16,18 +16,19 @@ good-names = ["ra", "z", "z1", "z2", "a", "a1", "a2",
               ]
 max-public-methods = 30
 ignored-modules = [
-    "numpy",
     "astropy",
-    "astropy.cosmology",
     "astropy.coordinates",
+    "astropy.cosmology",
     "astropy.table",
+    "healpy",
+    "healsparse",
+    "matplotlib",
+    "numpy",
+    "pyccl",
+    "pylab",
     "scipy",
     "scipy.interpolate",
     "scipy.special",
-    "matplotlib",
-    "pyccl",
-    "healpy",
-    "healsparse",
 ]
 
 [tool.pylint.'DESIGN']
