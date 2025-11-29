@@ -18,7 +18,8 @@ jobs:
       run: |
         LAST_COMMIT=$(git log -1 --pretty=format:'%s')
         echo "last commit: $LAST_COMMIT"
-        echo "${{ LAST_COMMIT != '[skip docs]' }}"
+        echo "LAST_COMMIT=$LAST_COMMIT" >> $GITHUB_ENV
+        echo "${{ env.LAST_COMMIT != '[skip docs]' }}"
         if [[ "$LAST_COMMIT" == *"[skip main-valid]"* ]]; then
           echo "Skipping docs build because commit message contains skip flag."
           exit 0
