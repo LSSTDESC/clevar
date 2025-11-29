@@ -7,13 +7,20 @@ on:
   pull_request:
 
 jobs:
-  main-tests:
+  main-valid:
     name: Code Validation
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, '[skip main-tests]') }}
     steps:
     - uses: actions/checkout@v4
     - uses: conda-incubator/setup-miniconda@v3
+    - name: Checks the last commit for skipping action
+      run: |
+        LAST_COMMIT=$(git log -1 --pretty=format:'%s')
+        echo "last commit: $LAST_COMMIT"
+        if [[ "$LAST_COMMIT" == *"[skip main-valid]"* ]]; then
+          echo "Skipping docs build because commit message contains skip flag."
+          exit 0
+        fi
     - name: Install prereq using conda
       run: |
         echo "$CONDA/bin" >> $GITHUB_PATH
@@ -43,7 +50,7 @@ jobs:
       run: |
         pip install coveralls
         coveralls --service=github
-  documentation-validation:
+  doc-valid:
     name: Documentation Validation
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +66,7 @@ jobs:
     - name: Run the docs
       run: |
         make -C docs/ html
-  format-validation:
+  format-valid:
     name: Format validation
     runs-on: ubuntu-latest
     steps:
@@ -79,7 +86,7 @@ jobs:
         run: |
           pip install pylint
           pylint clevar --ignored-classes=astropy.units
-  check-code-version:
+  code-vers-valid:
     name: Version Validation
     runs-on: ubuntu-latest
     steps:
