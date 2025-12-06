@@ -162,46 +162,46 @@ jobs:
     name: Documentation Validation
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: conda-incubator/setup-miniconda@v3
-      with:
-        activate-environment: ${{ env.CONDA_ENV_NAME }}
-        environment-file: environment.yml
-      - uses: actions/cache@v4
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
         with:
-          path: ${{ env.CONDA }}/pkgs
-          key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
-    - name: Install the package
-      shell: bash -l {0}
-      run: pip install .
-    - name: Run the docs
-      shell: bash -l {0}
-      run: make -C docs/ html
+          activate-environment: ${{ env.CONDA_ENV_NAME }}
+          environment-file: environment.yml
+        - uses: actions/cache@v4
+          with:
+            path: ${{ env.CONDA }}/pkgs
+            key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
+      - name: Install the package
+        shell: bash -l {0}
+        run: pip install .  
+      - name: Run the docs
+        shell: bash -l {0}
+        run: make -C docs/ html
 
 
   main-valid:
     name: Code Validation
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: conda-incubator/setup-miniconda@v3
-      with:
-        activate-environment: ${{ env.CONDA_ENV_NAME }}
-          environment-file: environment.yml
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: ${{ env.CONDA_ENV_NAME }}
+            environment-file: environment.yml
       - uses: actions/cache@v4
         with:
           path: ${{ env.CONDA }}/pkgs
           key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
-    - name: Install the package
-      shell: bash -l {0}
-      run: pip install .
-    - name: Run the unit tests
-      run: pytest tests/ --cov=clevar/
-      env:
-        DISPLAY: test
-    - name: Coveralls
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        pip install coveralls
-        coveralls --service=github
+      - name: Install the package
+        shell: bash -l {0}
+        run: pip install .
+      - name: Run the unit tests
+        run: pytest tests/ --cov=clevar/
+        env:
+          DISPLAY: test
+      - name: Coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install coveralls
+          coveralls --service=github
