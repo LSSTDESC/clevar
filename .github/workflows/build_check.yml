@@ -167,13 +167,13 @@ jobs:
         with:
           activate-environment: ${{ env.CONDA_ENV_NAME }}
           environment-file: environment.yml
-        - uses: actions/cache@v4
-          with:
-            path: ${{ env.CONDA }}/pkgs
-            key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/pkgs
+          key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
       - name: Install the package
         shell: bash -l {0}
-        run: pip install .  
+        run: pip install .
       - name: Run the docs
         shell: bash -l {0}
         run: make -C docs/ html
@@ -187,7 +187,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: ${{ env.CONDA_ENV_NAME }}
-            environment-file: environment.yml
+          environment-file: environment.yml
       - uses: actions/cache@v4
         with:
           path: ${{ env.CONDA }}/pkgs
