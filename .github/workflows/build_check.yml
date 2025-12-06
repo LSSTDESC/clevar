@@ -166,7 +166,7 @@ jobs:
     - uses: conda-incubator/setup-miniconda@v3
       with:
         activate-environment: ${{ env.CONDA_ENV_NAME }}
-          environment-file: environment.yml
+        environment-file: environment.yml
       - uses: actions/cache@v4
         with:
           path: ${{ env.CONDA }}/pkgs
