@@ -6,6 +6,10 @@ on:
       - main
   pull_request:
 
+env:
+  CONDA_ENV_NAME: clevar
+
+
 jobs:
 
 
