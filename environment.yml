@@ -1,0 +1,28 @@
+# clevar Conda environment
+name: clevar
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python >= 3.8
+  - astropy >= 4.0, !=5.0
+  - black
+  - cmake
+  - hatch
+  - healpy
+  - isort
+  - jupyter
+  - matplotlib
+  - numcosmo <= 0.24
+  - numpy >= 2.0
+  - pandoc
+  - pip
+  - pyccl >= 3.1.2
+  - pylint
+  - pytest >= 3.0
+  - pytest-cov
+  - scipy >= 1.6
+  - sphinx
+  - sphinx_rtd_theme >= 3.0
+  - pip:
+    - black-configparser

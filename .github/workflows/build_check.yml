@@ -6,78 +6,13 @@ on:
       - main
   pull_request:
 
+env:
+  CONDA_ENV_NAME: clevar
+
+
 jobs:
-  main-valid:
-    name: Code Validation
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: conda-incubator/setup-miniconda@v3
-    - name: Install prereq using conda
-      run: |
-        echo "$CONDA/bin" >> $GITHUB_PATH
-        conda install -c conda-forge gobject-introspection pygobject cmake swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
-    - name: Install prereq using pip
-      run: |
-        pip install -r requirements.txt
-    - name: Install the package
-      run: |
-        pip install .
-    - name: Install CCL
-      run: pip install pyccl
-    - name: Install healsparse from source
-      run: |
-        git clone https://github.com/LSSTDESC/healsparse
-        cd healsparse
-        pip install .
-    - name: Run the unit tests
-      run: |
-        pip install pytest pytest-cov
-        pytest tests/ --cov=clevar/
-      env:
-        DISPLAY: test
-    - name: Coveralls
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        pip install coveralls
-        coveralls --service=github
-  doc-valid:
-    name: Documentation Validation
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: conda-incubator/setup-miniconda@v3
-    - name: Install prereq using conda
-      run: |
-        echo "$CONDA/bin" >> $GITHUB_PATH
-        conda install -c conda-forge swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
-    - name: Install the package
-      run: |
-        pip install .
-    - name: Run the docs
-      run: |
-        make -C docs/ html
-  format-valid:
-    name: Format validation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check code formatting with black
-        run: |
-          pip install black black-configparser
-          black --check --diff clevar tests
-      - name: Check import order with isort
-        run: |
-          pip install isort
-          isort --check --diff clevar tests
-      - name: Install pylint requirements
-        run: |
-          pip install swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
-      - name: Analysing the code with pylint
-        run: |
-          pip install pylint
-          pylint clevar --ignored-classes=astropy.units
+
+
   code-vers-valid:
     name: Version Validation
     runs-on: ubuntu-latest
@@ -90,6 +25,36 @@ jobs:
         run: |
           CURRENT_VERSION="$(grep -oP '__version__ = "\K[^"]+' clevar/version.py)"
           echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+      # Get PR title to be updated with version
+      - name : Get PR title and clean version number from it
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          NEW_TITLE="${TITLE% [version:*}"
+          echo "New title: $NEW_TITLE"
+          echo "NEW_TITLE=$NEW_TITLE" >> $GITHUB_ENV
+      - name: Get PR number
+        id: pr_number
+        run: |
+          # Fetch the pull request number from the GitHub context
+          PR_NUMBER=$(echo $GITHUB_REF | sed 's/refs\/pull\/\([0-9]*\)\/merge/\1/')
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+      - name: Validate version format
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ! echo "$CURRENT_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Invalid version format: $v"
+            echo "Removing version from PR title: $NEW_TITLE"
+            curl -s -X PATCH \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              -d "{\"title\":\"$NEW_TITLE\"}" \
+              "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" > /dev/null
+            exit 1
+          fi
+          echo "Version format is ok"
+
       # Get main version
       - name: Checkout the main branch to get its version
         uses: actions/checkout@v4
@@ -105,59 +70,50 @@ jobs:
             MAIN_VERSION="0.0.0"
           fi
           echo "MAIN_VERSION=$MAIN_VERSION" >> $GITHUB_ENV
-      # Get PR title to be updated with version
-      - name : Get PR title and clean version number from it
-        env:
-          TITLE: ${{ github.event.pull_request.title }}
-        run: |
-          NEW_TITLE="${TITLE% [version:*}"
-          echo "New title: $NEW_TITLE"
-          echo "NEW_TITLE=$NEW_TITLE" >> $GITHUB_ENV
-      - name: Get PR number
-        id: pr_number
-        run: |
-          # Fetch the pull request number from the GitHub context
-          PR_NUMBER=$(echo $GITHUB_REF | sed 's/refs\/pull\/\([0-9]*\)\/merge/\1/')
-          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+
       # Compare
-      - name: Check version change
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compare versions
         run: |
-          if [ "$CURRENT_VERSION" == "$MAIN_VERSION" ]; then
-            echo "Version at clevar/version.py has not been updated!"
-            # Use the GitHub API to update the PR title
-            echo "Removing version from PR title: $NEW_TITLE"
-            curl -s -X PATCH \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Accept: application/vnd.github.v3+json" \
-              -d "{\"title\":\"$NEW_TITLE\"}" \
-              "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" > /dev/null
-            exit 1
+          IFS=. read -r C1 C2 C3 <<< "$CURRENT_VERSION"
+          IFS=. read -r M1 M2 M3 <<< "$MAIN_VERSION"
+          if [ "$C1" != "$M1" ]; then
+            GOAL="$((M1 + 1)).0.0"
+            if [ $C1 -lt $M1 ]; then
+              ERROR="  - Version number should increase: $CURRENT_VERSION<$MAIN_VERSION"
+            elif [ "$C1" != "$((M1 + 1))" ]; then
+              ERROR="  - Increment should be done by 1: $GOAL"
+            elif [ "$CURRENT_VERSION" != "$GOAL" ]; then
+              ERROR="  - When major version is increased, others should be zero: $GOAL"
+            fi
+          elif [ "$C2" != "$M2" ]; then
+            GOAL="$C1.$((M2 + 1)).0"
+            if [ $C2 -lt $M2 ]; then
+              ERROR="  - Version number should increase: $CURRENT_VERSION<$MAIN_VERSION"
+            elif [ "$C2" != "$((M2 + 1))" ]; then
+              ERROR="  - Increments should be done by 1: $GOAL"
+            elif [ "$CURRENT_VERSION" != "$GOAL" ]; then
+              ERROR="  - When middle version is increased, last number should be zero: $GOAL"
+            fi
+          elif [ "$C3" != "$M3" ]; then
+            GOAL="$C1.$C2.$((M3 + 1))"
+            if [ $C3 -lt $M3 ]; then
+              ERROR="  - Version number should increase: $CURRENT_VERSION<$MAIN_VERSION"
+            elif [ "$CURRENT_VERSION" != "$GOAL" ]; then
+              ERROR="  - Increments should be done by 1: $GOAL"
+            fi
+          else
+            ERROR="  - Version has not been updated!"
           fi
-          echo "[ok] Version has changed!"
-      - name: Check version update
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ "$(printf "%s\n%s" "$CURRENT_VERSION" "$MAIN_VERSION" | sort -V | tail -n 1)" != "$CURRENT_VERSION" ]; then
-            echo "Current version ($CURRENT_VERSION) < Main version ($MAIN_VERSION)"
-            # Use the GitHub API to update the PR title
-            echo "Removing version from PR title: $NEW_TITLE"
-            curl -s -X PATCH \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Accept: application/vnd.github.v3+json" \
-              -d "{\"title\":\"$NEW_TITLE\"}" \
-              "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" > /dev/null
-            exit 1
-          fi
-          echo "[ok] Version increased changed!"
+          echo "ERROR=$ERROR" >> $GITHUB_ENV
+
       # Add version number to PR title
       - name : Make new title for PR
         run: |
-          NEW_TITLE="${NEW_TITLE} [version:$CURRENT_VERSION]"
-          echo "New title: $NEW_TITLE"
-          echo "NEW_TITLE=$NEW_TITLE" >> $GITHUB_ENV
+          if [ "$(printf "%s\n%s" "$CURRENT_VERSION" "$MAIN_VERSION" | sort -V | tail -n 1)" == "$CURRENT_VERSION" ]; then
+            NEW_TITLE="${NEW_TITLE} [version:$CURRENT_VERSION]"
+            echo "New title: $NEW_TITLE"
+            echo "NEW_TITLE=$NEW_TITLE" >> $GITHUB_ENV
+          fi
       - name: Update PR title
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -169,3 +125,84 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -d "{\"title\":\"$NEW_TITLE\"}" \
             "https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER" > /dev/null
+
+      - name: Check version update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "$ERROR" != "" ]; then
+            echo "Check failed:"
+            echo "$ERROR"
+            exit 1
+          fi
+          echo "[ok] Version increased changed!"
+
+
+  format-valid:
+    name: Format validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check code formatting with black
+        run: |
+          pip install black black-configparser
+          black --check --diff clevar tests
+      - name: Check import order with isort
+        run: |
+          pip install isort
+          isort --check --diff clevar tests
+      - name: Analysing the code with pylint
+        run: |
+          #pip install swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
+          pip install pylint
+          pylint clevar --ignored-classes=astropy.units
+
+
+  doc-valid:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: ${{ env.CONDA_ENV_NAME }}
+          environment-file: environment.yml
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/pkgs
+          key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
+      - name: Install the package
+        shell: bash -l {0}
+        run: pip install .
+      - name: Run the docs
+        shell: bash -l {0}
+        run: make -C docs/ html
+
+
+  main-valid:
+    name: Code Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: ${{ env.CONDA_ENV_NAME }}
+          environment-file: environment.yml
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/pkgs
+          key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
+      - name: Install the package
+        shell: bash -l {0}
+        run: pip install .
+      - name: Run the unit tests
+        shell: bash -l {0}
+        run: pytest tests/ --cov=clevar/
+        env:
+          DISPLAY: test
+      - name: Coveralls
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install coveralls
+          coveralls --service=github
