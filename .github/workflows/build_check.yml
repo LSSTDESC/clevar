@@ -180,7 +180,7 @@ jobs:
       # Add version number to PR title
       - name : Make new title for PR
         run: |
-          if [ "$(printf "%s\n%s" "$CURRENT_VERSION" "$MAIN_VERSION" | sort -V | tail -n 1)" != "$CURRENT_VERSION" ]; then
+          if [ "$(printf "%s\n%s" "$CURRENT_VERSION" "$MAIN_VERSION" | sort -V | tail -n 1)" == "$CURRENT_VERSION" ]; then
             NEW_TITLE="${NEW_TITLE} [version:$CURRENT_VERSION]"
             echo "New title: $NEW_TITLE"
             echo "NEW_TITLE=$NEW_TITLE" >> $GITHUB_ENV
