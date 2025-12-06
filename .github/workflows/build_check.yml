@@ -200,6 +200,7 @@ jobs:
         shell: bash -l {0}
         run: pip install .
       - name: Run the unit tests
+        shell: bash -l {0}
         run: pytest tests/ --cov=clevar/
         env:
           DISPLAY: test
