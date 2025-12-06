@@ -143,23 +143,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: conda-incubator/setup-miniconda@v3
-        with:
-          activate-environment: ${{ env.CONDA_ENV_NAME }}
-          environment-file: environment.yml
-      - uses: actions/cache@v4
-        with:
-          path: ${{ env.CONDA }}/pkgs
-          key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
       - name: Check code formatting with black
-        shell: bash -l {0}
-        run: black --check --diff clevar tests
+        run: |
+          pip install black black-configparser
+          black --check --diff clevar tests
       - name: Check import order with isort
-        shell: bash -l {0}
-        run: isort --check --diff clevar tests
+        run: |
+          pip install isort
+          isort --check --diff clevar tests
       - name: Analysing the code with pylint
-        shell: bash -l {0}
-        run: pylint clevar --ignored-classes=astropy.units
+        run: |
+          #pip install swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
+          pip install pylint
+          pylint clevar --ignored-classes=astropy.units
 
 
   doc-valid:
