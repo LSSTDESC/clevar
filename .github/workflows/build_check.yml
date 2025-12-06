@@ -9,83 +9,6 @@ on:
 jobs:
 
 
-  main-valid:
-    name: Code Validation
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: conda-incubator/setup-miniconda@v3
-    - name: Install prereq using conda
-      run: |
-        echo "$CONDA/bin" >> $GITHUB_PATH
-        conda install -c conda-forge gobject-introspection pygobject cmake swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
-    - name: Install prereq using pip
-      run: |
-        pip install -r requirements.txt
-    - name: Install the package
-      run: |
-        pip install .
-    - name: Install CCL
-      run: pip install pyccl
-    - name: Install healsparse from source
-      run: |
-        git clone https://github.com/LSSTDESC/healsparse
-        cd healsparse
-        pip install .
-    - name: Run the unit tests
-      run: |
-        pip install pytest pytest-cov
-        pytest tests/ --cov=clevar/
-      env:
-        DISPLAY: test
-    - name: Coveralls
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        pip install coveralls
-        coveralls --service=github
-
-
-  doc-valid:
-    name: Documentation Validation
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: conda-incubator/setup-miniconda@v3
-    - name: Install prereq using conda
-      run: |
-        echo "$CONDA/bin" >> $GITHUB_PATH
-        conda install -c conda-forge swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
-    - name: Install the package
-      run: |
-        pip install .
-    - name: Run the docs
-      run: |
-        make -C docs/ html
-
-
-  format-valid:
-    name: Format validation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check code formatting with black
-        run: |
-          pip install black black-configparser
-          black --check --diff clevar tests
-      - name: Check import order with isort
-        run: |
-          pip install isort
-          isort --check --diff clevar tests
-      - name: Install pylint requirements
-        run: |
-          pip install swig sphinx sphinx_rtd_theme nbconvert pandoc ipython
-      - name: Analysing the code with pylint
-        run: |
-          pip install pylint
-          pylint clevar --ignored-classes=astropy.units
-
-
   code-vers-valid:
     name: Version Validation
     runs-on: ubuntu-latest
@@ -209,3 +132,76 @@ jobs:
             exit 1
           fi
           echo "[ok] Version increased changed!"
+
+
+  format-valid:
+    name: Format validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: ${{ env.CONDA_ENV_NAME }}
+          environment-file: environment.yml
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/pkgs
+          key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
+      - name: Check code formatting with black
+        shell: bash -l {0}
+        run: black --check --diff clevar tests
+      - name: Check import order with isort
+        shell: bash -l {0}
+        run: isort --check --diff clevar tests
+      - name: Analysing the code with pylint
+        shell: bash -l {0}
+        run: pylint clevar --ignored-classes=astropy.units
+
+
+  doc-valid:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        activate-environment: ${{ env.CONDA_ENV_NAME }}
+          environment-file: environment.yml
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/pkgs
+          key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
+    - name: Install the package
+      shell: bash -l {0}
+      run: pip install .
+    - name: Run the docs
+      shell: bash -l {0}
+      run: make -C docs/ html
+
+
+  main-valid:
+    name: Code Validation
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        activate-environment: ${{ env.CONDA_ENV_NAME }}
+          environment-file: environment.yml
+      - uses: actions/cache@v4
+        with:
+          path: ${{ env.CONDA }}/pkgs
+          key: ${{ runner.os }}-conda-${{ env.CONDA_ENV_NAME }}
+    - name: Install the package
+      shell: bash -l {0}
+      run: pip install .
+    - name: Run the unit tests
+      run: pytest tests/ --cov=clevar/
+      env:
+        DISPLAY: test
+    - name: Coveralls
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        pip install coveralls
+        coveralls --service=github
