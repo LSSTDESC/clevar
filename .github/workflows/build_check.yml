@@ -17,6 +17,12 @@ jobs:
     name: Version Validation
     runs-on: ubuntu-latest
     steps:
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Confirm gh CLI is installed
+        run: gh --version
       - name: Trigger CI on current branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
