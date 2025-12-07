@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install GitHub CLI
-        uses: cli/cli@v2
+        uses: actions/setup-gh-cli@v3
       - name: Trigger CI on current branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
