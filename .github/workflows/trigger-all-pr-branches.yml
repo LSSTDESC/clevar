@@ -1,0 +1,31 @@
+name: Trigger CI on all PR branches
+
+on:
+  push:
+    branches:
+      - main
+  #schedule:
+  #  - cron: "0 * * * *"   # Optional: run every hour
+  workflow_dispatch:      # Optional: manual trigger
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: List all open PRs and trigger workflow for each
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          prs=$(gh pr list --json headRefName --jq '.[].headRefName')
+
+          echo "Open PR branches:"
+          echo "$prs"
+
+          for branch in $prs; do
+            echo "Triggering workflow for branch: $branch"
+
+            gh workflow run check_version.yml \
+              -f branch="$branch" \
+              || echo "Failed to trigger workflow for $branch"
+          done
