@@ -17,8 +17,6 @@ jobs:
     name: Version Validation
     runs-on: ubuntu-latest
     steps:
-      - name: Install GitHub CLI
-        uses: actions/setup-gh-cli@v3
       - name: Trigger CI on current branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
