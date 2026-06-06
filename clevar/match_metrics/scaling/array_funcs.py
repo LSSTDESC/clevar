@@ -687,8 +687,8 @@ def plot_density_metrics(
     )["plots"]
     # Adjust plots
     labels = [
-        rf"$\sigma_{{{l.replace('p_', '')}}}$" if l[:2] == "p_" else l
-        for l in (c.get_label() for c in axes["right"].collections + axes["right"].lines)
+        rf"$\sigma_{{{lab.replace('p_', '')}}}$" if lab[:2] == "p_" else lab
+        for lab in (c.get_label() for c in axes["right"].collections + axes["right"].lines)
     ]
     axes["label"].legend(axes["right"].collections + axes["right"].lines, labels)
     axes["main"].set_xscale(xscale)

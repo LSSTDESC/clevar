@@ -42,7 +42,7 @@ def _test_mt_results(cat, multi_self, self, cross, multi_other=None, other=None)
 
     # Check multiple match
     def slists(mmt):
-        return [sorted(l) for l in mmt]
+        return list(map(sorted, mmt))
 
     assert_equal(slists(cat["mt_multi_self"]), slists(multi_self))
     assert_equal(slists(cat["mt_multi_other"]), slists(multi_other))

@@ -266,7 +266,7 @@ class TagData:
             if any(sizes[0] != s for s in sizes):
                 raise ValueError(
                     "Column sizes inconsistent:\n"
-                    + "\n".join([f"{' ' * 12}{k:10}: {l:,}" for k, l in zip(columns, sizes)])
+                    + "\n".join([f"{' ' * 12}{k:10}: {size:,}" for k, size in zip(columns, sizes)])
                 )
             data = ClData(columns)
 
