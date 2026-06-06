@@ -208,6 +208,8 @@ def test_clcatalog():
     c._init_match_vals()
     c_["mt_multi_self"] = [["1", "2", "3", "4"], ["2", "3", "4", "5"]]
     c_["mt_multi_other"] = [["2", "3", "4"], ["2", "3"]]
+    c_["mt_self"] = np.full(len(c_), "x", dtype=np.ndarray)
+    c_["mt_other"] = np.full(len(c_), "x", dtype=np.ndarray)
     cat2_ = Catalog("cat2", id=range(10))
     mask2 = ~np.isin(cat2_["id"], ["1", "3"])
     c_.remove_clusters_from_multiple(cat2_, mask2)
@@ -215,6 +217,8 @@ def test_clcatalog():
         assert test == ref
     for test, ref in zip(c_["mt_multi_other"], [["2", "4"], ["2"]]):
         assert test == ref
+    assert (c_["mt_self"] == None).all()  # noqa: E711
+    assert (c_["mt_other"] == None).all()  # noqa: E711
 
 
 def test_memcatalog():
