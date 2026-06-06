@@ -4,3 +4,16 @@ from . import constants, cosmology, geometry, match, utils
 from .catalog import ClCatalog, ClData, MemCatalog
 from .footprint import Footprint
 from .version import __version__
+
+__all__ = [
+    "constants",
+    "cosmology",
+    "geometry",
+    "match",
+    "utils",
+    "ClCatalog",
+    "ClData",
+    "MemCatalog",
+    "Footprint",
+    "__version__",
+]

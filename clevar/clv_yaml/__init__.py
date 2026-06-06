@@ -10,3 +10,14 @@ from .match_metrics_distances import run as match_metrics_distances
 from .match_metrics_mass import run as match_metrics_mass
 from .match_metrics_recovery_rate import run as match_metrics_recovery_rate
 from .match_metrics_redshift import run as match_metrics_redshift
+
+__all__ = [
+    "artificial_footprint",
+    "footprint_masks",
+    "match",
+    "write_full_output",
+    "match_metrics_distances",
+    "match_metrics_mass",
+    "match_metrics_recovery_rate",
+    "match_metrics_redshift",
+]
