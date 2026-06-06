@@ -1,5 +1,6 @@
 # pylint: disable=no-member, protected-access
 """Tests for match.py"""
+
 import os
 
 import numpy as np
