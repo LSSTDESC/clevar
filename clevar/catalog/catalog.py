@@ -248,7 +248,9 @@ class Catalog(TagData):
 
     @staticmethod
     def _clean_mmt_col(mmt_col, bad_ids):
-        return [list(filter(lambda x: x not in bad_ids, mmt)) for mmt in mmt_col]
+        return np.array(
+            [list(filter(lambda x: x not in bad_ids, mmt)) for mmt in mmt_col], dtype=list
+        )
 
     def _remove_ids_from_mmt(self, bad_ids, mmt_col):
 
@@ -261,10 +263,8 @@ class Catalog(TagData):
         ----------
         cat2: clevar.ClCatalog
             Other cluster catalog.
-        cat2_ids : array
-            ID's of catalog2 to be removed
         mask2: array
-            Mask for clusters 2 properties, must have size=cat2.size
+            Mask for clusters 2 properties to be kept, must have size=cat2.size
         """
         self.remove_ids_from_multiple(cat2["id"][~mask2])
 
@@ -279,6 +279,9 @@ class Catalog(TagData):
         bad_ids = set(cat2_ids)
         self._remove_ids_from_mmt(bad_ids, "mt_multi_self")
         self._remove_ids_from_mmt(bad_ids, "mt_multi_other")
+        for col in ("mt_self", "mt_other", "mt_cross"):
+            if col in self.colnames:
+                self[col] = None
 
     def _add_ftpt_mask(self, ftpt, maskname):
         """
