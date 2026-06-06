@@ -142,10 +142,10 @@ def test_clcatalog():
         empty_list[i] = []
     c._init_match_vals()
     for n in ("self", "other"):
-        assert all(c[f"mt_{n}"] is None)
+        assert all(c[f"mt_{n}"] == None)  # noqa: E711
         assert_equal(c[f"mt_multi_{n}"], empty_list)
     c.cross_match()
-    assert all(c["mt_cross"] is None)
+    assert all(c["mt_cross"] == None)  # noqa: E711
     # Check ind2inds
     assert_equal(c.ids2inds(["b", "a"]), [1, 0])
     # Check resolve multiple
@@ -243,14 +243,14 @@ def test_memcatalog():
     for i in range(c.size):
         empty_list[i] = []
     for n in ("self", "other"):
-        assert all(c[f"mt_{n}"] is None)
+        assert all(c[f"mt_{n}"] == None)  # noqa: E711
         assert_equal(c[f"mt_multi_{n}"], empty_list)
     c.cross_match()
     # test mt col remains
     mt_self = [0, 1]
     c["mt_self"] = mt_self
     assert_equal(c["dec",]["mt_self"], mt_self)
-    assert all(c["mt_cross"] is None)
+    assert all(c["mt_cross"] == None)  # noqa: E711
     # Check resolve multiple
     c["mt_multi_self"][0] = ["x", "x"]
     c.remove_multiple_duplicates()
