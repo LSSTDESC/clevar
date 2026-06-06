@@ -675,6 +675,7 @@ class Footprint(TagData):
                     def lims_mask(ra, dec):
                         return (ra >= xlim[0]) * (ra < xlim[1]) * (dec >= ylim[0]) * (dec < ylim[1])
 
+                    # pylint: disable=unused-argument
                     def plt_cl(ra, dec, radius):
                         return axis.scatter(
                             *np.transpose([ra, dec])[lims_mask(ra, dec)].T,

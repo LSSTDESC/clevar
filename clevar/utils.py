@@ -288,6 +288,7 @@ def str2dataunit(input_str, units_bank, err_msg=""):
         if unit.lower() in input_str.lower():
             try:
                 return float(input_str.lower().replace(unit.lower(), "")), unit.lower()
+            # pylint: disable=broad-exception-caught
             except Exception:
                 pass
     raise ValueError(f"Unknown unit of '{input_str}', must be in {units_bank}. {err_msg}")
