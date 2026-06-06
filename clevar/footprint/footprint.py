@@ -650,32 +650,37 @@ class Footprint(TagData):
                         redshift=cluster["z"],
                         cosmo=cosmo,
                     )
-                    plt_cl = lambda ra, dec, radius: [
-                        axis.plot(
-                            ra_ + radius_ * sin / np.cos(np.radians(dec_)),
-                            dec_ + radius_ * cos,
-                            **updated_dict({"color": "b", "lw": 1}, cluster_kwargs),
-                        )
-                        for ra_, dec_, radius_ in np.transpose([ra, dec, radius])[
-                            (ra + radius >= xlim[0])
-                            * (ra - radius < xlim[1])
-                            * (dec + radius >= ylim[0])
-                            * (dec - radius < ylim[1])
+
+                    def plt_cl(ra, dec, radius):
+                        return [
+                            axis.plot(
+                                ra_ + radius_ * sin / np.cos(np.radians(dec_)),
+                                dec_ + radius_ * cos,
+                                **updated_dict({"color": "b", "lw": 1}, cluster_kwargs),
+                            )
+                            for ra_, dec_, radius_ in np.transpose([ra, dec, radius])[
+                                (ra + radius >= xlim[0])
+                                * (ra - radius < xlim[1])
+                                * (dec + radius >= ylim[0])
+                                * (dec - radius < ylim[1])
+                            ]
                         ]
-                    ]
                 else:
                     warnings.warn(
                         "Column 'radius' or radius_unit of cluster not set up. "
                         "Plotting clusters as points with plt.scatter."
                     )
                     rad_deg = np.ones(cluster.size)
-                    lims_mask = lambda ra, dec: (
-                        (ra >= xlim[0]) * (ra < xlim[1]) * (dec >= ylim[0]) * (dec < ylim[1])
-                    )
-                    plt_cl = lambda ra, dec, radius: axis.scatter(
-                        *np.transpose([ra, dec])[lims_mask(ra, dec)].T,
-                        **updated_dict({"color": "b", "s": 5}, cluster_kwargs),
-                    )
+
+                    def lims_mask(ra, dec):
+                        return (ra >= xlim[0]) * (ra < xlim[1]) * (dec >= ylim[0]) * (dec < ylim[1])
+
+                    def plt_cl(ra, dec, radius):
+                        return axis.scatter(
+                            *np.transpose([ra, dec])[lims_mask(ra, dec)].T,
+                            **updated_dict({"color": "b", "s": 5}, cluster_kwargs),
+                        )
+
                 # Plot clusters in regular range
                 plt_cl(cluster["ra"], cluster["dec"], rad_deg)
                 # Plot clusters using -180<ra<0

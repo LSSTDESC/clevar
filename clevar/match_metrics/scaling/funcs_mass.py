@@ -301,7 +301,7 @@ def mass_zpanel(cat1, cat2, matching_type, redshift_bins=5, log_mass=True, **kwa
             (see `scaling.mass` for more info).
     """
     kwargs["label_format"] = kwargs.get(
-        "label_format", lambda v: f'%{kwargs.pop("label_fmt", ".2f")}' % v
+        "label_format", lambda v: f"%{kwargs.pop('label_fmt', '.2f')}" % v
     )
     kwargs["fit_log"] = kwargs.get("fit_log", log_mass)
     return catalog_funcs.plot_panel(

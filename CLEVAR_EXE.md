@@ -3,25 +3,26 @@
 `ClEvaR` can be used directly from the command line with `yml` configuration files.
 Some examples of config files can be found in the [demo](demo/) directory.
 
-* [Main readme](README.md)
+- [Main readme](README.md)
 
 ## Table of contents
+
 1. [Loading `ClEvaR` environment](#environment)
 2. [Executing `ClEvaR` operations](#executing)
-    1. [Matching catalogs](#matching)
-    2. [Footprint application](#footprint)
-    3. [Metrics of matching](#metrics)
+   1. [Matching catalogs](#matching)
+   2. [Footprint application](#footprint)
+   3. [Metrics of matching](#metrics)
 3. [Configuration file](#config)
-    1. [cosmology](#config_cosmology)
-    2. [catalog1 (and catalog2)](#config_cat)
-    3. [proximity_match](#config_proximity_match)
-    4. [membership_match](#config_membership_match)
-    5. [masks](#config_mask)
-    6. [match_metrics](#config_match_metrics)
-        1. [recovery](#config_metics_recovery)
-        2. [distances](#config_metics_distances)
-        3. [Mass](#config_metics_mass)
-        4. [redshift](#config_metics_redshift)
+   1. [cosmology](#config_cosmology)
+   2. [catalog1 (and catalog2)](#config_cat)
+   3. [proximity_match](#config_proximity_match)
+   4. [membership_match](#config_membership_match)
+   5. [masks](#config_mask)
+   6. [match_metrics](#config_match_metrics)
+      1. [recovery](#config_metics_recovery)
+      2. [distances](#config_metics_distances)
+      3. [Mass](#config_metics_mass)
+      4. [redshift](#config_metics_redshift)
 
 ## Loading `ClEvaR` environment <a name="environment"></a>
 
@@ -81,15 +82,15 @@ There is a example of a configuration file in [demo/config.yml](demo/config.yml)
 Each different section of this file is described here.
 The main sections of this file are:
 
-* `outpath` - Path to save output.
-* `matching_mode` - Method for matching, options are `proximity` or `membership`.
-* `cosmology` - Configuration for cosmology.
-* `catalog1` - Configuration for catalog 1.
-* `catalog2` - Configuration for catalog 2.
-* `proximity_match` -Configuration for proximity matching.
-* `membership_match` -Configuration for membership matching.
-* `masks` - Configuration to be used for mask creation and in recovery rate.
-* `match_metrics` - Configuration for metrics of matching.
+- `outpath` - Path to save output.
+- `matching_mode` - Method for matching, options are `proximity` or `membership`.
+- `cosmology` - Configuration for cosmology.
+- `catalog1` - Configuration for catalog 1.
+- `catalog2` - Configuration for catalog 2.
+- `proximity_match` -Configuration for proximity matching.
+- `membership_match` -Configuration for membership matching.
+- `masks` - Configuration to be used for mask creation and in recovery rate.
+- `match_metrics` - Configuration for metrics of matching.
 
 Each configuration is detailed below.
 
@@ -97,35 +98,35 @@ Each configuration is detailed below.
 
 Configuration for comology package and parameters:
 
-* `backend` - Library for cosmology. Options are Astropy, CCL.
-* `parameters` - cosmological parameters.
-  * `H0` - Hubble parameter
-  * `Omega_b0` - Baryonic matter fraction at `z=0`
-  * `Omega_dm0` - Cold dark matter fraction at `z=0`
-  * `Omega_k0` - Curvature fraction at `z=0`
+- `backend` - Library for cosmology. Options are Astropy, CCL.
+- `parameters` - cosmological parameters.
+  - `H0` - Hubble parameter
+  - `Omega_b0` - Baryonic matter fraction at `z=0`
+  - `Omega_dm0` - Cold dark matter fraction at `z=0`
+  - `Omega_k0` - Curvature fraction at `z=0`
 
 ### catalog1 (and catalog2) <a name="config_cat"></a>
 
 Configuration of input catalogs:
 
-* `file` - file of catalog
-* `name` - name of catalog (for plots)
-* `columns` - Section for column names.
-  * `ra` - Ra
-  * `dec` - Dec
-  * `z` - redshift
-  * `mass` - Mass or proxy
-  * `radius` - Radius of cluster
-* `radius_unit` - Units of the radius. Options are: `radians`, `degrees`, `arcmin`, `arcsec`, `pc`, `kpc`, `Mpc`. A mass can also be used and converted to radius with the cosmology, in this case, must be in the format `M{delta}{TYPE}` , ex: `M200b` (background), `M500c`(critical).
-* `labels` - Labels for plots. If not availble, `column_{name}` used. Ex:
-  * `mass` - Mass1
-* `footprint` - Footprint information. Used to create artificial footprint and on recovery rate.
-  * `file` - file for foorptint
-  * `nside` - healpix NSIDE.
-  * `nest` - healpix nested ordering. if false use ring.
-  * `pixel_name` - Name of pixel column of footprint.
-  * `detfrac_name` - Name of detfrac column of footprint. Use `None` if not existing.
-  * `zmax_name` - Name of zmax column of footprint. Use `None` if not existing.
+- `file` - file of catalog
+- `name` - name of catalog (for plots)
+- `columns` - Section for column names.
+  - `ra` - Ra
+  - `dec` - Dec
+  - `z` - redshift
+  - `mass` - Mass or proxy
+  - `radius` - Radius of cluster
+- `radius_unit` - Units of the radius. Options are: `radians`, `degrees`, `arcmin`, `arcsec`, `pc`, `kpc`, `Mpc`. A mass can also be used and converted to radius with the cosmology, in this case, must be in the format `M{delta}{TYPE}` , ex: `M200b` (background), `M500c`(critical).
+- `labels` - Labels for plots. If not availble, `column_{name}` used. Ex:
+  - `mass` - Mass1
+- `footprint` - Footprint information. Used to create artificial footprint and on recovery rate.
+  - `file` - file for foorptint
+  - `nside` - healpix NSIDE.
+  - `nest` - healpix nested ordering. if false use ring.
+  - `pixel_name` - Name of pixel column of footprint.
+  - `detfrac_name` - Name of detfrac column of footprint. Use `None` if not existing.
+  - `zmax_name` - Name of zmax column of footprint. Use `None` if not existing.
 
 ### proximity_match <a name="config_proximity_match"></a>
 
@@ -135,46 +136,47 @@ The other parameters must be encapsulated in a section with a `step` prefix.
 If you want a multi-step matching, add more `step` sections (each section name must be different or they will be overwritten).
 There is a example of a configuration file with multi-steps in [demo/config_2steps.yml](demo/config_2steps.yml).
 
-* `which_radius` - Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
-* `preference` - Preference for multiple candidadtes. Options are `more_massive`, `angular_proximity` or `redshift_proximity`.
-* `catalog1` - Options for catalog 1
-  * `delta_z` - Defines the zmin, zmax for matching. If `cat` uses redshift properties of the catalog, if `spline.filename` interpolates data in `filename` (z, zmin, zmax) fmt, if `float` uses `delta_z*(1+z)`, if `None` does not use z.
-  * `match_radius` - Radius to be used in the matching. If `cat` uses the radius in the catalog, else must be in format `value unit` (ex: `1 arcsec`, `1 Mpc`).
-* `catalog2` - Options for catalog 2
-  * `delta_z` - Defines the zmin, zmax for matching. If `cat` uses redshift properties of the catalog, if `spline.filename` interpolates data in `filename` (z, zmin, zmax) fmt, if `float` uses `delta_z*(1+z)`, if `None` does not use z.
-  * `match_radius` - Radius to be used in the matching. If `cat` uses the radius in the catalog, else must be in format `value unit` (ex: `1 arcsec`, `1 Mpc`).
+- `which_radius` - Case of radius to be used, can be: `cat1`, `cat2`, `min`, `max`.
+- `preference` - Preference for multiple candidadtes. Options are `more_massive`, `angular_proximity` or `redshift_proximity`.
+- `catalog1` - Options for catalog 1
+  - `delta_z` - Defines the zmin, zmax for matching. If `cat` uses redshift properties of the catalog, if `spline.filename` interpolates data in `filename` (z, zmin, zmax) fmt, if `float` uses `delta_z*(1+z)`, if `None` does not use z.
+  - `match_radius` - Radius to be used in the matching. If `cat` uses the radius in the catalog, else must be in format `value unit` (ex: `1 arcsec`, `1 Mpc`).
+- `catalog2` - Options for catalog 2
+  - `delta_z` - Defines the zmin, zmax for matching. If `cat` uses redshift properties of the catalog, if `spline.filename` interpolates data in `filename` (z, zmin, zmax) fmt, if `float` uses `delta_z*(1+z)`, if `None` does not use z.
+  - `match_radius` - Radius to be used in the matching. If `cat` uses the radius in the catalog, else must be in format `value unit` (ex: `1 arcsec`, `1 Mpc`).
 
 ### membership_match <a name="config_membership_match"></a>
 
 Configuration for membership matching:
-* `type` - Selects if a one way or two way matching is done (options are cross, cat1, cat2).
-* `preference` - Preference for multiple candidadtes. Options are `more_massive`, `angular_proximity`, `redshift_proximity` or `shared_member_fraction`(default).
-* `minimum_share_fraction: 0 # Minimum share fraction to consider in matches.
-* `match_members` - Match the members catalogs.
-* `match_members_kwargs` - Arguments to match members, needed if `match_members=True`.
-  * `method` - Method for matching. Options are `id` or `angular_distance`.
-  * `radius` - Radius for matching, with format 'value unit' (ex: `1 arcsec`, `1 Mpc`). Used in `method=angular_distance`.
-* `match_members_save` - Save file with matched members.
-* `match_members_load` - Load matched members, if True skips matching (and save) of members.
-* `match_members_file` - File to save matching of members, needed if `match_members_save` or `match_members_load` is True.
-* `shared_members_fill` - Adds shared members information to catalogs.
-* `shared_members_save` - Saves files with shared members.
-* `shared_members_load` - Load files with shared members, if `True` skips matching (and save) of members and fill (and save) of shared members.
-* `shared_members_file` - Prefix of file names to save shared members, needed if `shared_members_save` or `shared_members_load` is `True`.
+
+- `type` - Selects if a one way or two way matching is done (options are cross, cat1, cat2).
+- `preference` - Preference for multiple candidadtes. Options are `more_massive`, `angular_proximity`, `redshift_proximity` or `shared_member_fraction`(default).
+- `minimum_share_fraction: 0 # Minimum share fraction to consider in matches.
+- `match_members` - Match the members catalogs.
+- `match_members_kwargs` - Arguments to match members, needed if `match_members=True`.
+  - `method` - Method for matching. Options are `id` or `angular_distance`.
+  - `radius` - Radius for matching, with format 'value unit' (ex: `1 arcsec`, `1 Mpc`). Used in `method=angular_distance`.
+- `match_members_save` - Save file with matched members.
+- `match_members_load` - Load matched members, if True skips matching (and save) of members.
+- `match_members_file` - File to save matching of members, needed if `match_members_save` or `match_members_load` is True.
+- `shared_members_fill` - Adds shared members information to catalogs.
+- `shared_members_save` - Saves files with shared members.
+- `shared_members_load` - Load files with shared members, if `True` skips matching (and save) of members and fill (and save) of shared members.
+- `shared_members_file` - Prefix of file names to save shared members, needed if `shared_members_save` or `shared_members_load` is `True`.
 
 ### masks <a name="config_mask"></a>
 
 Configuration to make masks for recovery rate computations.
 These configurations must be inside a section for the corresponding catalog (`catalog1` or `catalog2`):
 
-* `in_footprint` - Flag if cluster is inside footprint. Add other sections with the prefix `in_footprint` for more masks (\*).
-  * `which_footprint` - Which footprint to use for computaions. Options: `self`, `other`.
-  * `name` - Name of this mask.
-* `coverfraction` - Coverfraction configuration. Add other sections with the prefix `coverfraction` for more computation (\*).
-  * `name` - Name for coverfraction column. It will receive a `cf_` prefix.
-  * `which_footprint` - Which footprint to use for computaions. Options: `self`, `other`.
-  * `aperture` - Size of aperture with units (ex: `1 arcmin`, `1 mpc`).
-  * `window_function` - Window to weight the coverfraction. Options are `flat`, `nfw2D`.
+- `in_footprint` - Flag if cluster is inside footprint. Add other sections with the prefix `in_footprint` for more masks (\*).
+  - `which_footprint` - Which footprint to use for computaions. Options: `self`, `other`.
+  - `name` - Name of this mask.
+- `coverfraction` - Coverfraction configuration. Add other sections with the prefix `coverfraction` for more computation (\*).
+  - `name` - Name for coverfraction column. It will receive a `cf_` prefix.
+  - `which_footprint` - Which footprint to use for computaions. Options: `self`, `other`.
+  - `aperture` - Size of aperture with units (ex: `1 arcmin`, `1 mpc`).
+  - `window_function` - Window to weight the coverfraction. Options are `flat`, `nfw2D`.
 
 (\*) Each section name must be different or they will be overwritten.
 
@@ -183,8 +185,8 @@ These configurations must be inside a section for the corresponding catalog (`ca
 Configuration for the metric plots.
 There are two main parameters:
 
-* `figsize` - Figure size of figures in cm, must be 2 numbers.
-* `dpi` - Resolution in dots per inch.
+- `figsize` - Figure size of figures in cm, must be 2 numbers.
+- `dpi` - Resolution in dots per inch.
 
 Each matching metrics operation are configured by subsections below.
 
@@ -192,33 +194,33 @@ Each matching metrics operation are configured by subsections below.
 
 Configuration for recovery rate plots, main parameters are:
 
-* `figsize` - Figure size of figures in cm, must be 2 numbers. Overwrites match_metrics figsize.
-* `dpi` - Resolution in dots per inch. Overwrites match_metrics dpi.
-* `plot_case` - Types of plots to be done. Options are `simple`, `panel`, `2D` or `all`.
-* `matching_type` - Options are `cross`, `cat1`, `cat2`, `multi_cat1`, `multi_cat2`, `multi_join`.
-* `line_type` - Type of line. Options are: `line`, `steps`.
+- `figsize` - Figure size of figures in cm, must be 2 numbers. Overwrites match_metrics figsize.
+- `dpi` - Resolution in dots per inch. Overwrites match_metrics dpi.
+- `plot_case` - Types of plots to be done. Options are `simple`, `panel`, `2D` or `all`.
+- `matching_type` - Options are `cross`, `cat1`, `cat2`, `multi_cat1`, `multi_cat2`, `multi_join`.
+- `line_type` - Type of line. Options are: `line`, `steps`.
 
 There are also configurations relative to each catalog that must be inside the corresponding section (`catalog1` or `catalog2`):
 
-* `log_mass` - Use mass in log scale.
-* `mass_num_fmt` - Format the values of mass binedges (ex: '.2f') in label.
-* `redshift_num_fmt` - Format the values of redshift binedges (ex: '.2f') in label.
-* `recovery_label` - Labey for recovery rate.
-* `mass_bins` - Mass bins. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
-* `redshift_bins` - Redshift bins. Can be number of bins, or `xmin, xmax, dx`.
-* `mass_lim` - Mass limits in plots. Must be 2 numbers (min, max) or `None`.
-* `redshift_lim` - Redshift limits in plots. Must be 2 numbers (min, max) or `None`.
-* `recovery_lim` - Recovery rate limits in plots. Must be 2 numbers (min, max) or `None`.
-* `add_mass_label` - Add labels and legends of mass bins.
-* `add_redshift_label` - Add labels and legends of redshift bins.
-* `masks` - Mask objects used in the computation of recovery rates. Names must correspond to those in the main `masks` section.
-  * `case` - Which clusters to mask on recovery rate computations. Options: `None`, `All`, `Unmatched`.
-  * `in_footprint` - Footprin mask. Add other sections with the prefix `in_footprint` for more masks (\*).
-    * `name` - Name for mask.
-    * `use` - Use this mask.
-  * `coverfraction` - Coverfraction mask. Add other sections with the prefix `coverfraction` for more computation (\*).
-    * `name` - Name for coverfraction column. It will receive a `cf_` prefix.
-    * `min` - Minimum value of cover fraction to be considered.
+- `log_mass` - Use mass in log scale.
+- `mass_num_fmt` - Format the values of mass binedges (ex: '.2f') in label.
+- `redshift_num_fmt` - Format the values of redshift binedges (ex: '.2f') in label.
+- `recovery_label` - Labey for recovery rate.
+- `mass_bins` - Mass bins. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
+- `redshift_bins` - Redshift bins. Can be number of bins, or `xmin, xmax, dx`.
+- `mass_lim` - Mass limits in plots. Must be 2 numbers (min, max) or `None`.
+- `redshift_lim` - Redshift limits in plots. Must be 2 numbers (min, max) or `None`.
+- `recovery_lim` - Recovery rate limits in plots. Must be 2 numbers (min, max) or `None`.
+- `add_mass_label` - Add labels and legends of mass bins.
+- `add_redshift_label` - Add labels and legends of redshift bins.
+- `masks` - Mask objects used in the computation of recovery rates. Names must correspond to those in the main `masks` section.
+  - `case` - Which clusters to mask on recovery rate computations. Options: `None`, `All`, `Unmatched`.
+  - `in_footprint` - Footprin mask. Add other sections with the prefix `in_footprint` for more masks (\*).
+    - `name` - Name for mask.
+    - `use` - Use this mask.
+  - `coverfraction` - Coverfraction mask. Add other sections with the prefix `coverfraction` for more computation (\*).
+    - `name` - Name for coverfraction column. It will receive a `cf_` prefix.
+    - `min` - Minimum value of cover fraction to be considered.
 
 (\*) Each section name must be different or they will be overwritten.
 
@@ -226,78 +228,78 @@ There are also configurations relative to each catalog that must be inside the c
 
 Configuration for distances of matched clusters, main parameters are:
 
-* `figsize` - Figure size of figures in cm, must be 2 numbers. Overwrites match_metrics figsize.
-* `dpi` - Resolution in dots per inch. Overwrites match_metrics dpi.
-* `plot_case` - Types of plots to be done. Options are `simple`, `panel`, `2D or all`.
-* `matching_type` - Options are cross, cat1, cat2.
-* `line_type` - Type of line. Options are: `line`, `steps`.
-* `radial_bins` - Bins for radial distances. Can be number of bins, or `xmin, xmax, dx`.
+- `figsize` - Figure size of figures in cm, must be 2 numbers. Overwrites match_metrics figsize.
+- `dpi` - Resolution in dots per inch. Overwrites match_metrics dpi.
+- `plot_case` - Types of plots to be done. Options are `simple`, `panel`, `2D or all`.
+- `matching_type` - Options are cross, cat1, cat2.
+- `line_type` - Type of line. Options are: `line`, `steps`.
+- `radial_bins` - Bins for radial distances. Can be number of bins, or `xmin, xmax, dx`.
 
-* `radial_bin_units` - arcmin # units of radial bins.
-* `delta_redshift_bins` - 20 # bins for redshift distances.
+- `radial_bin_units` - arcmin # units of radial bins.
+- `delta_redshift_bins` - 20 # bins for redshift distances.
 
 There are also configurations relative to each catalog that must be inside the corresponding section (`catalog1` or `catalog2`):
 
-* `log_mass` - Use mass in log scale.
-* `mass_num_fmt` - Format the values of mass binedges (ex: `.2f`) in label.
-* `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
-* `mass_bins` - Mass bins. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
-* `redshift_bins` - Redshift bins. Can be number of bins, or `xmin, xmax, dx`.
-* `add_mass_label` - Add labels and legends of mass bins.
-* `add_redshift_label` - Add labels and legends of redshift bins.
+- `log_mass` - Use mass in log scale.
+- `mass_num_fmt` - Format the values of mass binedges (ex: `.2f`) in label.
+- `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
+- `mass_bins` - Mass bins. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
+- `redshift_bins` - Redshift bins. Can be number of bins, or `xmin, xmax, dx`.
+- `add_mass_label` - Add labels and legends of mass bins.
+- `add_redshift_label` - Add labels and legends of redshift bins.
 
 #### mass <a name="config_metics_mass"></a>
 
 Configuration for mass scaling relation, main parameters are:
 
-* `figsize` - Figure size of figures in cm, must be 2 numbers. Overwrites match_metrics figsize.
-* `plot_case` - Types of plots to be done. Options are zcolors, density, density_panel.
-* `matching_type` - Options are cross, cat1, cat2.
-* `add_redshift_label` - Add redshift label in panels.
-* `add_err` - plot errorbars when available.
-* `add_cb` - add color bar in color plots.
-* `log_mass` - mass in log scale.
-* `ax_rotation` - for density plots. angle (in degrees) for rotation of axis of binning. overwrites use of mass_bins in catalogs.
-* `rotation_resolution` - for density plots. number of bins to be used when ax_rotation!=0.
-* `add_bindata` - Plot binned data to be used for fit.
-* `add_fit` - Fit and plot binned dat.
-* `add_fit_err` - Use error of component y in fit.
-* `fit_statistics` - Statistics to be used in fit. Options are: `individual`, `mode`, `mean`.
+- `figsize` - Figure size of figures in cm, must be 2 numbers. Overwrites match_metrics figsize.
+- `plot_case` - Types of plots to be done. Options are zcolors, density, density_panel.
+- `matching_type` - Options are cross, cat1, cat2.
+- `add_redshift_label` - Add redshift label in panels.
+- `add_err` - plot errorbars when available.
+- `add_cb` - add color bar in color plots.
+- `log_mass` - mass in log scale.
+- `ax_rotation` - for density plots. angle (in degrees) for rotation of axis of binning. overwrites use of mass_bins in catalogs.
+- `rotation_resolution` - for density plots. number of bins to be used when ax_rotation!=0.
+- `add_bindata` - Plot binned data to be used for fit.
+- `add_fit` - Fit and plot binned dat.
+- `add_fit_err` - Use error of component y in fit.
+- `fit_statistics` - Statistics to be used in fit. Options are: `individual`, `mode`, `mean`.
 
 There are also configurations relative to each catalog that must be inside the corresponding section (`catalog1` or `catalog2`):
 
-* `redshift_bins` - Redshift bins for panels. Can be number of bins, or `xmin, xmax, dx`.
-* `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
-* `mass_bins` - Mass bins for density colors. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
-* `mass_bins_dist` - Mass bins for distribution histograms. Can be number of bins, or `(xmin, xmax, dx)`. If log_mass provide log of values.
-* `mass_num_fmt` - Format the values of mass binedges (ex: `.2f`) in label (`10^mass_num_fmt` is used if log_mass).
-* `fit_mass_bins` - Bins to compute statistics for fit.
-* `fit_mass_bins_dist` - Bins to compute distribution of catalog2 mass.
+- `redshift_bins` - Redshift bins for panels. Can be number of bins, or `xmin, xmax, dx`.
+- `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
+- `mass_bins` - Mass bins for density colors. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
+- `mass_bins_dist` - Mass bins for distribution histograms. Can be number of bins, or `(xmin, xmax, dx)`. If log_mass provide log of values.
+- `mass_num_fmt` - Format the values of mass binedges (ex: `.2f`) in label (`10^mass_num_fmt` is used if log_mass).
+- `fit_mass_bins` - Bins to compute statistics for fit.
+- `fit_mass_bins_dist` - Bins to compute distribution of catalog2 mass.
 
 #### redshift - # Scaling relation <a name="config_metics_redshift"></a>
 
 Configuration for mass scaling relation, main parameters are:
 
-* `figsize` - Figure size of figures in cm, must be 2 numbers. Overwrites match_metrics figsize.
-* `plot_case` - Types of plots to be done. Options are zcolors, density, density_panel.
-* `matching_type` - Options are cross, cat1, cat2.
-* `add_mass_label` - True # Add mass label in panels.
-* `add_err` - plot errorbars when available.
-* `add_cb` - add color bar in color plots.
-* `log_mass` - mass in log scale.
-* `ax_rotation` - for density plots. angle (in degrees) for rotation of axis of binning. overwrites use of mass_bins in catalogs.
-* `rotation_resolution` - for density plots. number of bins to be used when ax_rotation!=0.
-* `add_bindata` - Plot binned data to be used for fit.
-* `add_fit` - Fit and plot binned dat.
-* `add_fit_err` - Use error of component y in fit.
-* `fit_statistics` - Statistics to be used in fit. Options are: `individual`, `mode`, `mean`.
+- `figsize` - Figure size of figures in cm, must be 2 numbers. Overwrites match_metrics figsize.
+- `plot_case` - Types of plots to be done. Options are zcolors, density, density_panel.
+- `matching_type` - Options are cross, cat1, cat2.
+- `add_mass_label` - True # Add mass label in panels.
+- `add_err` - plot errorbars when available.
+- `add_cb` - add color bar in color plots.
+- `log_mass` - mass in log scale.
+- `ax_rotation` - for density plots. angle (in degrees) for rotation of axis of binning. overwrites use of mass_bins in catalogs.
+- `rotation_resolution` - for density plots. number of bins to be used when ax_rotation!=0.
+- `add_bindata` - Plot binned data to be used for fit.
+- `add_fit` - Fit and plot binned dat.
+- `add_fit_err` - Use error of component y in fit.
+- `fit_statistics` - Statistics to be used in fit. Options are: `individual`, `mode`, `mean`.
 
 There are also configurations relative to each catalog that must be inside the corresponding section (`catalog1` or `catalog2`):
 
-* `redshift_bins` - Redshift bins for panels. Can be number of bins, or `xmin, xmax, dx`.
-* `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
-* `mass_bins` - Mass bins for density colors. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
-* `redshift_bins_dist` - Redshift bins for distribution histograms. Can be number of bins, or `(xmin, xmax, dx)`.
-* `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
-* `fit_redshift_bins` - Bins to compute statistics for fit.
-* `fit_redshift_bins_dist` - Bins to compute distribution of catalog2 redshift.
+- `redshift_bins` - Redshift bins for panels. Can be number of bins, or `xmin, xmax, dx`.
+- `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
+- `mass_bins` - Mass bins for density colors. Can be number of bins, or `xmin, xmax, dx`. If log_mass provide log of values.
+- `redshift_bins_dist` - Redshift bins for distribution histograms. Can be number of bins, or `(xmin, xmax, dx)`.
+- `redshift_num_fmt` - Format the values of redshift binedges (ex: `.2f`) in label.
+- `fit_redshift_bins` - Bins to compute statistics for fit.
+- `fit_redshift_bins_dist` - Bins to compute distribution of catalog2 redshift.

@@ -1,7 +1,7 @@
 """Tests for cosmo"""
 
 import numpy as np
-from numpy.testing import assert_allclose, assert_equal, assert_raises
+from numpy.testing import assert_allclose, assert_raises
 
 import clevar
 from clevar.cosmology.parent_class import Cosmology
@@ -60,12 +60,12 @@ def test_z_and_a(CosmoClass):
     assert_allclose(
         cosmo._get_a_from_z([0.1, 0.2, 0.3, 0.4]),
         [10.0 / 11.0, 5.0 / 6.0, 10.0 / 13.0, 5.0 / 7.0],
-        **TOLERANCE
+        **TOLERANCE,
     )
     assert_allclose(
         cosmo._get_a_from_z(np.array([0.1, 0.2, 0.3, 0.4])),
         np.array([10.0 / 11.0, 5.0 / 6.0, 10.0 / 13.0, 5.0 / 7.0]),
-        **TOLERANCE
+        **TOLERANCE,
     )
 
     # Convert from z to a - scalar, list, ndarray
@@ -73,20 +73,24 @@ def test_z_and_a(CosmoClass):
     assert_allclose(
         cosmo._get_z_from_a([10.0 / 11.0, 5.0 / 6.0, 10.0 / 13.0, 5.0 / 7.0]),
         [0.1, 0.2, 0.3, 0.4],
-        **TOLERANCE
+        **TOLERANCE,
     )
     assert_allclose(
         cosmo._get_z_from_a(np.array([10.0 / 11.0, 5.0 / 6.0, 10.0 / 13.0, 5.0 / 7.0])),
         np.array([0.1, 0.2, 0.3, 0.4]),
-        **TOLERANCE
+        **TOLERANCE,
     )
 
     # Some potential corner-cases for the two funcs
     assert_allclose(
-        cosmo._get_a_from_z(np.array([0.0, 1300.0])), np.array([1.0, 1.0 / 1301.0]), **TOLERANCE
+        cosmo._get_a_from_z(np.array([0.0, 1300.0])),
+        np.array([1.0, 1.0 / 1301.0]),
+        **TOLERANCE,
     )
     assert_allclose(
-        cosmo._get_z_from_a(np.array([1.0, 1.0 / 1301.0])), np.array([0.0, 1300.0]), **TOLERANCE
+        cosmo._get_z_from_a(np.array([1.0, 1.0 / 1301.0])),
+        np.array([0.0, 1300.0]),
+        **TOLERANCE,
     )
 
     # Test for exceptions when outside of domains
@@ -126,7 +130,7 @@ def test_cosmo_basic(CosmoClass, cosmo_init):
     assert_allclose(cosmo.eval_da(z), cosmo.eval_da_z1z2(0.0, z), rtol=8.0e-15)
     assert_allclose(cosmo.eval_da_z1z2(0.0, z), cosmo.eval_da_z1z2(0.0, z), rtol=8.0e-15)
     # Test initializing cosmo
-    test_cosmo = CosmoClass(be_cosmo=cosmo.be_cosmo)
+    CosmoClass(be_cosmo=cosmo.be_cosmo)
     # Test mass2radius
     cosmo.eval_mass2radius(1e14, 0, delta=200, mass_type="background")  # To add test here
     assert_raises(ValueError, cosmo.eval_mass2radius, 1e14, 0, delta=200, mass_type="nonexistent")
@@ -161,10 +165,16 @@ def test_convert_rad_to_mpc(CosmoClass):
     # Test some different H0
     for oneh0 in [30.0, 50.0, 67.3, 74.7, 100.0]:
         _rad2mpc_helper(
-            0.33, 0.5, CosmoClass(H0=oneh0, Omega_dm0=0.3 - 0.045, Omega_b0=0.045), do_inverse=False
+            0.33,
+            0.5,
+            CosmoClass(H0=oneh0, Omega_dm0=0.3 - 0.045, Omega_b0=0.045),
+            do_inverse=False,
         )
         _rad2mpc_helper(
-            1.0, 0.5, CosmoClass(H0=oneh0, Omega_dm0=0.3 - 0.045, Omega_b0=0.045), do_inverse=True
+            1.0,
+            0.5,
+            CosmoClass(H0=oneh0, Omega_dm0=0.3 - 0.045, Omega_b0=0.045),
+            do_inverse=True,
         )
     # Test some different Omega_M
     for oneomm in [0.1, 0.3, 0.5, 1.0]:
@@ -175,5 +185,8 @@ def test_convert_rad_to_mpc(CosmoClass):
             do_inverse=False,
         )
         _rad2mpc_helper(
-            1.0, 0.5, CosmoClass(H0=70.0, Omega_dm0=oneomm - 0.045, Omega_b0=0.045), do_inverse=True
+            1.0,
+            0.5,
+            CosmoClass(H0=70.0, Omega_dm0=oneomm - 0.045, Omega_b0=0.045),
+            do_inverse=True,
         )

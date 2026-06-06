@@ -25,7 +25,7 @@ class MetricYamlFuncs:
         self.skip = general_conf is None
         if self.skip:
             return
-        self.pref_save = f'{general_conf["outpath"]}/{pref_save}'
+        self.pref_save = f"{general_conf['outpath']}/{pref_save}"
 
         # prep cats
         self.cats = {}

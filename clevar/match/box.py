@@ -181,7 +181,7 @@ class BoxMatch(SpatialMatch):
                 print(f"        Pass   : {bool(np.prod(val[10:]))} (", *val[10:], ")")
                 print(
                     "        Areas  :",
-                    ", ".join([f"{v*3600:.2f}" for v in val[6:9]]),
+                    ", ".join([f"{v * 3600:.2f}" for v in val[6:9]]),
                     f"arcmin2 ( {locs['metric']}: {val[9]:.2g} )",
                 )
                 print(

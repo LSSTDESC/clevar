@@ -50,7 +50,13 @@ def test_plot():
     rc.plot(cat, matching_type, redshift_bins, mass_bins, shape="line")
     rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True)
     assert_raises(
-        ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins, shape="unknown"
+        ValueError,
+        rc.plot,
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        shape="unknown",
     )
     rc.plot(
         cat,
@@ -71,10 +77,19 @@ def test_plot():
     )
     rc.plot(cat, matching_type, redshift_bins, mass_bins, plt_kwargs={"n_increase": 3})
     rc.plot(
-        cat, matching_type, redshift_bins, mass_bins, shape="line", plt_kwargs={"n_increase": 3}
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        shape="line",
+        plt_kwargs={"n_increase": 3},
     )
     rc.plot(
-        cat, matching_type, redshift_bins, mass_bins, plt_kwargs={"n_increase": 3, "scheme": [1, 1]}
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        plt_kwargs={"n_increase": 3, "scheme": [1, 1]},
     )
 
 

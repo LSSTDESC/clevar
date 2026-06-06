@@ -1,7 +1,3 @@
-import importlib
-import os
-import sys
-
 import pytest
 
 from clevar import optional_libs

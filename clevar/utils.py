@@ -510,7 +510,7 @@ def get_dicts_diff(dict1, dict2, keys=None, header=("Name", "dict1", "dict2"), m
         fmts = f"  %-{max_sizes[0]}s | %{max_sizes[1]}s | %{max_sizes[2]}s"
         print(msg)
         print(fmts % tuple(diff_lines[0]))
-        print(f'  {"-"*max_sizes[0]}-|-{"-"*max_sizes[1]}-|-{"-"*max_sizes[2]}')
+        print(f"  {'-' * max_sizes[0]}-|-{'-' * max_sizes[1]}-|-{'-' * max_sizes[2]}")
         for line in diff_lines[1:]:
             print(fmts % tuple(line))
     return diff_lines[1:]
