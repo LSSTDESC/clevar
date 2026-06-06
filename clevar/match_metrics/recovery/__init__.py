@@ -4,7 +4,7 @@ recovery package
 
 from . import array_funcs as ArrayFuncs
 from . import catalog_funcs as ClCatalogFuncs
-from .funcs import plot, plot2D, plot_panel, skyplot
+from .funcs import plot, plot2D, plot_panel, skyplot, plot_roc
 
 __all__ = [
     "ArrayFuncs",
@@ -13,4 +13,5 @@ __all__ = [
     "plot2D",
     "plot_panel",
     "skyplot",
+    "plot_roc",
 ]

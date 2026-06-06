@@ -557,3 +557,39 @@ def skyplot(
         figsize=figsize,
         **kwargs,
     )
+
+
+def plot_roc(cat1, cat2, matching_type, snr_thresholds, **kwargs):
+    """
+    Plot redshift distance between matched clusters, binned by a second quantity.
+
+    Parameters
+    ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
+    matching_type: str
+        Type of matching to be considered. Must be in
+        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        Method to assign a corresponding snr to catalog2. Options are: 'matching', 'max'
+    snr_thresholds: np.ndarray
+        Thresholds for snr computation
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    plt_kwargs: dict, None
+        Additional arguments for pylab.plot.
+
+    Returns
+    -------
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `distances`: values of distances.
+            * `data`: Recovery rates used in the plot.
+    """
+    return catalog_funcs.plot_roc(cat1, cat2, matching_type, "snr", snr_thresholds, **kwargs)
