@@ -3,8 +3,8 @@
 Main recovery functions using arrays.
 """
 
-import numpy as np
 import healpy as hp
+import numpy as np
 
 from ...utils import none_val, updated_dict
 from .. import plot_helper as ph

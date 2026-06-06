@@ -1,20 +1,22 @@
 # pylint: disable=no-member, protected-access
-""" Tests for match.py """
-import os
-import numpy as np
-from numpy.testing import assert_raises, assert_allclose, assert_equal
+"""Tests for match.py"""
 
-from clevar.catalog import ClCatalog, MemCatalog
-from clevar.match.parent import Match
-from clevar.match.spatial import SpatialMatch
+import os
+
+import numpy as np
+from numpy.testing import assert_allclose, assert_equal, assert_raises
+
+from clevar.catalog import ClCatalog
 from clevar.match import (
-    ProximityMatch,
-    MembershipMatch,
     BoxMatch,
+    MembershipMatch,
+    ProximityMatch,
+    get_matched_pairs,
     output_catalog_with_matching,
     output_matched_catalog,
-    get_matched_pairs,
 )
+from clevar.match.parent import Match
+from clevar.match.spatial import SpatialMatch
 
 
 def test_parent():
@@ -37,8 +39,11 @@ def test_spatial():
 def _test_mt_results(cat, multi_self, self, cross, multi_other=None, other=None):
     multi_other = multi_self if multi_other is None else multi_other
     other = self if other is None else other
+
     # Check multiple match
-    slists = lambda mmt: [sorted(l) for l in mmt]
+    def slists(mmt):
+        return list(map(sorted, mmt))
+
     assert_equal(slists(cat["mt_multi_self"]), slists(multi_self))
     assert_equal(slists(cat["mt_multi_other"]), slists(multi_other))
     # Check unique
@@ -144,7 +149,12 @@ def test_proximity(CosmoClass):
     assert all(cat1.mt_input["zmax"] > cat1["z"].max())
     # missing all zmin/zmax info in catalog
     assert_raises(
-        ValueError, mt.prep_cat_for_match, cat1, delta_z="cat", match_radius="1 mpc", cosmo=cosmo
+        ValueError,
+        mt.prep_cat_for_match,
+        cat1,
+        delta_z="cat",
+        match_radius="1 mpc",
+        cosmo=cosmo,
     )
     # zmin/zmax in catalog
     cat1["zmin"] = cat1["z"] - 0.2
@@ -175,11 +185,21 @@ def test_proximity(CosmoClass):
     mt.prep_cat_for_match(cat1, delta_z="cat", match_radius="cat", cosmo=cosmo)
     cat1.radius_unit = "M200"
     assert_raises(
-        ValueError, mt.prep_cat_for_match, cat1, delta_z="cat", match_radius="cat", cosmo=cosmo
+        ValueError,
+        mt.prep_cat_for_match,
+        cat1,
+        delta_z="cat",
+        match_radius="cat",
+        cosmo=cosmo,
     )
     cat1.radius_unit = "MXXX"
     assert_raises(
-        ValueError, mt.prep_cat_for_match, cat1, delta_z="cat", match_radius="cat", cosmo=cosmo
+        ValueError,
+        mt.prep_cat_for_match,
+        cat1,
+        delta_z="cat",
+        match_radius="cat",
+        cosmo=cosmo,
     )
     # radus in unknown unit
     assert_raises(
@@ -256,10 +276,6 @@ def get_test_data_mem():
     }
     input2 = {k: v[:-1] for k, v in input1.items()}
     # members
-    mem_dat = [
-        (f"MEM{imem}", f"CL{icl}")
-        for imem, icl in enumerate([i for i in range(ncl) for j in range(i, ncl)])
-    ]
     input1_mem = {"id_cluster": [f"CL{i}" for i in range(ncl) for j in range(i, ncl)]}
     input2_mem = {"id_cluster": [f"CL{i}" for i in range(ncl) for j in range(i, ncl)][:-1]}
     input1_mem["id"] = [f"MEM{i}" for i in range(len(input1_mem["id_cluster"]))]
@@ -271,7 +287,7 @@ def get_test_data_mem():
     input1_mem["z"] = np.ones(len(input1_mem["id_cluster"]))
     input2_mem["z"] = np.ones(len(input2_mem["id_cluster"]))
     input2_mem["z"][-1] += 1
-    input2_mem["id_cluster"][0] = f"CL{ncl-2}"
+    input2_mem["id_cluster"][0] = f"CL{ncl - 2}"
     cat1 = ClCatalog("Cat1", **input1)
     cat2 = ClCatalog("Cat2", **input2)
     cat1.add_members(**input1_mem)
@@ -306,7 +322,11 @@ def test_membership():
     for delta_z in (0.1, None):
         mt.match_members(cat1.members, cat2.members, method="id", delta_z=delta_z)
         mt2.match_members(
-            cat1.members, cat2.members, method="angular_distance", radius="1arcsec", delta_z=delta_z
+            cat1.members,
+            cat2.members,
+            method="angular_distance",
+            radius="1arcsec",
+            delta_z=delta_z,
         )
         assert_equal(mt.matched_mems, mt2.matched_mems)
     # Save and load matched members
@@ -445,7 +465,6 @@ def test_membership_cfg(CosmoClass):
     print(cat1.data)
     print(cat2.data)
     # init match
-    cosmo = CosmoClass()
     mt = MembershipMatch()
     # test wrong matching config
     assert_raises(ValueError, mt.match_from_config, cat1, cat2, {"type": "unknown"})
@@ -565,7 +584,6 @@ def test_box(CosmoClass):
     cat2 = ClCatalog("Cat2", **input2)
     print(cat1.data)
     print(cat2.data)
-    cosmo = CosmoClass()
     mt = BoxMatch()
     assert_raises(NotImplementedError, mt._get_metric, None)
     # test mask intersection
@@ -599,7 +617,14 @@ def test_box(CosmoClass):
         mt.multiple(cat2, cat1, metric=metric)
     # Check unique with different preferences
     smt = ["CL0", "CL1", "CL2", "CL3", None]
-    for pref in ("angular_proximity", "GIoU", "IoAmin", "IoAmax", "IoAself", "IoAother"):
+    for pref in (
+        "angular_proximity",
+        "GIoU",
+        "IoAmin",
+        "IoAmax",
+        "IoAself",
+        "IoAother",
+    ):
         print(pref)
         _validate_unique_matching(
             mt,
@@ -725,7 +750,6 @@ def test_box_cfg(CosmoClass):
 
 
 def test_box_detailed_print(CosmoClass):
-    cosmo = CosmoClass()
     mt = BoxMatch()
     assert_raises(ValueError, mt._detailed_print, None, {"detailed_print_only": True})
     # prep data
@@ -808,10 +832,24 @@ def test_output_matched_catalog():
     cat2.data["id", "mass"].write(file_in2)
     # diff size files
     assert_raises(
-        ValueError, output_matched_catalog, file_in1, file_in2, file_out, cat1[:-1], cat2, "cross"
+        ValueError,
+        output_matched_catalog,
+        file_in1,
+        file_in2,
+        file_out,
+        cat1[:-1],
+        cat2,
+        "cross",
     )
     assert_raises(
-        ValueError, output_matched_catalog, file_in1, file_in2, file_out, cat1, cat2[:-1], "cross"
+        ValueError,
+        output_matched_catalog,
+        file_in1,
+        file_in2,
+        file_out,
+        cat1,
+        cat2[:-1],
+        "cross",
     )
     # normal functioning
     output_matched_catalog(file_in1, file_in2, file_out, cat1, cat2, "cross")

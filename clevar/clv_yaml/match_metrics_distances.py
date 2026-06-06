@@ -5,6 +5,7 @@ Matching metrics - distances functions for command line execution
 import pylab as plt
 
 from clevar.match_metrics import distances
+
 from .helper_funcs import make_cosmology
 from .match_metrics_parent import MetricYamlFuncs
 
@@ -34,8 +35,8 @@ class DistancesYamlFuncs(MetricYamlFuncs):
             "radial_bin_units": self.conf["radial_bin_units"],
             "cosmo": make_cosmology(general_conf["cosmology"]),
         }
-        self.pref_save_cen = f'{general_conf["outpath"]}/dist_cent_{self.conf["radial_bin_units"]}'
-        self.pref_save_z = f'{general_conf["outpath"]}/dist_z'
+        self.pref_save_cen = f"{general_conf['outpath']}/dist_cent_{self.conf['radial_bin_units']}"
+        self.pref_save_z = f"{general_conf['outpath']}/dist_z"
 
     def _main(self):
         # Central distances

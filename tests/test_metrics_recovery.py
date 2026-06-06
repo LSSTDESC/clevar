@@ -1,11 +1,13 @@
 """Tests for clevar/match_metrics/recovery"""
+
 import numpy as np
+from numpy.testing import assert_raises
+
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
-from clevar.utils import gaussian
 from clevar.match import ProximityMatch
 from clevar.match_metrics import recovery as rc
-from numpy.testing import assert_raises
+from clevar.utils import gaussian
 
 
 ##############################
@@ -48,7 +50,13 @@ def test_plot():
     rc.plot(cat, matching_type, redshift_bins, mass_bins, shape="line")
     rc.plot(cat, matching_type, redshift_bins, mass_bins, add_legend=True)
     assert_raises(
-        ValueError, rc.plot, cat, matching_type, redshift_bins, mass_bins, shape="unknown"
+        ValueError,
+        rc.plot,
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        shape="unknown",
     )
     rc.plot(
         cat,
@@ -69,10 +77,19 @@ def test_plot():
     )
     rc.plot(cat, matching_type, redshift_bins, mass_bins, plt_kwargs={"n_increase": 3})
     rc.plot(
-        cat, matching_type, redshift_bins, mass_bins, shape="line", plt_kwargs={"n_increase": 3}
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        shape="line",
+        plt_kwargs={"n_increase": 3},
     )
     rc.plot(
-        cat, matching_type, redshift_bins, mass_bins, plt_kwargs={"n_increase": 3, "scheme": [1, 1]}
+        cat,
+        matching_type,
+        redshift_bins,
+        mass_bins,
+        plt_kwargs={"n_increase": 3, "scheme": [1, 1]},
     )
 
 

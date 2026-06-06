@@ -3,16 +3,25 @@
 Main scaling functions using arrays.
 """
 
+# pylint: disable=too-many-lines
+
 import numpy as np
 
-from ...utils import none_val, autobins, binmasks, updated_dict, subdict, subdict_exclude
-from ..plot_helper import plt
+from ...utils import (
+    autobins,
+    binmasks,
+    none_val,
+    subdict,
+    subdict_exclude,
+    updated_dict,
+)
 from .. import plot_helper as ph
+from ..plot_helper import plt
 from .aux_funcs import (
     _add_bindata_and_powlawfit_array,
-    _plot_panel,
-    _plot_metrics,
     _plot_dist_vertical,
+    _plot_metrics,
+    _plot_panel,
 )
 
 
@@ -678,8 +687,8 @@ def plot_density_metrics(
     )["plots"]
     # Adjust plots
     labels = [
-        rf"$\sigma_{{{l.replace('p_', '')}}}$" if l[:2] == "p_" else l
-        for l in (c.get_label() for c in axes["right"].collections + axes["right"].lines)
+        rf"$\sigma_{{{lab.replace('p_', '')}}}$" if lab[:2] == "p_" else lab
+        for lab in (c.get_label() for c in axes["right"].collections + axes["right"].lines)
     ]
     axes["label"].legend(axes["right"].collections + axes["right"].lines, labels)
     axes["main"].set_xscale(xscale)

@@ -2,5 +2,13 @@
 The Catalogs and improved Astropy tables
 """
 
-from .tagdata import ClData, TagData
 from .catalog import Catalog, ClCatalog, MemCatalog
+from .tagdata import ClData, TagData
+
+__all__ = [
+    "Catalog",
+    "ClCatalog",
+    "MemCatalog",
+    "ClData",
+    "TagData",
+]

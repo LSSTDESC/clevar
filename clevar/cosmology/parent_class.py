@@ -3,6 +3,7 @@ Cosmology object abstract superclass
 """
 
 import numpy as np
+
 from ..constants import Constants as const
 
 

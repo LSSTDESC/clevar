@@ -1,20 +1,24 @@
 # pylint: disable=no-member, protected-access
-""" Tests for match.py """
+"""Tests for match.py"""
+
 import os
-import numpy as np
-import pytest
-import yaml
-from numpy.testing import assert_raises, assert_allclose, assert_equal
 from unittest import mock
 
+import pytest
+import yaml
+from numpy.testing import assert_equal, assert_raises
+
 from clevar import clv_yaml as clevar_yaml
-from clevar.clv_yaml import match_metrics_parent as metric_parent
 from clevar import optional_libs
+from clevar.clv_yaml import match_metrics_parent as metric_parent
 
 
 def test_yaml_parent():
     assert_raises(
-        NotImplementedError, metric_parent.MetricYamlFuncs._set_individual_conf, None, None
+        NotImplementedError,
+        metric_parent.MetricYamlFuncs._set_individual_conf,
+        None,
+        None,
     )
     assert_raises(NotImplementedError, metric_parent.MetricYamlFuncs._main, None)
     assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_density, None)
@@ -22,7 +26,9 @@ def test_yaml_parent():
     assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_density_metrics, None)
     assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_other_color, None)
     assert_raises(
-        NotImplementedError, metric_parent.ScalingYamlFuncs._core_density_other_panel, None
+        NotImplementedError,
+        metric_parent.ScalingYamlFuncs._core_density_other_panel,
+        None,
     )
     assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_dist_self, None)
     assert_raises(NotImplementedError, metric_parent.ScalingYamlFuncs._core_dist, None)
@@ -53,13 +59,14 @@ def test_yaml_helper_functions():
     original_input = mock.builtins.input
     mock.builtins.input = lambda _: "pass"
     assert_equal(
-        hf.get_input_loop(options_msg="test", actions={"pass": (lambda x: "ok", [0], {})}), "ok"
+        hf.get_input_loop(options_msg="test", actions={"pass": (lambda x: "ok", [0], {})}),
+        "ok",
     )
     mock.builtins.input = original_input
     # cosmology
     hf.make_cosmology({"backend": "astropy"})
     if optional_libs.ccl is None:
-        pytest.skip(f"Missing backend CCL.")
+        pytest.skip("Missing backend CCL.")
     else:
         hf.make_cosmology({"backend": "ccl"})
     assert_raises(ValueError, hf.make_cosmology, {"backend": "unknown"})
@@ -74,7 +81,7 @@ def create_base_matched_files(config_file, matching_mode):
     # get demo config
     config = yaml.read(config_file)
     config["matching_mode"] = matching_mode
-    outpath = config["outpath"] + "_" + matching_mode
+    config["outpath"] + "_" + matching_mode
     config_file_temp = "cfg_cbmf_temp.yaml"
     yaml.write(config, config_file_temp)
     # Match
@@ -83,8 +90,6 @@ def create_base_matched_files(config_file, matching_mode):
     clevar_yaml.artificial_footprint(config_file_temp, True, True, case="1")
     clevar_yaml.artificial_footprint(config_file_temp, True, True, case="2")
     # Masks
-    ftpt_quantities_file1 = f"{outpath}/ftpt_quantities1.fits"
-    ftpt_quantities_file2 = f"{outpath}/ftpt_quantities2.fits"
     clevar_yaml.footprint_masks(config_file_temp, True, False, case="1")
     clevar_yaml.footprint_masks(config_file_temp, True, False, case="2")
     os.system(f"rm -f {config_file_temp}")
@@ -123,7 +128,11 @@ def test_yaml_funcs_prox():
     # fail method for matching
     yaml.write({"outpath": "temp", "matching_mode": "unknown"}, "cfg.yml")
     assert_raises(
-        ValueError, clevar_yaml.match, "cfg.yml", overwrite_config=False, overwrite_files=False
+        ValueError,
+        clevar_yaml.match,
+        "cfg.yml",
+        overwrite_config=False,
+        overwrite_files=False,
     )
     # Match, used diff cosmology and overwrite
     # 1

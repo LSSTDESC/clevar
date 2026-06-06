@@ -3,17 +3,17 @@ Footprint class
 """
 
 import warnings
+
 import numpy as np
-
-from astropy.coordinates import SkyCoord
 from astropy import units as u
+from astropy.coordinates import SkyCoord
 
-from ..catalog import ClData, TagData, ClCatalog
+from .. import optional_libs as ol
+from ..catalog import ClCatalog, ClData, TagData
 from ..geometry import convert_units, physical_bank
+from ..match_metrics import plot_helper as ph
 from ..utils import hp, updated_dict
 from .nfw_funcs import nfw2D_profile_flatcore_unnorm
-from ..match_metrics import plot_helper as ph
-from .. import optional_libs as ol
 
 
 class Footprint(TagData):
@@ -650,32 +650,38 @@ class Footprint(TagData):
                         redshift=cluster["z"],
                         cosmo=cosmo,
                     )
-                    plt_cl = lambda ra, dec, radius: [
-                        axis.plot(
-                            ra_ + radius_ * sin / np.cos(np.radians(dec_)),
-                            dec_ + radius_ * cos,
-                            **updated_dict({"color": "b", "lw": 1}, cluster_kwargs),
-                        )
-                        for ra_, dec_, radius_ in np.transpose([ra, dec, radius])[
-                            (ra + radius >= xlim[0])
-                            * (ra - radius < xlim[1])
-                            * (dec + radius >= ylim[0])
-                            * (dec - radius < ylim[1])
+
+                    def plt_cl(ra, dec, radius):
+                        return [
+                            axis.plot(
+                                ra_ + radius_ * sin / np.cos(np.radians(dec_)),
+                                dec_ + radius_ * cos,
+                                **updated_dict({"color": "b", "lw": 1}, cluster_kwargs),
+                            )
+                            for ra_, dec_, radius_ in np.transpose([ra, dec, radius])[
+                                (ra + radius >= xlim[0])
+                                * (ra - radius < xlim[1])
+                                * (dec + radius >= ylim[0])
+                                * (dec - radius < ylim[1])
+                            ]
                         ]
-                    ]
                 else:
                     warnings.warn(
                         "Column 'radius' or radius_unit of cluster not set up. "
                         "Plotting clusters as points with plt.scatter."
                     )
                     rad_deg = np.ones(cluster.size)
-                    lims_mask = lambda ra, dec: (
-                        (ra >= xlim[0]) * (ra < xlim[1]) * (dec >= ylim[0]) * (dec < ylim[1])
-                    )
-                    plt_cl = lambda ra, dec, radius: axis.scatter(
-                        *np.transpose([ra, dec])[lims_mask(ra, dec)].T,
-                        **updated_dict({"color": "b", "s": 5}, cluster_kwargs),
-                    )
+
+                    def lims_mask(ra, dec):
+                        return (ra >= xlim[0]) * (ra < xlim[1]) * (dec >= ylim[0]) * (dec < ylim[1])
+
+                    # pylint: disable=unused-argument
+                    def plt_cl(ra, dec, radius):
+                        return axis.scatter(
+                            *np.transpose([ra, dec])[lims_mask(ra, dec)].T,
+                            **updated_dict({"color": "b", "s": 5}, cluster_kwargs),
+                        )
+
                 # Plot clusters in regular range
                 plt_cl(cluster["ra"], cluster["dec"], rad_deg)
                 # Plot clusters using -180<ra<0

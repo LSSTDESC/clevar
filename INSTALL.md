@@ -1,14 +1,13 @@
-
 # Installation instructions
 
-* [Main readme](README.md)
+- [Main readme](README.md)
 
 ## Table of contents
+
 1. [Basic installation](#basic_install)
 2. [Access to the proper environment on cori.nersc.gov](#access_to_the_proper_environment_on_cori)
 3. [An alternative installation at NERSC or at CC-IN2P3 for DESC members](#from_desc_conda_env)
 4. [Making a local copy of `ClEvaR`](#making_a_local_copy_of_clevar)
-
 
 ## Basic procedure <a name="basic_install"></a>
 
@@ -31,7 +30,7 @@ Now, you can install `ClEvaR` and its dependencies as
 
 ## Access to the proper environment on cori.nersc.gov <a name="access_to_the_proper_environment_on_cori"></a>
 
-If you have access to NERSC, this will likely be the easiest to make sure you have the appropriate environment.  After logging into cori.nersc.gov, you will need to execute the following.  We recommend executing line-by-line to avoid errors:
+If you have access to NERSC, this will likely be the easiest to make sure you have the appropriate environment. After logging into cori.nersc.gov, you will need to execute the following. We recommend executing line-by-line to avoid errors:
 
 ```bash
     module load python  # Also loads anaconda
@@ -42,11 +41,11 @@ If you have access to NERSC, this will likely be the easiest to make sure you ha
     conda install -c conda-forge firefox  # Need a browser to view jupyter notebooks
 ```
 
-Note, for regular contributions and use, we recommend adding `module load python` to your `~/.bashrc` so you have anaconda installed every time you log in.  You will subseqeuntly also want to be in the correct environment whenever working with `clevar`, which means running `source activate clevarenv` at the start of each session.
+Note, for regular contributions and use, we recommend adding `module load python` to your `~/.bashrc` so you have anaconda installed every time you log in. You will subseqeuntly also want to be in the correct environment whenever working with `clevar`, which means running `source activate clevarenv` at the start of each session.
 
 Once in your `ClEvaR` conda env, you may follow the [basic procedure](#basic_install) to install `ClEvaR` and its dependencies.
 
-The above allows you to develop at NERSC and run pytest.  Your workflow as a developer would be to make your changes, do a `python setup.py install` then `pytest` to make sure your changes did not break any tests.
+The above allows you to develop at NERSC and run pytest. Your workflow as a developer would be to make your changes, do a `python setup.py install` then `pytest` to make sure your changes did not break any tests.
 
 If you are a DESC member you may also add to your `ClEvaR` environment the GCR and GCRCatalog packages to access the DC2 datasets at NERSC. To run the DC2 example notebooks provided in `ClEvaR`, the following need to be installed in your `ClEvaR` environment at NERSC. Once in your `ClEvaR` environment (`source activate clevarenv`), run
 
@@ -66,7 +65,7 @@ To open up a notebook from NERSC in your browser, you will need to go to the [ne
     python -m ipykernel install --user --name=conda-clevarenv
 ```
 
-Clicking on the upper right corner of the notebook will provide options for your kernel.  Choose the kernel `conda-clevarenv` that you just created.
+Clicking on the upper right corner of the notebook will provide options for your kernel. Choose the kernel `conda-clevarenv` that you just created.
 
 ## Making a local copy of `ClEvaR` <a name="making_a_local_copy_of_clevar"></a>
 
@@ -80,7 +79,9 @@ To create a fork, navigate to the [`ClEvaR` home page](https://github.com/LSSTDE
     cd clevar
     git remote add base git@github.com:LSSTDESC/clevar.git
 ```
+
 If you do have edit privileges to `ClEvaR`, it may be easier to simply clone the base `ClEvaR` repository.
-``` bash
+
+```bash
     git clone git@github.com:LSSTDESC/clevar.git
 ```

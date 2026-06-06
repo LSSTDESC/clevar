@@ -6,13 +6,14 @@ import os
 import warnings
 
 import clevar
+
 from .helper_funcs import (
-    yaml,
+    add_mem_catalog,
+    get_input_loop,
     loadconf,
     make_catalog,
-    add_mem_catalog,
     make_cosmology,
-    get_input_loop,
+    yaml,
 )
 
 
@@ -72,9 +73,9 @@ def proximity(config_file, overwrite_config, overwrite_files):
         prt_msg = (
             "# Start proximity matching"
             if len(steps) == 1
-            else f'# Run step {step.replace("step", "")}'
+            else f"# Run step {step.replace('step', '')}"
         )
-        print(f'\n{"#"*len(prt_msg)}\n{prt_msg}\n{"#"*len(prt_msg)}')
+        print(f"\n{'#' * len(prt_msg)}\n{prt_msg}\n{'#' * len(prt_msg)}")
         cosmo_ = make_cosmology(match_conf["cosmology"]) if "cosmology" in match_conf else cosmo
         if cosmo_ != cosmo:
             warn_msg = "replacing default cosmology in matching with:\n    " + "\n    ".join(
@@ -127,7 +128,7 @@ def membership(config_file, overwrite_config, overwrite_files):
     # Run matching
     mt_membership = clevar.match.MembershipMatch()
     prt_msg = "# Start membership matching"
-    print(f'\n{"#"*len(prt_msg)}\n{prt_msg}\n{"#"*len(prt_msg)}')
+    print(f"\n{'#' * len(prt_msg)}\n{prt_msg}\n{'#' * len(prt_msg)}")
     mt_membership.match_from_config(cat1, cat2, match_config)
     save_matching_files(config, mt_membership, cat1, cat2, overwrite_files)
 
@@ -148,7 +149,7 @@ def save_matching_files(config, mt_obj, cat1, cat2, overwrite_files):
     overwrite_files: bool
         Forces overwrite of matching output files
     """
-    out1, out2 = f'{config["outpath"]}/match1.fits', f'{config["outpath"]}/match2.fits'
+    out1, out2 = f"{config['outpath']}/match1.fits", f"{config['outpath']}/match2.fits"
     check_actions = {
         "o": (lambda: True, [], {}),
         "q": (lambda: False, [], {}),
@@ -198,8 +199,8 @@ def write_output(config_file, overwrite_config, overwrite_files):
     print("\n# Adding Matching Info")
     clevar.match.parent.Match().load_matches(cat1, cat2, out_dir=config["outpath"])
     # Save files
-    out1, out2 = f'{config["outpath"]}/catalog1.fits', f'{config["outpath"]}/catalog2.fits'
-    out_matched = f'{config["outpath"]}/catalog_matched.fits'
+    out1, out2 = f"{config['outpath']}/catalog1.fits", f"{config['outpath']}/catalog2.fits"
+    out_matched = f"{config['outpath']}/catalog_matched.fits"
     check_actions = {
         "o": (lambda: True, [], {}),
         "q": (lambda: False, [], {}),

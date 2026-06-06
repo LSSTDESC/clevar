@@ -4,8 +4,8 @@ The BoxMatch class
 
 import numpy as np
 
-from .spatial import SpatialMatch
 from ..catalog import ClData
+from .spatial import SpatialMatch
 
 _area_type_funcs = {
     "min": lambda area1, area2: np.min([area1, area2], axis=0),
@@ -181,7 +181,7 @@ class BoxMatch(SpatialMatch):
                 print(f"        Pass   : {bool(np.prod(val[10:]))} (", *val[10:], ")")
                 print(
                     "        Areas  :",
-                    ", ".join([f"{v*3600:.2f}" for v in val[6:9]]),
+                    ", ".join([f"{v * 3600:.2f}" for v in val[6:9]]),
                     f"arcmin2 ( {locs['metric']}: {val[9]:.2g} )",
                 )
                 print(

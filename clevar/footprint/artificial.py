@@ -3,6 +3,7 @@ Functions to create artificial footprints
 """
 
 import numpy as np
+
 from ..utils import hp
 from .footprint import Footprint
 
@@ -45,7 +46,7 @@ def create_footprint(ra, dec, nside=None, min_density=2, neighbor_fill=None, nes
     ftpt = Footprint(nside=nside, pixel=pixel, nest=nest)
     # filling holes
     ftpt = ftpt if neighbor_fill is None else fill_holes_conv(ftpt, neighbor_fill, nest=nest)
-    print(f'Pixels in footprint: {ftpt["pixel"].size:,}')
+    print(f"Pixels in footprint: {ftpt['pixel'].size:,}")
     return ftpt
 
 
@@ -75,7 +76,7 @@ def nside_from_density(ra, dec, min_density, nest=False):
     pixel = hp.ang2pix(nside, ra, dec, lonlat=True, nest=nest)
     pixel_set = np.array(list(set(pixel)))
     for power in range(2, 12):
-        print(f"NSIDE({nside}) -> {pixel.size/pixel_set.size} clusters per pixel")
+        print(f"NSIDE({nside}) -> {pixel.size / pixel_set.size} clusters per pixel")
         if pixel.size / pixel_set.size < min_density:
             return nside, pixel_set
         nside = 2**power
@@ -146,11 +147,11 @@ def fill_holes_conv(ftpt, neighbor_fill, nest=False):
             print(" - filling")
             ftpt = fill_holes(ftpt, neighbor_fill, nest=nest)
             len_t = ftpt["pixel"].size
-            print(f"   size: {len_l:,} -> {len_t:,} (+{len_t-len_l:,})")
+            print(f"   size: {len_l:,} -> {len_t:,} (+{len_t - len_l:,})")
             if len_l == len_t:
                 break
             len_l = len_t
         print(" Total Change:")
-        print(f"   size: {len_0:,} -> {len_t:,} (+{len_t-len_0:,})")
+        print(f"   size: {len_0:,} -> {len_t:,} (+{len_t - len_0:,})")
         print("### filled! ###")
     return ftpt

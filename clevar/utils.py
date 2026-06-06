@@ -1,12 +1,11 @@
 """General utility functions that are used in multiple modules"""
 
 import importlib
-
 import time
 
+import healpy as hp
 import numpy as np
 from scipy.interpolate import interp1d
-import healpy as hp
 
 
 def import_safe(libname):
@@ -285,12 +284,12 @@ def str2dataunit(input_str, units_bank, err_msg=""):
     unit_bank: list
         Bank of units available.
     """
-    # pylint: disable-msg=bare-except
     for unit in units_bank:
         if unit.lower() in input_str.lower():
             try:
                 return float(input_str.lower().replace(unit.lower(), "")), unit.lower()
-            except:
+            # pylint: disable=broad-exception-caught
+            except Exception:
                 pass
     raise ValueError(f"Unknown unit of '{input_str}', must be in {units_bank}. {err_msg}")
 
@@ -507,11 +506,11 @@ def get_dicts_diff(dict1, dict2, keys=None, header=("Name", "dict1", "dict2"), m
         )
     if len(diff_lines) > 1:
         diff_lines = np.array(diff_lines)
-        max_sizes = [max(veclen(l)) for l in diff_lines.T]
+        max_sizes = [max(veclen(line)) for line in diff_lines.T]
         fmts = f"  %-{max_sizes[0]}s | %{max_sizes[1]}s | %{max_sizes[2]}s"
         print(msg)
         print(fmts % tuple(diff_lines[0]))
-        print(f'  {"-"*max_sizes[0]}-|-{"-"*max_sizes[1]}-|-{"-"*max_sizes[2]}')
+        print(f"  {'-' * max_sizes[0]}-|-{'-' * max_sizes[1]}-|-{'-' * max_sizes[2]}")
         for line in diff_lines[1:]:
             print(fmts % tuple(line))
     return diff_lines[1:]

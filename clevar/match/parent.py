@@ -3,6 +3,7 @@ The Match class
 """
 
 import os
+
 import numpy as np
 
 from ..utils import veclen
@@ -61,7 +62,7 @@ class Match:
         )
 
     def _rm_dup_add_hist(self, cat1, cat2, hist):
-        print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
+        print(f"* {(veclen(cat1['mt_multi_self']) > 0).sum():,}/{cat1.size:,} objects matched.")
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
         self.history.append(hist)
@@ -143,7 +144,7 @@ class Match:
             if cat1["mt_self"][ind1] is None:
                 self._cat1_mt[ind1] = set_unique(cat1, ind1, cat2)
         self._cat1_mt *= cat1.get_matching_mask("self")  # In case ang pref removes a match
-        print(f'* {cat1.get_matching_mask("self").sum():,}/{cat1.size:,} objects matched.')
+        print(f"* {cat1.get_matching_mask('self').sum():,}/{cat1.size:,} objects matched.")
 
         # Add match conf to history
         cfg = {"func": "unique", "cats": f"{cat1.name}, {cat2.name}", "preference": preference}
@@ -329,7 +330,7 @@ class Match:
         """
         print(f"Cross Matches ({cat1.name})")
         cat1.cross_match()
-        print(f'* {cat1.get_matching_mask("cross").sum():,}/{cat1.size:,} objects matched.')
+        print(f"* {cat1.get_matching_mask('cross').sum():,}/{cat1.size:,} objects matched.")
 
     def save_matches(self, cat1, cat2, out_dir, overwrite=False):
         """

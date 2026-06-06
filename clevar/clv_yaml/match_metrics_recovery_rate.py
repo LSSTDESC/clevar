@@ -3,10 +3,12 @@ Matching metrics - recovery rate functions for command line execution
 """
 
 import os
+
 import numpy as np
 import pylab as plt
 
 from clevar.match_metrics import recovery
+
 from .match_metrics_parent import MetricYamlFuncs
 
 
@@ -94,7 +96,7 @@ class RecoveryYamlFuncs(MetricYamlFuncs):
                     print(f"      * {mask[mask].size:,} clusters masked in total")
             # Add mask to args
             self.kwargs[{"all": "mask", "unmatched": "mask_unmatched"}[mask_case]] = mask
-        self.rec_name = f'{self.pref_save}{self.conf["matching_type"]}'
+        self.rec_name = f"{self.pref_save}{self.conf['matching_type']}"
         self.rec_suf = {"all": "_0mask", "unmatched": "_0ummask", "none": ""}[mask_case]
 
     def _simple_recovery_catalog_by_redshift(self, ind):

@@ -3,14 +3,15 @@ Auxiliary functions for scaling array functions.
 """
 
 import warnings
+
 import numpy as np
+from scipy.interpolate import UnivariateSpline as spline
 from scipy.optimize import curve_fit
 from scipy.stats import binned_statistic
-from scipy.interpolate import UnivariateSpline as spline
 
-from ...utils import none_val, autobins, binmasks, deep_update, gaussian, updated_dict
-from ..plot_helper import plt, NullFormatter
+from ...utils import autobins, binmasks, deep_update, gaussian, none_val, updated_dict
 from .. import plot_helper as ph
+from ..plot_helper import NullFormatter, plt
 
 
 def _prep_fit_data(xvals, yvals, yerr=None, statistics="mean", bins_x=None, bins_y=None):
@@ -42,13 +43,16 @@ def _prep_fit_data(xvals, yvals, yerr=None, statistics="mean", bins_x=None, bins
     xdata, ydata, errdata: array
         Data for fit
     """
+    bins_hist = None
     if statistics == "individual":
-        return xvals, yvals, yerr
+        return xvals, yvals, yerr, None, None
     if statistics == "mode":
         bins_hist = autobins(yvals, bins_y)
         bins_hist_m = 0.5 * (bins_hist[1:] + bins_hist[:-1])
+
         # pylint: disable=unnecessary-lambda-assignment
-        statistic = lambda vals: bins_hist_m[np.histogram(vals, bins=bins_hist)[0].argmax()]
+        def statistic(vals):
+            return bins_hist_m[np.histogram(vals, bins=bins_hist)[0].argmax()]
     elif statistics == "mean":
         statistic = "mean"
     else:
@@ -60,8 +64,9 @@ def _prep_fit_data(xvals, yvals, yerr=None, statistics="mean", bins_x=None, bins
     err = binned_statistic(
         xvals, none_val(yerr, np.zeros(len(yvals))), bins=xbins, statistic="mean"
     )[0]
+    counts = np.histogram(xvals, bins=xbins)[0]
     valid = ~np.isnan(xdata)
-    return xdata[valid], ydata[valid], np.sqrt(std**2 + err**2)[valid]
+    return xdata[valid], ydata[valid], np.sqrt(std**2 + err**2)[valid], counts[valid], bins_hist
 
 
 def _pw_func(xvals, coeff_ang, coeff_lin):
@@ -149,7 +154,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     # set log/lin funcs
     tfunc, ifunc = (np.log10, lambda x: 10**x) if log else (lambda x: x, lambda x: x)
     # data
-    vbin_1, vbin_2, vbin_err2 = _prep_fit_data(
+    vbin_1, vbin_2, vbin_err2, counts, bins_y = _prep_fit_data(
         tfunc(values1),
         tfunc(values2),
         bins_x=tfunc(bins1) if hasattr(bins1, "__len__") else bins1,
@@ -159,7 +164,13 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
     )
     if len(vbin_1) == 0:
         return info
-    info["binned_data"] = {"x": vbin_1, "y": vbin_2, "yerr": vbin_err2}
+    info["binned_data"] = {
+        "x": vbin_1,
+        "y": vbin_2,
+        "yerr": vbin_err2,
+        "counts": counts,
+        "bins_y": bins_y,
+    }
     # fit
     if add_fit:
         fit, cov = curve_fit(_pw_func, vbin_1, vbin_2, sigma=vbin_err2, absolute_sigma=True)[:2]
@@ -202,12 +213,12 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
             return f"{xval:.2f}" if 0.01 < abs(fit[1]) < 100 else f"{xval:.2e}"
 
         fit0_lab = rf"({_fmt0(fit[0])}\pm {_fmt0(sig[0])})"
-        fit1_lab = rf'{"-"*(fit[1]<0)}({_fmt1(abs(fit[1]))}\pm {_fmt1(sig[1])})'
+        fit1_lab = rf"{'-' * int(fit[1] < 0)}({_fmt1(abs(fit[1]))}\pm {_fmt1(sig[1])})"
         avg_label = rf"\left<{ylabel}\right|\left.{xlabel}\right>"
         fit_label = (
             rf"${avg_label}=10^{{{fit1_lab}}}\;({xlabel})^{{{fit0_lab}}}$"
             if log
-            else rf"${avg_label}={fit0_lab}\;{xlabel}{'+'*(fit[1]>=0)}{fit1_lab}$"
+            else rf"${avg_label}={fit0_lab}\;{xlabel}{'+' * (fit[1] >= 0)}{fit1_lab}$"
         )
         # plot fit
         plot_kwargs_ = updated_dict(
@@ -215,7 +226,7 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
             kwargs.get("plot_kwargs", {}),
         )
         sort = np.argsort(values1)
-        xvals = values1[sort]
+        xvals = np.array(values1[sort])
         ax.plot(xvals, info["fit"]["func"](xvals), **plot_kwargs_)
         deep_update(
             info,

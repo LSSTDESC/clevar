@@ -1,16 +1,26 @@
 """Tests for clevar/footprint"""
+
 import os
-import numpy as np
+
 import healpy as hp
 import healsparse as hs
+import numpy as np
+from numpy.testing import (
+    assert_allclose,
+    assert_almost_equal,
+    assert_equal,
+    assert_raises,
+)
 
 import clevar
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology
 from clevar.footprint import Footprint
 from clevar.footprint.artificial import create_footprint
-from clevar.footprint.nfw_funcs import nfw2D_profile_flatcore, nfw2D_profile_flatcore_unnorm
-from numpy.testing import assert_raises, assert_allclose, assert_equal, assert_almost_equal
+from clevar.footprint.nfw_funcs import (
+    nfw2D_profile_flatcore,
+    nfw2D_profile_flatcore_unnorm,
+)
 
 
 def test_installation_healsparse():
@@ -65,7 +75,9 @@ def test_footprint():
     assert_raises(ValueError, Footprint.read, "ftpt1.fits", nside=nside, tags=None)
     assert_raises(ValueError, Footprint.read, "ftpt1.fits", nside=nside, tags={"x": "x"})
     ftpt1 = Footprint.read(
-        "ftpt1.fits", nside=nside, tags={"pixel": "pixel", "detfrac": "detfrac", "zmax": "zmax"}
+        "ftpt1.fits",
+        nside=nside,
+        tags={"pixel": "pixel", "detfrac": "detfrac", "zmax": "zmax"},
     )
     ftpt1 = Footprint.read("ftpt1.fits", tags={"pixel": "pixel"}, nside=nside)
     os.system("rm -f ftpt1.fits")
@@ -82,7 +94,7 @@ def test_footprint():
     hsp_map.write("hsp_map.fits")
     tags0 = {"detfrac": "detfrac", "zmax": "zmax"}
     for kwargs in ({}, {"tags": tags0}, {"full": False, "tags": tags0}):
-        ftpt_ = Footprint.read_healsparse("hsp_map.fits", **kwargs)
+        Footprint.read_healsparse("hsp_map.fits", **kwargs)
     os.system("rm -f hsp_map.fits")
     # healsparse with 1 map only
 
@@ -90,7 +102,7 @@ def test_footprint():
     hsp_map.write("hsp_map.fits")
     assert_raises(ValueError, Footprint.read_healsparse, "hsp_map.fits", full=False)
     assert_raises(ValueError, Footprint.read_healsparse, "hsp_map.fits", tags=tags0)
-    ftpt_ = Footprint.read_healsparse("hsp_map.fits")
+    Footprint.read_healsparse("hsp_map.fits")
     os.system("rm -f hsp_map.fits")
 
     # Add quantities to catalog
@@ -115,7 +127,10 @@ def test_coverfrac():
             nside,
             nest=nest,
             pixel=hp.query_disc(
-                nside, vec=hp.ang2vec(0, 0, lonlat=True), radius=np.radians(0.1), nest=nest
+                nside,
+                vec=hp.ang2vec(0, 0, lonlat=True),
+                radius=np.radians(0.1),
+                nest=nest,
             ),
         )
         assert_equal(ft.get_coverfrac(0, 0, 0, 5, "arcmin"), 1)
@@ -143,7 +158,6 @@ def test_coverfrac():
 
 def test_artificial_footprint():
     cat1, cat2 = get_test_data()
-    cosmo = AstroPyCosmology()
 
     # baseline footprint
 

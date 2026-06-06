@@ -1,10 +1,12 @@
 """Tests for clevar/match_metrics/recovery"""
+
 import numpy as np
+from numpy.testing import assert_raises
+
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
 from clevar.match_metrics import scaling
-from numpy.testing import assert_raises
 
 
 ##############################
@@ -37,116 +39,114 @@ class _test_data:
 ##############################
 def test_z_simple():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    ax = scaling.redshift(cat1, cat2, "cat1")
-    ax = scaling.redshift(cat1, cat2, "cat1", add_err=True)
+    scaling.redshift(cat1, cat2, "cat1")
+    scaling.redshift(cat1, cat2, "cat1", add_err=True)
 
 
 def test_z_color():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_masscolor(cat1, cat2, "cat1", add_err=True)
-    ax = scaling.redshift_masscolor(cat1, cat2, "cat1", add_cb=False)
+    scaling.redshift_masscolor(cat1, cat2, "cat1", add_err=True)
+    scaling.redshift_masscolor(cat1, cat2, "cat1", add_cb=False)
 
 
 def test_z_density():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_density(cat1, cat2, "cat1", add_err=True)
-    info = scaling.redshift_density(cat1, cat2, "cat1", ax_rotation=45)
+    scaling.redshift_density(cat1, cat2, "cat1", add_err=True)
+    scaling.redshift_density(cat1, cat2, "cat1", ax_rotation=45)
 
 
 def test_z_panel():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_masspanel(cat1, cat2, "cat1", add_err=True, mass_bins=4)
+    scaling.redshift_masspanel(cat1, cat2, "cat1", add_err=True, mass_bins=4)
 
 
 def test_z_density_panel():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_density_masspanel(cat1, cat2, "cat1", add_err=True)
+    scaling.redshift_density_masspanel(cat1, cat2, "cat1", add_err=True)
 
 
 def test_z_metrics():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_metrics(cat1, cat2, "cat1")
+    scaling.redshift_metrics(cat1, cat2, "cat1")
 
 
 def test_z_density_metrics():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_density_metrics(cat1, cat2, "cat1")
+    scaling.redshift_density_metrics(cat1, cat2, "cat1")
 
 
 def test_z_dist():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_dist(cat1, cat2, "cat1")
+    scaling.redshift_dist(cat1, cat2, "cat1")
 
 
 def test_z_dist_self():
-    cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_dist_self(cat1)
+    cat1, _cat2 = _test_data.cat1, _test_data.cat2
+    scaling.redshift_dist_self(cat1)
 
 
 def test_z_density_dist():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.redshift_density_dist(cat1, cat2, "cat1")
+    scaling.redshift_density_dist(cat1, cat2, "cat1")
 
 
 def test_m_simple():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass(cat1, cat2, "cat1", add_err=True)
+    scaling.mass(cat1, cat2, "cat1", add_err=True)
 
 
 def test_m_color():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass_zcolor(cat1, cat2, "cat1", add_err=True)
+    scaling.mass_zcolor(cat1, cat2, "cat1", add_err=True)
 
 
 def test_m_density():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass_density(cat1, cat2, "cat1", add_err=True)
+    scaling.mass_density(cat1, cat2, "cat1", add_err=True)
     scaling.mass_density(cat1, cat2, "cat1", add_bindata=True, fit_bins1=[1, 2], fit_bins2=3)
 
 
 def test_m_panel():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass_zpanel(cat1, cat2, "cat1", add_err=True)
+    scaling.mass_zpanel(cat1, cat2, "cat1", add_err=True)
 
 
 def test_m_density_panel():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass_density_zpanel(cat1, cat2, "cat1", add_err=True)
+    scaling.mass_density_zpanel(cat1, cat2, "cat1", add_err=True)
 
 
 def test_color_panel():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.ClCatalogFuncs.plot_panel(
+    scaling.ClCatalogFuncs.plot_panel(
         cat1, cat2, "cat1", "mass", col_color="z", col_panel="z", bins_panel=3
     )
-    info = scaling.ClCatalogFuncs.plot_panel(
+    scaling.ClCatalogFuncs.plot_panel(
         cat1, cat2, "cat1", "mass", col_color="z", col_panel="z", bins_panel=[3, 4, 5]
     )
 
 
 def test_m_metrics():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass_metrics(cat1, cat2, "cat1")
-    info = scaling.mass_metrics(cat1, cat2, "cat1", metrics=["p_68"])
+    scaling.mass_metrics(cat1, cat2, "cat1")
+    scaling.mass_metrics(cat1, cat2, "cat1", metrics=["p_68"])
     assert_raises(ValueError, scaling.mass_metrics, cat1, cat2, "cat1", metrics=["xxx"])
-    info = scaling.mass_metrics(cat1, cat2, "cat1", metrics_mode="diff_log")
+    scaling.mass_metrics(cat1, cat2, "cat1", metrics_mode="diff_log")
 
 
 def test_m_density_metrics():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass_density_metrics(
-        cat1, cat2, "cat1", mask1=cat1["mass"] > 0, mask2=cat2["mass"] > 0
-    )
+    scaling.mass_density_metrics(cat1, cat2, "cat1", mask1=cat1["mass"] > 0, mask2=cat2["mass"] > 0)
 
 
 def test_m_dist():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass_dist(cat1, cat2, "cat1", mass_bins=6)
+    scaling.mass_dist(cat1, cat2, "cat1", mass_bins=6)
 
 
 def test_m_dist_self():
-    cat1, cat2 = _test_data.cat1, _test_data.cat2
-    info = scaling.mass_dist_self(cat1)
+    cat1, _cat2 = _test_data.cat1, _test_data.cat2
+    scaling.mass_dist_self(cat1)
     assert_raises(
         ValueError,
         scaling.ClCatalogFuncs.plot_dist_self,
@@ -161,10 +161,22 @@ def test_m_density_dist():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
     info = scaling.mass_density_dist(cat1, cat2, "cat1", add_fit=True, fit_bins1=5, fit_bins2=3)
     info = scaling.mass_density_dist(
-        cat1, cat2, "cat1", add_fit=True, fit_bins1=5, fit_bins2=3, fit_statistics="mean"
+        cat1,
+        cat2,
+        "cat1",
+        add_fit=True,
+        fit_bins1=5,
+        fit_bins2=3,
+        fit_statistics="mean",
     )
     info = scaling.mass_density_dist(
-        cat1, cat2, "cat1", add_fit=True, fit_bins1=5, fit_bins2=3, fit_statistics="individual"
+        cat1,
+        cat2,
+        "cat1",
+        add_fit=True,
+        fit_bins1=5,
+        fit_bins2=3,
+        fit_statistics="individual",
     )
     assert_raises(
         ValueError,
@@ -176,7 +188,13 @@ def test_m_density_dist():
         fit_statistics="unknown",
     )
     info = scaling.mass_density_dist(
-        cat1, cat2, "cat1", add_fit=True, fit_bins1=2, fit_bins2=3, fit_statistics="mode"
+        cat1,
+        cat2,
+        "cat1",
+        add_fit=True,
+        fit_bins1=2,
+        fit_bins2=3,
+        fit_statistics="mode",
     )
     scaling.mass_density_dist(cat1, cat2, "cat1", add_fit=True, fit_bins1=[1e16, 1e18], fit_bins2=3)
     # run fit functions

@@ -1,6 +1,7 @@
-""" Provide a consistent set of constants to use through clevar """
+"""Provide a consistent set of constants to use through clevar"""
 
 from enum import Enum
+
 import numpy as np
 
 
