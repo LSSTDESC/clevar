@@ -49,8 +49,10 @@ def _prep_fit_data(xvals, yvals, yerr=None, statistics="mean", bins_x=None, bins
     if statistics == "mode":
         bins_hist = autobins(yvals, bins_y)
         bins_hist_m = 0.5 * (bins_hist[1:] + bins_hist[:-1])
+
         # pylint: disable=unnecessary-lambda-assignment
-        statistic = lambda vals: bins_hist_m[np.histogram(vals, bins=bins_hist)[0].argmax()]
+        def statistic(vals):
+            return bins_hist_m[np.histogram(vals, bins=bins_hist)[0].argmax()]
     elif statistics == "mean":
         statistic = "mean"
     else:
@@ -211,12 +213,12 @@ def _add_bindata_and_powlawfit(ax, values1, values2, err2, log=False, **kwargs):
             return f"{xval:.2f}" if 0.01 < abs(fit[1]) < 100 else f"{xval:.2e}"
 
         fit0_lab = rf"({_fmt0(fit[0])}\pm {_fmt0(sig[0])})"
-        fit1_lab = rf'{"-"*int(fit[1]<0)}({_fmt1(abs(fit[1]))}\pm {_fmt1(sig[1])})'
+        fit1_lab = rf"{'-' * int(fit[1] < 0)}({_fmt1(abs(fit[1]))}\pm {_fmt1(sig[1])})"
         avg_label = rf"\left<{ylabel}\right|\left.{xlabel}\right>"
         fit_label = (
             rf"${avg_label}=10^{{{fit1_lab}}}\;({xlabel})^{{{fit0_lab}}}$"
             if log
-            else rf"${avg_label}={fit0_lab}\;{xlabel}{'+'*(fit[1]>=0)}{fit1_lab}$"
+            else rf"${avg_label}={fit0_lab}\;{xlabel}{'+' * (fit[1] >= 0)}{fit1_lab}$"
         )
         # plot fit
         plot_kwargs_ = updated_dict(

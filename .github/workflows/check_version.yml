@@ -23,7 +23,7 @@ jobs:
           CURRENT_VERSION="$(grep -oP '__version__ = "\K[^"]+' clevar/version.py)"
           echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
       # Get PR title to be updated with version
-      - name : Get PR title and clean version number from it
+      - name: Get PR title and clean version number from it
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: |

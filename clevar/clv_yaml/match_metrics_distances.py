@@ -35,8 +35,8 @@ class DistancesYamlFuncs(MetricYamlFuncs):
             "radial_bin_units": self.conf["radial_bin_units"],
             "cosmo": make_cosmology(general_conf["cosmology"]),
         }
-        self.pref_save_cen = f'{general_conf["outpath"]}/dist_cent_{self.conf["radial_bin_units"]}'
-        self.pref_save_z = f'{general_conf["outpath"]}/dist_z'
+        self.pref_save_cen = f"{general_conf['outpath']}/dist_cent_{self.conf['radial_bin_units']}"
+        self.pref_save_z = f"{general_conf['outpath']}/dist_z"
 
     def _main(self):
         # Central distances

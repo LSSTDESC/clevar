@@ -6,7 +6,7 @@ on:
       - main
   #schedule:
   #  - cron: "0 * * * *"   # Optional: run every hour
-  workflow_dispatch:      # Optional: manual trigger
+  workflow_dispatch: # Optional: manual trigger
 
 jobs:
   dispatch:

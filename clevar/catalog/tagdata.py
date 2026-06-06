@@ -120,7 +120,7 @@ class ClData(APtable):
         missing = [f"'{k}'" for k in columns if k not in self.namedict]
         if len(missing) > 0:
             missing = ", ".join(missing)
-            raise KeyError(f"Column(s) '{missing}' not found " "in catalog {data.colnames}")
+            raise KeyError(f"Column(s) '{missing}' not found in catalog {{data.colnames}}")
 
 
 class TagData:
@@ -249,7 +249,7 @@ class TagData:
         return "<tr>".join(table_list)
 
     def _repr_html_(self):
-        return f"<b>tags:</b> {self._prt_tags()}" f"<br>{self._prt_table_tags(self.data)}"
+        return f"<b>tags:</b> {self._prt_tags()}<br>{self._prt_table_tags(self.data)}"
 
     def _add_values(self, **columns):
         """Add values for all attributes."""
@@ -266,7 +266,7 @@ class TagData:
             if any(sizes[0] != s for s in sizes):
                 raise ValueError(
                     "Column sizes inconsistent:\n"
-                    + "\n".join([f"{' '*12}{k:10}: {l:,}" for k, l in zip(columns, sizes)])
+                    + "\n".join([f"{' ' * 12}{k:10}: {size:,}" for k, size in zip(columns, sizes)])
                 )
             data = ClData(columns)
 
@@ -301,7 +301,7 @@ class TagData:
         pass
 
     def _create_id(self, size):
-        id_name = "id" if self.tags["id"] == "id" else f'id ({self.tags["id"]})'
+        id_name = "id" if self.tags["id"] == "id" else f"id ({self.tags['id']})"
         warnings.warn(f"{id_name} column missing, additional one is being created.")
         TagData.__setitem__(self, self.tags["id"], np.array(range(size), dtype=str))
 

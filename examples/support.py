@@ -2,6 +2,7 @@
 
 Support functions for notebooks.
 """
+
 import numpy as np
 from astropy.table import Table
 
@@ -30,7 +31,9 @@ def _rand_from_dist(ndata, vmin, vmax, dist, nscale=10):
     """
     values_random_large = vmin + (vmax - vmin) * np.random.rand(ndata * nscale)
     weights = dist(values_random_large)
-    return np.random.choice(values_random_large, ndata, p=weights / weights.sum(), replace=False)
+    return np.random.choice(
+        values_random_large, ndata, p=weights / weights.sum(), replace=False
+    )
 
 
 def gen_cluster(
@@ -84,9 +87,14 @@ def gen_cluster(
         raise ValueError("Minimum redshift must be >=0.05")
     if z_max > 2.3:
         raise ValueError("Maximum redshift must be <2.3")
+
     # Approximated fit for DC2, 1e12<M200<1e15.
-    dn_dlogm = lambda x: 10 ** np.poly1d([-0.4102, 9.6586, -52.4729])(x)
-    n_logm = lambda x: 10 ** np.poly1d([-0.4882, 11.5986, -63.8458])(x)
+    def dn_dlogm(x):
+        return 10 ** np.poly1d([-0.4102, 9.6586, -52.4729])(x)
+
+    def n_logm(x):
+        return 10 ** np.poly1d([-0.4882, 11.5986, -63.8458])(x)
+
     dn_dz = np.poly1d([-0.56, 4.99, -14.54, 14.14, -0.62])
     # Create cluster with logm_min0 = logm_min-3*logm_scatter
     logm_min0 = logm_min - 3 * lnm_scatter / np.log(10)
@@ -103,7 +111,8 @@ def gen_cluster(
             "DEC": dec_min + np.random.rand(N_clusters0) * (dec_max - dec_min),
             "Z": _rand_from_dist(N_clusters0, z_min, z_max, dn_dz, nscale=10),
             "RADIUS_ARCMIN": np.random.rand(N_clusters0),
-            "MASS": 10 ** _rand_from_dist(N_clusters0, logm_min0, logm_max, dn_dlogm, nscale=10),
+            "MASS": 10
+            ** _rand_from_dist(N_clusters0, logm_min0, logm_max, dn_dlogm, nscale=10),
         }
     )
     Data0["MASS_ERR"] = Data0["MASS"] * np.random.normal(

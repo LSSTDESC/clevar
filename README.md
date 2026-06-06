@@ -1,12 +1,15 @@
 # Cluster Evaluation Resources (ClEvaR)
+
 [![Build and Check](https://github.com/LSSTDESC/clevar/workflows/Build%20and%20Check/badge.svg)](https://github.com/LSSTDESC/clevar/actions?query=workflow%3A%22Build+and+Check%22)
 [![Coverage Status](https://coveralls.io/repos/github/LSSTDESC/clevar/badge.svg?branch=main)](https://coveralls.io/github/LSSTDESC/clevar?branch=main)
 Library to validate cluster detection. A detailed documentation of the code can be found at [https://lsstdesc.org/clevar](https://lsstdesc.org/clevar).
 
 # Contriutors
-* [Michel Aguena](https://github.com/m-aguena) (LAPP / LIneA)
+
+- [Michel Aguena](https://github.com/m-aguena) (INAF / LIneA)
 
 ## Table of contents
+
 1. [Requirements](#requirements)
 2. [Installation](#installation)
 3. [Running ClEvaR](#running)
@@ -15,7 +18,7 @@ Library to validate cluster detection. A detailed documentation of the code can 
 
 ## Requirements <a name="requirements"></a>
 
-ClEvaR requires Python version 3.6 or later.  ClEvaR has the following dependencies:
+ClEvaR requires Python version 3.6 or later. ClEvaR has the following dependencies:
 
 - [NumPy](http://www.numpy.org/) (1.17 or later)
 - [SciPy](http://www.numpy.org/) (1.3 or later)
@@ -35,9 +38,11 @@ For developers, you will also need to install:
 - [Sphinx](https://www.sphinx-doc.org/en/master/usage/installation.html) (for documentation)
 
 These are also pip installable:
+
 ```
   pip install pytest sphinx sphinx_rtd_theme
 ```
+
 Note, the last item, `sphinx_rtd_theme` is to make the docs.
 
 ## Installation <a name="installation"></a>
@@ -49,11 +54,12 @@ To install ClEvaR you currently need to build it from source:
   cd clevar
   python setup.py install --user   # Add --user flag to install it locally
 ```
+
 See the [INSTALL documentation](INSTALL.md) for more detailed installation instructions.
 
 To run the tests you can do:
 
-  `pytest`
+`pytest`
 
 ## Running ClEvaR <a name="running"></a>
 
@@ -68,4 +74,5 @@ Check detailed description of each usage below:
 Contributing documentation can be found [here](CONTRIBUTING.md)
 
 ## Contact <a name="contact"></a>
+
 If you have comments, questions, or feedback, please [write us an issue](https://github.com/LSSTDESC/clevar/issues).

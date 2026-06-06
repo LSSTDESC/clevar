@@ -1,50 +1,49 @@
 outpath: temp2
 
 cosmology:
-    backend: Astropy
-    parameters:
+  backend: Astropy
+  parameters:
 
 catalog1:
-    file: cat1.fits
-    name:
-    columns:
-        ra: RA
-        dec: DEC
-        z: Z
-        mass: MASS
-        radius: RADIUS_ARCMIN
-    radius_unit: ARCMIN
+  file: cat1.fits
+  name:
+  columns:
+    ra: RA
+    dec: DEC
+    z: Z
+    mass: MASS
+    radius: RADIUS_ARCMIN
+  radius_unit: ARCMIN
 
 catalog2:
-    file: cat2.fits
-    name:
-    columns:
-        ra: RA
-        dec: DEC
-        z: Z
-        mass: MASS
-        radius: RADIUS_ARCMIN
-    radius_unit: ARCMIN
+  file: cat2.fits
+  name:
+  columns:
+    ra: RA
+    dec: DEC
+    z: Z
+    mass: MASS
+    radius: RADIUS_ARCMIN
+  radius_unit: ARCMIN
 
 proximity_match:
-    type: cross # options are cross, cat1, cat2
-    verbose: True # print matching info of all clusters to screen
-    step1:
-        which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
-        preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
-        catalog1:
-            delta_z: .2
-            match_radius: .01 arcsec
-        catalog2:
-            delta_z: .2
-            match_radius: .01 arcsec
-    step2:
-        which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
-        preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
-        catalog1:
-            delta_z: .2
-            match_radius: 1 arcmin
-        catalog2:
-            delta_z: .2
-            match_radius: 1 mpc
-            
+  type: cross # options are cross, cat1, cat2
+  verbose: True # print matching info of all clusters to screen
+  step1:
+    which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
+    preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
+    catalog1:
+      delta_z: .2
+      match_radius: .01 arcsec
+    catalog2:
+      delta_z: .2
+      match_radius: .01 arcsec
+  step2:
+    which_radius: max # Case of radius to be used, can be: cat1, cat2, min, max.
+    preference: more_massive # options are more_massive, angular_proximity or redshift_proximity
+    catalog1:
+      delta_z: .2
+      match_radius: 1 arcmin
+    catalog2:
+      delta_z: .2
+      match_radius: 1 mpc
