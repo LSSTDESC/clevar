@@ -36,4 +36,4 @@ repos:
           - "--ignored-modules=astropy,astropy.coordinates,astropy.cosmology,astropy.table,astropy.units,healpy,matplotlib,matplotlib.pyplot,numpy,pyccl,qp,scipy,scipy.integrate,scipy.interpolate,scipy.optimize,scipy.special,scipy.stats,yaml,pylab"
           - "--max-locals=20"
           - "--max-args=20"
-exclude: examples/|docs/
+exclude: docs/
