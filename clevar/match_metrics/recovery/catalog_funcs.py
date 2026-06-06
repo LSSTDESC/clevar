@@ -509,7 +509,7 @@ def plot_roc(cat1, cat2, matching_type, col_th, thresholds, **kwargs):
         Information of data in the plots, it contains the sections:
 
             * `ax`: ax used in the plot.
-            * `data`: Recovery rates used in the plot.
+            * `data`: Recovery rates and thresholds used in the plot (rec1, rec2, ths).
     """
     mt_msk = cat1.get_matching_mask(matching_type)
 
@@ -535,10 +535,12 @@ def plot_roc(cat1, cat2, matching_type, col_th, thresholds, **kwargs):
         mt_msk2 = cat2.ids2inds(cat1[f"mt_{matching_type}"][mt_msk])
         vals_th_cat2[mt_msk2] = cat1[col_th][mt_msk]
 
-    # if mask_cat1 is None:
-    #    mask_cat1 = np.ones(cat1.size, dtype=bool)
-    # if mask_cat2 is None:
-    #    mask_cat2 = np.ones(cat2s.size, dtype=bool)
+    mask1 = kwargs.get("mask1", None)
+    if mask1 is None:
+        mask1 = np.ones(cat1.size, dtype=bool)
+    mask2 = kwargs.get("mask2", None)
+    if mask2 is None:
+        mask2 = np.ones(cat2.size, dtype=bool)
 
     # if rm_msk_from_mt:
     #    cl_mt_msk *= clean_mt(_cat, halos, matching_type_cat, mask_halo)
@@ -546,11 +548,14 @@ def plot_roc(cat1, cat2, matching_type, col_th, thresholds, **kwargs):
 
     ax = kwargs.get("ax", None)
     info = {
-        "data": get_rates_snr(mt_msk, cat1[col_th], vals_th_cat2, thresholds),
+        "data": [
+            *get_rates_snr(mt_msk[mask1], cat1[col_th][mask1], vals_th_cat2[mask2], thresholds),
+            thresholds,
+        ],
         "ax": plt.axes() if ax is None else ax,
     }
 
-    info["ax"].plot(*info["data"], **kwargs.get("plt_kwargs", {}))
+    info["ax"].plot(*info["data"][:2], **kwargs.get("plt_kwargs", {}))
     info["ax"].set_xlabel("Recovery rate cat1")
     info["ax"].set_ylabel("Recovery rate cat2")
     return info
