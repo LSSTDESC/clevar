@@ -699,7 +699,8 @@ class ClCatalog(Catalog):
                     kwargs["mt_input"] = self.mt_input[item]
                 if self.members is not None and isinstance(item, (list, np.ndarray)):
                     cl_mask = np.zeros(self.size, dtype=bool)
-                    cl_mask[item] = True
+                    if len(item) > 0:
+                        cl_mask[item] = True
                     kwargs["members"] = self.members[cl_mask[self.members["ind_cl"]]]
         return self._getitem_base(DataType=ClCatalog, **kwargs)
 
