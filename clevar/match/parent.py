@@ -259,17 +259,16 @@ class Match:
         """
         inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
 
-        if len(inds2) == 0:
-            return False
-
-        dists = self._get_dist_mt(cat1[ind1], cat2[inds2], match_pref)
+        dists = self._get_dist_mt(cat1.raw()[ind1], cat2.raw()[inds2], match_pref)
         sort_d = np.argsort(dists)
         for dist, ind2 in zip(dists[sort_d], inds2[sort_d]):
             i1_replace = cat1.id_dict[cat2["mt_other"][ind2]] if cat2["mt_other"][ind2] else None
 
             _do_match = True
             if i1_replace is not None:
-                _do_match = dist < self._get_dist_mt(cat1[i1_replace], cat2[ind2], match_pref)
+                _do_match = dist < self._get_dist_mt(
+                    cat1.raw()[i1_replace], cat2.raw()[ind2], match_pref
+                )
 
             if _do_match:
                 self._link_matched_pairs(cat1, cat2, ind1, ind2)
