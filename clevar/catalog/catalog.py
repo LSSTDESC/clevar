@@ -25,13 +25,14 @@ from .tagdata import ClData, TagData
 
 # pylint: disable=singleton-comparison
 _matching_mask_funcs = {
-    "cross": lambda match: match["mt_cross"] != None,
-    "self": lambda match: match["mt_self"] != None,
-    "other": lambda match: match["mt_other"] != None,
+    "cross": lambda match: match["mt_cross"] != None,  # noqa: E711
+    "self": lambda match: match["mt_self"] != None,  # noqa: E711
+    "other": lambda match: match["mt_other"] != None,  # noqa: E711
     "multi_self": lambda match: veclen(match["mt_multi_self"]) > 0,
     "multi_other": lambda match: veclen(match["mt_multi_other"]) > 0,
-    "multi_join": lambda match: (veclen(match["mt_multi_self"]) > 0)
-    + (veclen(match["mt_multi_other"]) > 0),
+    "multi_join": lambda match: (
+        (veclen(match["mt_multi_self"]) > 0) + (veclen(match["mt_multi_other"]) > 0)
+    ),
 }
 
 
@@ -78,7 +79,7 @@ class Catalog(TagData):
         """
         steps = []
         for step in self.mt_hist:
-            lines = [f'{step["func"]}(']
+            lines = [f"{step['func']}("]
             len_func = len(lines[0])
             pref = ""
             for key, value in filter(lambda x: x[0] != "func", step.items()):
@@ -131,7 +132,7 @@ class Catalog(TagData):
         return f"{self.name}:\n{self.data.__str__()}"
 
     def _repr_html_(self):
-        return f"<b>{self.name}</b>" f"<br>{TagData._repr_html_(self)}"
+        return f"<b>{self.name}</b><br>{TagData._repr_html_(self)}"
 
     def __getitem__(self, item):
         return self._getitem_base(
@@ -150,12 +151,12 @@ class Catalog(TagData):
             unique_vals, counts = np.unique(id_out, return_counts=True)
             if (counts > 1).any():
                 warnings.warn(
-                    f'Repeated ID\'s in {self.tags["id"]} column, adding suffix _r# to them.'
+                    f"Repeated ID's in {self.tags['id']} column, adding suffix _r# to them."
                 )
                 id_out = np.array(id_out, dtype=np.ndarray)
                 for id_ in unique_vals[counts > 1]:
                     case = id_out == id_
-                    fmt = f'_r%0{len(f"{case.sum()}")}d'
+                    fmt = f"_r%0{len(f'{case.sum()}')}d"
                     id_out[case] += [fmt % (i + 1) for i in range(case.sum())]
         return id_out
 
@@ -245,6 +246,42 @@ class Catalog(TagData):
                 f"matching_type ({matching_type}) must be in {list(_matching_mask_funcs.keys())}"
             )
         return _matching_mask_funcs[matching_type](self.data)
+
+    @staticmethod
+    def _clean_mmt_col(mmt_col, bad_ids):
+        return np.array(
+            [list(filter(lambda x: x not in bad_ids, mmt)) for mmt in mmt_col], dtype=list
+        )
+
+    def _remove_ids_from_mmt(self, bad_ids, mmt_col):
+        self[mmt_col] = Catalog._clean_mmt_col(self[mmt_col], bad_ids)
+
+    def remove_clusters_from_multiple(self, cat2, mask2):
+        """Remove cat2 clusters from mt_multi_self, mt_multi_other columns.
+
+        Parameters
+        ----------
+        cat2: clevar.ClCatalog
+            Other cluster catalog.
+        mask2: array
+            Mask for clusters 2 properties to be kept, must have size=cat2.size
+        """
+        self.remove_ids_from_multiple(cat2["id"][~mask2])
+
+    def remove_ids_from_multiple(self, cat2_ids):
+        """Remove cat2 clusters from mt_multi_self, mt_multi_other columns.
+
+        Parameters
+        ----------
+        cat2_ids : array
+            ID's of catalog2 to be removed
+        """
+        bad_ids = set(cat2_ids)
+        self._remove_ids_from_mmt(bad_ids, "mt_multi_self")
+        self._remove_ids_from_mmt(bad_ids, "mt_multi_other")
+        for col in ("mt_self", "mt_other", "mt_cross"):
+            if col in self.colnames:
+                self[col] = None
 
     def _add_ftpt_mask(self, ftpt, maskname):
         """
@@ -427,7 +464,7 @@ class Catalog(TagData):
             Input file.
         """
         data = ClData.read(filename)
-        print("    * ClEvar used in matching: " f'{data.meta.get("ClEvaR_ver", "<0.13.0")}')
+        print(f"    * ClEvar used in matching: {data.meta.get('ClEvaR_ver', '<0.13.0')}")
         # read labels and radius unit from file
         kwargs = {
             "name": data.meta["NAME"],
@@ -494,11 +531,11 @@ class Catalog(TagData):
         self._set_mt_hist(mt_data.mt_hist)
         self.cross_match()
         print(f" * Total objects:    {self.size:,}")
-        print(f' * multiple (self):  {(veclen(self["mt_multi_self"])>0).sum():,}')
-        print(f' * multiple (other): {(veclen(self["mt_multi_other"])>0).sum():,}')
-        print(f' * unique (self):    {self.get_matching_mask("self").sum():,}')
-        print(f' * unique (other):   {self.get_matching_mask("other").sum():,}')
-        print(f' * cross:            {self.get_matching_mask("cross").sum():,}')
+        print(f" * multiple (self):  {(veclen(self['mt_multi_self']) > 0).sum():,}")
+        print(f" * multiple (other): {(veclen(self['mt_multi_other']) > 0).sum():,}")
+        print(f" * unique (self):    {self.get_matching_mask('self').sum():,}")
+        print(f" * unique (other):   {self.get_matching_mask('other').sum():,}")
+        print(f" * cross:            {self.get_matching_mask('cross').sum():,}")
 
     def save_footprint_quantities(self, filename, overwrite=False):
         """
@@ -579,7 +616,17 @@ class ClCatalog(Catalog):
             name,
             labels=labels,
             tags=tags,
-            default_tags=["id", "ra", "dec", "mass", "z", "radius", "zmin", "zmax", "z_err"],
+            default_tags=[
+                "id",
+                "ra",
+                "dec",
+                "mass",
+                "z",
+                "radius",
+                "zmin",
+                "zmax",
+                "z_err",
+            ],
             unique_id=True,
             **kwargs,
         )
@@ -638,7 +685,10 @@ class ClCatalog(Catalog):
                 item_nl = NameList(item)
                 kwargs["item"] = [
                     *item,
-                    *filter(lambda c: c[:3] == "mt_" and c not in item_nl, self.data.colnames),
+                    *filter(
+                        lambda c: c[:3] == "mt_" and c not in item_nl,
+                        self.data.colnames,
+                    ),
                 ]
                 kwargs["mt_input"] = self.mt_input
                 kwargs["members"] = self.members
@@ -649,7 +699,8 @@ class ClCatalog(Catalog):
                     kwargs["mt_input"] = self.mt_input[item]
                 if self.members is not None and isinstance(item, (list, np.ndarray)):
                     cl_mask = np.zeros(self.size, dtype=bool)
-                    cl_mask[item] = True
+                    if len(item) > 0:
+                        cl_mask[item] = True
                     kwargs["members"] = self.members[cl_mask[self.members["ind_cl"]]]
         return self._getitem_base(DataType=ClCatalog, **kwargs)
 
@@ -724,8 +775,7 @@ class ClCatalog(Catalog):
             id_cluster_colname = members_catalog.tags.get("id_cluster", "id_cluster")
         elif members_catalog is not None:
             raise TypeError(
-                f"members_catalog type is {type(members_catalog)},"
-                " it must be a MemCatalog object."
+                f"members_catalog type is {type(members_catalog)}, it must be a MemCatalog object."
             )
         # pylint: disable=consider-using-get
         elif "data" in kwargs:

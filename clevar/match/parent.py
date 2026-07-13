@@ -62,7 +62,7 @@ class Match:
         )
 
     def _rm_dup_add_hist(self, cat1, cat2, hist):
-        print(f'* {(veclen(cat1["mt_multi_self"])>0).sum():,}/{cat1.size:,} objects matched.')
+        print(f"* {(veclen(cat1['mt_multi_self']) > 0).sum():,}/{cat1.size:,} objects matched.")
         cat1.remove_multiple_duplicates()
         cat2.remove_multiple_duplicates()
         self.history.append(hist)
@@ -75,7 +75,7 @@ class Match:
         raise NotImplementedError
 
     def _init_matching_extra_cols(self, cat1, cat2, preference):
-        if preference == "shared_member_fraction":
+        if self.type == "Membership":
             cat1["mt_frac_self"] = np.zeros(cat1.size)
             cat2["mt_frac_other"] = np.zeros(cat2.size)
             if "mt_frac_other" not in cat1.colnames:
@@ -136,7 +136,8 @@ class Match:
             set_unique = self._set_unique_matching_function(
                 preference, minimum_share_fraction=minimum_share_fraction
             )
-            self._init_matching_extra_cols(cat1, cat2, preference)
+
+        self._init_matching_extra_cols(cat1, cat2, preference)
 
         # Run matching
         print(f"Unique Matches ({cat1.name})")
@@ -144,7 +145,7 @@ class Match:
             if cat1["mt_self"][ind1] is None:
                 self._cat1_mt[ind1] = set_unique(cat1, ind1, cat2)
         self._cat1_mt *= cat1.get_matching_mask("self")  # In case ang pref removes a match
-        print(f'* {cat1.get_matching_mask("self").sum():,}/{cat1.size:,} objects matched.')
+        print(f"* {cat1.get_matching_mask('self').sum():,}/{cat1.size:,} objects matched.")
 
         # Add match conf to history
         cfg = {"func": "unique", "cats": f"{cat1.name}, {cat2.name}", "preference": preference}
@@ -176,6 +177,40 @@ class Match:
         """
         raise NotImplementedError
 
+    def _link_matched_pairs(self, cat1, cat2, ind1, ind2, shared_frac=None):
+        """
+        Sets mt_* columns for a given matched pair.
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            ClCatalog 1
+        cat2: clevar.ClCatalog
+            ClCatalog 2
+        ind1: int
+            Index of the cluster from cat1
+        ind2: int
+            Index of the cluster from cat2 corresponding to cat1[ind1]
+        shared_frac: float, None
+            Richness shared fraction of clusters. If None and membership
+            matching is used, it is computed from cat1.mt_input columns.
+
+        Note
+        ----
+            Also adds share fraction to preference!=shared_member_fraction cases
+            when membership matching is used.
+        """
+        cat1["mt_self"][ind1] = cat2["id"][ind2]
+        cat2["mt_other"][ind2] = cat1["id"][ind1]
+
+        if shared_frac is None and "share_mems" in cat1.mt_input.colnames:
+            id2 = cat2["id"][ind2]
+            shared_frac = cat1.mt_input["share_mems"][ind1][id2] / cat1.mt_input["nmem"][ind1]
+
+        if shared_frac is not None:
+            cat1["mt_frac_self"][ind1] = shared_frac
+            cat2["mt_frac_other"][ind2] = shared_frac
+
     def _match_mpref(self, cat1, ind1, cat2):
         """
         Make the unique match by mass preference
@@ -198,8 +233,7 @@ class Match:
         if len(inds2) > 0:
             for ind2 in self._sorted2[np.isin(self._sorted2, inds2)]:
                 if cat2["mt_other"][ind2] is None:
-                    cat1["mt_self"][ind1] = cat2["id"][ind2]
-                    cat2["mt_other"][ind2] = cat1["id"][ind1]
+                    self._link_matched_pairs(cat1, cat2, ind1, ind2)
                     return True
         return False
 
@@ -224,20 +258,24 @@ class Match:
             Tells if the cluster was matched
         """
         inds2 = cat2.ids2inds(cat1["mt_multi_self"][ind1])
-        dists = self._get_dist_mt(cat1[ind1], cat2[inds2], match_pref)
+
+        dists = self._get_dist_mt(cat1.raw()[ind1], cat2.raw()[inds2], match_pref)
         sort_d = np.argsort(dists)
         for dist, ind2 in zip(dists[sort_d], inds2[sort_d]):
             i1_replace = cat1.id_dict[cat2["mt_other"][ind2]] if cat2["mt_other"][ind2] else None
-            if i1_replace is None:
-                cat1["mt_self"][ind1] = cat2["id"][ind2]
-                cat2["mt_other"][ind2] = cat1["id"][ind1]
+
+            _do_match = True
+            if i1_replace is not None:
+                _do_match = dist < self._get_dist_mt(
+                    cat1.raw()[i1_replace], cat2.raw()[ind2], match_pref
+                )
+
+            if _do_match:
+                self._link_matched_pairs(cat1, cat2, ind1, ind2)
+                if i1_replace is not None:
+                    cat1["mt_self"][i1_replace] = None
                 return True
-            if dist < self._get_dist_mt(cat1[i1_replace], cat2[ind2], match_pref):
-                cat1["mt_self"][ind1] = cat2["id"][ind2]
-                cat2["mt_other"][ind2] = cat1["id"][ind1]
-                cat1["mt_self"][i1_replace] = None
-                self._match_apref(cat1, i1_replace, cat2, match_pref)
-                return True
+
         return False
 
     def _match_sharepref(self, cat1, ind1, cat2, minimum_share_fraction=0):
@@ -282,14 +320,15 @@ class Match:
                     and cat1["mass"][ind1] <= cat1["mass"][i1_replace]
                 ):
                     return False
-                cat1["mt_self"][ind1] = id2
-                cat1["mt_frac_self"][ind1] = shared_frac
-                cat2["mt_other"][ind2] = id1
-                cat2["mt_frac_other"][ind2] = shared_frac
+
+                self._link_matched_pairs(cat1, cat2, ind1, ind2, shared_frac)
+
+                # try to rematch other candidate that lost the counterpart
                 if i1_replace is not None:
                     cat1["mt_self"][i1_replace] = None
                     cat1["mt_frac_other"][i1_replace] = 0
                     self._match_sharepref(cat1, i1_replace, cat2, minimum_share_fraction)
+
                 return True
         return False
 
@@ -330,7 +369,7 @@ class Match:
         """
         print(f"Cross Matches ({cat1.name})")
         cat1.cross_match()
-        print(f'* {cat1.get_matching_mask("cross").sum():,}/{cat1.size:,} objects matched.')
+        print(f"* {cat1.get_matching_mask('cross').sum():,}/{cat1.size:,} objects matched.")
 
     def save_matches(self, cat1, cat2, out_dir, overwrite=False):
         """

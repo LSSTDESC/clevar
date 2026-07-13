@@ -266,7 +266,7 @@ def nice_panel(axes, xlabel=None, ylabel=None, xscale="linear", yscale="linear")
             ax.xaxis.set_minor_formatter(NullFormatter())
             ax.set_xticks(10**xticks)
             ax.set_xticklabels(
-                [f"${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$" for t in xticks],
+                [f"${10 ** (t - int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$" for t in xticks],
                 rotation=-45,
             )
     log_yticks = [np.log10(ax.get_yticks()[ax.get_yticks() > 0]) for ax in axes.flatten()]
@@ -279,7 +279,7 @@ def nice_panel(axes, xlabel=None, ylabel=None, xscale="linear", yscale="linear")
             ax.yaxis.set_minor_formatter(NullFormatter())
             ax.set_yticks(10**yticks)
             ax.set_yticklabels(
-                [f"${10**(t-int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$" for t in yticks],
+                [f"${10 ** (t - int(t)):.0f}\\times 10^{{{np.floor(t):.0f}}}$" for t in yticks],
                 rotation=-45,
             )
 

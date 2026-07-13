@@ -10,6 +10,13 @@ from .membership import MembershipMatch
 from .parent import Match
 from .proximity import ProximityMatch
 
+__all__ = [
+    "BoxMatch",
+    "MembershipMatch",
+    "Match",
+    "ProximityMatch",
+]
+
 
 def get_matched_pairs(cat1, cat2, matching_type, mask1=None, mask2=None):
     """

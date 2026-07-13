@@ -3,3 +3,8 @@ match_metrics package
 """
 
 from . import distances, recovery
+
+__all__ = [
+    "distances",
+    "recovery",
+]

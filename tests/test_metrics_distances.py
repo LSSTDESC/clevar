@@ -1,7 +1,5 @@
 """Tests for clevar/match_metrics/distances"""
 
-import numpy as np
-
 from clevar.catalog import ClCatalog
 from clevar.cosmology import AstroPyCosmology as CosmoClass
 from clevar.match import ProximityMatch
@@ -42,7 +40,13 @@ class _test_data:
 def test_central_position():
     cat1, cat2 = _test_data.cat1, _test_data.cat2
     dt.central_position(
-        cat1, cat2, "cat1", radial_bins=20, radial_bin_units="degrees", cosmo=None, ax=None
+        cat1,
+        cat2,
+        "cat1",
+        radial_bins=20,
+        radial_bin_units="degrees",
+        cosmo=None,
+        ax=None,
     )
 
 

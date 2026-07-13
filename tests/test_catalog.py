@@ -2,7 +2,7 @@ import os
 
 import numpy as np
 import pytest
-from numpy.testing import assert_allclose, assert_equal, assert_raises
+from numpy.testing import assert_equal, assert_raises
 
 from clevar import ClCatalog, ClData, MemCatalog
 from clevar.catalog import Catalog, TagData
@@ -142,10 +142,10 @@ def test_clcatalog():
         empty_list[i] = []
     c._init_match_vals()
     for n in ("self", "other"):
-        assert all(c[f"mt_{n}"] == None)
+        assert all(c[f"mt_{n}"] == None)  # noqa: E711
         assert_equal(c[f"mt_multi_{n}"], empty_list)
     c.cross_match()
-    assert all(c["mt_cross"] == None)
+    assert all(c["mt_cross"] == None)  # noqa: E711
     # Check ind2inds
     assert_equal(c.ids2inds(["b", "a"]), [1, 0])
     # Check resolve multiple
@@ -171,7 +171,7 @@ def test_clcatalog():
     assert_raises(ValueError, ClCatalog.read, "demo/cat1.fits", "test", tags="x")
     c = ClCatalog.read("demo/cat1.fits", "test", tags={"id": "ID"})
     c.write("cat1_with_header.fits", overwrite=True)
-    c_read = ClCatalog.read_full("cat1_with_header.fits")
+    ClCatalog.read_full("cat1_with_header.fits")
     os.system("rm -f cat1_with_header.fits")
     # Check add members
     for cl_id_col, mem_cl_id_col in (
@@ -203,6 +203,23 @@ def test_clcatalog():
     assert_equal(c.members, None)
     assert_equal(c.leftover_members, None)
 
+    # test remove from match
+    c_ = Catalog("test", **quantities)
+    c._init_match_vals()
+    c_["mt_multi_self"] = [["1", "2", "3", "4"], ["2", "3", "4", "5"]]
+    c_["mt_multi_other"] = [["2", "3", "4"], ["2", "3"]]
+    c_["mt_self"] = np.full(len(c_), "x", dtype=np.ndarray)
+    c_["mt_other"] = np.full(len(c_), "x", dtype=np.ndarray)
+    cat2_ = Catalog("cat2", id=range(10))
+    mask2 = ~np.isin(cat2_["id"], ["1", "3"])
+    c_.remove_clusters_from_multiple(cat2_, mask2)
+    for test, ref in zip(c_["mt_multi_self"], [["2", "4"], ["2", "4", "5"]]):
+        assert test == ref
+    for test, ref in zip(c_["mt_multi_other"], [["2", "4"], ["2"]]):
+        assert test == ref
+    assert (c_["mt_self"] == None).all()  # noqa: E711
+    assert (c_["mt_other"] == None).all()  # noqa: E711
+
 
 def test_memcatalog():
     quantities = {
@@ -230,14 +247,14 @@ def test_memcatalog():
     for i in range(c.size):
         empty_list[i] = []
     for n in ("self", "other"):
-        assert all(c[f"mt_{n}"] == None)
+        assert all(c[f"mt_{n}"] == None)  # noqa: E711
         assert_equal(c[f"mt_multi_{n}"], empty_list)
     c.cross_match()
     # test mt col remains
     mt_self = [0, 1]
     c["mt_self"] = mt_self
     assert_equal(c["dec",]["mt_self"], mt_self)
-    assert all(c["mt_cross"] == None)
+    assert all(c["mt_cross"] == None)  # noqa: E711
     # Check resolve multiple
     c["mt_multi_self"][0] = ["x", "x"]
     c.remove_multiple_duplicates()

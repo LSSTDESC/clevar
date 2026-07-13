@@ -114,7 +114,7 @@ def loadconf(
     # Add outpath suffix to differentiate proximity from memebership
     config["outpath"] += "_" + config["matching_mode"]
     # Checks if config is consistent with log file
-    log_file = f'{config["outpath"]}/config.log.yml'
+    log_file = f"{config['outpath']}/config.log.yml"
     if not os.path.isdir(config["outpath"]):
         os.mkdir(config["outpath"])
         log_config = config
