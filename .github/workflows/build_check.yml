@@ -9,6 +9,7 @@ on:
 env:
   CONDA_ENV_NAME: clevar
 
+jobs:
   code-vers-valid:
     name: Version Validation
     runs-on: ubuntu-latest
