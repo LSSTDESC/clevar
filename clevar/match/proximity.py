@@ -209,9 +209,8 @@ class ProximityMatch(SpatialMatch):
         argsort = np.argsort(inds1)
 
         # add pairings
-        cat1[mt_col][inds1_unq] = list(
-            map(list, np.split(cat2["id"][inds2[argsort]], split_pos)[:-1])
-        )
+        for i1, ids2 in zip(inds1_unq, np.split(cat2["id"][inds2[argsort]], split_pos)[:-1]):
+            cat1[mt_col][i1] += list(ids2)
 
         return inds1_unq
 
