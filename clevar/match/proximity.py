@@ -156,9 +156,13 @@ class ProximityMatch(SpatialMatch):
             # crop in redshift range
             inds2 = np.where((z2max >= z1min[inds1].min()) * (z2min <= z1max[inds1].max()))[0]
 
+            print(
+                f" * kdtree zbin [{cat1['z'][inds1[0]]:.2f}:{cat1['z'][inds1[-1]]:.2f}]"
+                f" - {len(inds1):,} x {len(inds2):,} clusters"
+            )
+
             # coarse selection
             # pairs of indicies for matched clusters
-            print(np.maximum(ang1[inds1], ang2[inds2].max()))
             mt_inds1, mt_inds2, angsep = cat2["SkyCoord"][inds2].search_around_sky(
                 cat1["SkyCoord"][inds1], np.maximum(ang1[inds1], ang2[inds2].max()) * u.degree
             )[:3]
