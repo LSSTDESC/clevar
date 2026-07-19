@@ -31,9 +31,7 @@ def _rand_from_dist(ndata, vmin, vmax, dist, nscale=10):
     """
     values_random_large = vmin + (vmax - vmin) * np.random.rand(ndata * nscale)
     weights = dist(values_random_large)
-    return np.random.choice(
-        values_random_large, ndata, p=weights / weights.sum(), replace=False
-    )
+    return np.random.choice(values_random_large, ndata, p=weights / weights.sum(), replace=False)
 
 
 def gen_cluster(
@@ -111,8 +109,7 @@ def gen_cluster(
             "DEC": dec_min + np.random.rand(N_clusters0) * (dec_max - dec_min),
             "Z": _rand_from_dist(N_clusters0, z_min, z_max, dn_dz, nscale=10),
             "RADIUS_ARCMIN": np.random.rand(N_clusters0),
-            "MASS": 10
-            ** _rand_from_dist(N_clusters0, logm_min0, logm_max, dn_dlogm, nscale=10),
+            "MASS": 10 ** _rand_from_dist(N_clusters0, logm_min0, logm_max, dn_dlogm, nscale=10),
         }
     )
     Data0["MASS_ERR"] = Data0["MASS"] * np.random.normal(

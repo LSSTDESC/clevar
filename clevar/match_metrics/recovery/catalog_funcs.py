@@ -4,6 +4,7 @@ Main recovery functions using catalogs, wrapper of array_funcs functions
 """
 
 import numpy as np
+import pylab as plt
 
 from ...utils import none_val
 from .. import plot_helper as ph
@@ -419,3 +420,142 @@ def skyplot(
         figsize=figsize,
         **kwargs,
     )
+
+
+#######
+# ROC #
+#######
+
+
+def threshold_counts(values, thresholds):
+    r"""Compute vectorized counts above given thresholds.
+
+    Parameters
+    ----------
+    values: np.ndarray
+        Values for counts
+    thresholds: np.ndarray
+        Thresholds for counts
+
+    Returns
+    -------
+    np.ndarray
+        Vectorized counts above thresholds
+    """
+    return np.cumsum(np.histogram(values, bins=np.append(thresholds, np.inf))[0][::-1])[::-1]
+
+
+def get_rates_snr(is_matched, snr, snr_cat2, snr_thresholds):
+    """Compute vectorized recovery rates above snr_thresholds.
+
+    Parameters
+    ----------
+    is_matched: np.ndarray
+        Mask pointing to matched objects
+    snr: np.ndarray
+        Signal-to-noise of the base catalog
+    snr_cat2: np.ndarray
+        Signal-to-noise of base catalog object matched to the target catalog
+    snr_thresholds: np.ndarray
+        Thresholds for snr computation
+
+    Returns
+    -------
+    np.ndarray, np.ndarray
+        Recovery rates for cat1 and cat2 above snr thresholds provided
+    """
+    num_cat_th = threshold_counts(snr, snr_thresholds)
+    num_cat_mt_th = threshold_counts(snr[is_matched], snr_thresholds)
+
+    _msk = num_cat_th > 0
+
+    recovery1 = np.full(len(snr_thresholds), np.nan)
+    recovery1[_msk] = num_cat_mt_th[_msk] / num_cat_th[_msk]
+
+    recovery2 = threshold_counts(snr_cat2, snr_thresholds) / len(snr_cat2)
+
+    return recovery1, recovery2
+
+
+def plot_roc(cat1, cat2, matching_type, col_th, thresholds, **kwargs):
+    """
+    Plot redshift distance between matched clusters, binned by a second quantity.
+
+    Parameters
+    ----------
+    cat1, cat2: clevar.ClCatalog
+        ClCatalogs with matching information.
+    matching_type: str
+        Type of matching to be considered. Must be in
+        'cross', 'self', 'other', 'multi_self', 'multi_other', 'multi_join'
+        Method to assign a corresponding snr to catalog2. Options are: 'matching', 'max'
+    col_th: str
+        Column in catalog1 to be use for threshold values
+    thresholds: np.ndarray
+        Thresholds for computation
+    mask1, mask2: array, None
+        Masks for clusters 1(2), must have size=cat1(2).size
+
+    Other parameters
+    ----------------
+    ax: matplotlib.axes
+        Ax to add plot
+    plt_kwargs: dict, None
+        Additional arguments for pylab.plot.
+
+    Returns
+    -------
+    info: dict
+        Information of data in the plots, it contains the sections:
+
+            * `ax`: ax used in the plot.
+            * `data`: Recovery rates and thresholds used in the plot (rec1, rec2, ths).
+    """
+    mt_msk = cat1.get_matching_mask(matching_type)
+
+    vals_th_cat2 = np.zeros(cat2.size)
+    if "multi" in matching_type:
+        if matching_type in ("multi_self", "multi_join"):
+            vals_th_cat2 = np.maximum(
+                vals_th_cat2,
+                [
+                    cat1[col_th][cat1.ids2inds(ids)].max() if len(ids) > 0 else 0
+                    for ids in cat2["mt_multi_self"]
+                ],
+            )
+        if matching_type in ("multi_other", "multi_join"):
+            vals_th_cat2 = np.maximum(
+                vals_th_cat2,
+                [
+                    cat1[col_th][cat1.ids2inds(ids)].max() if len(ids) > 0 else 0
+                    for ids in cat2["mt_multi_other"]
+                ],
+            )
+    else:
+        mt_msk2 = cat2.ids2inds(cat1[f"mt_{matching_type}"][mt_msk])
+        vals_th_cat2[mt_msk2] = cat1[col_th][mt_msk]
+
+    mask1 = kwargs.get("mask1", None)
+    if mask1 is None:
+        mask1 = np.ones(cat1.size, dtype=bool)
+    mask2 = kwargs.get("mask2", None)
+    if mask2 is None:
+        mask2 = np.ones(cat2.size, dtype=bool)
+
+    # if rm_msk_from_mt:
+    #    cl_mt_msk *= clean_mt(_cat, halos, matching_type_cat, mask_halo)
+    #    print(f"     + msk h : {cl_mt_msk.sum():,}")
+
+    ax = kwargs.get("ax", None)
+    info = {
+        "data": [
+            *get_rates_snr(mt_msk[mask1], cat1[col_th][mask1], vals_th_cat2[mask2], thresholds),
+            thresholds,
+        ],
+        "ax": plt.axes() if ax is None else ax,
+    }
+
+    info["ax"].plot(*info["data"][:2], **kwargs.get("plt_kwargs", {}))
+    info["ax"].set_xlabel("Recovery rate cat1")
+    info["ax"].set_ylabel("Recovery rate cat2")
+    return info
