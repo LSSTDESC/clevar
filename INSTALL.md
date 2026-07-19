@@ -5,15 +5,14 @@
 ## Table of contents
 
 1. [Basic installation](#basic_install)
-2. [Access to the proper environment on cori.nersc.gov](#access_to_the_proper_environment_on_cori)
-3. [An alternative installation at NERSC or at CC-IN2P3 for DESC members](#from_desc_conda_env)
-4. [Making a local copy of `ClEvaR`](#making_a_local_copy_of_clevar)
+2. [Access to the proper environment at NERSC or at CC-IN2P3](#access_to_the_proper_env)
+3. [Making a local copy of `ClEvaR`](#making_a_local_copy_of_clevar)
 
 ## Basic procedure <a name="basic_install"></a>
 
 Here we provide a quick guide for a basic instalation, this will install all the packages in your current environment.
 To create a specific conda environment for `ClEvaR`, we recommend you to check the begining of section
-[Access to the proper environment on cori.nersc.gov](#access_to_the_proper_environment_on_cori).
+[Access to the proper environment on cori.nersc.gov](#access_to_the_proper_env).
 
 ### `ClEvaR` and dependency installation
 
@@ -25,20 +24,16 @@ Now, you can install `ClEvaR` and its dependencies as
     pip install jupyter  # need to have jupyter notebook tied to this environment, you can then see the environment in jupyter.nersc.gov
     git clone https://github.com/LSSTDESC/clevar.git  # If you'd like to contribute but don't have edit permissions to the `ClEvaR` repo, see below how to fork the repo instead.
     cd clevar
-    python setup.py install     # build from source
+    pip install . # build from source
 ```
 
-## Access to the proper environment on cori.nersc.gov <a name="access_to_the_proper_environment_on_cori"></a>
+## Access to the proper environment at NERSC or at CC-IN2P3 <a name="access_to_the_proper_env"></a>
 
 If you have access to NERSC, this will likely be the easiest to make sure you have the appropriate environment. After logging into cori.nersc.gov, you will need to execute the following. We recommend executing line-by-line to avoid errors:
 
 ```bash
     module load python  # Also loads anaconda
-    conda create --name clevarenv  # Create an anaconda environment for clevar
-    source activate clevarenv  # switch to your newly created environment
-    conda install pip  # need pip to install everything else necessary for clevar
-    conda install ipython # need to have the ipython tied to this environment
-    conda install -c conda-forge firefox  # Need a browser to view jupyter notebooks
+    conda env create --file=environment.yml  # Create an anaconda environment for clevar
 ```
 
 Note, for regular contributions and use, we recommend adding `module load python` to your `~/.bashrc` so you have anaconda installed every time you log in. You will subseqeuntly also want to be in the correct environment whenever working with `clevar`, which means running `source activate clevarenv` at the start of each session.
