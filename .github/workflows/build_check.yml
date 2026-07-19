@@ -13,6 +13,7 @@ jobs:
   code-vers-valid:
     name: Version Validation
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       # Get current version
       - name: Check out the code
