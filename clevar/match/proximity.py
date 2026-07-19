@@ -160,7 +160,10 @@ class ProximityMatch(SpatialMatch):
             kdt_prt = " * kdtree"
             if "z" in cat1.colnames:
                 kdt_prt += f" zbin [{cat1['z'][inds1[0]]:.2f}:{cat1['z'][inds1[-1]]:.2f}]"
-            print(f"{kdt_prt} - {len(inds1):,} x {len(inds2):,} clusters")
+            print(
+                f"{kdt_prt} - {len(inds1):,} x {len(inds2):,}"
+                f" = {len(inds1) * len(inds2):,} clusters"
+            )
 
             # coarse selection
             # pairs of indicies for matched clusters
@@ -187,10 +190,30 @@ class ProximityMatch(SpatialMatch):
             inds2 = inds2[mt_msk]
 
             # pair clusters
-            for ind1, ind2 in zip(inds1, inds2):
-                cat1["mt_multi_self"][ind1].append(cat2["id"][ind2])
-                cat2["mt_multi_other"][ind2].append(cat1["id"][ind1])
-                self._cat1_mmt[ind1] = True
+            inds1_unq = self._smart_pairing(cat1, cat2, inds1, inds2, "mt_multi_self")
+            self._smart_pairing(cat2, cat1, inds2, inds1, "mt_multi_other")
+            self._cat1_mmt[inds1_unq] = True
+
+    @staticmethod
+    def _smart_pairing(cat1, cat2, inds1, inds2, mt_col):
+        """
+        More efficient pairing for matched catalogs
+        """
+        # Find how many galaxies are associated to each detection
+        inds1_unq, counts = np.unique(inds1, return_counts=True)
+
+        # Find positions to split by inds1 types
+        split_pos = counts.cumsum()
+
+        # For this, inds1 must be sorted
+        argsort = np.argsort(inds1)
+
+        # add pairings
+        cat1[mt_col][inds1_unq] = list(
+            map(list, np.split(cat2["id"][inds2[argsort]], split_pos)[:-1])
+        )
+
+        return inds1_unq
 
     def prep_cat_for_match(
         self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1, cosmo=None
