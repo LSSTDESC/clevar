@@ -48,6 +48,33 @@ class ProximityMatch(SpatialMatch):
         self._valid_match_input_setup(cat1, cat2)
 
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
+
+        self._simple_multiple_match(cat1, cat2, radius_selection, verbose)
+
+        hist = {
+            "func": "multiple",
+            "cats": f"{cat1.name}, {cat2.name}",
+            "radius_selection": radius_selection,
+        }
+        self._rm_dup_add_hist(cat1, cat2, hist)
+
+    def _simple_multiple_match(self, cat1, cat2, radius_selection="max", verbose=True):
+        """
+        Simple way to make the one way multiple matching
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        cat2: clevar.ClCatalog
+            Target catalog
+        verbose: bool
+            Print result for individual matches.
+        radius_selection: str (optional)
+            Case of radius to be used, can be: max, min, self, other.
+        """
+        # pylint: disable=arguments-renamed
+        # pylint: disable=too-many-locals
         ra2, dec2, sk2 = (cat2[c] for c in ("ra", "dec", "SkyCoord"))
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ("ang", "zmin", "zmax"))
         ang2max = ang2.max()
@@ -85,12 +112,6 @@ class ProximityMatch(SpatialMatch):
                         self._cat1_mmt[ind1] = True
             if verbose:
                 self._prt_cand_mt(cat1, ind1)
-        hist = {
-            "func": "multiple",
-            "cats": f"{cat1.name}, {cat2.name}",
-            "radius_selection": radius_selection,
-        }
-        self._rm_dup_add_hist(cat1, cat2, hist)
 
     def prep_cat_for_match(
         self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1, cosmo=None
