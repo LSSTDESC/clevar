@@ -3,6 +3,7 @@ The ProximityMatch class
 """
 
 import numpy as np
+from astropy import units as u
 
 from ..catalog import ClData
 from .spatial import SpatialMatch
@@ -28,7 +29,7 @@ class ProximityMatch(SpatialMatch):
         SpatialMatch.__init__(self)
         self.type = "Proximity"
 
-    def multiple(self, cat1, cat2, radius_selection="max", verbose=True):
+    def multiple(self, cat1, cat2, radius_selection="max", verbose=True, kdtree_div=None):
         """
         Make the one way multiple matching
 
@@ -38,16 +39,49 @@ class ProximityMatch(SpatialMatch):
             Base catalog
         cat2: clevar.ClCatalog
             Target catalog
-        verbose: bool
-            Print result for individual matches.
         radius_selection: str (optional)
             Case of radius to be used, can be: max, min, self, other.
+        verbose: bool
+            Print result for individual matches, only used in old matching scheme.
+        kdtree_div: int, None
+            If None, simple old matching scheme is used where a loop is used,
+            else it should be number of redshift to be used in the kdtree split.
         """
         # pylint: disable=arguments-renamed
         # pylint: disable=too-many-locals
         self._valid_match_input_setup(cat1, cat2)
 
         self._cat1_mmt = np.zeros(cat1.size, dtype=bool)  # To add flag in multi step matching
+
+        if kdtree_div is None:
+            self._simple_multiple_match(cat1, cat2, radius_selection, verbose)
+        else:
+            self._kdtree_multiple_match(cat1, cat2, radius_selection, kdtree_div)
+
+        hist = {
+            "func": "multiple",
+            "cats": f"{cat1.name}, {cat2.name}",
+            "radius_selection": radius_selection,
+        }
+        self._rm_dup_add_hist(cat1, cat2, hist)
+
+    def _simple_multiple_match(self, cat1, cat2, radius_selection="max", verbose=True):
+        """
+        Simple way to make the one way multiple matching
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        cat2: clevar.ClCatalog
+            Target catalog
+        radius_selection: str (optional)
+            Case of radius to be used, can be: max, min, self, other.
+        verbose: bool
+            Print result for individual matches.
+        """
+        # pylint: disable=arguments-renamed
+        # pylint: disable=too-many-locals
         ra2, dec2, sk2 = (cat2[c] for c in ("ra", "dec", "SkyCoord"))
         ang2, z2min, z2max = (cat2.mt_input[c] for c in ("ang", "zmin", "zmax"))
         ang2max = ang2.max()
@@ -85,12 +119,100 @@ class ProximityMatch(SpatialMatch):
                         self._cat1_mmt[ind1] = True
             if verbose:
                 self._prt_cand_mt(cat1, ind1)
-        hist = {
-            "func": "multiple",
-            "cats": f"{cat1.name}, {cat2.name}",
-            "radius_selection": radius_selection,
-        }
-        self._rm_dup_add_hist(cat1, cat2, hist)
+
+    def _kdtree_multiple_match(self, cat1, cat2, radius_selection="max", ndiv=1):
+        """
+        Make the one way multiple matching using kdtree
+
+        Parameters
+        ----------
+        cat1: clevar.ClCatalog
+            Base catalog
+        cat2: clevar.ClCatalog
+            Target catalog
+        verbose: bool
+            Print result for individual matches.
+        radius_selection: str (optional)
+            Case of radius to be used, can be: max, min, self, other.
+        kdtree_div: int, None
+            If None, simple old matching scheme is used where a loop is used,
+            else it should be number of redshift to be used in the kdtree split.
+        """
+        # pylint: disable=too-many-locals
+
+        if "z" not in cat1.colnames:
+            inds1_sorted = np.arange(cat1.size)
+        else:
+            inds1_sorted = np.argsort(cat1["z"])
+
+        # props
+        ang1, z1min, z1max = (cat1.mt_input[c] for c in ("ang", "zmin", "zmax"))
+        ang2, z2min, z2max = (cat2.mt_input[c] for c in ("ang", "zmin", "zmax"))
+
+        for inds1 in np.array_split(inds1_sorted, ndiv):
+            if len(inds1) == 0:
+                break
+
+            # pre-select cat2 in redshift
+            # crop in redshift range
+            inds2 = np.where((z2max >= z1min[inds1].min()) * (z2min <= z1max[inds1].max()))[0]
+
+            kdt_prt = " * kdtree"
+            if "z" in cat1.colnames:
+                kdt_prt += f" zbin [{cat1['z'][inds1[0]]:.2f}:{cat1['z'][inds1[-1]]:.2f}]"
+            print(
+                f"{kdt_prt} - {len(inds1):,} x {len(inds2):,}"
+                f" = {len(inds1) * len(inds2):,} clusters"
+            )
+
+            # coarse selection
+            # pairs of indicies for matched clusters
+            mt_inds1, mt_inds2, angsep = cat2["SkyCoord"][inds2].search_around_sky(
+                cat1["SkyCoord"][inds1], np.maximum(ang1[inds1], ang2[inds2].max()) * u.degree
+            )[:3]
+            inds1 = inds1[mt_inds1]
+            inds2 = inds2[mt_inds2]
+
+            # refine to actual radii and z dist
+            mt_msk = (
+                (
+                    angsep.value
+                    <= self._max_mt_distance(
+                        ang1[inds1],
+                        ang2[inds2],
+                        radius_selection=radius_selection,
+                    )
+                )
+                * (z2max[inds2] >= z1min[inds1])
+                * (z2min[inds2] <= z1max[inds1])
+            )
+            inds1 = inds1[mt_msk]
+            inds2 = inds2[mt_msk]
+
+            # pair clusters
+            inds1_unq = self._smart_pairing(cat1, cat2, inds1, inds2, "mt_multi_self")
+            self._smart_pairing(cat2, cat1, inds2, inds1, "mt_multi_other")
+            self._cat1_mmt[inds1_unq] = True
+
+    @staticmethod
+    def _smart_pairing(cat1, cat2, inds1, inds2, mt_col):
+        """
+        More efficient pairing for matched catalogs
+        """
+        # Find how many galaxies are associated to each detection
+        inds1_unq, counts = np.unique(inds1, return_counts=True)
+
+        # Find positions to split by inds1 types
+        split_pos = counts.cumsum()
+
+        # For this, inds1 must be sorted
+        argsort = np.argsort(inds1)
+
+        # add pairings
+        for i1, ids2 in zip(inds1_unq, np.split(cat2["id"][inds2[argsort]], split_pos)[:-1]):
+            cat1[mt_col][i1] += list(ids2)
+
+        return inds1_unq
 
     def prep_cat_for_match(
         self, cat, delta_z, match_radius, n_delta_z=1, n_match_radius=1, cosmo=None
