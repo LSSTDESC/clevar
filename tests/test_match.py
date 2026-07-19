@@ -106,6 +106,17 @@ def test_proximity(CosmoClass):
     cat2.cross_match()
     _test_mt_results(cat1, multi_self=mmt, self=smt, cross=smt)
     _test_mt_results(cat2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
+    # Check with kdtree
+    cat1._init_match_vals(overwrite=True)
+    cat2._init_match_vals(overwrite=True)
+    mt.multiple(cat1, cat2, kdtree_div=1)
+    mt.multiple(cat2, cat1, kdtree_div=10)
+    mt.unique(cat1, cat2, "angular_proximity")
+    mt.unique(cat2, cat1, "angular_proximity")
+    cat1.cross_match()
+    cat2.cross_match()
+    _test_mt_results(cat1, multi_self=mmt, self=smt, cross=smt)
+    _test_mt_results(cat2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
     # Check unique with mass preference
     for col in ("mt_self", "mt_other"):
         cat1[col] = None
@@ -215,6 +226,9 @@ def test_proximity(CosmoClass):
     mt.multiple(cat1, cat2, radius_selection="self")
     mt.multiple(cat1, cat2, radius_selection="other")
     mt.multiple(cat1, cat2, radius_selection="min")
+    # kdtree match for cat without redshift
+    del cat1["z"]
+    mt.multiple(cat1, cat2, kdtree_div=1)
 
 
 def test_proximity_cfg(CosmoClass):

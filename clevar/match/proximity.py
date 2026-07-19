@@ -138,6 +138,7 @@ class ProximityMatch(SpatialMatch):
             If None, simple old matching scheme is used where a loop is used,
             else it should be number of redshift to be used in the kdtree split.
         """
+        # pylint: disable=too-many-locals
 
         if "z" not in cat1.colnames:
             inds1_sorted = np.arange(cat1.size)
@@ -156,10 +157,10 @@ class ProximityMatch(SpatialMatch):
             # crop in redshift range
             inds2 = np.where((z2max >= z1min[inds1].min()) * (z2min <= z1max[inds1].max()))[0]
 
-            print(
-                f" * kdtree zbin [{cat1['z'][inds1[0]]:.2f}:{cat1['z'][inds1[-1]]:.2f}]"
-                f" - {len(inds1):,} x {len(inds2):,} clusters"
-            )
+            kdt_prt = " * kdtree"
+            if "z" in cat1.colnames:
+                kdt_prt += f" zbin [{cat1['z'][inds1[0]]:.2f}:{cat1['z'][inds1[-1]]:.2f}]"
+            print(f"{kdt_prt} - {len(inds1):,} x {len(inds2):,} clusters")
 
             # coarse selection
             # pairs of indicies for matched clusters
