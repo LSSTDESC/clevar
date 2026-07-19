@@ -106,6 +106,17 @@ def test_proximity(CosmoClass):
     cat2.cross_match()
     _test_mt_results(cat1, multi_self=mmt, self=smt, cross=smt)
     _test_mt_results(cat2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
+    # Check with kdtree
+    cat1._init_match_vals(overwrite=True)
+    cat2._init_match_vals(overwrite=True)
+    mt.multiple(cat1, cat2, kdtree_div=1)
+    mt.multiple(cat2, cat1, kdtree_div=10)
+    mt.unique(cat1, cat2, "angular_proximity")
+    mt.unique(cat2, cat1, "angular_proximity")
+    cat1.cross_match()
+    cat2.cross_match()
+    _test_mt_results(cat1, multi_self=mmt, self=smt, cross=smt)
+    _test_mt_results(cat2, multi_self=mmt[:-1], self=smt[:-1], cross=smt[:-1])
     # Check unique with mass preference
     for col in ("mt_self", "mt_other"):
         cat1[col] = None
@@ -215,6 +226,9 @@ def test_proximity(CosmoClass):
     mt.multiple(cat1, cat2, radius_selection="self")
     mt.multiple(cat1, cat2, radius_selection="other")
     mt.multiple(cat1, cat2, radius_selection="min")
+    # kdtree match for cat without redshift
+    del cat1["z"]
+    mt.multiple(cat1, cat2, kdtree_div=1)
 
 
 def test_proximity_cfg(CosmoClass):
@@ -273,6 +287,9 @@ def get_test_data_mem():
     input1 = {
         "id": [f"CL{i}" for i in range(ncl)],
         "mass": [30 + i for i in range(ncl)],
+        "ra": np.arange(ncl),
+        "dec": np.zeros(ncl),
+        "z": np.ones(ncl),
     }
     input2 = {k: v[:-1] for k, v in input1.items()}
     # members
@@ -458,6 +475,22 @@ def test_membership():
     _test_mt_results(cat2, multi_self=mmt2, self=smt[:-1], cross=smt[:-1], other=smt[:-1])
     print(cat1.members)
     print(cat2.members)
+
+    # Test shared fracthion is computed with other preferences
+    for pref in (
+        "more_massive",
+        "angular_proximity",
+        "redshift_proximity",
+        "shared_member_fraction",
+    ):
+        cat1, cat2 = get_test_data_mem()
+        mt.match_members(cat1.members, cat2.members, method="id")
+        mt.fill_shared_members(cat1, cat2)
+        mt.multiple(cat1, cat2)
+        mt.multiple(cat2, cat1)
+        mt.unique(cat1, cat2, pref)
+        assert cat1["mt_frac_self"].max() > 0
+        assert cat2["mt_frac_other"].max() > 0
 
 
 def test_membership_cfg(CosmoClass):
