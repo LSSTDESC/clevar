@@ -17,10 +17,12 @@ dependencies:
   - numpy >= 2.0
   - pandoc
   - pip
+  - pre-commit
   - pyccl >= 3.1.2
   - pylint
   - pytest >= 3.0
   - pytest-cov
+  - setuptools
   - scipy >= 1.6
   - sphinx
   - sphinx_rtd_theme >= 3.0
