@@ -146,3 +146,12 @@ def test_skyplot():
         matching_type,
         recovery_label=None,
     )
+
+
+def test_roc():
+    cat1, cat2 = _test_data.cat1, _test_data.cat2
+    cat1["snr"] = np.linspace(2, 20, cat1.size)
+    matching_type = "self"
+    rc.plot_roc(cat1, cat2, matching_type, np.linspace(1, 10, 21))
+    matching_type = "multi_join"
+    rc.plot_roc(cat1, cat2, matching_type, np.linspace(1, 10, 21))
